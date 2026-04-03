@@ -592,7 +592,7 @@
         </thead>
         <tbody id="accessRequestBody"></tbody>
       </table>
-      
+
       <div class="page8-bottom-row">
         <button class="add-access-btn" id="addAccessBtn">Zugriff hinzufügen</button>
       </div>
@@ -644,7 +644,6 @@
         <button class="save-btn" type="button" onclick="saveAccessEntry()">Speichern</button>
       </div>
     </div>
-  </div>
   </div>
 
   <script type="module">
@@ -699,6 +698,7 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
     const provider = new GoogleAuthProvider();
+
     provider.setCustomParameters({
       prompt: 'select_account'
     });
