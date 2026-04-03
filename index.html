@@ -706,6 +706,7 @@
     let currentUserData = null;
     let currentUser = null;
     let editingEmployeeId = null;
+    const LAST_PAGE_KEY = 'lspd_last_page';
 
     const navItems = [
       { id: 'page2', label: 'LSPD Dasboard' },
@@ -739,10 +740,29 @@
       return !!currentUser && isAdmin(currentUser.email, currentUserData);
     }
 
-    function showPage(pageId) {
-      const targetPage = canAccessPage(pageId) ? pageId : 'page2';
+    function saveLastPage(pageId) {
+      localStorage.setItem(LAST_PAGE_KEY, pageId);
+    }
+
+    function getLastPage() {
+      return localStorage.getItem(LAST_PAGE_KEY) || 'page2';
+    }
+
+    function clearLastPage() {
+      localStorage.removeItem(LAST_PAGE_KEY);
+    }
+
+    function showPage(pageId, options = {}) {
+      const { save = true } = options;
+      const fallbackPage = currentUser ? 'page2' : 'page1';
+      const targetPage = canAccessPage(pageId) ? pageId : fallbackPage;
+
       document.querySelectorAll('.page').forEach(page => page.classList.add('hidden'));
       document.getElementById(targetPage).classList.remove('hidden');
+
+      if (save && targetPage !== 'page1') {
+        saveLastPage(targetPage);
+      }
     }
 
     function showMessage(text) {
@@ -884,11 +904,8 @@
         if (approved) {
           currentUserData = payload;
           renderPersonalData(payload, user);
-          if (isAdmin(user.email, payload)) {
-            showPage('page8');
-          } else {
-            showPage('page2');
-          }
+          const lastPage = getLastPage();
+          showPage(lastPage);
         } else {
           showMessage('Registrierung gespeichert. Ein Admin muss dich freigeben.');
           await signOut(auth);
@@ -928,22 +945,17 @@
         }
 
         const data = snap.data();
-        if (isAdmin(user.email, data)) {
-          currentUserData = data;
-          renderPersonalData(data, user);
-          showPage('page8');
-          return;
-        }
+        currentUserData = data;
+        renderPersonalData(data, user);
 
-        if (!data.approved) {
+        if (!data.approved && !isAdmin(user.email, data)) {
           showMessage('Dein Zugriff wurde noch nicht freigegeben.');
           await signOut(auth);
           return;
         }
 
-        currentUserData = data;
-        renderPersonalData(data, user);
-        showPage('page2');
+        const lastPage = getLastPage();
+        showPage(lastPage);
       } catch (error) {
         console.error(error);
         showMessage('Google Anmeldung fehlgeschlagen. Nutze localhost und prüfe die freigegebene Domain in Firebase.');
@@ -1228,7 +1240,8 @@
       currentUser = null;
       currentUserData = null;
       showMessage('');
-      showPage('page1');
+      clearLastPage();
+      showPage('page1', { save: false });
     };
 
     document.getElementById('addEmployeeBtn').addEventListener('click', () => {
@@ -1245,13 +1258,15 @@
 
     onAuthStateChanged(auth, async (user) => {
       currentUser = user || null;
+
       if (!user) {
-        showPage('page1');
+        showPage('page1', { save: false });
         return;
       }
 
       const ref = doc(db, 'accessRequests', user.uid);
       let snap = await getDoc(ref);
+
       if (!snap.exists()) {
         const existingByEmail = await findAccessByEmail(user.email);
         if (existingByEmail) {
@@ -1266,7 +1281,7 @@
       }
 
       if (!snap.exists()) {
-        showPage('page1');
+        showPage('page1', { save: false });
         return;
       }
 
@@ -1274,13 +1289,13 @@
       currentUserData = data;
       renderPersonalData(data, user);
 
-      if (isAdmin(user.email, data)) {
-        showPage('page8');
-      } else if (data.approved) {
-        showPage('page2');
-      } else {
-        showPage('page1');
+      if (!data.approved && !isAdmin(user.email, data)) {
+        showPage('page1', { save: false });
+        return;
       }
+
+      const lastPage = getLastPage();
+      showPage(lastPage, { save: false });
     });
 
     subscribeAccessRequests();
