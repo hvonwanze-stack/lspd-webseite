@@ -312,6 +312,91 @@
       gap: 8px;
     }
 
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 9999;
+    }
+
+    .modal-card {
+      width: min(860px, 100%);
+      background: #111;
+      border: 1px solid #555;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      border-bottom: 1px solid #333;
+      background: #1a1a1a;
+    }
+
+    .modal-header h3 {
+      margin: 0;
+      font-size: 22px;
+      font-weight: 400;
+    }
+
+    .modal-close {
+      background: transparent;
+      font-size: 28px;
+      padding: 0 8px;
+      min-width: auto;
+    }
+
+    .modal-body {
+      padding: 18px;
+    }
+
+    .modal-form {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px 18px;
+    }
+
+    .form-grid label {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      text-align: left;
+      font-size: 14px;
+      color: #ddd;
+    }
+
+    .form-grid input,
+    .form-grid select {
+      width: 100%;
+      padding: 10px 12px;
+      background: #1d1d1d;
+      border: 1px solid #555;
+      color: #fff;
+      font-size: 14px;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+
+    .modal-cancel {
+      background: #5a5a5a;
+    }
+
     @media (max-width: 1000px) {
       .logo-wrap { flex-direction: column; }
       .logo-line { font-size: 40px; text-align: center; }
@@ -610,6 +695,121 @@
 
     ['navMount','navMount3','navMount4','navMount5','navMount6','navMount7','navMount8'].forEach(mountNav);
 
+    function createModalShell(title, content) {
+      const backdrop = document.createElement('div');
+      backdrop.className = 'modal-backdrop';
+      backdrop.innerHTML = `
+        <div class="modal-card">
+          <div class="modal-header">
+            <h3>${title}</h3>
+            <button type="button" class="modal-close">×</button>
+          </div>
+          <div class="modal-body">${content}</div>
+        </div>
+      `;
+
+      const close = () => backdrop.remove();
+      backdrop.addEventListener('click', (e) => {
+        if (e.target === backdrop) close();
+      });
+      backdrop.querySelector('.modal-close').addEventListener('click', close);
+      document.body.appendChild(backdrop);
+      return { backdrop, close };
+    }
+
+    function employeeFormTemplate(values = {}) {
+      return `
+        <form id="employeeForm" class="modal-form">
+          <div class="form-grid">
+            <label><span>Email</span><input name="email" value="${values.email || ''}" required></label>
+            <label><span>Name</span><input name="name" value="${values.name || ''}" required></label>
+            <label><span>ID</span><input name="employeeId" value="${values.employeeId || '164895'}"></label>
+            <label><span>Telefonnummer</span><input name="phone" value="${values.phone || '16-48-950'}"></label>
+            <label><span>Dienstnummer</span><input name="serviceNumber" value="${values.serviceNumber || '1'}"></label>
+            <label><span>Mitarbeiter-Rang</span><input name="rank" type="number" min="0" max="30" value="${values.rank ?? 0}"></label>
+            <label><span>Abteilung 1</span><input name="department1" value="${values.department1 || 'HR Curator'}"></label>
+            <label><span>Abteilung 2</span><input name="department2" value="${values.department2 || 'SWAT'}"></label>
+            <label><span>Invite</span><input name="invite" value="${values.invite || 'Manuell hinzugefügt'}"></label>
+            <label><span>Last RunkUp</span><input name="lastRankUp" value="${values.lastRankUp || '01.01.2026'}"></label>
+            <label><span>Urlaub</span><input name="vacation" value="${values.vacation || '0/3'}"></label>
+            <label><span>Stike</span><input name="strike" value="${values.strike || '0/3'}"></label>
+            <label><span>Zugriffsrang Webseite</span><input name="accessLevel" type="number" min="0" max="30" value="${values.accessLevel ?? 0}"></label>
+          </div>
+          <div class="modal-actions">
+            <button type="button" class="modal-cancel">Abbrechen</button>
+            <button type="submit">Speichern</button>
+          </div>
+        </form>
+      `;
+    }
+
+    function accessFormTemplate(values = {}) {
+      return `
+        <form id="accessForm" class="modal-form">
+          <div class="form-grid">
+            <label><span>Email</span><input name="email" value="${values.email || ''}" required></label>
+            <label><span>Name</span><input name="name" value="${values.name || ''}" required></label>
+            <label><span>Zugriffsrang</span><input name="accessLevel" type="number" min="0" max="30" value="${values.accessLevel ?? 0}" required></label>
+          </div>
+          <div class="modal-actions">
+            <button type="button" class="modal-cancel">Abbrechen</button>
+            <button type="submit">Speichern</button>
+          </div>
+        </form>
+      `;
+    }
+
+    function getFormData(form) {
+      const fd = new FormData(form);
+      return Object.fromEntries(fd.entries());
+    }
+
+    function clampAccessLevel(value) {
+      return Math.max(0, Math.min(30, Number(value) || 0));
+    }
+
+    function openAccessModal(values = {}, onSubmit) {
+      const { backdrop, close } = createModalShell('Zugriff hinzufügen', accessFormTemplate(values));
+      const form = backdrop.querySelector('#accessForm');
+      backdrop.querySelector('.modal-cancel').addEventListener('click', close);
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const data = getFormData(form);
+        await onSubmit({
+          email: (data.email || '').trim(),
+          name: (data.name || '').trim(),
+          accessLevel: clampAccessLevel(data.accessLevel)
+        });
+        close();
+      });
+    }
+
+    function openEmployeeModal(values = {}, onSubmit, title = 'Mitarbeiter hinzufügen') {
+      const { backdrop, close } = createModalShell(title, employeeFormTemplate(values));
+      const form = backdrop.querySelector('#employeeForm');
+      backdrop.querySelector('.modal-cancel').addEventListener('click', close);
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const data = getFormData(form);
+        await onSubmit({
+          email: (data.email || '').trim(),
+          name: (data.name || '').trim(),
+          employeeId: (data.employeeId || '').trim(),
+          phone: (data.phone || '').trim(),
+          serviceNumber: (data.serviceNumber || '').trim(),
+          rank: clampAccessLevel(data.rank),
+          department1: (data.department1 || '').trim(),
+          department2: (data.department2 || '').trim(),
+          invite: (data.invite || '').trim(),
+          lastRankUp: (data.lastRankUp || '').trim(),
+          vacation: (data.vacation || '').trim(),
+          strike: (data.strike || '').trim(),
+          accessLevel: clampAccessLevel(data.accessLevel)
+        });
+        close();
+      });
+    }
+
     function showPage(pageId) {
       document.querySelectorAll('.page').forEach(page => page.classList.add('hidden'));
       document.getElementById(pageId).classList.remove('hidden');
@@ -800,38 +1000,30 @@
     window.addAccessEntry = async function () {
       if (!hasFullAccess()) return;
 
-      const email = prompt('Email des Google Kontos eingeben:');
-      if (!email) return;
+      openAccessModal({}, async (formData) => {
+        const existing = await findAccessByEmail(formData.email);
+        const docId = existing?.id || `manual-${Date.now()}`;
+        const existingData = existing?.data || {};
 
-      const name = prompt('Name eingeben:', email.split('@')[0] || '');
-      if (name === null) return;
-
-      const accessInput = prompt('Zugriffsrang eingeben (0 bis 30):', '0');
-      if (accessInput === null) return;
-
-      const accessLevel = Math.max(0, Math.min(30, Number(accessInput) || 0));
-      const existing = await findAccessByEmail(email);
-      const docId = existing?.id || `manual-${Date.now()}`;
-      const existingData = existing?.data || {};
-
-      await upsertAccessDocument(docId, {
-        uid: existingData.uid || docId,
-        name: name || existingData.name || '-',
-        email,
-        approved: true,
-        accessLevel,
-        role: accessLevel >= 30 ? 'admin' : 'user',
-        rank: existingData.rank ?? 0,
-        employeeId: existingData.employeeId || '164895',
-        phone: existingData.phone || '16-48-950',
-        serviceNumber: existingData.serviceNumber || '1',
-        department1: existingData.department1 || 'HR Curator',
-        department2: existingData.department2 || 'SWAT',
-        invite: existingData.invite || 'Manuell freigegeben',
-        lastRankUp: existingData.lastRankUp || '01.01.2026',
-        vacation: existingData.vacation || '0/3',
-        strike: existingData.strike || '0/3',
-        createdAt: existingData.createdAt || new Date().toISOString()
+        await upsertAccessDocument(docId, {
+          uid: existingData.uid || docId,
+          name: formData.name || existingData.name || '-',
+          email: formData.email,
+          approved: true,
+          accessLevel: formData.accessLevel,
+          role: formData.accessLevel >= 30 ? 'admin' : 'user',
+          rank: existingData.rank ?? 0,
+          employeeId: existingData.employeeId || '164895',
+          phone: existingData.phone || '16-48-950',
+          serviceNumber: existingData.serviceNumber || '1',
+          department1: existingData.department1 || 'HR Curator',
+          department2: existingData.department2 || 'SWAT',
+          invite: existingData.invite || 'Manuell freigegeben',
+          lastRankUp: existingData.lastRankUp || '01.01.2026',
+          vacation: existingData.vacation || '0/3',
+          strike: existingData.strike || '0/3',
+          createdAt: existingData.createdAt || new Date().toISOString()
+        });
       });
     };
 
@@ -845,58 +1037,31 @@
     window.addEmployee = async function () {
       if (!hasFullAccess()) return;
 
-      const email = prompt('Email des Mitarbeiters:');
-      if (!email) return;
+      openEmployeeModal({}, async (formData) => {
+        const existing = await findAccessByEmail(formData.email);
+        const docId = existing?.id || `employee-${Date.now()}`;
+        const existingData = existing?.data || {};
 
-      const name = prompt('Name:', '');
-      if (name === null) return;
-      const employeeId = prompt('ID:', '164895');
-      if (employeeId === null) return;
-      const phone = prompt('Telefonnummer:', '16-48-950');
-      if (phone === null) return;
-      const serviceNumber = prompt('Dienstnummer:', '1');
-      if (serviceNumber === null) return;
-      const rank = prompt('Mitarbeiter-Rang für Seite 2 eingeben:', '0');
-      if (rank === null) return;
-      const department1 = prompt('Abteilung 1:', 'HR Curator');
-      if (department1 === null) return;
-      const department2 = prompt('Abteilung 2:', 'SWAT');
-      if (department2 === null) return;
-      const invite = prompt('Invite:', 'Manuell hinzugefügt');
-      if (invite === null) return;
-      const lastRankUp = prompt('Last RunkUp:', '01.01.2026');
-      if (lastRankUp === null) return;
-      const vacation = prompt('Urlaub:', '0/3');
-      if (vacation === null) return;
-      const strike = prompt('Stike:', '0/3');
-      if (strike === null) return;
-      const accessInput = prompt('Zugriffsrang für die Webseite (0 bis 30):', '0');
-      if (accessInput === null) return;
-
-      const existing = await findAccessByEmail(email);
-      const docId = existing?.id || `employee-${Date.now()}`;
-      const existingData = existing?.data || {};
-      const accessLevel = Math.max(0, Math.min(30, Number(accessInput) || 0));
-
-      await upsertAccessDocument(docId, {
-        uid: existingData.uid || docId,
-        name: name || existingData.name || '-',
-        email,
-        approved: true,
-        accessLevel,
-        role: accessLevel >= 30 ? 'admin' : 'user',
-        rank: Number(rank) || 0,
-        employeeId,
-        phone,
-        serviceNumber,
-        department1,
-        department2,
-        invite,
-        lastRankUp,
-        vacation,
-        strike,
-        createdAt: existingData.createdAt || new Date().toISOString()
-      });
+        await upsertAccessDocument(docId, {
+          uid: existingData.uid || docId,
+          name: formData.name || existingData.name || '-',
+          email: formData.email,
+          approved: true,
+          accessLevel: formData.accessLevel,
+          role: formData.accessLevel >= 30 ? 'admin' : 'user',
+          rank: Number(formData.rank) || 0,
+          employeeId: formData.employeeId,
+          phone: formData.phone,
+          serviceNumber: formData.serviceNumber,
+          department1: formData.department1,
+          department2: formData.department2,
+          invite: formData.invite,
+          lastRankUp: formData.lastRankUp,
+          vacation: formData.vacation,
+          strike: formData.strike,
+          createdAt: existingData.createdAt || new Date().toISOString()
+        });
+      }, 'Mitarbeiter hinzufügen');
     };
 
     window.editEmployee = async function (id) {
@@ -908,45 +1073,38 @@
 
       const item = snap.data();
 
-      const email = prompt('Email bearbeiten:', item.email || '');
-      if (email === null) return;
-      const name = prompt('Name bearbeiten:', item.name || '');
-      if (name === null) return;
-      const employeeId = prompt('ID bearbeiten:', item.employeeId || '164895');
-      if (employeeId === null) return;
-      const phone = prompt('Telefonnummer bearbeiten:', item.phone || '16-48-950');
-      if (phone === null) return;
-      const serviceNumber = prompt('Dienstnummer bearbeiten:', item.serviceNumber || '1');
-      if (serviceNumber === null) return;
-      const rank = prompt('Mitarbeiter-Rang für Seite 2 bearbeiten:', String(item.rank ?? 0));
-      if (rank === null) return;
-      const department1 = prompt('Abteilung 1 bearbeiten:', item.department1 || 'HR Curator');
-      if (department1 === null) return;
-      const department2 = prompt('Abteilung 2 bearbeiten:', item.department2 || 'SWAT');
-      if (department2 === null) return;
-      const invite = prompt('Invite bearbeiten:', item.invite || '');
-      if (invite === null) return;
-      const lastRankUp = prompt('Last RunkUp bearbeiten:', item.lastRankUp || '01.01.2026');
-      if (lastRankUp === null) return;
-      const vacation = prompt('Urlaub bearbeiten:', item.vacation || '0/3');
-      if (vacation === null) return;
-      const strike = prompt('Stike bearbeiten:', item.strike || '0/3');
-      if (strike === null) return;
-
-      await updateDoc(ref, {
-        email,
-        name,
-        employeeId,
-        phone,
-        serviceNumber,
-        rank: Number(rank) || 0,
-        department1,
-        department2,
-        invite,
-        lastRankUp,
-        vacation,
-        strike
-      });
+      openEmployeeModal({
+        email: item.email || '',
+        name: item.name || '',
+        employeeId: item.employeeId || '164895',
+        phone: item.phone || '16-48-950',
+        serviceNumber: item.serviceNumber || '1',
+        rank: item.rank ?? 0,
+        department1: item.department1 || 'HR Curator',
+        department2: item.department2 || 'SWAT',
+        invite: item.invite || '',
+        lastRankUp: item.lastRankUp || '01.01.2026',
+        vacation: item.vacation || '0/3',
+        strike: item.strike || '0/3',
+        accessLevel: item.accessLevel ?? 0
+      }, async (formData) => {
+        await updateDoc(ref, {
+          email: formData.email,
+          name: formData.name,
+          employeeId: formData.employeeId,
+          phone: formData.phone,
+          serviceNumber: formData.serviceNumber,
+          rank: Number(formData.rank) || 0,
+          department1: formData.department1,
+          department2: formData.department2,
+          invite: formData.invite,
+          lastRankUp: formData.lastRankUp,
+          vacation: formData.vacation,
+          strike: formData.strike,
+          accessLevel: formData.accessLevel,
+          role: formData.accessLevel >= 30 ? 'admin' : 'user'
+        });
+      }, 'Mitarbeiter bearbeiten');
     };
 
     function subscribeAccessRequests() {
