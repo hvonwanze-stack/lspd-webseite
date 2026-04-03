@@ -544,10 +544,13 @@
     .division-suspended { background: #ff1b1b; }
 
     .mini-checkbox {
-      width: 13px;
-      height: 13px;
-      accent-color: #1d6b32;
+      width: 18px;
+      height: 18px;
+      accent-color: #22c55e;
       pointer-events: none;
+      transform: scale(1.08);
+      opacity: 1;
+      filter: contrast(1.35) brightness(1.12);
     }
 
     .training-edit-grid {
@@ -567,9 +570,12 @@
     }
 
     .training-edit-item input {
-      width: 18px;
-      height: 18px;
-      accent-color: #1d6b32;
+      width: 21px;
+      height: 21px;
+      accent-color: #22c55e;
+      transform: scale(1.06);
+      opacity: 1;
+      filter: contrast(1.35) brightness(1.12);
     }
 
     @media (max-width: 1000px) {
@@ -971,6 +977,7 @@
     let currentUserData = null;
     let currentUser = null;
     let editingEmployeeId = null;
+    let editingEmployeeTrainings = {};
     let editingTrainingId = null;
     let employeeSearchTerm = '';
     let employeesCache = [];
@@ -1264,6 +1271,7 @@
 
     function resetEmployeeModal() {
       editingEmployeeId = null;
+      editingEmployeeTrainings = {};
       document.getElementById('employeeModalTitle').textContent = 'Mitarbeiter hinzufügen';
       document.getElementById('empEmail').value = '';
       document.getElementById('empName').value = '';
@@ -1287,6 +1295,7 @@
       resetEmployeeModal();
       if (item && docId) {
         editingEmployeeId = docId;
+        editingEmployeeTrainings = normalizeTrainings(item.trainings || {});
         document.getElementById('employeeModalTitle').textContent = 'Mitarbeiter bearbeiten';
         document.getElementById('empEmail').value = item.email || '';
         document.getElementById('empName').value = item.name || '';
@@ -1315,7 +1324,15 @@
 
       const existingByEmail = await findAccessByEmail(email);
       const targetId = editingEmployeeId || existingByEmail?.id || `manual-${Date.now()}`;
-      const existingData = existingByEmail?.data || {};
+
+      let existingData = existingByEmail?.data || {};
+
+      if (editingEmployeeId) {
+        const currentDocSnap = await getDoc(doc(db, 'accessRequests', editingEmployeeId));
+        if (currentDocSnap.exists()) {
+          existingData = currentDocSnap.data();
+        }
+      }
 
       const payload = {
         uid: existingData.uid || targetId,
@@ -1335,7 +1352,7 @@
         approved: existingData.approved ?? true,
         role: existingData.role || 'user',
         createdAt: existingData.createdAt || new Date().toISOString(),
-        trainings: normalizeTrainings(existingData.trainings || {})
+        trainings: normalizeTrainings(existingData.trainings || editingEmployeeTrainings || {})
       };
 
       await setDoc(doc(db, 'accessRequests', targetId), payload, { merge: true });
