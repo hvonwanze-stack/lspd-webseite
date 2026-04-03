@@ -1,117 +1,3 @@
-Skip to content
-hvonwanze-stack
-lspd-webseite
-Repository navigation
-Code
-Issues
-Pull requests
-Actions
-Projects
-Wiki
-Security and quality
-1
- (1)
-Insights
-Settings
-Important update
-On April 24 we'll start using GitHub Copilot interaction data for AI model training unless you opt out. Review this update and manage your preferences in your GitHub account settings.
-lspd-webseite
-/
-index.html
-in
-main
-
-Edit
-
-Preview
-Indent mode
-
-Spaces
-Indent size
-
-2
-Line wrap mode
-
-No wrap
-Editing index.html file contents
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-28
-29
-30
-31
-32
-33
-34
-35
-36
-37
-38
-39
-40
-41
-42
-43
-44
-45
-46
-47
-48
-49
-50
-51
-52
-53
-54
-55
-56
-57
-58
-59
-60
-61
-62
-63
-64
-65
-66
-67
-68
-69
-70
-71
-72
-73
-74
-75
-76
-77
-78
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -190,5 +76,988 @@ Editing index.html file contents
     .logo-line {
       flex: 1;
       border-top: 4px solid #d4af37;
-Use Control + Shift + m to toggle the tab key moving focus. Alternatively, use esc then tab to move to the next interactive element on the page.
- 
+      border-bottom: 4px solid #d4af37;
+      padding: 18px 24px;
+      font-size: 58px;
+      font-family: Georgia, serif;
+      font-weight: 700;
+      color: #f3f3f3;
+    }
+
+    .auth-box {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      align-items: center;
+    }
+
+    button {
+      cursor: pointer;
+      border: none;
+      color: #fff;
+      background: var(--blue);
+      padding: 10px 18px;
+      font-size: 16px;
+    }
+
+    .outline-btn {
+      width: 220px;
+      background: transparent;
+      border: 1px solid #aaa;
+      font-size: 24px;
+      padding: 8px 12px;
+    }
+
+    .top-title {
+      text-align: center;
+      font-size: 72px;
+      margin: 0 0 10px;
+      font-weight: 300;
+    }
+
+    .nav {
+      display: flex;
+      justify-content: center;
+      gap: 18px;
+      flex-wrap: wrap;
+      margin: 18px 0 12px;
+    }
+
+    .nav button {
+      min-width: 165px;
+      padding: 8px 14px;
+      background: #0b4c84;
+    }
+
+    .nav-separator {
+      height: 10px;
+      background: #6b6b6b;
+      margin: 8px 0 24px;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 330px 1fr;
+      gap: 34px;
+      align-items: start;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .box-title {
+      text-align: center;
+      padding: 10px;
+      font-size: 20px;
+      margin-bottom: 12px;
+    }
+
+    .purple { background: var(--purple); }
+    .orange { background: var(--orange); }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: 110px 1fr;
+      gap: 10px 16px;
+    }
+
+    .info-grid div {
+      background: var(--purple);
+      padding: 10px;
+      text-align: center;
+      min-height: 38px;
+    }
+
+    .training-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .training-card { text-align: center; }
+
+    .training-card h4 {
+      margin: 0 0 10px;
+      padding: 10px;
+      font-size: 16px;
+    }
+
+    .mini-row {
+      display: grid;
+      grid-template-columns: 26px 1fr;
+      gap: 1px;
+      margin-bottom: 10px;
+    }
+
+    .mini-row div {
+      padding: 10px;
+      min-height: 38px;
+    }
+
+    .bg-green { background: #3d7d21; }
+    .bg-gold { background: #a8870f; }
+    .bg-blue { background: #10559b; }
+    .bg-red { background: #cf1404; }
+    .bg-cyan { background: #5ac3d9; }
+    .bg-pink { background: #c86aa2; }
+    .bg-light { background: #b9d3db; color: #fff; }
+    .bg-orange { background: #ef6d2f; }
+    .bg-beige { background: #f5bc77; }
+    .bg-violet { background: #b8acd8; }
+    .bg-wine { background: #6f184f; }
+
+    .content-wrap {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      color: #fff;
+      background: rgba(80,80,80,0.85);
+    }
+
+    th, td {
+      border: 1px solid #2d2d2d;
+      padding: 6px 8px;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    th { background: #666; }
+
+    .action-cell { width: 55px; font-weight: bold; }
+
+    .left-btn {
+      margin-top: 20px;
+      background: #666;
+      min-width: 180px;
+    }
+
+    .icon-btn {
+      width: 34px;
+      min-width: 34px;
+      height: 30px;
+      padding: 0;
+      background: #4a4a4a;
+      font-size: 16px;
+      line-height: 30px;
+    }
+
+    .delete-btn {
+      background: #8b1e1e;
+      min-width: 110px;
+      padding: 6px 12px;
+      font-size: 13px;
+    }
+
+    .logout {
+      position: fixed;
+      right: 30px;
+      bottom: 26px;
+      background: var(--red);
+      min-width: 165px;
+      font-weight: bold;
+    }
+
+    .panel-card {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .request-controls select {
+      width: 100%;
+      padding: 6px;
+      background: #222;
+      color: #fff;
+      border: 1px solid #555;
+    }
+
+    .status-pill {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .yes { background: #1d6b32; }
+    .no { background: #8b1e1e; }
+    .pending { background: #7c620f; }
+
+    .small-note {
+      margin-top: 12px;
+      color: #d0d0d0;
+      text-align: center;
+    }
+
+    .welcome-box {
+      text-align: center;
+      margin-top: 14px;
+      color: #ddd;
+    }
+
+    @media (max-width: 1000px) {
+      .logo-wrap { flex-direction: column; }
+      .logo-line { font-size: 40px; text-align: center; }
+      .top-title { font-size: 44px; }
+      .dashboard-grid { grid-template-columns: 1fr; }
+      .logout { position: static; margin-top: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <section id="page1" class="page login-page">
+    <div class="logo-wrap">
+      <div class="fake-badge">LOS SANTOS<br>POLICE<br>DEPARTMENT</div>
+      <div class="logo-line">Los Santos Police Department.</div>
+    </div>
+
+    <div class="auth-box">
+      <button class="outline-btn" onclick="registerWithGoogle()">Registrieren</button>
+      <button class="outline-btn" onclick="loginWithGoogle()">Anmelden</button>
+      <div id="loginMessage" class="small-note"></div>
+    </div>
+  </section>
+
+  <section id="page2" class="page hidden app-page">
+    <div class="content-wrap">
+      <h1 class="top-title">Los Santos Police Department</h1>
+      <div id="navMount"></div>
+      <div class="dashboard-grid">
+        <div>
+          <div class="box-title purple">Persönliche Daten</div>
+          <div class="info-grid" id="personalDataGrid"></div>
+        </div>
+        <div>
+          <div class="box-title orange">Ausbildungen</div>
+          <div class="training-grid">
+            <div class="training-card">
+              <h4 class="bg-green">Für Rookie</h4>
+              <div class="mini-row"><div class="bg-green"><input type="checkbox" disabled></div><div class="bg-green">GA</div></div>
+              <div class="mini-row"><div class="bg-green"><input type="checkbox" disabled></div><div class="bg-green">EHK</div></div>
+            </div>
+            <div class="training-card">
+              <h4 class="bg-gold">Für Officer</h4>
+              <div class="mini-row"><div class="bg-gold"><input type="checkbox" disabled></div><div class="bg-gold">ES</div></div>
+              <div class="mini-row"><div class="bg-gold"><input type="checkbox" disabled></div><div class="bg-gold">OP</div></div>
+            </div>
+            <div class="training-card">
+              <h4 class="bg-blue">Für Officer 2</h4>
+              <div class="mini-row"><div class="bg-blue"><input type="checkbox" disabled></div><div class="bg-blue">OK</div></div>
+              <div class="mini-row"><div class="bg-blue"><input type="checkbox" disabled></div><div class="bg-blue">FULA</div></div>
+            </div>
+            <div class="training-card">
+              <h4 class="bg-red">Für Officer Fist Class</h4>
+              <div class="mini-row"><div class="bg-red"><input type="checkbox" disabled></div><div class="bg-red">TST</div></div>
+            </div>
+            <div class="training-card">
+              <h4 class="bg-cyan">Für Supervising Officer</h4>
+              <div class="mini-row"><div class="bg-cyan"><input type="checkbox" disabled></div><div class="bg-cyan">KS</div></div>
+            </div>
+            <div class="training-card">
+              <h4 class="bg-pink">Für Senior Supervisor</h4>
+              <div class="mini-row"><div class="bg-pink"><input type="checkbox" disabled></div><div class="bg-pink">OK+</div></div>
+            </div>
+            <div class="training-card">
+              <h4 class="bg-light">Für Corporal</h4>
+              <div class="mini-row"><div class="bg-light"><input type="checkbox" disabled></div><div class="bg-light">COP</div></div>
+            </div>
+            <div class="training-card">
+              <h4 class="bg-orange">Für Lead Supervisor</h4>
+              <div class="mini-row"><div class="bg-orange"><input type="checkbox" disabled></div><div class="bg-orange">FT</div></div>
+            </div>
+            <div class="training-card">
+              <h4 class="bg-beige">Für Detectiv</h4>
+              <div class="mini-row"><div class="bg-beige"><input type="checkbox" disabled></div><div class="bg-beige">JP</div></div>
+            </div>
+            <div class="training-card">
+              <h4 class="bg-violet">AKS</h4>
+              <div class="mini-row"><div class="bg-violet"><input type="checkbox" disabled></div><div class="bg-violet">AKS</div></div>
+            </div>
+            <div class="training-card" style="grid-column: 1 / -1;">
+              <h4 class="bg-wine">Freiwillige Ausbildungen</h4>
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
+                <div class="mini-row"><div class="bg-wine"><input type="checkbox" disabled></div><div class="bg-wine">ZP</div></div>
+                <div class="mini-row"><div class="bg-wine"><input type="checkbox" disabled></div><div class="bg-wine">VHP</div></div>
+                <div class="mini-row"><div class="bg-wine"><input type="checkbox" disabled></div><div class="bg-wine">TOW / BL</div></div>
+              </div>
+            </div>
+          </div>
+          <div class="welcome-box" id="welcomeBox"></div>
+        </div>
+      </div>
+      <button class="logout" onclick="logout()">Abmelden</button>
+    </div>
+  </section>
+
+  <section id="page3" class="page hidden app-page">
+    <div class="content-wrap">
+      <h1 class="top-title">Los Santos Police Department</h1>
+      <div id="navMount3"></div>
+    </div>
+  </section>
+
+  <section id="page4" class="page hidden app-page">
+    <div class="content-wrap">
+      <h1 class="top-title">Los Santos Police Department</h1>
+      <div id="navMount4"></div>
+      <table>
+        <thead>
+          <tr>
+            <th>FDA nutzen</th><th>Suspendiert</th><th>TOW Officer</th><th>Cadet</th><th>Rookie</th><th>Officer I</th><th>Officer II</th><th>Officer Fist Class</th><th>Supervising Officer</th><th>Senior Supervisor</th><th>Lead Supervisor</th><th>Corporal</th><th>Detective</th><th>Sergeant</th><th>Lieutenant</th><th>Captain</th><th>HR Assistant</th><th>Deputy Chief</th><th>Chief</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Handschellen</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☑</td><td>☑</td></tr>
+          <tr><td>Wegweisen</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☑</td><td>☑</td></tr>
+          <tr><td>Festnehmen</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☑</td><td>☑</td></tr>
+          <tr><td>Durchsuchen</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☑</td><td>☑</td></tr>
+          <tr><td>Warnen</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☑</td><td>☑</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="page5" class="page hidden app-page">
+    <div class="content-wrap panel-card">
+      <h1 class="top-title">Los Santos Police Department</h1>
+      <div id="navMount5"></div>
+      <table>
+        <thead>
+          <tr><th>Fahrzeug</th><th class="action-cell">&gt;</th><th>Rang</th><th class="action-cell">&gt;</th><th>Abteilung</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>AMG GT 20</td><td>&gt;</td><td>29 | Deputy Chief of Police</td><td>&gt;</td><td>HR</td></tr>
+        </tbody>
+      </table>
+      <button class="left-btn">Fahrzeug +</button>
+    </div>
+  </section>
+
+  <section id="page6" class="page hidden app-page">
+    <div class="content-wrap panel-card">
+      <h1 class="top-title">Los Santos Police Department</h1>
+      <div id="navMount6"></div>
+      <table>
+        <thead>
+          <tr>
+            <th>§</th><th>Regeldefinition</th><th class="action-cell">&gt;</th><th>Geldstrafe</th><th>TOW Fahrt</th><th>Human Labs</th><th>NG Runde</th><th>UpRank Sperre</th><th>Stike</th><th>Suspendierung</th><th>Kündigung</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>§1</td><td>Beleidigungen, respektlosigkeit und sonstiges niederes Verhalten</td><td>&gt;</td><td>150</td><td>10 Autos</td><td>30 min</td><td>2</td><td>2 Wochen</td><td>1</td><td>3 Tage</td><td>✓</td>
+          </tr>
+        </tbody>
+      </table>
+      <button class="left-btn">Sanktion +</button>
+    </div>
+  </section>
+
+  <section id="page7" class="page hidden app-page">
+    <div class="content-wrap">
+      <h1 class="top-title">Los Santos Police Department</h1>
+      <div id="navMount7"></div>
+      <table>
+        <thead>
+          <tr>
+            <th class="action-cell">✎</th><th>Email</th><th>Name</th><th class="action-cell">&gt;</th><th>ID</th><th class="action-cell">&gt;</th><th>Telefonnummer</th><th class="action-cell">&gt;</th><th>Dienstnummer</th><th class="action-cell">&gt;</th><th>Rang</th><th class="action-cell">&gt;</th><th>Abteilung1</th><th class="action-cell">&gt;</th><th>Abteilung2</th><th class="action-cell">&gt;</th><th>Invite</th><th class="action-cell">&gt;</th><th>Last RunkUp</th><th class="action-cell">&gt;</th><th>Urlaub</th><th class="action-cell">&gt;</th><th>Stike</th>
+          </tr>
+        </thead>
+        <tbody id="employeesTableBody"></tbody>
+      </table>
+      <button class="left-btn" onclick="addEmployee()">Mitarbeiter hinzufügen +</button>
+    </div>
+  </section>
+
+  <section id="page8" class="page hidden app-page">
+    <div class="content-wrap">
+      <h1 class="top-title">Los Santos Police Department</h1>
+      <div id="navMount8"></div>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Freigeben</th>
+            <th>Zugriffsrang</th>
+            <th>Status</th>
+            <th>Löschen</th>
+          </tr>
+        </thead>
+        <tbody id="accessRequestBody"></tbody>
+      </table>
+      <div class="small-note">Wenn bei einer registrierten Email unter Freigeben „ja“ steht, darf sich diese Person per Google anmelden.</div>
+      <button class="left-btn" onclick="addAccessEntry()">Zugriff hinzufügen +</button>
+    </div>
+  </section>
+
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js';
+    import {
+      getAuth,
+      GoogleAuthProvider,
+      signInWithPopup,
+      signOut,
+      onAuthStateChanged
+    } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
+    import {
+      getFirestore,
+      doc,
+      setDoc,
+      getDoc,
+      collection,
+      onSnapshot,
+      updateDoc,
+      query,
+      orderBy,
+      getDocs,
+      deleteDoc
+    } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js';
+
+    const firebaseConfig = {
+      apiKey: 'AIzaSyCtjm0vz5sJ8i_Jdl3HzdVmxwqcYRJa7bg',
+      authDomain: 'lspd-dasboard.firebaseapp.com',
+      projectId: 'lspd-dasboard',
+      storageBucket: 'lspd-dasboard.firebasestorage.app',
+      messagingSenderId: '759790444992',
+      appId: '1:759790444992:web:e17137ec821690aab92825',
+      measurementId: 'G-Z25G7L5X5W'
+    };
+
+    const ADMIN_EMAILS = ['h.vonwanze@gmail.com'];
+
+    const PREAPPROVED_USERS = [
+      {
+        uid: 'preapproved-admin-h-vonwanze',
+        name: 'H vonwanze',
+        email: 'H.vonwanze@gmail.com',
+        approved: true,
+        rank: 30,
+        accessLevel: 30,
+        role: 'admin',
+        employeeId: '164895',
+        phone: '16-48-950',
+        serviceNumber: '1',
+        department1: 'HR Curator',
+        department2: 'SWAT',
+        invite: 'Vorab freigegeben',
+        lastRankUp: '01.01.2026',
+        vacation: '0/3',
+        strike: '0/3',
+        createdAt: new Date().toISOString()
+      }
+    ];
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const provider = new GoogleAuthProvider();
+
+    let currentUserData = null;
+    let currentUser = null;
+
+    const navItems = [
+      { id: 'page2', label: 'LSPD Dasboard' },
+      { id: 'page3', label: 'Kleider Ordnung' },
+      { id: 'page4', label: 'Rangebfugnisse' },
+      { id: 'page5', label: 'Fahrzeugordnung' },
+      { id: 'page6', label: 'Sanktionskatalog' },
+      { id: 'page7', label: 'Mitarbeiter Register' },
+      { id: 'page8', label: 'Zugrifsanfrage' }
+    ];
+
+    function mountNav(targetId) {
+      const target = document.getElementById(targetId);
+      if (!target) return;
+      target.innerHTML = `
+        <div class="nav">
+          ${navItems.map(item => `<button data-page="${item.id}">${item.label}</button>`).join('')}
+        </div>
+        <div class="nav-separator"></div>
+      `;
+      target.querySelectorAll('button').forEach(btn => {
+        btn.addEventListener('click', () => showPage(btn.dataset.page));
+      });
+    }
+
+    ['navMount','navMount3','navMount4','navMount5','navMount6','navMount7','navMount8'].forEach(mountNav);
+
+    function showPage(pageId) {
+      document.querySelectorAll('.page').forEach(page => page.classList.add('hidden'));
+      document.getElementById(pageId).classList.remove('hidden');
+    }
+
+    function showMessage(text) {
+      document.getElementById('loginMessage').textContent = text || '';
+    }
+
+    async function ensurePreapprovedUsers() {
+      for (const user of PREAPPROVED_USERS) {
+        const ref = doc(db, 'accessRequests', user.uid);
+        await setDoc(ref, user, { merge: true });
+      }
+    }
+
+    async function findAccessByEmail(email) {
+      const snap = await getDocs(collection(db, 'accessRequests'));
+      const targetEmail = (email || '').toLowerCase();
+
+      for (const docSnap of snap.docs) {
+        const data = docSnap.data();
+        if ((data.email || '').toLowerCase() === targetEmail) {
+          return { id: docSnap.id, data };
+        }
+      }
+
+      return null;
+    }
+
+    window.registerWithGoogle = async function () {
+      try {
+        showMessage('');
+        const result = await signInWithPopup(auth, provider);
+        const user = result.user;
+        const existingByEmail = await findAccessByEmail(user.email);
+        const ref = doc(db, 'accessRequests', user.uid);
+
+        let approved = false;
+        let rank = 0;
+        let accessLevel = 0;
+        let role = 'user';
+
+        if (existingByEmail) {
+          approved = !!existingByEmail.data.approved;
+          rank = existingByEmail.data.rank ?? 0;
+          accessLevel = existingByEmail.data.accessLevel ?? 0;
+          role = existingByEmail.data.role || 'user';
+        }
+
+        const payload = {
+          uid: user.uid,
+          name: user.displayName || user.email.split('@')[0],
+          email: user.email,
+          approved,
+          rank,
+          accessLevel,
+          role,
+          employeeId: existingByEmail?.data?.employeeId || '164895',
+          phone: existingByEmail?.data?.phone || '16-48-950',
+          serviceNumber: existingByEmail?.data?.serviceNumber || '1',
+          department1: existingByEmail?.data?.department1 || 'HR Curator',
+          department2: existingByEmail?.data?.department2 || 'SWAT',
+          invite: existingByEmail?.data?.invite || 'Google Registrierung',
+          lastRankUp: existingByEmail?.data?.lastRankUp || '01.01.2026',
+          vacation: existingByEmail?.data?.vacation || '0/3',
+          strike: existingByEmail?.data?.strike || '0/3',
+          createdAt: existingByEmail?.data?.createdAt || new Date().toISOString()
+        };
+
+        await setDoc(ref, payload, { merge: true });
+
+        if (approved) {
+          renderPersonalData(payload, user);
+          if (isAdmin(user.email)) {
+            showPage('page8');
+          } else {
+            showPage('page2');
+          }
+        } else {
+          showMessage('Registrierung gespeichert. Ein Admin muss dich freigeben.');
+          await signOut(auth);
+        }
+      } catch (error) {
+        console.error(error);
+        showMessage('Google Registrierung fehlgeschlagen. Nutze localhost und prüfe die freigegebene Domain in Firebase.');
+      }
+    };
+
+    window.loginWithGoogle = async function () {
+      try {
+        showMessage('');
+        const result = await signInWithPopup(auth, provider);
+        const user = result.user;
+        const ref = doc(db, 'accessRequests', user.uid);
+        let snap = await getDoc(ref);
+
+        if (!snap.exists()) {
+          const existingByEmail = await findAccessByEmail(user.email);
+          if (existingByEmail) {
+            await setDoc(ref, {
+              ...existingByEmail.data,
+              uid: user.uid,
+              name: user.displayName || existingByEmail.data.name || user.email.split('@')[0],
+              email: user.email
+            }, { merge: true });
+            snap = await getDoc(ref);
+          }
+        }
+
+        if (!snap.exists()) {
+          showMessage('Du bist noch nicht registriert. Bitte zuerst registrieren.');
+          await signOut(auth);
+          return;
+        }
+
+        const data = snap.data();
+
+        if (isAdmin(user.email)) {
+          currentUserData = data;
+          renderPersonalData(data, user);
+          showPage('page8');
+          return;
+        }
+
+        if (!data.approved) {
+          showMessage('Dein Zugriff wurde noch nicht freigegeben.');
+          await signOut(auth);
+          return;
+        }
+
+        currentUserData = data;
+        renderPersonalData(data, user);
+        showPage('page2');
+      } catch (error) {
+        console.error(error);
+        showMessage('Google Anmeldung fehlgeschlagen. Nutze localhost und prüfe die freigegebene Domain in Firebase.');
+      }
+    };
+
+    function renderPersonalData(data, user) {
+      const personalData = [
+        ['Name:', data.name || '-'],
+        ['ID:', data.employeeId || '164895'],
+        ['Telefonnummer:', data.phone || '16-48-950'],
+        ['Dienstnummer', data.serviceNumber || '1'],
+        ['Rang:', `${data.rank ?? 0} | ${rankLabel(data.rank ?? 0)}`],
+        ['Abteilung 1:', data.department1 || 'HR Curator'],
+        ['Abteilung 2:', data.department2 || 'SWAT'],
+        ['Invite', data.invite || 'Datum'],
+        ['Last RunkUp', data.lastRankUp || '01.01.2026'],
+        ['Urlaub', data.vacation || '0/3'],
+        ['Stike', data.strike || '0/3']
+      ];
+
+      const grid = document.getElementById('personalDataGrid');
+      grid.innerHTML = personalData.map(([k, v]) => `<div>${k}</div><div>${v}</div>`).join('');
+      document.getElementById('welcomeBox').textContent = `Angemeldet als ${user.email}`;
+    }
+
+    function rankLabel(rank) {
+      const labels = {
+        0: 'Cadet', 1: 'Rookie', 2: 'Officer I', 3: 'Officer II', 4: 'Officer Fist Class', 5: 'Supervising Officer',
+        6: 'Senior Supervisor', 7: 'Lead Supervisor', 8: 'Corporal', 9: 'Detective', 10: 'Sergeant', 11: 'Lieutenant',
+        12: 'Captain', 13: 'HR Assistant', 14: 'Special Police Officer', 15: 'Press Association', 16: 'Internet Supervisor',
+        17: 'S.W.A.T Captain', 18: 'UI Investigator', 19: 'HR Coordinator', 20: 'Police Inspector', 21: 'Police Command',
+        22: 'Chief of Department', 23: 'Interims Chief', 24: 'Assistant Chief of Police', 25: 'Deputy Chief of Police',
+        26: 'Chief of Police', 27: 'Chief+', 28: 'Command+', 29: 'Deputy Chief of Police', 30: 'Chief of Police'
+      };
+      return labels[rank] || `Rang ${rank}`;
+    }
+
+    function isAdmin(email) {
+      return (email || '').toLowerCase() === 'h.vonwanze@gmail.com';
+    }
+
+    window.addAccessEntry = async function () {
+      if (!currentUser || !isAdmin(currentUser.email)) return;
+
+      const email = prompt('Email eingeben:');
+      if (!email) return;
+
+      const name = prompt('Name eingeben:', email.split('@')[0] || '') || email.split('@')[0] || '-';
+      const accessLevelInput = prompt('Zugriffsrang eingeben (0 bis 30):', '0');
+      if (accessLevelInput === null) return;
+
+      const accessLevel = Math.max(0, Math.min(30, Number(accessLevelInput) || 0));
+      const existing = await findAccessByEmail(email);
+      const docId = existing?.id || `manual-${Date.now()}`;
+      const existingData = existing?.data || {};
+
+      await setDoc(doc(db, 'accessRequests', docId), {
+        uid: existingData.uid || docId,
+        name,
+        email,
+        approved: true,
+        rank: existingData.rank ?? 0,
+        accessLevel,
+        role: accessLevel >= 30 ? 'admin' : (existingData.role || 'user'),
+        employeeId: existingData.employeeId || '164895',
+        phone: existingData.phone || '16-48-950',
+        serviceNumber: existingData.serviceNumber || '1',
+        department1: existingData.department1 || 'HR Curator',
+        department2: existingData.department2 || 'SWAT',
+        invite: existingData.invite || 'Manuell freigegeben',
+        lastRankUp: existingData.lastRankUp || '01.01.2026',
+        vacation: existingData.vacation || '0/3',
+        strike: existingData.strike || '0/3',
+        createdAt: existingData.createdAt || new Date().toISOString()
+      }, { merge: true });
+    };
+
+    window.addEmployee = async function () {
+      if (!currentUser || !isAdmin(currentUser.email)) return;
+
+      const email = prompt('Email eingeben:');
+      if (!email) return;
+
+      const name = prompt('Name eingeben:', '') || '-';
+      const employeeId = prompt('ID eingeben:', '164895');
+      if (employeeId === null) return;
+      const phone = prompt('Telefonnummer eingeben:', '16-48-950');
+      if (phone === null) return;
+      const serviceNumber = prompt('Dienstnummer eingeben:', '1');
+      if (serviceNumber === null) return;
+      const rankInput = prompt('Mitarbeiter-Rang eingeben:', '0');
+      if (rankInput === null) return;
+      const department1 = prompt('Abteilung 1 eingeben:', 'HR Curator');
+      if (department1 === null) return;
+      const department2 = prompt('Abteilung 2 eingeben:', 'SWAT');
+      if (department2 === null) return;
+      const invite = prompt('Invite eingeben:', 'Manuell hinzugefügt');
+      if (invite === null) return;
+      const lastRankUp = prompt('Last RunkUp eingeben:', '01.01.2026');
+      if (lastRankUp === null) return;
+      const vacation = prompt('Urlaub eingeben:', '0/3');
+      if (vacation === null) return;
+      const strike = prompt('Stike eingeben:', '0/3');
+      if (strike === null) return;
+
+      const existing = await findAccessByEmail(email);
+      const docId = existing?.id || `employee-${Date.now()}`;
+      const existingData = existing?.data || {};
+
+      await setDoc(doc(db, 'accessRequests', docId), {
+        uid: existingData.uid || docId,
+        name,
+        email,
+        approved: true,
+        rank: Number(rankInput) || 0,
+        accessLevel: existingData.accessLevel ?? 0,
+        role: existingData.role || 'user',
+        employeeId,
+        phone,
+        serviceNumber,
+        department1,
+        department2,
+        invite,
+        lastRankUp,
+        vacation,
+        strike,
+        createdAt: existingData.createdAt || new Date().toISOString()
+      }, { merge: true });
+    };
+
+    window.editEmployee = async function (id) {
+      if (!currentUser || !isAdmin(currentUser.email)) return;
+
+      const ref = doc(db, 'accessRequests', id);
+      const snap = await getDoc(ref);
+      if (!snap.exists()) return;
+      const item = snap.data();
+
+      const email = prompt('Email bearbeiten:', item.email || '');
+      if (email === null) return;
+      const name = prompt('Name bearbeiten:', item.name || '');
+      if (name === null) return;
+      const employeeId = prompt('ID bearbeiten:', item.employeeId || '164895');
+      if (employeeId === null) return;
+      const phone = prompt('Telefonnummer bearbeiten:', item.phone || '16-48-950');
+      if (phone === null) return;
+      const serviceNumber = prompt('Dienstnummer bearbeiten:', item.serviceNumber || '1');
+      if (serviceNumber === null) return;
+      const rankInput = prompt('Mitarbeiter-Rang bearbeiten:', String(item.rank ?? 0));
+      if (rankInput === null) return;
+      const department1 = prompt('Abteilung 1 bearbeiten:', item.department1 || 'HR Curator');
+      if (department1 === null) return;
+      const department2 = prompt('Abteilung 2 bearbeiten:', item.department2 || 'SWAT');
+      if (department2 === null) return;
+      const invite = prompt('Invite bearbeiten:', item.invite || '');
+      if (invite === null) return;
+      const lastRankUp = prompt('Last RunkUp bearbeiten:', item.lastRankUp || '01.01.2026');
+      if (lastRankUp === null) return;
+      const vacation = prompt('Urlaub bearbeiten:', item.vacation || '0/3');
+      if (vacation === null) return;
+      const strike = prompt('Stike bearbeiten:', item.strike || '0/3');
+      if (strike === null) return;
+
+      await updateDoc(ref, {
+        email,
+        name,
+        employeeId,
+        phone,
+        serviceNumber,
+        rank: Number(rankInput) || 0,
+        department1,
+        department2,
+        invite,
+        lastRankUp,
+        vacation,
+        strike
+      });
+    };
+
+    window.deleteAccessRequest = async function (id) {
+      if (!currentUser || !isAdmin(currentUser.email)) return;
+      await deleteDoc(doc(db, 'accessRequests', id));
+    };
+
+    function subscribeAccessRequests() {
+      const q = query(collection(db, 'accessRequests'), orderBy('createdAt', 'desc'));
+      onSnapshot(q, (snapshot) => {
+        const body = document.getElementById('accessRequestBody');
+        body.innerHTML = '';
+        const seenEmails = new Set();
+
+        snapshot.forEach((docSnap) => {
+          const item = docSnap.data();
+          const emailKey = (item.email || '').toLowerCase();
+
+          if (seenEmails.has(emailKey)) return;
+          seenEmails.add(emailKey);
+
+          const tr = document.createElement('tr');
+          const disabled = currentUser && isAdmin(currentUser.email) ? '' : 'disabled';
+          const status = item.approved ? 'Freigegeben' : 'Wartet';
+
+          tr.innerHTML = `
+            <td>${item.name || '-'}</td>
+            <td>${item.email || '-'}</td>
+            <td class="request-controls">
+              <select data-type="approved" data-id="${docSnap.id}" ${disabled}>
+                <option value="false" ${!item.approved ? 'selected' : ''}>nein</option>
+                <option value="true" ${item.approved ? 'selected' : ''}>ja</option>
+              </select>
+            </td>
+            <td class="request-controls">
+              <select data-type="accessLevel" data-id="${docSnap.id}" ${disabled}>
+                ${Array.from({ length: 31 }, (_, i) => `<option value="${i}" ${(item.accessLevel ?? 0) === i ? 'selected' : ''}>${i}</option>`).join('')}
+              </select>
+            </td>
+            <td><span class="status-pill ${item.approved ? 'yes' : 'pending'}">${status}</span></td>
+            <td><button class="delete-btn" data-delete-id="${docSnap.id}" ${disabled}>Löschen</button></td>
+          `;
+          body.appendChild(tr);
+        });
+
+        body.querySelectorAll('select').forEach(select => {
+          select.addEventListener('change', async (e) => {
+            if (!currentUser || !isAdmin(currentUser.email)) return;
+            const id = e.target.dataset.id;
+            const type = e.target.dataset.type;
+            const ref = doc(db, 'accessRequests', id);
+
+            if (type === 'approved') {
+              await updateDoc(ref, { approved: e.target.value === 'true' });
+            }
+
+            if (type === 'accessLevel') {
+              await updateDoc(ref, { accessLevel: Number(e.target.value) });
+            }
+          });
+        });
+
+        body.querySelectorAll('[data-delete-id]').forEach(btn => {
+          btn.addEventListener('click', () => deleteAccessRequest(btn.dataset.deleteId));
+        });
+      });
+    }
+
+    function subscribeEmployees() {
+      const q = query(collection(db, 'accessRequests'), orderBy('createdAt', 'desc'));
+      onSnapshot(q, (snapshot) => {
+        const tbody = document.getElementById('employeesTableBody');
+        tbody.innerHTML = '';
+        const seenEmails = new Set();
+
+        snapshot.forEach((docSnap) => {
+          const item = docSnap.data();
+          const emailKey = (item.email || '').toLowerCase();
+
+          if (!item.approved) return;
+          if (seenEmails.has(emailKey)) return;
+          seenEmails.add(emailKey);
+
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td><button class="icon-btn" data-edit-id="${docSnap.id}">✎</button></td>
+            <td>${item.email || '-'}</td>
+            <td>${item.name || '-'}</td><td>&gt;</td>
+            <td>${item.employeeId || '164895'}</td><td>&gt;</td>
+            <td>${item.phone || '16-48-950'}</td><td>&gt;</td>
+            <td>${item.serviceNumber || '1'}</td><td>&gt;</td>
+            <td>${item.rank ?? 0} | ${rankLabel(item.rank ?? 0)}</td><td>&gt;</td>
+            <td>${item.department1 || 'HR Curator'}</td><td>&gt;</td>
+            <td>${item.department2 || 'Swat'}</td><td>&gt;</td>
+            <td>${item.invite || 'Email'}</td><td>&gt;</td>
+            <td>${item.lastRankUp || 'Prüfungen'}</td><td>&gt;</td>
+            <td>${item.vacation || '0'}</td><td>&gt;</td>
+            <td>${item.strike || '0'}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+
+        tbody.querySelectorAll('[data-edit-id]').forEach(btn => {
+          btn.addEventListener('click', () => editEmployee(btn.dataset.editId));
+        });
+      });
+    }
+
+    window.logout = async function () {
+      await signOut(auth);
+      currentUser = null;
+      currentUserData = null;
+      showMessage('');
+      showPage('page1');
+    };
+
+    onAuthStateChanged(auth, async (user) => {
+      currentUser = user || null;
+
+      if (!user) {
+        showPage('page1');
+        return;
+      }
+
+      const ref = doc(db, 'accessRequests', user.uid);
+      let snap = await getDoc(ref);
+
+      if (!snap.exists()) {
+        const existingByEmail = await findAccessByEmail(user.email);
+        if (existingByEmail) {
+          await setDoc(ref, {
+            ...existingByEmail.data,
+            uid: user.uid,
+            name: user.displayName || existingByEmail.data.name || user.email.split('@')[0],
+            email: user.email
+          }, { merge: true });
+          snap = await getDoc(ref);
+        }
+      }
+
+      if (!snap.exists()) {
+        showPage('page1');
+        return;
+      }
+
+      const data = snap.data();
+      currentUserData = data;
+      renderPersonalData(data, user);
+
+      if (isAdmin(user.email)) {
+        showPage('page8');
+      } else if (data.approved) {
+        showPage('page2');
+      } else {
+        showPage('page1');
+      }
+    });
+
+    subscribeAccessRequests();
+    subscribeEmployees();
+    ensurePreapprovedUsers();
+  </script>
+</body>
+</html>
