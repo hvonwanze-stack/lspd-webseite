@@ -699,6 +699,9 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
     const provider = new GoogleAuthProvider();
+    provider.setCustomParameters({
+      prompt: 'select_account'
+    });
 
     let currentUserData = null;
     let currentUser = null;
@@ -838,6 +841,7 @@
     window.registerWithGoogle = async function () {
       try {
         showMessage('');
+        await signOut(auth);
         const result = await signInWithPopup(auth, provider);
         const user = result.user;
         const existingByEmail = await findAccessByEmail(user.email);
@@ -898,6 +902,7 @@
     window.loginWithGoogle = async function () {
       try {
         showMessage('');
+        await signOut(auth);
         const result = await signInWithPopup(auth, provider);
         const user = result.user;
         const ref = doc(db, 'accessRequests', user.uid);
