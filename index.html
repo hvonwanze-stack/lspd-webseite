@@ -413,6 +413,85 @@
 
     .full-width { grid-column: 1 / -1; }
 
+    .rank-list-wrap {
+      max-width: 1850px;
+      margin: 0 auto;
+    }
+
+    .rank-list-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      color: #fff;
+      background: rgba(60,60,60,0.9);
+    }
+
+    .rank-list-table th,
+    .rank-list-table td {
+      border: 1px solid #111;
+      padding: 4px 6px;
+      text-align: center;
+      white-space: nowrap;
+      vertical-align: middle;
+    }
+
+    .rank-list-table th {
+      background: #0f2f5f;
+      font-weight: bold;
+    }
+
+    .rank-group-header td {
+      background: #0f2f5f;
+      color: #fff;
+      font-weight: bold;
+      text-align: left;
+      padding: 6px 10px;
+      font-size: 13px;
+    }
+
+    .rank-main-cell {
+      font-weight: bold;
+      min-width: 170px;
+      color: #fff;
+    }
+
+    .rank-empty-row td {
+      background: rgba(80,80,80,0.75);
+      color: #cfcfcf;
+    }
+
+    .rank-30, .rank-29, .rank-28 { background: #d11c1c; }
+    .rank-27, .rank-26, .rank-25, .rank-24 { background: #2f6fd6; }
+    .rank-23, .rank-22, .rank-21, .rank-20, .rank-19 { background: #3c1a78; }
+    .rank-18, .rank-17 { background: #d61ce0; color: #000; }
+    .rank-16, .rank-15, .rank-14, .rank-13, .rank-12, .rank-11 { background: #d68c00; color: #000; }
+    .rank-10, .rank-9, .rank-8, .rank-7, .rank-6, .rank-5 { background: #00c91b; color: #000; }
+    .rank-4 { background: #1bbec9; color: #000; }
+    .rank-3 { background: #9fc5e8; color: #000; }
+    .rank-2 { background: #6fa8dc; }
+    .rank-1 { background: #ff1a1a; }
+
+    .division-cell {
+      font-weight: bold;
+    }
+
+    .division-leadership { background: #c00000; }
+    .division-highcommand { background: #3d85c6; }
+    .division-department { background: #351c75; }
+    .division-media { background: #ff00ff; color: #000; }
+    .division-command { background: #f1a300; color: #000; }
+    .division-officer { background: #00d11a; color: #000; }
+    .division-rookie { background: #1bbec9; color: #000; }
+    .division-tow { background: #9fc5e8; color: #000; }
+    .division-suspended { background: #ff1a1a; }
+
+    .mini-checkbox {
+      width: 14px;
+      height: 14px;
+      accent-color: #fff;
+      pointer-events: none;
+    }
+
     @media (max-width: 1000px) {
       .logo-wrap { flex-direction: column; }
       .logo-line { font-size: 40px; text-align: center; }
@@ -581,17 +660,47 @@
 
   <!-- Seite 7 -->
   <section id="page7" class="page hidden app-page">
-    <div class="content-wrap">
+    <div class="rank-list-wrap">
       <h1 class="top-title">Los Santos Police Department</h1>
       <div id="navMount7"></div>
-      <table>
+
+      <table class="rank-list-table">
         <thead>
           <tr>
-            <th>Email</th><th>Bearbeiten</th><th>Name</th><th class="action-cell">&gt;</th><th>ID</th><th class="action-cell">&gt;</th><th>Telefonnummer</th><th class="action-cell">&gt;</th><th>Dienstnummer</th><th class="action-cell">&gt;</th><th>Rang</th><th class="action-cell">&gt;</th><th>Abteilung1</th><th class="action-cell">&gt;</th><th>Abteilung2</th><th class="action-cell">&gt;</th><th>Invite</th><th class="action-cell">&gt;</th><th>Last RunkUp</th><th class="action-cell">&gt;</th><th>Urlaub</th><th class="action-cell">&gt;</th><th>Stike</th>
+            <th>ID</th>
+            <th>DN</th>
+            <th>Name</th>
+            <th>Tel. Nr.</th>
+            <th>Rang</th>
+            <th>Division</th>
+            <th>Urlaub</th>
+            <th>Strike</th>
+            <th>Invite Date</th>
+            <th>Last RankUp</th>
+            <th>Abteilung 1</th>
+            <th>Abteilung 2</th>
+            <th>GA</th>
+            <th>EHK</th>
+            <th>ES</th>
+            <th>Officer</th>
+            <th>OK</th>
+            <th>FULA</th>
+            <th>TST</th>
+            <th>KS</th>
+            <th>OK+</th>
+            <th>FT</th>
+            <th>COP</th>
+            <th>JP</th>
+            <th>ZP</th>
+            <th>VHP</th>
+            <th>TOW/BL</th>
+            <th>AKS</th>
+            <th>Bearbeiten</th>
           </tr>
         </thead>
         <tbody id="employeesTableBody"></tbody>
       </table>
+
       <button class="left-btn" id="addEmployeeBtn">Mitarbeiter hinzufügen +</button>
     </div>
   </section>
@@ -832,34 +941,34 @@
     function rankLabel(rank) {
       const labels = {
         0: 'Cadet',
-        1: 'Rookie',
-        2: 'Officer I',
-        3: 'Officer II',
-        4: 'Officer Fist Class',
-        5: 'Supervising Officer',
-        6: 'Senior Supervisor',
-        7: 'Lead Supervisor',
-        8: 'Corporal',
-        9: 'Detective',
-        10: 'Sergeant',
-        11: 'Lieutenant',
-        12: 'Captain',
-        13: 'HR Assistant',
-        14: 'Special Police Officer',
-        15: 'Press Association',
-        16: 'Internet Supervisor',
-        17: 'S.W.A.T Captain',
-        18: 'UI Investigator',
-        19: 'HR Coordinator',
-        20: 'Police Inspector',
-        21: 'Police Command',
-        22: 'Chief of Department',
-        23: 'Interims Chief',
-        24: 'Assistant Chief of Police',
-        25: 'Deputy Chief of Police',
-        26: 'Chief of Police',
-        27: 'Chief+',
-        28: 'Command+',
+        1: 'Suspended',
+        2: 'Cadet',
+        3: 'TOW Officer',
+        4: 'Rookie',
+        5: 'Officer I',
+        6: 'Officer II',
+        7: 'Officer Fist Class',
+        8: 'Supervising Officer',
+        9: 'Senior Supervisor',
+        10: 'Lead Supervisor',
+        11: 'Corporal',
+        12: 'Detective',
+        13: 'Sergeant',
+        14: 'Lieutenant',
+        15: 'Captain',
+        16: 'Commander',
+        17: 'Special Police Officer',
+        18: 'Enforcement Supervisor',
+        19: 'S.W.A.T Captain',
+        20: 'HR Coordinator',
+        21: 'IU Investigator',
+        22: 'Police Inspector',
+        23: 'Police Commander',
+        24: 'Deputy Chief of Department',
+        25: 'Deputy Chief of Department',
+        26: 'Chief of Department',
+        27: 'Advising Chief of Police',
+        28: 'Assistant Chief of Police',
         29: 'Deputy Chief of Police',
         30: 'Chief of Police'
       };
@@ -1219,47 +1328,175 @@
       });
     }
 
+    function getDivisionLabel(rank) {
+      const r = Number(rank || 0);
+
+      if (r >= 28) return 'Leadership';
+      if (r >= 24) return 'High Command';
+      if (r >= 19) return 'Department';
+      if (r === 17 || r === 18) return 'Media';
+      if (r >= 11 && r <= 16) return 'Command';
+      if (r >= 4 && r <= 10) return 'Officer';
+      if (r === 3) return 'Tow Officer';
+      if (r === 2) return 'Cadet';
+      return 'Suspended';
+    }
+
+    function getDivisionClass(rank) {
+      const r = Number(rank || 0);
+
+      if (r >= 28) return 'division-leadership';
+      if (r >= 24) return 'division-highcommand';
+      if (r >= 19) return 'division-department';
+      if (r === 17 || r === 18) return 'division-media';
+      if (r >= 11 && r <= 16) return 'division-command';
+      if (r >= 4 && r <= 10) return 'division-officer';
+      if (r === 3) return 'division-tow';
+      if (r === 2) return 'division-rookie';
+      return 'division-suspended';
+    }
+
+    function hasTraining(item, key) {
+      return !!item?.trainings?.[key];
+    }
+
+    function createTrainingCell(item, key) {
+      return `<td><input class="mini-checkbox" type="checkbox" ${hasTraining(item, key) ? 'checked' : ''} disabled></td>`;
+    }
+
+    function createEmptyRankRow(rank) {
+      return `
+        <tr class="rank-empty-row">
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td class="rank-main-cell rank-${rank}">${rank} | ${rankLabel(rank)}</td>
+          <td class="division-cell ${getDivisionClass(rank)}">${getDivisionLabel(rank)}</td>
+          <td>0/3</td>
+          <td>0/3</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td><input class="mini-checkbox" type="checkbox" disabled></td>
+          <td><input class="mini-checkbox" type="checkbox" disabled></td>
+          <td><input class="mini-checkbox" type="checkbox" disabled></td>
+          <td><input class="mini-checkbox" type="checkbox" disabled></td>
+          <td><input class="mini-checkbox" type="checkbox" disabled></td>
+          <td><input class="mini-checkbox" type="checkbox" disabled></td>
+          <td><input class="mini-checkbox" type="checkbox" disabled></td>
+          <td><input class="mini-checkbox" type="checkbox" disabled></td>
+          <td><input class="mini-checkbox" type="checkbox" disabled></td>
+          <td><input class="mini-checkbox" type="checkbox" disabled></td>
+          <td><input class="mini-checkbox" type="checkbox" disabled></td>
+          <td><input class="mini-checkbox" type="checkbox" disabled></td>
+          <td><input class="mini-checkbox" type="checkbox" disabled></td>
+          <td><input class="mini-checkbox" type="checkbox" disabled></td>
+          <td><input class="mini-checkbox" type="checkbox" disabled></td>
+          <td><input class="mini-checkbox" type="checkbox" disabled></td>
+          <td>-</td>
+        </tr>
+      `;
+    }
+
+    function createEmployeeRankRow(item, docId, editDisabled) {
+      const personalRank = Math.max(1, Math.min(30, getPersonalRank(item) || 1));
+      const inviteDate = item.createdAt
+        ? new Date(item.createdAt).toLocaleDateString('de-DE')
+        : '01.04.2026';
+
+      return `
+        <tr>
+          <td>${item.employeeId || '-'}</td>
+          <td>${item.serviceNumber || '-'}</td>
+          <td>${item.name || '-'}</td>
+          <td>${item.phone || '-'}</td>
+          <td class="rank-main-cell rank-${personalRank}">${personalRank} | ${rankLabel(personalRank)}</td>
+          <td class="division-cell ${getDivisionClass(personalRank)}">${getDivisionLabel(personalRank)}</td>
+          <td>${item.vacation || '0/3'}</td>
+          <td>${item.strike || '0/3'}</td>
+          <td>${inviteDate}</td>
+          <td>${item.lastRankUp || '01.04.2026'}</td>
+          <td>${item.department1 || '-'}</td>
+          <td>${item.department2 || '-'}</td>
+          ${createTrainingCell(item, 'GA')}
+          ${createTrainingCell(item, 'EHK')}
+          ${createTrainingCell(item, 'ES')}
+          ${createTrainingCell(item, 'Officer')}
+          ${createTrainingCell(item, 'OK')}
+          ${createTrainingCell(item, 'FULA')}
+          ${createTrainingCell(item, 'TST')}
+          ${createTrainingCell(item, 'KS')}
+          ${createTrainingCell(item, 'OKPLUS')}
+          ${createTrainingCell(item, 'FT')}
+          ${createTrainingCell(item, 'COP')}
+          ${createTrainingCell(item, 'JP')}
+          ${createTrainingCell(item, 'ZP')}
+          ${createTrainingCell(item, 'VHP')}
+          ${createTrainingCell(item, 'TOWBL')}
+          ${createTrainingCell(item, 'AKS')}
+          <td>
+            <button class="icon-btn" data-edit-id="${docId}" ${editDisabled}>✎</button>
+          </td>
+        </tr>
+      `;
+    }
+
     function subscribeEmployees() {
       const q = query(collection(db, 'accessRequests'), orderBy('createdAt', 'desc'));
+
       onSnapshot(q, (snapshot) => {
         const tbody = document.getElementById('employeesTableBody');
         tbody.innerHTML = '';
+
+        const groupedByRank = {};
+        for (let rank = 1; rank <= 30; rank++) {
+          groupedByRank[rank] = [];
+        }
+
         const seenEmails = new Set();
 
         snapshot.forEach((docSnap) => {
           const item = docSnap.data();
           const emailKey = (item.email || '').toLowerCase();
+
           if (!item.approved) return;
           if (seenEmails.has(emailKey)) return;
           seenEmails.add(emailKey);
 
-          const tr = document.createElement('tr');
-          const personalRank = getPersonalRank(item);
-          const editDisabled = currentUser && isAdmin(currentUser.email) ? '' : 'disabled';
+          const personalRank = Math.max(1, Math.min(30, getPersonalRank(item) || 1));
+          groupedByRank[personalRank].push({
+            id: docSnap.id,
+            data: item
+          });
+        });
 
-          tr.innerHTML = `
-            <td>${item.email || '-'}</td>
-            <td>
-              <button class="icon-btn" data-edit-id="${docSnap.id}" ${editDisabled}>✎</button>
-            </td>
-            <td>${item.name || '-'}</td><td>&gt;</td>
-            <td>${item.employeeId || '164895'}</td><td>&gt;</td>
-            <td>${item.phone || '16-48-950'}</td><td>&gt;</td>
-            <td>${item.serviceNumber || '1'}</td><td>&gt;</td>
-            <td>${personalRank} | ${rankLabel(personalRank)}</td><td>&gt;</td>
-            <td>${item.department1 || 'HR Curator'}</td><td>&gt;</td>
-            <td>${item.department2 || 'Swat'}</td><td>&gt;</td>
-            <td>${item.invite || 'Email'}</td><td>&gt;</td>
-            <td>${item.lastRankUp || 'Prüfungen'}</td><td>&gt;</td>
-            <td>${item.vacation || '0'}</td><td>&gt;</td>
-            <td>${item.strike || '0'}</td>
+        for (let rank = 30; rank >= 1; rank--) {
+          tbody.innerHTML += `
+            <tr class="rank-group-header">
+              <td colspan="29">Rang ${rank} | ${rankLabel(rank)}</td>
+            </tr>
           `;
-          tbody.appendChild(tr);
 
-          const editBtn = tr.querySelector('[data-edit-id]');
-          if (editBtn) {
-            editBtn.addEventListener('click', () => openEmployeeModal(item, docSnap.id));
+          if (!groupedByRank[rank].length) {
+            tbody.innerHTML += createEmptyRankRow(rank);
+            continue;
           }
+
+          groupedByRank[rank].forEach(entry => {
+            const editDisabled = currentUser && isAdmin(currentUser.email) ? '' : 'disabled';
+            tbody.innerHTML += createEmployeeRankRow(entry.data, entry.id, editDisabled);
+          });
+        }
+
+        tbody.querySelectorAll('[data-edit-id]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const rowId = btn.dataset.editId;
+            const found = snapshot.docs.find(docItem => docItem.id === rowId);
+            if (!found) return;
+            openEmployeeModal(found.data(), rowId);
+          });
         });
       });
     }
