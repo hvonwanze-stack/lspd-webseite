@@ -29,6 +29,27 @@
 
     .hidden { display: none !important; }
 
+    body.auth-loading .page {
+      display: none !important;
+    }
+
+    #authLoadingScreen {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 99999;
+      font-size: 28px;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body:not(.auth-loading) #authLoadingScreen {
+      display: none;
+    }
+
     .page {
       min-height: 100vh;
       padding: 20px;
@@ -402,7 +423,9 @@
     }
   </style>
 </head>
-<body>
+<body class="auth-loading">
+  <div id="authLoadingScreen">Lädt...</div>
+
   <!-- Seite 1 -->
   <section id="page1" class="page login-page">
     <div class="logo-wrap">
@@ -648,7 +671,7 @@
 
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js';
-    import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
+    import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
     import {
       getFirestore,
       doc,
@@ -703,6 +726,8 @@
       prompt: 'select_account'
     });
 
+    await setPersistence(auth, browserLocalPersistence);
+
     let currentUserData = null;
     let currentUser = null;
     let editingEmployeeId = null;
@@ -750,6 +775,10 @@
 
     function clearLastPage() {
       localStorage.removeItem(LAST_PAGE_KEY);
+    }
+
+    function finishAuthCheck() {
+      document.body.classList.remove('auth-loading');
     }
 
     function showPage(pageId, options = {}) {
@@ -1242,6 +1271,7 @@
       showMessage('');
       clearLastPage();
       showPage('page1', { save: false });
+      finishAuthCheck();
     };
 
     document.getElementById('addEmployeeBtn').addEventListener('click', () => {
@@ -1257,45 +1287,55 @@
     populateAccessRankSelect(document.getElementById('accessRank'), 0);
 
     onAuthStateChanged(auth, async (user) => {
-      currentUser = user || null;
+      try {
+        currentUser = user || null;
 
-      if (!user) {
-        showPage('page1', { save: false });
-        return;
-      }
-
-      const ref = doc(db, 'accessRequests', user.uid);
-      let snap = await getDoc(ref);
-
-      if (!snap.exists()) {
-        const existingByEmail = await findAccessByEmail(user.email);
-        if (existingByEmail) {
-          await setDoc(ref, {
-            ...existingByEmail.data,
-            uid: user.uid,
-            name: user.displayName || existingByEmail.data.name || user.email.split('@')[0],
-            email: user.email
-          }, { merge: true });
-          snap = await getDoc(ref);
+        if (!user) {
+          showPage('page1', { save: false });
+          finishAuthCheck();
+          return;
         }
-      }
 
-      if (!snap.exists()) {
+        const ref = doc(db, 'accessRequests', user.uid);
+        let snap = await getDoc(ref);
+
+        if (!snap.exists()) {
+          const existingByEmail = await findAccessByEmail(user.email);
+          if (existingByEmail) {
+            await setDoc(ref, {
+              ...existingByEmail.data,
+              uid: user.uid,
+              name: user.displayName || existingByEmail.data.name || user.email.split('@')[0],
+              email: user.email
+            }, { merge: true });
+            snap = await getDoc(ref);
+          }
+        }
+
+        if (!snap.exists()) {
+          showPage('page1', { save: false });
+          finishAuthCheck();
+          return;
+        }
+
+        const data = snap.data();
+        currentUserData = data;
+        renderPersonalData(data, user);
+
+        if (!data.approved && !isAdmin(user.email, data)) {
+          showPage('page1', { save: false });
+          finishAuthCheck();
+          return;
+        }
+
+        const lastPage = getLastPage();
+        showPage(lastPage, { save: false });
+        finishAuthCheck();
+      } catch (error) {
+        console.error('Fehler beim Wiederherstellen der Sitzung:', error);
         showPage('page1', { save: false });
-        return;
+        finishAuthCheck();
       }
-
-      const data = snap.data();
-      currentUserData = data;
-      renderPersonalData(data, user);
-
-      if (!data.approved && !isAdmin(user.email, data)) {
-        showPage('page1', { save: false });
-        return;
-      }
-
-      const lastPage = getLastPage();
-      showPage(lastPage, { save: false });
     });
 
     subscribeAccessRequests();
