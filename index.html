@@ -581,8 +581,8 @@
       <table>
         <thead>
           <tr>
-            <th>Name</th>
             <th>Bearbeiten</th>
+            <th>Name</th>
             <th>Email</th>
             <th>Freigeben</th>
             <th>Zugriffsrang</th>
@@ -1112,10 +1112,10 @@
           const accessRank = getWebsiteAccessRank(item);
 
           tr.innerHTML = `
-            <td>${item.name || '-'}</td>
             <td>
               <button class="icon-btn" data-access-edit-id="${docSnap.id}" ${disabled}>✎</button>
             </td>
+            <td>${item.name || '-'}</td>
             <td>${item.email || '-'}</td>
             <td class="request-controls">
               <select data-type="approved" data-id="${docSnap.id}" ${disabled}>
