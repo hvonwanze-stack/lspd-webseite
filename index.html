@@ -614,53 +614,53 @@
           <div class="training-grid">
             <div class="training-card">
               <h4 class="bg-green">Für Rookie</h4>
-              <div class="mini-row"><div class="bg-green"><input type="checkbox" disabled></div><div class="bg-green">GA</div></div>
-              <div class="mini-row"><div class="bg-green"><input type="checkbox" disabled></div><div class="bg-green">EHK</div></div>
+              <div class="mini-row"><div class="bg-green"><input data-training="GA" type="checkbox" disabled></div><div class="bg-green">GA</div></div>
+              <div class="mini-row"><div class="bg-green"><input data-training="EHK" type="checkbox" disabled></div><div class="bg-green">EHK</div></div>
             </div>
             <div class="training-card">
               <h4 class="bg-gold">Für Officer</h4>
-              <div class="mini-row"><div class="bg-gold"><input type="checkbox" disabled></div><div class="bg-gold">ES</div></div>
-              <div class="mini-row"><div class="bg-gold"><input type="checkbox" disabled></div><div class="bg-gold">OP</div></div>
+              <div class="mini-row"><div class="bg-gold"><input data-training="ES" type="checkbox" disabled></div><div class="bg-gold">ES</div></div>
+              <div class="mini-row"><div class="bg-gold"><input data-training="Officer" type="checkbox" disabled></div><div class="bg-gold">OP</div></div>
             </div>
             <div class="training-card">
               <h4 class="bg-blue">Für Officer 2</h4>
-              <div class="mini-row"><div class="bg-blue"><input type="checkbox" disabled></div><div class="bg-blue">OK</div></div>
-              <div class="mini-row"><div class="bg-blue"><input type="checkbox" disabled></div><div class="bg-blue">FULA</div></div>
+              <div class="mini-row"><div class="bg-blue"><input data-training="OK" type="checkbox" disabled></div><div class="bg-blue">OK</div></div>
+              <div class="mini-row"><div class="bg-blue"><input data-training="FULA" type="checkbox" disabled></div><div class="bg-blue">FULA</div></div>
             </div>
             <div class="training-card">
               <h4 class="bg-red">Für Officer Fist Class</h4>
-              <div class="mini-row"><div class="bg-red"><input type="checkbox" disabled></div><div class="bg-red">TST</div></div>
+              <div class="mini-row"><div class="bg-red"><input data-training="TST" type="checkbox" disabled></div><div class="bg-red">TST</div></div>
             </div>
             <div class="training-card">
               <h4 class="bg-cyan">Für Supervising Officer</h4>
-              <div class="mini-row"><div class="bg-cyan"><input type="checkbox" disabled></div><div class="bg-cyan">KS</div></div>
+              <div class="mini-row"><div class="bg-cyan"><input data-training="KS" type="checkbox" disabled></div><div class="bg-cyan">KS</div></div>
             </div>
             <div class="training-card">
               <h4 class="bg-pink">Für Senior Supervisor</h4>
-              <div class="mini-row"><div class="bg-pink"><input type="checkbox" disabled></div><div class="bg-pink">OK+</div></div>
+              <div class="mini-row"><div class="bg-pink"><input data-training="OKPLUS" type="checkbox" disabled></div><div class="bg-pink">OK+</div></div>
             </div>
             <div class="training-card">
               <h4 class="bg-light">Für Corporal</h4>
-              <div class="mini-row"><div class="bg-light"><input type="checkbox" disabled></div><div class="bg-light">COP</div></div>
+              <div class="mini-row"><div class="bg-light"><input data-training="COP" type="checkbox" disabled></div><div class="bg-light">COP</div></div>
             </div>
             <div class="training-card">
               <h4 class="bg-orange">Für Lead Supervisor</h4>
-              <div class="mini-row"><div class="bg-orange"><input type="checkbox" disabled></div><div class="bg-orange">FT</div></div>
+              <div class="mini-row"><div class="bg-orange"><input data-training="FT" type="checkbox" disabled></div><div class="bg-orange">FT</div></div>
             </div>
             <div class="training-card">
               <h4 class="bg-beige">Für Detectiv</h4>
-              <div class="mini-row"><div class="bg-beige"><input type="checkbox" disabled></div><div class="bg-beige">JP</div></div>
+              <div class="mini-row"><div class="bg-beige"><input data-training="JP" type="checkbox" disabled></div><div class="bg-beige">JP</div></div>
             </div>
             <div class="training-card">
               <h4 class="bg-violet">AKS</h4>
-              <div class="mini-row"><div class="bg-violet"><input type="checkbox" disabled></div><div class="bg-violet">AKS</div></div>
+              <div class="mini-row"><div class="bg-violet"><input data-training="AKS" type="checkbox" disabled></div><div class="bg-violet">AKS</div></div>
             </div>
             <div class="training-card" style="grid-column: 1 / -1;">
               <h4 class="bg-wine">Freiwillige Ausbildungen</h4>
               <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
-                <div class="mini-row"><div class="bg-wine"><input type="checkbox" disabled></div><div class="bg-wine">ZP</div></div>
-                <div class="mini-row"><div class="bg-wine"><input type="checkbox" disabled></div><div class="bg-wine">VHP</div></div>
-                <div class="mini-row"><div class="bg-wine"><input type="checkbox" disabled></div><div class="bg-wine">TOW / BL</div></div>
+                <div class="mini-row"><div class="bg-wine"><input data-training="ZP" type="checkbox" disabled></div><div class="bg-wine">ZP</div></div>
+                <div class="mini-row"><div class="bg-wine"><input data-training="VHP" type="checkbox" disabled></div><div class="bg-wine">VHP</div></div>
+                <div class="mini-row"><div class="bg-wine"><input data-training="TOWBL" type="checkbox" disabled></div><div class="bg-wine">TOW / BL</div></div>
               </div>
             </div>
           </div>
@@ -757,6 +757,7 @@
       <table class="rank-list-table">
         <thead>
           <tr>
+            <th>Daten</th>
             <th>ID</th>
             <th>DN</th>
             <th>Name</th>
@@ -771,7 +772,6 @@
             <th>Last Rankup</th>
             <th>Abteilung 1</th>
             <th>Abteilung 2</th>
-            <th>Daten</th>
             <th class="vertical-sep"></th>
             <th>GA</th>
             <th>EHK</th>
@@ -1054,6 +1054,22 @@
       return getWebsiteAccessRank(data || currentUserData) >= 30;
     }
 
+    function normalizeTrainings(trainings = {}) {
+      const normalized = {};
+      TRAINING_KEYS.forEach((key) => {
+        normalized[key] = !!trainings[key];
+      });
+      return normalized;
+    }
+
+    function renderDashboardTrainings(data) {
+      const trainings = normalizeTrainings(data?.trainings || {});
+      document.querySelectorAll('[data-training]').forEach((checkbox) => {
+        const key = checkbox.dataset.training;
+        checkbox.checked = !!trainings[key];
+      });
+    }
+
     async function ensurePreapprovedUsers() {
       for (const user of PREAPPROVED_USERS) {
         const ref = doc(db, 'accessRequests', user.uid);
@@ -1128,6 +1144,7 @@
       const grid = document.getElementById('personalDataGrid');
       grid.innerHTML = personalData.map(([k, v]) => `<div>${k}</div><div>${v}</div>`).join('');
       document.getElementById('welcomeBox').textContent = `Angemeldet als ${user.email}`;
+      renderDashboardTrainings(data);
     }
 
     window.registerWithGoogle = async function () {
@@ -1169,7 +1186,7 @@
           vacation: existingByEmail?.data?.vacation || '0/3',
           strike: existingByEmail?.data?.strike || '0/3',
           createdAt: existingByEmail?.data?.createdAt || new Date().toISOString(),
-          trainings: existingByEmail?.data?.trainings || {}
+          trainings: normalizeTrainings(existingByEmail?.data?.trainings || {})
         };
 
         await setDoc(ref, payload, { merge: true });
@@ -1218,8 +1235,11 @@
         }
 
         const data = snap.data();
-        currentUserData = data;
-        renderPersonalData(data, user);
+        currentUserData = {
+          ...data,
+          trainings: normalizeTrainings(data.trainings || {})
+        };
+        renderPersonalData(currentUserData, user);
 
         if (!data.approved && !isAdmin(user.email, data)) {
           showMessage('Dein Zugriff wurde noch nicht freigegeben.');
@@ -1315,7 +1335,7 @@
         approved: existingData.approved ?? true,
         role: existingData.role || 'user',
         createdAt: existingData.createdAt || new Date().toISOString(),
-        trainings: existingData.trainings || {}
+        trainings: normalizeTrainings(existingData.trainings || {})
       };
 
       await setDoc(doc(db, 'accessRequests', targetId), payload, { merge: true });
@@ -1337,7 +1357,7 @@
     function openTrainingModal(item = null, docId = null) {
       resetTrainingModal();
       editingTrainingId = docId || null;
-      const trainings = item?.trainings || {};
+      const trainings = normalizeTrainings(item?.trainings || {});
 
       TRAINING_KEYS.forEach(key => {
         const el = document.getElementById(`tr${key}`);
@@ -1356,9 +1376,17 @@
         payload[key] = !!document.getElementById(`tr${key}`)?.checked;
       });
 
-      await updateDoc(doc(db, 'accessRequests', editingTrainingId), {
+      await setDoc(doc(db, 'accessRequests', editingTrainingId), {
         trainings: payload
-      });
+      }, { merge: true });
+
+      if (currentUser && currentUser.uid === editingTrainingId) {
+        currentUserData = {
+          ...(currentUserData || {}),
+          trainings: payload
+        };
+        renderDashboardTrainings(currentUserData);
+      }
 
       closeTrainingModal();
     };
@@ -1412,7 +1440,7 @@
         vacation: existingData.vacation || '0/3',
         strike: existingData.strike || '0/3',
         createdAt: existingData.createdAt || new Date().toISOString(),
-        trainings: existingData.trainings || {}
+        trainings: normalizeTrainings(existingData.trainings || {})
       };
 
       await setDoc(doc(db, 'accessRequests', targetId), payload, { merge: true });
@@ -1537,7 +1565,7 @@
     }
 
     function hasTraining(item, key) {
-      return !!item?.trainings?.[key];
+      return !!normalizeTrainings(item?.trainings || {})[key];
     }
 
     function createTrainingCell(item, key) {
@@ -1563,7 +1591,7 @@
     function createSeparatorRow() {
       return `
         <tr class="sep-row">
-          <td colspan="34"></td>
+          <td colspan="33"></td>
         </tr>
       `;
     }
@@ -1571,6 +1599,7 @@
     function createSingleEmptyRankRow(rank) {
       return `
         <tr class="rank-empty-row">
+          <td class="left-dark"></td>
           <td class="left-dark"></td>
           <td class="left-dark"></td>
           <td class="left-dark"></td>
@@ -1585,7 +1614,6 @@
           <td></td>
           <td></td>
           <td></td>
-          <td></td>
           <td class="vertical-sep"></td>
           <td><input class="mini-checkbox" type="checkbox" disabled></td>
           <td><input class="mini-checkbox" type="checkbox" disabled></td>
@@ -1603,7 +1631,6 @@
           <td><input class="mini-checkbox" type="checkbox" disabled></td>
           <td><input class="mini-checkbox" type="checkbox" disabled></td>
           <td><input class="mini-checkbox" type="checkbox" disabled></td>
-          <td></td>
           <td></td>
         </tr>
       `;
@@ -1625,6 +1652,9 @@
 
       return `
         <tr>
+          <td>
+            <button class="data-edit-btn" data-employee-edit-id="${docId}" ${disabledAttr}>✎</button>
+          </td>
           <td class="left-dark">${item.employeeId || ''}</td>
           <td class="left-dark">${item.serviceNumber || ''}</td>
           <td class="left-dark">${item.name || ''}</td>
@@ -1639,9 +1669,6 @@
           <td>${item.lastRankUp || '01.04.2026'}</td>
           <td>${item.department1 || '-'}</td>
           <td>${item.department2 || '-'}</td>
-          <td>
-            <button class="data-edit-btn" data-employee-edit-id="${docId}" ${disabledAttr}>✎</button>
-          </td>
           <td class="vertical-sep"></td>
           ${createTrainingCell(item, 'GA')}
           ${createTrainingCell(item, 'EHK')}
@@ -1764,8 +1791,21 @@
       unsubscribeEmployeesSnapshot = onSnapshot(q, (snapshot) => {
         employeesCache = snapshot.docs.map(docSnap => ({
           id: docSnap.id,
-          data: docSnap.data()
+          data: {
+            ...docSnap.data(),
+            trainings: normalizeTrainings(docSnap.data().trainings || {})
+          }
         }));
+
+        const myEntry = currentUser
+          ? employeesCache.find(entry => entry.id === currentUser.uid || (entry.data.email || '').toLowerCase() === (currentUser.email || '').toLowerCase())
+          : null;
+
+        if (myEntry && currentUser) {
+          currentUserData = myEntry.data;
+          renderPersonalData(currentUserData, currentUser);
+        }
+
         renderEmployeesFromCache();
       });
     }
@@ -1830,8 +1870,11 @@
         }
 
         const data = snap.data();
-        currentUserData = data;
-        renderPersonalData(data, user);
+        currentUserData = {
+          ...data,
+          trainings: normalizeTrainings(data.trainings || {})
+        };
+        renderPersonalData(currentUserData, user);
 
         if (!data.approved && !isAdmin(user.email, data)) {
           showPage('page1', { save: false });
