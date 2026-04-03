@@ -582,6 +582,7 @@
         <thead>
           <tr>
             <th>Name</th>
+            <th>Bearbeiten</th>
             <th>Email</th>
             <th>Freigeben</th>
             <th>Zugriffsrang</th>
@@ -591,7 +592,7 @@
         </thead>
         <tbody id="accessRequestBody"></tbody>
       </table>
-      <div class="small-note">Der Zugriffsrang ist nur für die Webseiten-Berechtigung. Rang 0 = Standard, Rang 30 = voller Admin-Zugriff.</div>
+      
       <div class="page8-bottom-row">
         <button class="add-access-btn" id="addAccessBtn">Zugriff hinzufügen</button>
       </div>
@@ -624,7 +625,7 @@
 
   <div id="accessModal" class="modal hidden">
     <div class="modal-content">
-      <h2 class="modal-title">Zugriff hinzufügen</h2>
+      <h2 class="modal-title" id="accessModalTitle">Zugriff hinzufügen</h2>
       <div class="modal-grid">
         <label>Name<input id="accessName" type="text" /></label>
         <label>Email<input id="accessEmail" type="email" /></label>
@@ -634,13 +635,16 @@
             <option value="false">nein</option>
           </select>
         </label>
-        <label>Zugriffsrang<input id="accessRank" type="number" min="0" max="30" value="0" /></label>
+        <label>Zugriffsrang
+          <select id="accessRank"></select>
+        </label>
       </div>
       <div class="modal-actions">
         <button class="muted-btn" type="button" onclick="closeAccessModal()">Abbrechen</button>
         <button class="save-btn" type="button" onclick="saveAccessEntry()">Speichern</button>
       </div>
     </div>
+  </div>
   </div>
 
   <script type="module">
@@ -726,9 +730,16 @@
 
     ['navMount', 'navMount3', 'navMount4', 'navMount5', 'navMount6', 'navMount7', 'navMount8'].forEach(mountNav);
 
+    function canAccessPage(pageId) {
+      const adminOnlyPages = ['page7', 'page8'];
+      if (!adminOnlyPages.includes(pageId)) return true;
+      return !!currentUser && isAdmin(currentUser.email, currentUserData);
+    }
+
     function showPage(pageId) {
+      const targetPage = canAccessPage(pageId) ? pageId : 'page2';
       document.querySelectorAll('.page').forEach(page => page.classList.add('hidden'));
-      document.getElementById(pageId).classList.remove('hidden');
+      document.getElementById(targetPage).classList.remove('hidden');
     }
 
     function showMessage(text) {
@@ -744,7 +755,7 @@
     }
 
     function isAdmin(email, data = null) {
-      return getWebsiteAccessRank(data || currentUserData) >= 30 || (email || '').toLowerCase() === 'h.vonwanze@gmail.com';
+      return getWebsiteAccessRank(data || currentUserData) >= 30;
     }
 
     async function ensurePreapprovedUsers() {
@@ -934,6 +945,13 @@
       }
     };
 
+    function populateAccessRankSelect(selectElement, selectedValue = 0) {
+      if (!selectElement) return;
+      selectElement.innerHTML = Array.from({ length: 31 }, (_, i) => `
+        <option value="${i}" ${Number(selectedValue) === i ? 'selected' : ''}>${i}</option>
+      `).join('');
+    }
+
     function resetEmployeeModal() {
       editingEmployeeId = null;
       document.getElementById('employeeModalTitle').textContent = 'Mitarbeiter hinzufügen';
@@ -1017,11 +1035,14 @@
       document.getElementById('accessModal').classList.add('hidden');
     };
 
-    function openAccessModal() {
-      document.getElementById('accessName').value = '';
-      document.getElementById('accessEmail').value = '';
-      document.getElementById('accessApproved').value = 'true';
-      document.getElementById('accessRank').value = '0';
+    function openAccessModal(item = null, docId = null) {
+      const title = document.getElementById('accessModalTitle');
+      document.getElementById('accessName').value = item?.name || '';
+      document.getElementById('accessEmail').value = item?.email || '';
+      document.getElementById('accessApproved').value = String(item?.approved ?? true);
+      populateAccessRankSelect(document.getElementById('accessRank'), getWebsiteAccessRank(item || {}));
+      title.textContent = item && docId ? 'Zugriff bearbeiten' : 'Zugriff hinzufügen';
+      document.getElementById('accessModal').dataset.editId = docId || '';
       document.getElementById('accessModal').classList.remove('hidden');
     }
 
@@ -1034,18 +1055,21 @@
         return;
       }
 
+      const modal = document.getElementById('accessModal');
+      const modalEditId = modal.dataset.editId || '';
       const existingByEmail = await findAccessByEmail(email);
-      const targetId = existingByEmail?.id || `access-${Date.now()}`;
+      const targetId = modalEditId || existingByEmail?.id || `access-${Date.now()}`;
       const existingData = existingByEmail?.data || {};
+      const accessRankValue = Number(document.getElementById('accessRank').value || 0);
 
       const payload = {
         uid: existingData.uid || targetId,
         email,
         name: document.getElementById('accessName').value.trim() || email.split('@')[0],
         approved: document.getElementById('accessApproved').value === 'true',
-        websiteAccessRank: Number(document.getElementById('accessRank').value || 0),
+        websiteAccessRank: accessRankValue,
         rank: getPersonalRank(existingData),
-        role: Number(document.getElementById('accessRank').value || 0) >= 30 ? 'admin' : (existingData.role || 'user'),
+        role: accessRankValue >= 30 ? 'admin' : (existingData.role || 'user'),
         employeeId: existingData.employeeId || '164895',
         phone: existingData.phone || '16-48-950',
         serviceNumber: existingData.serviceNumber || '1',
@@ -1089,6 +1113,9 @@
 
           tr.innerHTML = `
             <td>${item.name || '-'}</td>
+            <td>
+              <button class="icon-btn" data-access-edit-id="${docSnap.id}" ${disabled}>✎</button>
+            </td>
             <td>${item.email || '-'}</td>
             <td class="request-controls">
               <select data-type="approved" data-id="${docSnap.id}" ${disabled}>
@@ -1097,7 +1124,9 @@
               </select>
             </td>
             <td class="request-controls">
-              <input type="number" min="0" max="30" data-type="websiteAccessRank" data-id="${docSnap.id}" value="${accessRank}" ${disabled} />
+              <select data-type="websiteAccessRank" data-id="${docSnap.id}" ${disabled}>
+                ${Array.from({ length: 31 }, (_, i) => `<option value="${i}" ${accessRank === i ? 'selected' : ''}>${i}</option>`).join('')}
+              </select>
             </td>
             <td><span class="status-pill ${item.approved ? 'yes' : 'pending'}">${status}</span></td>
             <td>
@@ -1109,11 +1138,12 @@
           body.appendChild(tr);
         });
 
-        body.querySelectorAll('select, input[data-type="websiteAccessRank"]').forEach(control => {
+        body.querySelectorAll('select').forEach(control => {
           control.addEventListener('change', async (e) => {
             if (!currentUser || !isAdmin(currentUser.email)) return;
             const id = e.target.dataset.id;
             const type = e.target.dataset.type;
+            if (!id || !type) return;
             const ref = doc(db, 'accessRequests', id);
 
             if (type === 'approved') {
@@ -1121,7 +1151,6 @@
             }
             if (type === 'websiteAccessRank') {
               const value = Math.max(0, Math.min(30, Number(e.target.value || 0)));
-              e.target.value = value;
               await updateDoc(ref, { websiteAccessRank: value, role: value >= 30 ? 'admin' : 'user' });
             }
           });
@@ -1130,6 +1159,15 @@
         body.querySelectorAll('[data-delete-id]').forEach(btn => {
           btn.addEventListener('click', async () => {
             await deleteAccessEntry(btn.dataset.deleteId);
+          });
+        });
+
+        body.querySelectorAll('[data-access-edit-id]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const rowId = btn.dataset.accessEditId;
+            const rowData = snapshot.docs.find(docItem => docItem.id === rowId)?.data();
+            if (!rowData) return;
+            openAccessModal(rowData, rowId);
           });
         });
       });
@@ -1197,6 +1235,8 @@
       if (!currentUser || !isAdmin(currentUser.email)) return;
       openAccessModal();
     });
+
+    populateAccessRankSelect(document.getElementById('accessRank'), 0);
 
     onAuthStateChanged(auth, async (user) => {
       currentUser = user || null;
