@@ -311,7 +311,8 @@
     .danger-btn,
     .save-btn,
     .add-access-btn,
-    .rank-edit-btn {
+    .rank-edit-btn,
+    .data-edit-btn {
       border: none;
       color: #fff;
       font-size: 14px;
@@ -320,7 +321,8 @@
     }
 
     .icon-btn,
-    .rank-edit-btn {
+    .rank-edit-btn,
+    .data-edit-btn {
       background: #3e3e3e;
       font-weight: bold;
     }
@@ -544,8 +546,30 @@
     .mini-checkbox {
       width: 13px;
       height: 13px;
-      accent-color: #fff;
+      accent-color: #1d6b32;
       pointer-events: none;
+    }
+
+    .training-edit-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px 16px;
+    }
+
+    .training-edit-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #1a1a1a;
+      border: 1px solid #333;
+      padding: 10px 12px;
+      color: #fff;
+    }
+
+    .training-edit-item input {
+      width: 18px;
+      height: 18px;
+      accent-color: #1d6b32;
     }
 
     @media (max-width: 1000px) {
@@ -555,6 +579,7 @@
       .dashboard-grid { grid-template-columns: 1fr; }
       .logout { position: static; margin-top: 20px; }
       .modal-grid { grid-template-columns: 1fr; }
+      .training-edit-grid { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
 </head>
@@ -746,6 +771,7 @@
             <th>Last Rankup</th>
             <th>Abteilung 1</th>
             <th>Abteilung 2</th>
+            <th>Daten</th>
             <th class="vertical-sep"></th>
             <th>GA</th>
             <th>EHK</th>
@@ -763,7 +789,7 @@
             <th>VHP</th>
             <th>TOW/BL</th>
             <th>AKS</th>
-            <th>Bearbeiten</th>
+            <th>Ausbildung</th>
           </tr>
         </thead>
         <tbody id="employeesTableBody"></tbody>
@@ -799,6 +825,7 @@
     </div>
   </section>
 
+  <!-- Mitarbeiterdaten Modal -->
   <div id="employeeModal" class="modal hidden">
     <div class="modal-content">
       <h2 class="modal-title" id="employeeModalTitle">Mitarbeiter hinzufügen</h2>
@@ -823,6 +850,36 @@
     </div>
   </div>
 
+  <!-- Ausbildung Modal -->
+  <div id="trainingModal" class="modal hidden">
+    <div class="modal-content">
+      <h2 class="modal-title">Ausbildungen bearbeiten</h2>
+      <div class="training-edit-grid">
+        <label class="training-edit-item"><input id="trGA" type="checkbox" /><span>GA</span></label>
+        <label class="training-edit-item"><input id="trEHK" type="checkbox" /><span>EHK</span></label>
+        <label class="training-edit-item"><input id="trES" type="checkbox" /><span>ES</span></label>
+        <label class="training-edit-item"><input id="trOfficer" type="checkbox" /><span>Officer</span></label>
+        <label class="training-edit-item"><input id="trOK" type="checkbox" /><span>OK</span></label>
+        <label class="training-edit-item"><input id="trFULA" type="checkbox" /><span>FULA</span></label>
+        <label class="training-edit-item"><input id="trTST" type="checkbox" /><span>TST</span></label>
+        <label class="training-edit-item"><input id="trKS" type="checkbox" /><span>KS</span></label>
+        <label class="training-edit-item"><input id="trOKPLUS" type="checkbox" /><span>OK+</span></label>
+        <label class="training-edit-item"><input id="trFT" type="checkbox" /><span>FT</span></label>
+        <label class="training-edit-item"><input id="trCOP" type="checkbox" /><span>COP</span></label>
+        <label class="training-edit-item"><input id="trJP" type="checkbox" /><span>JP</span></label>
+        <label class="training-edit-item"><input id="trZP" type="checkbox" /><span>ZP</span></label>
+        <label class="training-edit-item"><input id="trVHP" type="checkbox" /><span>VHP</span></label>
+        <label class="training-edit-item"><input id="trTOWBL" type="checkbox" /><span>TOW/BL</span></label>
+        <label class="training-edit-item"><input id="trAKS" type="checkbox" /><span>AKS</span></label>
+      </div>
+      <div class="modal-actions">
+        <button class="muted-btn" type="button" onclick="closeTrainingModal()">Abbrechen</button>
+        <button class="save-btn" type="button" onclick="saveTrainingModal()">Speichern</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Zugriff Modal -->
   <div id="accessModal" class="modal hidden">
     <div class="modal-content">
       <h2 class="modal-title" id="accessModalTitle">Zugriff hinzufügen</h2>
@@ -890,8 +947,14 @@
         lastRankUp: '01.01.2026',
         vacation: '0/3',
         strike: '0/3',
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
+        trainings: {}
       }
+    ];
+
+    const TRAINING_KEYS = [
+      'GA', 'EHK', 'ES', 'Officer', 'OK', 'FULA', 'TST', 'KS',
+      'OKPLUS', 'FT', 'COP', 'JP', 'ZP', 'VHP', 'TOWBL', 'AKS'
     ];
 
     const app = initializeApp(firebaseConfig);
@@ -908,7 +971,10 @@
     let currentUserData = null;
     let currentUser = null;
     let editingEmployeeId = null;
+    let editingTrainingId = null;
     let employeeSearchTerm = '';
+    let employeesCache = [];
+    let unsubscribeEmployeesSnapshot = null;
     const LAST_PAGE_KEY = 'lspd_last_page';
 
     const navItems = [
@@ -1102,7 +1168,8 @@
           lastRankUp: existingByEmail?.data?.lastRankUp || '01.01.2026',
           vacation: existingByEmail?.data?.vacation || '0/3',
           strike: existingByEmail?.data?.strike || '0/3',
-          createdAt: existingByEmail?.data?.createdAt || new Date().toISOString()
+          createdAt: existingByEmail?.data?.createdAt || new Date().toISOString(),
+          trainings: existingByEmail?.data?.trainings || {}
         };
 
         await setDoc(ref, payload, { merge: true });
@@ -1253,6 +1320,47 @@
 
       await setDoc(doc(db, 'accessRequests', targetId), payload, { merge: true });
       closeEmployeeModal();
+    };
+
+    function resetTrainingModal() {
+      editingTrainingId = null;
+      TRAINING_KEYS.forEach(key => {
+        const el = document.getElementById(`tr${key}`);
+        if (el) el.checked = false;
+      });
+    }
+
+    window.closeTrainingModal = function () {
+      document.getElementById('trainingModal').classList.add('hidden');
+    };
+
+    function openTrainingModal(item = null, docId = null) {
+      resetTrainingModal();
+      editingTrainingId = docId || null;
+      const trainings = item?.trainings || {};
+
+      TRAINING_KEYS.forEach(key => {
+        const el = document.getElementById(`tr${key}`);
+        if (el) el.checked = !!trainings[key];
+      });
+
+      document.getElementById('trainingModal').classList.remove('hidden');
+    }
+
+    window.saveTrainingModal = async function () {
+      if (!currentUser || !isAdmin(currentUser.email)) return;
+      if (!editingTrainingId) return;
+
+      const payload = {};
+      TRAINING_KEYS.forEach(key => {
+        payload[key] = !!document.getElementById(`tr${key}`)?.checked;
+      });
+
+      await updateDoc(doc(db, 'accessRequests', editingTrainingId), {
+        trainings: payload
+      });
+
+      closeTrainingModal();
     };
 
     window.closeAccessModal = function () {
@@ -1455,7 +1563,7 @@
     function createSeparatorRow() {
       return `
         <tr class="sep-row">
-          <td colspan="32"></td>
+          <td colspan="34"></td>
         </tr>
       `;
     }
@@ -1477,6 +1585,7 @@
           <td></td>
           <td></td>
           <td></td>
+          <td></td>
           <td class="vertical-sep"></td>
           <td><input class="mini-checkbox" type="checkbox" disabled></td>
           <td><input class="mini-checkbox" type="checkbox" disabled></td>
@@ -1495,6 +1604,7 @@
           <td><input class="mini-checkbox" type="checkbox" disabled></td>
           <td><input class="mini-checkbox" type="checkbox" disabled></td>
           <td></td>
+          <td></td>
         </tr>
       `;
     }
@@ -1507,7 +1617,7 @@
       return html;
     }
 
-    function createEmployeeRankRow(item, docId, editDisabled) {
+    function createEmployeeRankRow(item, docId, disabledAttr) {
       const personalRank = Math.max(1, Math.min(30, Number(getPersonalRank(item) || 1)));
       const inviteDate = item.createdAt
         ? new Date(item.createdAt).toLocaleDateString('de-DE')
@@ -1529,6 +1639,9 @@
           <td>${item.lastRankUp || '01.04.2026'}</td>
           <td>${item.department1 || '-'}</td>
           <td>${item.department2 || '-'}</td>
+          <td>
+            <button class="data-edit-btn" data-employee-edit-id="${docId}" ${disabledAttr}>✎</button>
+          </td>
           <td class="vertical-sep"></td>
           ${createTrainingCell(item, 'GA')}
           ${createTrainingCell(item, 'EHK')}
@@ -1547,7 +1660,7 @@
           ${createTrainingCell(item, 'TOWBL')}
           ${createTrainingCell(item, 'AKS')}
           <td>
-            <button class="rank-edit-btn" data-edit-id="${docId}" ${editDisabled}>✎</button>
+            <button class="rank-edit-btn" data-training-edit-id="${docId}" ${disabledAttr}>✎</button>
           </td>
         </tr>
       `;
@@ -1573,69 +1686,87 @@
       return searchText.includes(term.toLowerCase());
     }
 
+    function renderEmployeesFromCache() {
+      const tbody = document.getElementById('employeesTableBody');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      const groupedByRank = {};
+      for (let rank = 1; rank <= 30; rank++) {
+        groupedByRank[rank] = [];
+      }
+
+      const seenEmails = new Set();
+
+      employeesCache.forEach((entry) => {
+        const item = entry.data;
+        const emailKey = (item.email || '').toLowerCase();
+
+        if (!item.approved) return;
+        if (seenEmails.has(emailKey)) return;
+        if (!matchesSearch(item, employeeSearchTerm)) return;
+
+        seenEmails.add(emailKey);
+
+        const personalRank = Math.max(1, Math.min(30, Number(getPersonalRank(item) || 1)));
+        groupedByRank[personalRank].push(entry);
+      });
+
+      for (let rank = 30; rank >= 1; rank--) {
+        const entries = groupedByRank[rank];
+        const minRows = employeeSearchTerm.trim() ? 0 : getEmptyRowsForRank(rank);
+
+        if (entries.length === 0) {
+          if (!employeeSearchTerm.trim()) {
+            tbody.innerHTML += createEmptyRankRows(rank, minRows);
+          }
+        } else {
+          entries.forEach((entry) => {
+            const disabledAttr = currentUser && isAdmin(currentUser.email) ? '' : 'disabled';
+            tbody.innerHTML += createEmployeeRankRow(entry.data, entry.id, disabledAttr);
+          });
+
+          if (!employeeSearchTerm.trim() && entries.length < minRows) {
+            tbody.innerHTML += createEmptyRankRows(rank, minRows - entries.length);
+          }
+        }
+
+        if (rank > 1 && (!employeeSearchTerm.trim() || entries.length > 0)) {
+          tbody.innerHTML += createSeparatorRow();
+        }
+      }
+
+      tbody.querySelectorAll('[data-employee-edit-id]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const rowId = btn.dataset.employeeEditId;
+          const found = employeesCache.find(item => item.id === rowId);
+          if (!found) return;
+          openEmployeeModal(found.data, rowId);
+        });
+      });
+
+      tbody.querySelectorAll('[data-training-edit-id]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const rowId = btn.dataset.trainingEditId;
+          const found = employeesCache.find(item => item.id === rowId);
+          if (!found) return;
+          openTrainingModal(found.data, rowId);
+        });
+      });
+    }
+
     function subscribeEmployees() {
+      if (unsubscribeEmployeesSnapshot) {
+        unsubscribeEmployeesSnapshot();
+      }
+
       const q = query(collection(db, 'accessRequests'), orderBy('createdAt', 'desc'));
-
-      onSnapshot(q, (snapshot) => {
-        const tbody = document.getElementById('employeesTableBody');
-        tbody.innerHTML = '';
-
-        const groupedByRank = {};
-        for (let rank = 1; rank <= 30; rank++) {
-          groupedByRank[rank] = [];
-        }
-
-        const seenEmails = new Set();
-
-        snapshot.forEach((docSnap) => {
-          const item = docSnap.data();
-          const emailKey = (item.email || '').toLowerCase();
-
-          if (!item.approved) return;
-          if (seenEmails.has(emailKey)) return;
-          if (!matchesSearch(item, employeeSearchTerm)) return;
-
-          seenEmails.add(emailKey);
-
-          const personalRank = Math.max(1, Math.min(30, Number(getPersonalRank(item) || 1)));
-          groupedByRank[personalRank].push({
-            id: docSnap.id,
-            data: item
-          });
-        });
-
-        for (let rank = 30; rank >= 1; rank--) {
-          const entries = groupedByRank[rank];
-          const minRows = employeeSearchTerm.trim() ? 0 : getEmptyRowsForRank(rank);
-
-          if (entries.length === 0) {
-            if (!employeeSearchTerm.trim()) {
-              tbody.innerHTML += createEmptyRankRows(rank, minRows);
-            }
-          } else {
-            entries.forEach((entry) => {
-              const editDisabled = currentUser && isAdmin(currentUser.email) ? '' : 'disabled';
-              tbody.innerHTML += createEmployeeRankRow(entry.data, entry.id, editDisabled);
-            });
-
-            if (!employeeSearchTerm.trim() && entries.length < minRows) {
-              tbody.innerHTML += createEmptyRankRows(rank, minRows - entries.length);
-            }
-          }
-
-          if (rank > 1 && (!employeeSearchTerm.trim() || entries.length > 0)) {
-            tbody.innerHTML += createSeparatorRow();
-          }
-        }
-
-        tbody.querySelectorAll('[data-edit-id]').forEach(btn => {
-          btn.addEventListener('click', () => {
-            const rowId = btn.dataset.editId;
-            const found = snapshot.docs.find(docItem => docItem.id === rowId);
-            if (!found) return;
-            openEmployeeModal(found.data(), rowId);
-          });
-        });
+      unsubscribeEmployeesSnapshot = onSnapshot(q, (snapshot) => {
+        employeesCache = snapshot.docs.map(docSnap => ({
+          id: docSnap.id,
+          data: docSnap.data()
+        }));
+        renderEmployeesFromCache();
       });
     }
 
@@ -1661,7 +1792,7 @@
 
     document.getElementById('employeeSearchInput').addEventListener('input', (e) => {
       employeeSearchTerm = e.target.value.trim();
-      subscribeEmployees();
+      renderEmployeesFromCache();
     });
 
     populateAccessRankSelect(document.getElementById('accessRank'), 0);
