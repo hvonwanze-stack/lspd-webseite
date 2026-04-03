@@ -420,6 +420,28 @@
       margin: 0 auto;
     }
 
+    .rank-search-wrap {
+      display: flex;
+      justify-content: flex-start;
+      margin: 0 0 16px;
+    }
+
+    .rank-search-input {
+      width: 100%;
+      max-width: 420px;
+      background: #111;
+      color: #fff;
+      border: 1px solid #444;
+      padding: 12px 14px;
+      font-size: 15px;
+      outline: none;
+    }
+
+    .rank-search-input:focus {
+      border-color: #0b4c84;
+      box-shadow: 0 0 0 1px #0b4c84 inset;
+    }
+
     .rank-list-table {
       width: 100%;
       border-collapse: collapse;
@@ -468,6 +490,14 @@
     .rank-empty-row td {
       background: rgba(74,74,74,0.88);
       color: #d7d7d7;
+    }
+
+    .vertical-sep {
+      background: #000 !important;
+      border-color: #000 !important;
+      width: 16px;
+      min-width: 16px;
+      padding: 0 !important;
     }
 
     .rank-30 { background: #000000; color: #fff; }
@@ -690,6 +720,15 @@
       <h1 class="top-title">Los Santos Police Department</h1>
       <div id="navMount7"></div>
 
+      <div class="rank-search-wrap">
+        <input
+          id="employeeSearchInput"
+          class="rank-search-input"
+          type="text"
+          placeholder="Mitarbeiter suchen..."
+        />
+      </div>
+
       <table class="rank-list-table">
         <thead>
           <tr>
@@ -698,13 +737,16 @@
             <th>Name</th>
             <th>Tel. Nr.</th>
             <th>Rank</th>
+            <th class="vertical-sep"></th>
             <th>Division</th>
+            <th class="vertical-sep"></th>
             <th>Urlaub</th>
             <th>Strike</th>
             <th>Invite Date</th>
             <th>Last Rankup</th>
             <th>Abteilung 1</th>
             <th>Abteilung 2</th>
+            <th class="vertical-sep"></th>
             <th>GA</th>
             <th>EHK</th>
             <th>ES</th>
@@ -866,6 +908,7 @@
     let currentUserData = null;
     let currentUser = null;
     let editingEmployeeId = null;
+    let employeeSearchTerm = '';
     const LAST_PAGE_KEY = 'lspd_last_page';
 
     const navItems = [
@@ -1412,7 +1455,7 @@
     function createSeparatorRow() {
       return `
         <tr class="sep-row">
-          <td colspan="29"></td>
+          <td colspan="32"></td>
         </tr>
       `;
     }
@@ -1425,13 +1468,16 @@
           <td class="left-dark"></td>
           <td class="left-dark"></td>
           <td class="rank-main-cell rank-${rank}">${rank} | ${rankLabel(rank)}</td>
+          <td class="vertical-sep"></td>
           <td class="division-cell ${getDivisionClass(rank)}">${getDivisionLabel(rank)}</td>
+          <td class="vertical-sep"></td>
           <td>0/3</td>
           <td>0/3</td>
           <td></td>
           <td></td>
           <td></td>
           <td></td>
+          <td class="vertical-sep"></td>
           <td><input class="mini-checkbox" type="checkbox" disabled></td>
           <td><input class="mini-checkbox" type="checkbox" disabled></td>
           <td><input class="mini-checkbox" type="checkbox" disabled></td>
@@ -1474,13 +1520,16 @@
           <td class="left-dark">${item.name || ''}</td>
           <td class="left-dark">${item.phone || ''}</td>
           <td class="rank-main-cell rank-${personalRank}">${personalRank} | ${rankLabel(personalRank)}</td>
+          <td class="vertical-sep"></td>
           <td class="division-cell ${getDivisionClass(personalRank)}">${getDivisionLabel(personalRank)}</td>
+          <td class="vertical-sep"></td>
           <td>${item.vacation || '0/3'}</td>
           <td>${item.strike || '0/3'}</td>
           <td>${inviteDate}</td>
           <td>${item.lastRankUp || '01.04.2026'}</td>
           <td>${item.department1 || '-'}</td>
           <td>${item.department2 || '-'}</td>
+          <td class="vertical-sep"></td>
           ${createTrainingCell(item, 'GA')}
           ${createTrainingCell(item, 'EHK')}
           ${createTrainingCell(item, 'ES')}
@@ -1504,6 +1553,26 @@
       `;
     }
 
+    function matchesSearch(item, term) {
+      if (!term) return true;
+
+      const searchText = [
+        item.name,
+        item.email,
+        item.employeeId,
+        item.phone,
+        item.serviceNumber,
+        item.department1,
+        item.department2,
+        rankLabel(getPersonalRank(item)),
+        getDivisionLabel(getPersonalRank(item))
+      ]
+        .join(' ')
+        .toLowerCase();
+
+      return searchText.includes(term.toLowerCase());
+    }
+
     function subscribeEmployees() {
       const q = query(collection(db, 'accessRequests'), orderBy('createdAt', 'desc'));
 
@@ -1524,6 +1593,8 @@
 
           if (!item.approved) return;
           if (seenEmails.has(emailKey)) return;
+          if (!matchesSearch(item, employeeSearchTerm)) return;
+
           seenEmails.add(emailKey);
 
           const personalRank = Math.max(1, Math.min(30, Number(getPersonalRank(item) || 1)));
@@ -1535,22 +1606,24 @@
 
         for (let rank = 30; rank >= 1; rank--) {
           const entries = groupedByRank[rank];
-          const minRows = getEmptyRowsForRank(rank);
+          const minRows = employeeSearchTerm.trim() ? 0 : getEmptyRowsForRank(rank);
 
           if (entries.length === 0) {
-            tbody.innerHTML += createEmptyRankRows(rank, minRows);
+            if (!employeeSearchTerm.trim()) {
+              tbody.innerHTML += createEmptyRankRows(rank, minRows);
+            }
           } else {
             entries.forEach((entry) => {
               const editDisabled = currentUser && isAdmin(currentUser.email) ? '' : 'disabled';
               tbody.innerHTML += createEmployeeRankRow(entry.data, entry.id, editDisabled);
             });
 
-            if (entries.length < minRows) {
+            if (!employeeSearchTerm.trim() && entries.length < minRows) {
               tbody.innerHTML += createEmptyRankRows(rank, minRows - entries.length);
             }
           }
 
-          if (rank > 1) {
+          if (rank > 1 && (!employeeSearchTerm.trim() || entries.length > 0)) {
             tbody.innerHTML += createSeparatorRow();
           }
         }
@@ -1584,6 +1657,11 @@
     document.getElementById('addAccessBtn').addEventListener('click', () => {
       if (!currentUser || !isAdmin(currentUser.email)) return;
       openAccessModal();
+    });
+
+    document.getElementById('employeeSearchInput').addEventListener('input', (e) => {
+      employeeSearchTerm = e.target.value.trim();
+      subscribeEmployees();
     });
 
     populateAccessRankSelect(document.getElementById('accessRank'), 0);
