@@ -15,6 +15,9 @@
       --orange: #c77711;
       --red: #ff1a1a;
       --green: #1d6b32;
+      --check-green: #22c55e;
+      --check-border: #8a8a8a;
+      --check-bg: #111;
     }
 
     * { box-sizing: border-box; }
@@ -204,7 +207,7 @@
 
     .mini-row {
       display: grid;
-      grid-template-columns: 26px 1fr;
+      grid-template-columns: 34px 1fr;
       gap: 1px;
       margin-bottom: 10px;
     }
@@ -212,6 +215,12 @@
     .mini-row div {
       padding: 10px;
       min-height: 38px;
+    }
+
+    .mini-row div:first-child {
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .bg-green { background: #3d7d21; }
@@ -543,14 +552,52 @@
     .division-tow { background: #a8d0f0; color: #000; }
     .division-suspended { background: #ff1b1b; }
 
+    .dashboard-training-checkbox,
+    .mini-checkbox,
+    .training-edit-item input[type="checkbox"] {
+      -webkit-appearance: none;
+      appearance: none;
+      border: 2px solid var(--check-border);
+      background: var(--check-bg);
+      border-radius: 4px;
+      display: inline-block;
+      position: relative;
+      opacity: 1 !important;
+      cursor: default;
+      margin: 0;
+      flex: 0 0 auto;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
+    }
+
+    .dashboard-training-checkbox,
     .mini-checkbox {
-      width: 18px;
-      height: 18px;
-      accent-color: #22c55e;
+      width: 19px;
+      height: 19px;
       pointer-events: none;
-      transform: scale(1.08);
-      opacity: 1;
-      filter: contrast(1.35) brightness(1.12);
+    }
+
+    .training-edit-item input[type="checkbox"] {
+      width: 22px;
+      height: 22px;
+      cursor: pointer;
+    }
+
+    .dashboard-training-checkbox:checked,
+    .mini-checkbox:checked,
+    .training-edit-item input[type="checkbox"]:checked {
+      border-color: var(--check-green);
+      background-color: #0d1a12;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 88% 88%;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M5 13l4 4L19 7' fill='none' stroke='%2322c55e' stroke-width='4.2' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+      box-shadow: 0 0 0 1px rgba(34,197,94,0.15), inset 0 0 0 1px rgba(34,197,94,0.08);
+    }
+
+    .dashboard-training-checkbox:disabled,
+    .mini-checkbox:disabled,
+    .training-edit-item input[type="checkbox"]:disabled {
+      opacity: 1 !important;
     }
 
     .training-edit-grid {
@@ -567,15 +614,6 @@
       border: 1px solid #333;
       padding: 10px 12px;
       color: #fff;
-    }
-
-    .training-edit-item input {
-      width: 21px;
-      height: 21px;
-      accent-color: #22c55e;
-      transform: scale(1.06);
-      opacity: 1;
-      filter: contrast(1.35) brightness(1.12);
     }
 
     @media (max-width: 1000px) {
@@ -620,53 +658,53 @@
           <div class="training-grid">
             <div class="training-card">
               <h4 class="bg-green">Für Rookie</h4>
-              <div class="mini-row"><div class="bg-green"><input data-training="GA" type="checkbox" disabled></div><div class="bg-green">GA</div></div>
-              <div class="mini-row"><div class="bg-green"><input data-training="EHK" type="checkbox" disabled></div><div class="bg-green">EHK</div></div>
+              <div class="mini-row"><div class="bg-green"><input class="dashboard-training-checkbox" data-training="GA" type="checkbox" disabled></div><div class="bg-green">GA</div></div>
+              <div class="mini-row"><div class="bg-green"><input class="dashboard-training-checkbox" data-training="EHK" type="checkbox" disabled></div><div class="bg-green">EHK</div></div>
             </div>
             <div class="training-card">
               <h4 class="bg-gold">Für Officer</h4>
-              <div class="mini-row"><div class="bg-gold"><input data-training="ES" type="checkbox" disabled></div><div class="bg-gold">ES</div></div>
-              <div class="mini-row"><div class="bg-gold"><input data-training="Officer" type="checkbox" disabled></div><div class="bg-gold">OP</div></div>
+              <div class="mini-row"><div class="bg-gold"><input class="dashboard-training-checkbox" data-training="ES" type="checkbox" disabled></div><div class="bg-gold">ES</div></div>
+              <div class="mini-row"><div class="bg-gold"><input class="dashboard-training-checkbox" data-training="Officer" type="checkbox" disabled></div><div class="bg-gold">OP</div></div>
             </div>
             <div class="training-card">
               <h4 class="bg-blue">Für Officer 2</h4>
-              <div class="mini-row"><div class="bg-blue"><input data-training="OK" type="checkbox" disabled></div><div class="bg-blue">OK</div></div>
-              <div class="mini-row"><div class="bg-blue"><input data-training="FULA" type="checkbox" disabled></div><div class="bg-blue">FULA</div></div>
+              <div class="mini-row"><div class="bg-blue"><input class="dashboard-training-checkbox" data-training="OK" type="checkbox" disabled></div><div class="bg-blue">OK</div></div>
+              <div class="mini-row"><div class="bg-blue"><input class="dashboard-training-checkbox" data-training="FULA" type="checkbox" disabled></div><div class="bg-blue">FULA</div></div>
             </div>
             <div class="training-card">
               <h4 class="bg-red">Für Officer Fist Class</h4>
-              <div class="mini-row"><div class="bg-red"><input data-training="TST" type="checkbox" disabled></div><div class="bg-red">TST</div></div>
+              <div class="mini-row"><div class="bg-red"><input class="dashboard-training-checkbox" data-training="TST" type="checkbox" disabled></div><div class="bg-red">TST</div></div>
             </div>
             <div class="training-card">
               <h4 class="bg-cyan">Für Supervising Officer</h4>
-              <div class="mini-row"><div class="bg-cyan"><input data-training="KS" type="checkbox" disabled></div><div class="bg-cyan">KS</div></div>
+              <div class="mini-row"><div class="bg-cyan"><input class="dashboard-training-checkbox" data-training="KS" type="checkbox" disabled></div><div class="bg-cyan">KS</div></div>
             </div>
             <div class="training-card">
               <h4 class="bg-pink">Für Senior Supervisor</h4>
-              <div class="mini-row"><div class="bg-pink"><input data-training="OKPLUS" type="checkbox" disabled></div><div class="bg-pink">OK+</div></div>
+              <div class="mini-row"><div class="bg-pink"><input class="dashboard-training-checkbox" data-training="OKPLUS" type="checkbox" disabled></div><div class="bg-pink">OK+</div></div>
             </div>
             <div class="training-card">
               <h4 class="bg-light">Für Corporal</h4>
-              <div class="mini-row"><div class="bg-light"><input data-training="COP" type="checkbox" disabled></div><div class="bg-light">COP</div></div>
+              <div class="mini-row"><div class="bg-light"><input class="dashboard-training-checkbox" data-training="COP" type="checkbox" disabled></div><div class="bg-light">COP</div></div>
             </div>
             <div class="training-card">
               <h4 class="bg-orange">Für Lead Supervisor</h4>
-              <div class="mini-row"><div class="bg-orange"><input data-training="FT" type="checkbox" disabled></div><div class="bg-orange">FT</div></div>
+              <div class="mini-row"><div class="bg-orange"><input class="dashboard-training-checkbox" data-training="FT" type="checkbox" disabled></div><div class="bg-orange">FT</div></div>
             </div>
             <div class="training-card">
               <h4 class="bg-beige">Für Detectiv</h4>
-              <div class="mini-row"><div class="bg-beige"><input data-training="JP" type="checkbox" disabled></div><div class="bg-beige">JP</div></div>
+              <div class="mini-row"><div class="bg-beige"><input class="dashboard-training-checkbox" data-training="JP" type="checkbox" disabled></div><div class="bg-beige">JP</div></div>
             </div>
             <div class="training-card">
               <h4 class="bg-violet">AKS</h4>
-              <div class="mini-row"><div class="bg-violet"><input data-training="AKS" type="checkbox" disabled></div><div class="bg-violet">AKS</div></div>
+              <div class="mini-row"><div class="bg-violet"><input class="dashboard-training-checkbox" data-training="AKS" type="checkbox" disabled></div><div class="bg-violet">AKS</div></div>
             </div>
             <div class="training-card" style="grid-column: 1 / -1;">
               <h4 class="bg-wine">Freiwillige Ausbildungen</h4>
               <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
-                <div class="mini-row"><div class="bg-wine"><input data-training="ZP" type="checkbox" disabled></div><div class="bg-wine">ZP</div></div>
-                <div class="mini-row"><div class="bg-wine"><input data-training="VHP" type="checkbox" disabled></div><div class="bg-wine">VHP</div></div>
-                <div class="mini-row"><div class="bg-wine"><input data-training="TOWBL" type="checkbox" disabled></div><div class="bg-wine">TOW / BL</div></div>
+                <div class="mini-row"><div class="bg-wine"><input class="dashboard-training-checkbox" data-training="ZP" type="checkbox" disabled></div><div class="bg-wine">ZP</div></div>
+                <div class="mini-row"><div class="bg-wine"><input class="dashboard-training-checkbox" data-training="VHP" type="checkbox" disabled></div><div class="bg-wine">VHP</div></div>
+                <div class="mini-row"><div class="bg-wine"><input class="dashboard-training-checkbox" data-training="TOWBL" type="checkbox" disabled></div><div class="bg-wine">TOW / BL</div></div>
               </div>
             </div>
           </div>
