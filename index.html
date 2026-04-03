@@ -310,7 +310,8 @@
     .icon-btn,
     .danger-btn,
     .save-btn,
-    .add-access-btn {
+    .add-access-btn,
+    .rank-edit-btn {
       border: none;
       color: #fff;
       font-size: 14px;
@@ -318,7 +319,8 @@
       min-width: auto;
     }
 
-    .icon-btn {
+    .icon-btn,
+    .rank-edit-btn {
       background: #3e3e3e;
       font-weight: bold;
     }
@@ -414,80 +416,104 @@
     .full-width { grid-column: 1 / -1; }
 
     .rank-list-wrap {
-      max-width: 1850px;
+      max-width: 1920px;
       margin: 0 auto;
     }
 
     .rank-list-table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 12px;
+      font-size: 11px;
       color: #fff;
-      background: rgba(60,60,60,0.9);
+      background: rgba(60,60,60,0.94);
     }
 
     .rank-list-table th,
     .rank-list-table td {
-      border: 1px solid #111;
-      padding: 4px 6px;
+      border: 1px solid #0f0f0f;
+      padding: 2px 5px;
       text-align: center;
       white-space: nowrap;
       vertical-align: middle;
+      height: 22px;
     }
 
     .rank-list-table th {
-      background: #0f2f5f;
+      background: #12305c;
       font-weight: bold;
     }
 
-    .rank-group-header td {
-      background: #0f2f5f;
-      color: #fff;
-      font-weight: bold;
-      text-align: left;
-      padding: 6px 10px;
-      font-size: 13px;
+    .rank-list-table .sep-row td {
+      background: #000;
+      border-color: #000;
+      padding: 0;
+      height: 16px;
+    }
+
+    .rank-list-table .left-dark {
+      background: rgba(70,70,70,0.88);
     }
 
     .rank-main-cell {
       font-weight: bold;
-      min-width: 170px;
+      min-width: 180px;
       color: #fff;
     }
 
-    .rank-empty-row td {
-      background: rgba(80,80,80,0.75);
-      color: #cfcfcf;
-    }
-
-    .rank-30, .rank-29, .rank-28 { background: #d11c1c; }
-    .rank-27, .rank-26, .rank-25, .rank-24 { background: #2f6fd6; }
-    .rank-23, .rank-22, .rank-21, .rank-20, .rank-19 { background: #3c1a78; }
-    .rank-18, .rank-17 { background: #d61ce0; color: #000; }
-    .rank-16, .rank-15, .rank-14, .rank-13, .rank-12, .rank-11 { background: #d68c00; color: #000; }
-    .rank-10, .rank-9, .rank-8, .rank-7, .rank-6, .rank-5 { background: #00c91b; color: #000; }
-    .rank-4 { background: #1bbec9; color: #000; }
-    .rank-3 { background: #9fc5e8; color: #000; }
-    .rank-2 { background: #6fa8dc; }
-    .rank-1 { background: #ff1a1a; }
-
     .division-cell {
       font-weight: bold;
+      min-width: 110px;
     }
 
-    .division-leadership { background: #c00000; }
+    .rank-empty-row td {
+      background: rgba(74,74,74,0.88);
+      color: #d7d7d7;
+    }
+
+    .rank-30 { background: #000000; color: #fff; }
+    .rank-29 { background: #d61818; }
+    .rank-28 { background: #d61818; }
+    .rank-27 { background: #2e66c7; }
+    .rank-26 { background: #4a86e8; }
+    .rank-25 { background: #6fa8dc; }
+    .rank-24 { background: #2e66c7; }
+    .rank-23 { background: #4a86e8; }
+    .rank-22 { background: #2e0f63; }
+    .rank-21 { background: #2e0f63; }
+    .rank-20 { background: #2e0f63; }
+    .rank-19 { background: #2e0f63; }
+    .rank-18 { background: #2e0f63; }
+    .rank-17 { background: #ff00ff; color: #000; }
+    .rank-16 { background: #f4a000; color: #000; }
+    .rank-15 { background: #f4a000; color: #000; }
+    .rank-14 { background: #f4a000; color: #000; }
+    .rank-13 { background: #f4a000; color: #000; }
+    .rank-12 { background: #f4a000; color: #000; }
+    .rank-11 { background: #f4a000; color: #000; }
+    .rank-10 { background: #08db1a; color: #000; }
+    .rank-9  { background: #08db1a; color: #000; }
+    .rank-8  { background: #08db1a; color: #000; }
+    .rank-7  { background: #08db1a; color: #000; }
+    .rank-6  { background: #08db1a; color: #000; }
+    .rank-5  { background: #08db1a; color: #000; }
+    .rank-4  { background: #19c7c8; color: #000; }
+    .rank-3  { background: #a8d0f0; color: #000; }
+    .rank-2  { background: #6fa8dc; }
+    .rank-1  { background: #ff1b1b; }
+
+    .division-leadership { background: #b40000; }
     .division-highcommand { background: #3d85c6; }
-    .division-department { background: #351c75; }
+    .division-department { background: #2e0f63; }
     .division-media { background: #ff00ff; color: #000; }
-    .division-command { background: #f1a300; color: #000; }
-    .division-officer { background: #00d11a; color: #000; }
-    .division-rookie { background: #1bbec9; color: #000; }
-    .division-tow { background: #9fc5e8; color: #000; }
-    .division-suspended { background: #ff1a1a; }
+    .division-command { background: #f4a000; color: #000; }
+    .division-officer { background: #08db1a; color: #000; }
+    .division-rookie { background: #19c7c8; color: #000; }
+    .division-tow { background: #a8d0f0; color: #000; }
+    .division-suspended { background: #ff1b1b; }
 
     .mini-checkbox {
-      width: 14px;
-      height: 14px;
+      width: 13px;
+      height: 13px;
       accent-color: #fff;
       pointer-events: none;
     }
@@ -671,12 +697,12 @@
             <th>DN</th>
             <th>Name</th>
             <th>Tel. Nr.</th>
-            <th>Rang</th>
+            <th>Rank</th>
             <th>Division</th>
             <th>Urlaub</th>
             <th>Strike</th>
             <th>Invite Date</th>
-            <th>Last RankUp</th>
+            <th>Last Rankup</th>
             <th>Abteilung 1</th>
             <th>Abteilung 2</th>
             <th>GA</th>
@@ -740,7 +766,7 @@
         <label>ID<input id="empId" type="text" /></label>
         <label>Telefonnummer<input id="empPhone" type="text" /></label>
         <label>Dienstnummer<input id="empServiceNumber" type="text" /></label>
-        <label>Rang<input id="empRank" type="number" min="0" max="30" /></label>
+        <label>Rang<input id="empRank" type="number" min="1" max="30" /></label>
         <label>Abteilung 1<input id="empDepartment1" type="text" /></label>
         <label>Abteilung 2<input id="empDepartment2" type="text" /></label>
         <label>Invite<input id="empInvite" type="text" /></label>
@@ -940,14 +966,13 @@
 
     function rankLabel(rank) {
       const labels = {
-        0: 'Cadet',
         1: 'Suspended',
         2: 'Cadet',
         3: 'TOW Officer',
         4: 'Rookie',
         5: 'Officer I',
         6: 'Officer II',
-        7: 'Officer Fist Class',
+        7: 'Officer First Class',
         8: 'Supervising Officer',
         9: 'Senior Supervisor',
         10: 'Lead Supervisor',
@@ -958,13 +983,13 @@
         15: 'Captain',
         16: 'Commander',
         17: 'Special Police Officer',
-        18: 'Enforcement Supervisor',
-        19: 'S.W.A.T Captain',
-        20: 'HR Coordinator',
-        21: 'IU Investigator',
-        22: 'Police Inspector',
-        23: 'Police Commander',
-        24: 'Deputy Chief of Department',
+        18: 'Press Associator',
+        19: 'Enforcement Supervisor',
+        20: 'S.W.A.T Captain',
+        21: 'HR Coordinator',
+        22: 'IU Investigator',
+        23: 'Police Inspector',
+        24: 'Police Commander',
         25: 'Deputy Chief of Department',
         26: 'Chief of Department',
         27: 'Advising Chief of Police',
@@ -1115,7 +1140,7 @@
       document.getElementById('empId').value = '';
       document.getElementById('empPhone').value = '';
       document.getElementById('empServiceNumber').value = '';
-      document.getElementById('empRank').value = '0';
+      document.getElementById('empRank').value = '1';
       document.getElementById('empDepartment1').value = '';
       document.getElementById('empDepartment2').value = '';
       document.getElementById('empInvite').value = '';
@@ -1138,7 +1163,7 @@
         document.getElementById('empId').value = item.employeeId || '';
         document.getElementById('empPhone').value = item.phone || '';
         document.getElementById('empServiceNumber').value = item.serviceNumber || '';
-        document.getElementById('empRank').value = getPersonalRank(item);
+        document.getElementById('empRank').value = getPersonalRank(item) || 1;
         document.getElementById('empDepartment1').value = item.department1 || '';
         document.getElementById('empDepartment2').value = item.department2 || '';
         document.getElementById('empInvite').value = item.invite || '';
@@ -1169,7 +1194,7 @@
         employeeId: document.getElementById('empId').value.trim() || '164895',
         phone: document.getElementById('empPhone').value.trim() || '16-48-950',
         serviceNumber: document.getElementById('empServiceNumber').value.trim() || '1',
-        rank: Number(document.getElementById('empRank').value || 0),
+        rank: Math.max(1, Math.min(30, Number(document.getElementById('empRank').value || 1))),
         websiteAccessRank: getWebsiteAccessRank(existingData),
         department1: document.getElementById('empDepartment1').value.trim() || 'HR Curator',
         department2: document.getElementById('empDepartment2').value.trim() || 'SWAT',
@@ -1179,7 +1204,8 @@
         strike: document.getElementById('empStrike').value.trim() || '0/3',
         approved: existingData.approved ?? true,
         role: existingData.role || 'user',
-        createdAt: existingData.createdAt || new Date().toISOString()
+        createdAt: existingData.createdAt || new Date().toISOString(),
+        trainings: existingData.trainings || {}
       };
 
       await setDoc(doc(db, 'accessRequests', targetId), payload, { merge: true });
@@ -1234,7 +1260,8 @@
         lastRankUp: existingData.lastRankUp || '01.01.2026',
         vacation: existingData.vacation || '0/3',
         strike: existingData.strike || '0/3',
-        createdAt: existingData.createdAt || new Date().toISOString()
+        createdAt: existingData.createdAt || new Date().toISOString(),
+        trainings: existingData.trainings || {}
       };
 
       await setDoc(doc(db, 'accessRequests', targetId), payload, { merge: true });
@@ -1329,28 +1356,30 @@
     }
 
     function getDivisionLabel(rank) {
-      const r = Number(rank || 0);
+      const r = Number(rank || 1);
 
       if (r >= 28) return 'Leadership';
-      if (r >= 24) return 'High Command';
-      if (r >= 19) return 'Department';
-      if (r === 17 || r === 18) return 'Media';
+      if (r >= 23 && r <= 27) return 'High Command';
+      if (r >= 18 && r <= 22) return 'Department';
+      if (r === 17) return 'Media';
       if (r >= 11 && r <= 16) return 'Command';
-      if (r >= 4 && r <= 10) return 'Officer';
+      if (r >= 5 && r <= 10) return 'Officer';
+      if (r === 4) return 'Rookie';
       if (r === 3) return 'Tow Officer';
       if (r === 2) return 'Cadet';
       return 'Suspended';
     }
 
     function getDivisionClass(rank) {
-      const r = Number(rank || 0);
+      const r = Number(rank || 1);
 
       if (r >= 28) return 'division-leadership';
-      if (r >= 24) return 'division-highcommand';
-      if (r >= 19) return 'division-department';
-      if (r === 17 || r === 18) return 'division-media';
+      if (r >= 23 && r <= 27) return 'division-highcommand';
+      if (r >= 18 && r <= 22) return 'division-department';
+      if (r === 17) return 'division-media';
       if (r >= 11 && r <= 16) return 'division-command';
-      if (r >= 4 && r <= 10) return 'division-officer';
+      if (r >= 5 && r <= 10) return 'division-officer';
+      if (r === 4) return 'division-rookie';
       if (r === 3) return 'division-tow';
       if (r === 2) return 'division-rookie';
       return 'division-suspended';
@@ -1364,54 +1393,86 @@
       return `<td><input class="mini-checkbox" type="checkbox" ${hasTraining(item, key) ? 'checked' : ''} disabled></td>`;
     }
 
-    function createEmptyRankRow(rank) {
+    function getEmptyRowsForRank(rank) {
+      const r = Number(rank);
+
+      if (r === 30) return 1;
+      if (r >= 28) return 3;
+      if (r >= 25) return 4;
+      if (r >= 23) return 2;
+      if (r >= 18) return 2;
+      if (r >= 11) return 2;
+      if (r >= 5) return 2;
+      if (r === 4) return 2;
+      if (r === 3) return 2;
+      if (r === 2) return 3;
+      return 3;
+    }
+
+    function createSeparatorRow() {
       return `
-        <tr class="rank-empty-row">
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
-          <td class="rank-main-cell rank-${rank}">${rank} | ${rankLabel(rank)}</td>
-          <td class="division-cell ${getDivisionClass(rank)}">${getDivisionLabel(rank)}</td>
-          <td>0/3</td>
-          <td>0/3</td>
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
-          <td><input class="mini-checkbox" type="checkbox" disabled></td>
-          <td><input class="mini-checkbox" type="checkbox" disabled></td>
-          <td><input class="mini-checkbox" type="checkbox" disabled></td>
-          <td><input class="mini-checkbox" type="checkbox" disabled></td>
-          <td><input class="mini-checkbox" type="checkbox" disabled></td>
-          <td><input class="mini-checkbox" type="checkbox" disabled></td>
-          <td><input class="mini-checkbox" type="checkbox" disabled></td>
-          <td><input class="mini-checkbox" type="checkbox" disabled></td>
-          <td><input class="mini-checkbox" type="checkbox" disabled></td>
-          <td><input class="mini-checkbox" type="checkbox" disabled></td>
-          <td><input class="mini-checkbox" type="checkbox" disabled></td>
-          <td><input class="mini-checkbox" type="checkbox" disabled></td>
-          <td><input class="mini-checkbox" type="checkbox" disabled></td>
-          <td><input class="mini-checkbox" type="checkbox" disabled></td>
-          <td><input class="mini-checkbox" type="checkbox" disabled></td>
-          <td><input class="mini-checkbox" type="checkbox" disabled></td>
-          <td>-</td>
+        <tr class="sep-row">
+          <td colspan="29"></td>
         </tr>
       `;
     }
 
+    function createSingleEmptyRankRow(rank) {
+      return `
+        <tr class="rank-empty-row">
+          <td class="left-dark"></td>
+          <td class="left-dark"></td>
+          <td class="left-dark"></td>
+          <td class="left-dark"></td>
+          <td class="rank-main-cell rank-${rank}">${rank} | ${rankLabel(rank)}</td>
+          <td class="division-cell ${getDivisionClass(rank)}">${getDivisionLabel(rank)}</td>
+          <td>0/3</td>
+          <td>0/3</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td><input class="mini-checkbox" type="checkbox" disabled></td>
+          <td><input class="mini-checkbox" type="checkbox" disabled></td>
+          <td><input class="mini-checkbox" type="checkbox" disabled></td>
+          <td><input class="mini-checkbox" type="checkbox" disabled></td>
+          <td><input class="mini-checkbox" type="checkbox" disabled></td>
+          <td><input class="mini-checkbox" type="checkbox" disabled></td>
+          <td><input class="mini-checkbox" type="checkbox" disabled></td>
+          <td><input class="mini-checkbox" type="checkbox" disabled></td>
+          <td><input class="mini-checkbox" type="checkbox" disabled></td>
+          <td><input class="mini-checkbox" type="checkbox" disabled></td>
+          <td><input class="mini-checkbox" type="checkbox" disabled></td>
+          <td><input class="mini-checkbox" type="checkbox" disabled></td>
+          <td><input class="mini-checkbox" type="checkbox" disabled></td>
+          <td><input class="mini-checkbox" type="checkbox" disabled></td>
+          <td><input class="mini-checkbox" type="checkbox" disabled></td>
+          <td><input class="mini-checkbox" type="checkbox" disabled></td>
+          <td></td>
+        </tr>
+      `;
+    }
+
+    function createEmptyRankRows(rank, amount = 1) {
+      let html = '';
+      for (let i = 0; i < amount; i++) {
+        html += createSingleEmptyRankRow(rank);
+      }
+      return html;
+    }
+
     function createEmployeeRankRow(item, docId, editDisabled) {
-      const personalRank = Math.max(1, Math.min(30, getPersonalRank(item) || 1));
+      const personalRank = Math.max(1, Math.min(30, Number(getPersonalRank(item) || 1)));
       const inviteDate = item.createdAt
         ? new Date(item.createdAt).toLocaleDateString('de-DE')
         : '01.04.2026';
 
       return `
         <tr>
-          <td>${item.employeeId || '-'}</td>
-          <td>${item.serviceNumber || '-'}</td>
-          <td>${item.name || '-'}</td>
-          <td>${item.phone || '-'}</td>
+          <td class="left-dark">${item.employeeId || ''}</td>
+          <td class="left-dark">${item.serviceNumber || ''}</td>
+          <td class="left-dark">${item.name || ''}</td>
+          <td class="left-dark">${item.phone || ''}</td>
           <td class="rank-main-cell rank-${personalRank}">${personalRank} | ${rankLabel(personalRank)}</td>
           <td class="division-cell ${getDivisionClass(personalRank)}">${getDivisionLabel(personalRank)}</td>
           <td>${item.vacation || '0/3'}</td>
@@ -1437,7 +1498,7 @@
           ${createTrainingCell(item, 'TOWBL')}
           ${createTrainingCell(item, 'AKS')}
           <td>
-            <button class="icon-btn" data-edit-id="${docId}" ${editDisabled}>✎</button>
+            <button class="rank-edit-btn" data-edit-id="${docId}" ${editDisabled}>✎</button>
           </td>
         </tr>
       `;
@@ -1465,7 +1526,7 @@
           if (seenEmails.has(emailKey)) return;
           seenEmails.add(emailKey);
 
-          const personalRank = Math.max(1, Math.min(30, getPersonalRank(item) || 1));
+          const personalRank = Math.max(1, Math.min(30, Number(getPersonalRank(item) || 1)));
           groupedByRank[personalRank].push({
             id: docSnap.id,
             data: item
@@ -1473,21 +1534,25 @@
         });
 
         for (let rank = 30; rank >= 1; rank--) {
-          tbody.innerHTML += `
-            <tr class="rank-group-header">
-              <td colspan="29">Rang ${rank} | ${rankLabel(rank)}</td>
-            </tr>
-          `;
+          const entries = groupedByRank[rank];
+          const minRows = getEmptyRowsForRank(rank);
 
-          if (!groupedByRank[rank].length) {
-            tbody.innerHTML += createEmptyRankRow(rank);
-            continue;
+          if (entries.length === 0) {
+            tbody.innerHTML += createEmptyRankRows(rank, minRows);
+          } else {
+            entries.forEach((entry) => {
+              const editDisabled = currentUser && isAdmin(currentUser.email) ? '' : 'disabled';
+              tbody.innerHTML += createEmployeeRankRow(entry.data, entry.id, editDisabled);
+            });
+
+            if (entries.length < minRows) {
+              tbody.innerHTML += createEmptyRankRows(rank, minRows - entries.length);
+            }
           }
 
-          groupedByRank[rank].forEach(entry => {
-            const editDisabled = currentUser && isAdmin(currentUser.email) ? '' : 'disabled';
-            tbody.innerHTML += createEmployeeRankRow(entry.data, entry.id, editDisabled);
-          });
+          if (rank > 1) {
+            tbody.innerHTML += createSeparatorRow();
+          }
         }
 
         tbody.querySelectorAll('[data-edit-id]').forEach(btn => {
