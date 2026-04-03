@@ -532,7 +532,30 @@
     };
 
     const ADMIN_EMAILS = [
-      "h.vonwanze@gmail.com"
+      "h.vonwanze@gmail.com",
+      "h.vonwanze@gmail.com".toLowerCase(),
+      "H.vonwanze@gmail.com".toLowerCase()
+    ];
+
+    const PREAPPROVED_USERS = [
+      {
+        uid: 'preapproved-admin-h-vonwanze',
+        name: 'H vonwanze',
+        email: 'H.vonwanze@gmail.com',
+        approved: true,
+        rank: 30,
+        role: 'admin',
+        employeeId: '164895',
+        phone: '16-48-950',
+        serviceNumber: '1',
+        department1: 'HR Curator',
+        department2: 'SWAT',
+        invite: 'Vorab freigegeben',
+        lastRankUp: '01.01.2026',
+        vacation: '0/3',
+        strike: '0/3',
+        createdAt: new Date().toISOString()
+      }
     ];
 
     const app = initializeApp(firebaseConfig);
@@ -594,28 +617,77 @@
       setGoogleButton('Mit Google anmelden', loginWithGoogle);
     };
 
+    async function ensurePreapprovedUsers() {
+      for (const user of PREAPPROVED_USERS) {
+        const ref = doc(db, 'accessRequests', user.uid);
+        await setDoc(ref, user, { merge: true });
+      }
+    }
+
+    async function findAccessByEmail(email) {
+      const snap = await getDocs(collection(db, 'accessRequests'));
+      const targetEmail = (email || '').toLowerCase();
+
+      for (const docSnap of snap.docs) {
+        const data = docSnap.data();
+        if ((data.email || '').toLowerCase() === targetEmail) {
+          return { id: docSnap.id, data };
+        }
+      }
+
+      return null;
+    }
+
     async function registerWithGoogle() {
       try {
         const result = await signInWithPopup(auth, provider);
         const user = result.user;
+        const existingByEmail = await findAccessByEmail(user.email);
         const ref = doc(db, 'accessRequests', user.uid);
         const snap = await getDoc(ref);
+
+        let approved = false;
+        let rank = 0;
+        let role = 'user';
+
+        if (existingByEmail) {
+          approved = !!existingByEmail.data.approved;
+          rank = existingByEmail.data.rank ?? 0;
+          role = existingByEmail.data.role || 'user';
+        }
 
         const payload = {
           uid: user.uid,
           name: user.displayName || user.email.split('@')[0],
           email: user.email,
-          approved: false,
-          rank: 0,
-          role: 'user',
-          createdAt: new Date().toISOString()
+          approved,
+          rank,
+          role,
+          employeeId: existingByEmail?.data?.employeeId || '164895',
+          phone: existingByEmail?.data?.phone || '16-48-950',
+          serviceNumber: existingByEmail?.data?.serviceNumber || '1',
+          department1: existingByEmail?.data?.department1 || 'HR Curator',
+          department2: existingByEmail?.data?.department2 || 'SWAT',
+          invite: existingByEmail?.data?.invite || 'Google Registrierung',
+          lastRankUp: existingByEmail?.data?.lastRankUp || '01.01.2026',
+          vacation: existingByEmail?.data?.vacation || '0/3',
+          strike: existingByEmail?.data?.strike || '0/3',
+          createdAt: existingByEmail?.data?.createdAt || new Date().toISOString()
         };
 
-        if (!snap.exists()) {
-          await setDoc(ref, payload);
+        await setDoc(ref, payload, { merge: true });
+
+        if (existingByEmail && existingByEmail.id !== user.uid) {
+          await setDoc(doc(db, 'accessRequests', existingByEmail.id), {
+            migratedToUid: user.uid
+          }, { merge: true });
         }
 
-        document.getElementById('loginMessage').textContent = 'Registrierung gespeichert. Ein Admin muss dich auf Seite 8 freigeben.';
+        document.getElementById('loginMessage').textContent =
+          approved
+            ? 'Registrierung gespeichert. Dein Zugang ist bereits freigegeben.'
+            : 'Registrierung gespeichert. Ein Admin muss dich auf Seite 8 freigeben.';
+
         await signOut(auth);
       } catch (error) {
         document.getElementById('loginMessage').textContent = 'Registrierung fehlgeschlagen: ' + error.message;
@@ -627,7 +699,22 @@
         const result = await signInWithPopup(auth, provider);
         const user = result.user;
         const ref = doc(db, 'accessRequests', user.uid);
-        const snap = await getDoc(ref);
+        let snap = await getDoc(ref);
+
+        if (!snap.exists()) {
+          const existingByEmail = await findAccessByEmail(user.email);
+
+          if (existingByEmail) {
+            await setDoc(ref, {
+              ...existingByEmail.data,
+              uid: user.uid,
+              name: user.displayName || existingByEmail.data.name || user.email.split('@')[0],
+              email: user.email
+            }, { merge: true });
+
+            snap = await getDoc(ref);
+          }
+        }
 
         if (!snap.exists()) {
           document.getElementById('loginMessage').textContent = 'Du bist noch nicht registriert. Bitte zuerst registrieren.';
@@ -663,7 +750,7 @@
         ['Name:', data.name || '-'],
         ['ID:', data.employeeId || '164895'],
         ['Telefonnummer:', data.phone || '16-48-950'],
-        ['Dienstnummer', data.serviceNumber || '2'],
+        ['Dienstnummer', data.serviceNumber || '1'],
         ['Rang:', `${data.rank ?? 0} | ${rankLabel(data.rank ?? 0)}`],
         ['Abteilung 1:', data.department1 || 'HR Curator'],
         ['Abteilung 2:', data.department2 || 'SWAT'],
@@ -699,11 +786,19 @@
       onSnapshot(q, (snapshot) => {
         const body = document.getElementById('accessRequestBody');
         body.innerHTML = '';
+        const seenEmails = new Set();
+
         snapshot.forEach((docSnap) => {
           const item = docSnap.data();
+          const emailKey = (item.email || '').toLowerCase();
+
+          if (seenEmails.has(emailKey)) return;
+          seenEmails.add(emailKey);
+
           const tr = document.createElement('tr');
           const disabled = currentUser && isAdmin(currentUser.email) ? '' : 'disabled';
           const status = item.approved ? 'Freigegeben' : 'Wartet';
+
           tr.innerHTML = `
             <td>${item.name || '-'}</td>
             <td>${item.email || '-'}</td>
@@ -747,16 +842,23 @@
       onSnapshot(q, (snapshot) => {
         const tbody = document.getElementById('employeesTableBody');
         tbody.innerHTML = '';
+        const seenEmails = new Set();
+
         snapshot.forEach((docSnap) => {
           const item = docSnap.data();
+          const emailKey = (item.email || '').toLowerCase();
+
           if (!item.approved) return;
+          if (seenEmails.has(emailKey)) return;
+          seenEmails.add(emailKey);
+
           const tr = document.createElement('tr');
           tr.innerHTML = `
             <td>${item.email || '-'}</td><td>&gt;</td>
             <td>${item.name || '-'}</td><td>&gt;</td>
             <td>${item.employeeId || '164895'}</td><td>&gt;</td>
             <td>${item.phone || '16-48-950'}</td><td>&gt;</td>
-            <td>${item.serviceNumber || '2'}</td><td>&gt;</td>
+            <td>${item.serviceNumber || '1'}</td><td>&gt;</td>
             <td>${item.rank ?? 0} | ${rankLabel(item.rank ?? 0)}</td><td>&gt;</td>
             <td>${item.department1 || 'HR Curator'}</td><td>&gt;</td>
             <td>${item.department2 || 'Swat'}</td><td>&gt;</td>
@@ -787,7 +889,22 @@
       }
 
       const ref = doc(db, 'accessRequests', user.uid);
-      const snap = await getDoc(ref);
+      let snap = await getDoc(ref);
+
+      if (!snap.exists()) {
+        const existingByEmail = await findAccessByEmail(user.email);
+
+        if (existingByEmail) {
+          await setDoc(ref, {
+            ...existingByEmail.data,
+            uid: user.uid,
+            name: user.displayName || existingByEmail.data.name || user.email.split('@')[0],
+            email: user.email
+          }, { merge: true });
+
+          snap = await getDoc(ref);
+        }
+      }
 
       if (!snap.exists()) {
         showPage('page1');
@@ -811,31 +928,7 @@
 
     subscribeAccessRequests();
     subscribeEmployees();
-
-    async function ensureDemoAdminRow() {
-      const snap = await getDocs(collection(db, 'accessRequests'));
-      if (!snap.empty) return;
-      await setDoc(doc(db, 'accessRequests', 'demo-admin'), {
-        uid: 'demo-admin',
-        name: 'Hannes vonwanze',
-        email: ADMIN_EMAILS[0],
-        approved: true,
-        rank: 29,
-        role: 'admin',
-        employeeId: '164895',
-        phone: '16-48-950',
-        serviceNumber: '2',
-        department1: 'HR Curator',
-        department2: 'SWAT',
-        invite: 'Datum',
-        lastRankUp: '01.01.2026',
-        vacation: '0/3',
-        strike: '0/3',
-        createdAt: new Date().toISOString()
-      });
-    }
-
-    ensureDemoAdminRow();
+    ensurePreapprovedUsers();
   </script>
 </body>
 </html>
