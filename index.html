@@ -223,33 +223,20 @@
       padding: 6px 8px;
       text-align: center;
       white-space: nowrap;
+      vertical-align: middle;
     }
 
     th { background: #666; }
 
-    .action-cell { width: 55px; font-weight: bold; }
+    .action-cell {
+      width: 55px;
+      font-weight: bold;
+    }
 
     .left-btn {
       margin-top: 20px;
       background: #666;
       min-width: 180px;
-    }
-
-    .icon-btn {
-      width: 34px;
-      min-width: 34px;
-      height: 30px;
-      padding: 0;
-      background: #4a4a4a;
-      font-size: 16px;
-      line-height: 30px;
-    }
-
-    .delete-btn {
-      background: #8b1e1e;
-      min-width: 110px;
-      padding: 6px 12px;
-      font-size: 13px;
     }
 
     .logout {
@@ -266,7 +253,8 @@
       margin: 0 auto;
     }
 
-    .request-controls select {
+    .request-controls select,
+    .request-controls input {
       width: 100%;
       padding: 6px;
       background: #222;
@@ -298,22 +286,129 @@
       color: #ddd;
     }
 
+    .icon-btn,
+    .danger-btn,
+    .save-btn,
+    .add-access-btn {
+      border: none;
+      color: #fff;
+      font-size: 14px;
+      padding: 7px 10px;
+      min-width: auto;
+    }
+
+    .icon-btn {
+      background: #3e3e3e;
+      font-weight: bold;
+    }
+
+    .danger-btn {
+      background: #8b1e1e;
+    }
+
+    .save-btn {
+      background: var(--green);
+    }
+
+    .employee-actions,
+    .request-actions {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .page8-bottom-row {
+      display: flex;
+      justify-content: flex-start;
+      margin-top: 20px;
+    }
+
+    .add-access-btn {
+      background: #666;
+      min-width: 180px;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+
+    .modal-content {
+      width: 100%;
+      max-width: 720px;
+      background: #111;
+      border: 1px solid #444;
+      padding: 20px;
+    }
+
+    .modal-title {
+      margin: 0 0 18px;
+      text-align: center;
+      font-size: 28px;
+      font-weight: 400;
+    }
+
+    .modal-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px 16px;
+    }
+
+    .modal-grid label {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 14px;
+      color: #ddd;
+    }
+
+    .modal-grid input,
+    .modal-grid select {
+      width: 100%;
+      background: #1d1d1d;
+      border: 1px solid #444;
+      color: #fff;
+      padding: 10px;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    .muted-btn {
+      background: #555;
+    }
+
+    .full-width { grid-column: 1 / -1; }
+
     @media (max-width: 1000px) {
       .logo-wrap { flex-direction: column; }
       .logo-line { font-size: 40px; text-align: center; }
       .top-title { font-size: 44px; }
       .dashboard-grid { grid-template-columns: 1fr; }
       .logout { position: static; margin-top: 20px; }
+      .modal-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
+  <!-- Seite 1 -->
   <section id="page1" class="page login-page">
     <div class="logo-wrap">
       <div class="fake-badge">LOS SANTOS<br>POLICE<br>DEPARTMENT</div>
       <div class="logo-line">Los Santos Police Department.</div>
     </div>
-
     <div class="auth-box">
       <button class="outline-btn" onclick="registerWithGoogle()">Registrieren</button>
       <button class="outline-btn" onclick="loginWithGoogle()">Anmelden</button>
@@ -321,6 +416,7 @@
     </div>
   </section>
 
+  <!-- Seite 2 -->
   <section id="page2" class="page hidden app-page">
     <div class="content-wrap">
       <h1 class="top-title">Los Santos Police Department</h1>
@@ -392,6 +488,7 @@
     </div>
   </section>
 
+  <!-- Seite 3 -->
   <section id="page3" class="page hidden app-page">
     <div class="content-wrap">
       <h1 class="top-title">Los Santos Police Department</h1>
@@ -399,6 +496,7 @@
     </div>
   </section>
 
+  <!-- Seite 4 -->
   <section id="page4" class="page hidden app-page">
     <div class="content-wrap">
       <h1 class="top-title">Los Santos Police Department</h1>
@@ -420,6 +518,7 @@
     </div>
   </section>
 
+  <!-- Seite 5 -->
   <section id="page5" class="page hidden app-page">
     <div class="content-wrap panel-card">
       <h1 class="top-title">Los Santos Police Department</h1>
@@ -436,6 +535,7 @@
     </div>
   </section>
 
+  <!-- Seite 6 -->
   <section id="page6" class="page hidden app-page">
     <div class="content-wrap panel-card">
       <h1 class="top-title">Los Santos Police Department</h1>
@@ -456,6 +556,7 @@
     </div>
   </section>
 
+  <!-- Seite 7 -->
   <section id="page7" class="page hidden app-page">
     <div class="content-wrap">
       <h1 class="top-title">Los Santos Police Department</h1>
@@ -463,15 +564,16 @@
       <table>
         <thead>
           <tr>
-            <th class="action-cell">✎</th><th>Email</th><th>Name</th><th class="action-cell">&gt;</th><th>ID</th><th class="action-cell">&gt;</th><th>Telefonnummer</th><th class="action-cell">&gt;</th><th>Dienstnummer</th><th class="action-cell">&gt;</th><th>Rang</th><th class="action-cell">&gt;</th><th>Abteilung1</th><th class="action-cell">&gt;</th><th>Abteilung2</th><th class="action-cell">&gt;</th><th>Invite</th><th class="action-cell">&gt;</th><th>Last RunkUp</th><th class="action-cell">&gt;</th><th>Urlaub</th><th class="action-cell">&gt;</th><th>Stike</th>
+            <th>Email</th><th>Bearbeiten</th><th>Name</th><th class="action-cell">&gt;</th><th>ID</th><th class="action-cell">&gt;</th><th>Telefonnummer</th><th class="action-cell">&gt;</th><th>Dienstnummer</th><th class="action-cell">&gt;</th><th>Rang</th><th class="action-cell">&gt;</th><th>Abteilung1</th><th class="action-cell">&gt;</th><th>Abteilung2</th><th class="action-cell">&gt;</th><th>Invite</th><th class="action-cell">&gt;</th><th>Last RunkUp</th><th class="action-cell">&gt;</th><th>Urlaub</th><th class="action-cell">&gt;</th><th>Stike</th>
           </tr>
         </thead>
         <tbody id="employeesTableBody"></tbody>
       </table>
-      <button class="left-btn" onclick="addEmployee()">Mitarbeiter hinzufügen +</button>
+      <button class="left-btn" id="addEmployeeBtn">Mitarbeiter hinzufügen +</button>
     </div>
   </section>
 
+  <!-- Seite 8 -->
   <section id="page8" class="page hidden app-page">
     <div class="content-wrap">
       <h1 class="top-title">Los Santos Police Department</h1>
@@ -484,25 +586,66 @@
             <th>Freigeben</th>
             <th>Zugriffsrang</th>
             <th>Status</th>
-            <th>Löschen</th>
+            <th>Aktionen</th>
           </tr>
         </thead>
         <tbody id="accessRequestBody"></tbody>
       </table>
-      <div class="small-note">Wenn bei einer registrierten Email unter Freigeben „ja“ steht, darf sich diese Person per Google anmelden.</div>
-      <button class="left-btn" onclick="addAccessEntry()">Zugriff hinzufügen +</button>
+      <div class="small-note">Der Zugriffsrang ist nur für die Webseiten-Berechtigung. Rang 0 = Standard, Rang 30 = voller Admin-Zugriff.</div>
+      <div class="page8-bottom-row">
+        <button class="add-access-btn" id="addAccessBtn">Zugriff hinzufügen</button>
+      </div>
     </div>
   </section>
 
+  <div id="employeeModal" class="modal hidden">
+    <div class="modal-content">
+      <h2 class="modal-title" id="employeeModalTitle">Mitarbeiter hinzufügen</h2>
+      <div class="modal-grid">
+        <label>Email<input id="empEmail" type="email" /></label>
+        <label>Name<input id="empName" type="text" /></label>
+        <label>ID<input id="empId" type="text" /></label>
+        <label>Telefonnummer<input id="empPhone" type="text" /></label>
+        <label>Dienstnummer<input id="empServiceNumber" type="text" /></label>
+        <label>Rang<input id="empRank" type="number" min="0" max="30" /></label>
+        <label>Abteilung 1<input id="empDepartment1" type="text" /></label>
+        <label>Abteilung 2<input id="empDepartment2" type="text" /></label>
+        <label>Invite<input id="empInvite" type="text" /></label>
+        <label>Last RunkUp<input id="empLastRankUp" type="text" /></label>
+        <label>Urlaub<input id="empVacation" type="text" /></label>
+        <label>Stike<input id="empStrike" type="text" /></label>
+      </div>
+      <div class="modal-actions">
+        <button class="muted-btn" type="button" onclick="closeEmployeeModal()">Abbrechen</button>
+        <button class="save-btn" type="button" onclick="saveEmployee()">Speichern</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="accessModal" class="modal hidden">
+    <div class="modal-content">
+      <h2 class="modal-title">Zugriff hinzufügen</h2>
+      <div class="modal-grid">
+        <label>Name<input id="accessName" type="text" /></label>
+        <label>Email<input id="accessEmail" type="email" /></label>
+        <label>Freigeben
+          <select id="accessApproved">
+            <option value="true">ja</option>
+            <option value="false">nein</option>
+          </select>
+        </label>
+        <label>Zugriffsrang<input id="accessRank" type="number" min="0" max="30" value="0" /></label>
+      </div>
+      <div class="modal-actions">
+        <button class="muted-btn" type="button" onclick="closeAccessModal()">Abbrechen</button>
+        <button class="save-btn" type="button" onclick="saveAccessEntry()">Speichern</button>
+      </div>
+    </div>
+  </div>
+
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js';
-    import {
-      getAuth,
-      GoogleAuthProvider,
-      signInWithPopup,
-      signOut,
-      onAuthStateChanged
-    } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
+    import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
     import {
       getFirestore,
       doc,
@@ -527,16 +670,13 @@
       measurementId: 'G-Z25G7L5X5W'
     };
 
-    const ADMIN_EMAILS = ['h.vonwanze@gmail.com'];
-
     const PREAPPROVED_USERS = [
       {
         uid: 'preapproved-admin-h-vonwanze',
         name: 'H vonwanze',
         email: 'H.vonwanze@gmail.com',
         approved: true,
-        rank: 30,
-        accessLevel: 30,
+        websiteAccessRank: 30,
         role: 'admin',
         employeeId: '164895',
         phone: '16-48-950',
@@ -558,6 +698,7 @@
 
     let currentUserData = null;
     let currentUser = null;
+    let editingEmployeeId = null;
 
     const navItems = [
       { id: 'page2', label: 'LSPD Dasboard' },
@@ -583,7 +724,7 @@
       });
     }
 
-    ['navMount','navMount3','navMount4','navMount5','navMount6','navMount7','navMount8'].forEach(mountNav);
+    ['navMount', 'navMount3', 'navMount4', 'navMount5', 'navMount6', 'navMount7', 'navMount8'].forEach(mountNav);
 
     function showPage(pageId) {
       document.querySelectorAll('.page').forEach(page => page.classList.add('hidden'));
@@ -592,6 +733,18 @@
 
     function showMessage(text) {
       document.getElementById('loginMessage').textContent = text || '';
+    }
+
+    function getWebsiteAccessRank(data) {
+      return Number(data?.websiteAccessRank ?? data?.rank ?? 0);
+    }
+
+    function getPersonalRank(data) {
+      return Number(data?.rank ?? 0);
+    }
+
+    function isAdmin(email, data = null) {
+      return getWebsiteAccessRank(data || currentUserData) >= 30 || (email || '').toLowerCase() === 'h.vonwanze@gmail.com';
     }
 
     async function ensurePreapprovedUsers() {
@@ -604,15 +757,71 @@
     async function findAccessByEmail(email) {
       const snap = await getDocs(collection(db, 'accessRequests'));
       const targetEmail = (email || '').toLowerCase();
-
       for (const docSnap of snap.docs) {
         const data = docSnap.data();
         if ((data.email || '').toLowerCase() === targetEmail) {
           return { id: docSnap.id, data };
         }
       }
-
       return null;
+    }
+
+    function rankLabel(rank) {
+      const labels = {
+        0: 'Cadet',
+        1: 'Rookie',
+        2: 'Officer I',
+        3: 'Officer II',
+        4: 'Officer Fist Class',
+        5: 'Supervising Officer',
+        6: 'Senior Supervisor',
+        7: 'Lead Supervisor',
+        8: 'Corporal',
+        9: 'Detective',
+        10: 'Sergeant',
+        11: 'Lieutenant',
+        12: 'Captain',
+        13: 'HR Assistant',
+        14: 'Special Police Officer',
+        15: 'Press Association',
+        16: 'Internet Supervisor',
+        17: 'S.W.A.T Captain',
+        18: 'UI Investigator',
+        19: 'HR Coordinator',
+        20: 'Police Inspector',
+        21: 'Police Command',
+        22: 'Chief of Department',
+        23: 'Interims Chief',
+        24: 'Assistant Chief of Police',
+        25: 'Deputy Chief of Police',
+        26: 'Chief of Police',
+        27: 'Chief+',
+        28: 'Command+',
+        29: 'Deputy Chief of Police',
+        30: 'Chief of Police'
+      };
+      return labels[rank] || `Rang ${rank}`;
+    }
+
+    function renderPersonalData(data, user) {
+      const personalRank = getPersonalRank(data);
+      const personalData = [
+        ['Name:', data.name || '-'],
+        ['ID:', data.employeeId || '164895'],
+        ['Telefonnummer:', data.phone || '16-48-950'],
+        ['Dienstnummer', data.serviceNumber || '1'],
+        ['Rang:', `${personalRank} | ${rankLabel(personalRank)}`],
+        ['Abteilung 1:', data.department1 || 'HR Curator'],
+        ['Abteilung 2:', data.department2 || 'SWAT'],
+        ['Invite', data.invite || 'Datum'],
+        ['Last RunkUp', data.lastRankUp || '01.01.2026'],
+        ['Urlaub', data.vacation || '0/3'],
+        ['Stike', data.strike || '0/3']
+      ];
+
+      const grid = document.getElementById('personalDataGrid');
+      grid.innerHTML = personalData.map(([k, v]) => `<div>${k}</div><div>${v}</div>`).join('');
+      document.getElementById('welcomeBox').textContent = `Angemeldet als ${user.email}`;
     }
 
     window.registerWithGoogle = async function () {
@@ -624,14 +833,14 @@
         const ref = doc(db, 'accessRequests', user.uid);
 
         let approved = false;
-        let rank = 0;
-        let accessLevel = 0;
+        let websiteAccessRank = 0;
+        let personalRank = 0;
         let role = 'user';
 
         if (existingByEmail) {
           approved = !!existingByEmail.data.approved;
-          rank = existingByEmail.data.rank ?? 0;
-          accessLevel = existingByEmail.data.accessLevel ?? 0;
+          websiteAccessRank = getWebsiteAccessRank(existingByEmail.data);
+          personalRank = getPersonalRank(existingByEmail.data);
           role = existingByEmail.data.role || 'user';
         }
 
@@ -640,8 +849,8 @@
           name: user.displayName || user.email.split('@')[0],
           email: user.email,
           approved,
-          rank,
-          accessLevel,
+          websiteAccessRank,
+          rank: personalRank,
           role,
           employeeId: existingByEmail?.data?.employeeId || '164895',
           phone: existingByEmail?.data?.phone || '16-48-950',
@@ -658,8 +867,9 @@
         await setDoc(ref, payload, { merge: true });
 
         if (approved) {
+          currentUserData = payload;
           renderPersonalData(payload, user);
-          if (isAdmin(user.email)) {
+          if (isAdmin(user.email, payload)) {
             showPage('page8');
           } else {
             showPage('page2');
@@ -702,8 +912,7 @@
         }
 
         const data = snap.data();
-
-        if (isAdmin(user.email)) {
+        if (isAdmin(user.email, data)) {
           currentUserData = data;
           renderPersonalData(data, user);
           showPage('page8');
@@ -725,184 +934,140 @@
       }
     };
 
-    function renderPersonalData(data, user) {
-      const personalData = [
-        ['Name:', data.name || '-'],
-        ['ID:', data.employeeId || '164895'],
-        ['Telefonnummer:', data.phone || '16-48-950'],
-        ['Dienstnummer', data.serviceNumber || '1'],
-        ['Rang:', `${data.rank ?? 0} | ${rankLabel(data.rank ?? 0)}`],
-        ['Abteilung 1:', data.department1 || 'HR Curator'],
-        ['Abteilung 2:', data.department2 || 'SWAT'],
-        ['Invite', data.invite || 'Datum'],
-        ['Last RunkUp', data.lastRankUp || '01.01.2026'],
-        ['Urlaub', data.vacation || '0/3'],
-        ['Stike', data.strike || '0/3']
-      ];
-
-      const grid = document.getElementById('personalDataGrid');
-      grid.innerHTML = personalData.map(([k, v]) => `<div>${k}</div><div>${v}</div>`).join('');
-      document.getElementById('welcomeBox').textContent = `Angemeldet als ${user.email}`;
+    function resetEmployeeModal() {
+      editingEmployeeId = null;
+      document.getElementById('employeeModalTitle').textContent = 'Mitarbeiter hinzufügen';
+      document.getElementById('empEmail').value = '';
+      document.getElementById('empName').value = '';
+      document.getElementById('empId').value = '';
+      document.getElementById('empPhone').value = '';
+      document.getElementById('empServiceNumber').value = '';
+      document.getElementById('empRank').value = '0';
+      document.getElementById('empDepartment1').value = '';
+      document.getElementById('empDepartment2').value = '';
+      document.getElementById('empInvite').value = '';
+      document.getElementById('empLastRankUp').value = '';
+      document.getElementById('empVacation').value = '0/3';
+      document.getElementById('empStrike').value = '0/3';
     }
 
-    function rankLabel(rank) {
-      const labels = {
-        0: 'Cadet', 1: 'Rookie', 2: 'Officer I', 3: 'Officer II', 4: 'Officer Fist Class', 5: 'Supervising Officer',
-        6: 'Senior Supervisor', 7: 'Lead Supervisor', 8: 'Corporal', 9: 'Detective', 10: 'Sergeant', 11: 'Lieutenant',
-        12: 'Captain', 13: 'HR Assistant', 14: 'Special Police Officer', 15: 'Press Association', 16: 'Internet Supervisor',
-        17: 'S.W.A.T Captain', 18: 'UI Investigator', 19: 'HR Coordinator', 20: 'Police Inspector', 21: 'Police Command',
-        22: 'Chief of Department', 23: 'Interims Chief', 24: 'Assistant Chief of Police', 25: 'Deputy Chief of Police',
-        26: 'Chief of Police', 27: 'Chief+', 28: 'Command+', 29: 'Deputy Chief of Police', 30: 'Chief of Police'
-      };
-      return labels[rank] || `Rang ${rank}`;
+    window.closeEmployeeModal = function () {
+      document.getElementById('employeeModal').classList.add('hidden');
+    };
+
+    function openEmployeeModal(item = null, docId = null) {
+      resetEmployeeModal();
+      if (item && docId) {
+        editingEmployeeId = docId;
+        document.getElementById('employeeModalTitle').textContent = 'Mitarbeiter bearbeiten';
+        document.getElementById('empEmail').value = item.email || '';
+        document.getElementById('empName').value = item.name || '';
+        document.getElementById('empId').value = item.employeeId || '';
+        document.getElementById('empPhone').value = item.phone || '';
+        document.getElementById('empServiceNumber').value = item.serviceNumber || '';
+        document.getElementById('empRank').value = getPersonalRank(item);
+        document.getElementById('empDepartment1').value = item.department1 || '';
+        document.getElementById('empDepartment2').value = item.department2 || '';
+        document.getElementById('empInvite').value = item.invite || '';
+        document.getElementById('empLastRankUp').value = item.lastRankUp || '';
+        document.getElementById('empVacation').value = item.vacation || '';
+        document.getElementById('empStrike').value = item.strike || '';
+      }
+      document.getElementById('employeeModal').classList.remove('hidden');
     }
 
-    function isAdmin(email) {
-      return (email || '').toLowerCase() === 'h.vonwanze@gmail.com';
-    }
-
-    window.addAccessEntry = async function () {
+    window.saveEmployee = async function () {
       if (!currentUser || !isAdmin(currentUser.email)) return;
 
-      const email = prompt('Email eingeben:');
-      if (!email) return;
+      const email = document.getElementById('empEmail').value.trim();
+      if (!email) {
+        alert('Bitte eine Email eintragen.');
+        return;
+      }
 
-      const name = prompt('Name eingeben:', email.split('@')[0] || '') || email.split('@')[0] || '-';
-      const accessLevelInput = prompt('Zugriffsrang eingeben (0 bis 30):', '0');
-      if (accessLevelInput === null) return;
+      const existingByEmail = await findAccessByEmail(email);
+      const targetId = editingEmployeeId || existingByEmail?.id || `manual-${Date.now()}`;
+      const existingData = existingByEmail?.data || {};
 
-      const accessLevel = Math.max(0, Math.min(30, Number(accessLevelInput) || 0));
-      const existing = await findAccessByEmail(email);
-      const docId = existing?.id || `manual-${Date.now()}`;
-      const existingData = existing?.data || {};
-
-      await setDoc(doc(db, 'accessRequests', docId), {
-        uid: existingData.uid || docId,
-        name,
+      const payload = {
+        uid: existingData.uid || targetId,
         email,
-        approved: true,
-        rank: existingData.rank ?? 0,
-        accessLevel,
-        role: accessLevel >= 30 ? 'admin' : (existingData.role || 'user'),
+        name: document.getElementById('empName').value.trim() || email.split('@')[0],
+        employeeId: document.getElementById('empId').value.trim() || '164895',
+        phone: document.getElementById('empPhone').value.trim() || '16-48-950',
+        serviceNumber: document.getElementById('empServiceNumber').value.trim() || '1',
+        rank: Number(document.getElementById('empRank').value || 0),
+        websiteAccessRank: getWebsiteAccessRank(existingData),
+        department1: document.getElementById('empDepartment1').value.trim() || 'HR Curator',
+        department2: document.getElementById('empDepartment2').value.trim() || 'SWAT',
+        invite: document.getElementById('empInvite').value.trim() || 'Manuell erstellt',
+        lastRankUp: document.getElementById('empLastRankUp').value.trim() || '01.01.2026',
+        vacation: document.getElementById('empVacation').value.trim() || '0/3',
+        strike: document.getElementById('empStrike').value.trim() || '0/3',
+        approved: existingData.approved ?? true,
+        role: existingData.role || 'user',
+        createdAt: existingData.createdAt || new Date().toISOString()
+      };
+
+      await setDoc(doc(db, 'accessRequests', targetId), payload, { merge: true });
+      closeEmployeeModal();
+    };
+
+    window.closeAccessModal = function () {
+      document.getElementById('accessModal').classList.add('hidden');
+    };
+
+    function openAccessModal() {
+      document.getElementById('accessName').value = '';
+      document.getElementById('accessEmail').value = '';
+      document.getElementById('accessApproved').value = 'true';
+      document.getElementById('accessRank').value = '0';
+      document.getElementById('accessModal').classList.remove('hidden');
+    }
+
+    window.saveAccessEntry = async function () {
+      if (!currentUser || !isAdmin(currentUser.email)) return;
+
+      const email = document.getElementById('accessEmail').value.trim();
+      if (!email) {
+        alert('Bitte eine Email eintragen.');
+        return;
+      }
+
+      const existingByEmail = await findAccessByEmail(email);
+      const targetId = existingByEmail?.id || `access-${Date.now()}`;
+      const existingData = existingByEmail?.data || {};
+
+      const payload = {
+        uid: existingData.uid || targetId,
+        email,
+        name: document.getElementById('accessName').value.trim() || email.split('@')[0],
+        approved: document.getElementById('accessApproved').value === 'true',
+        websiteAccessRank: Number(document.getElementById('accessRank').value || 0),
+        rank: getPersonalRank(existingData),
+        role: Number(document.getElementById('accessRank').value || 0) >= 30 ? 'admin' : (existingData.role || 'user'),
         employeeId: existingData.employeeId || '164895',
         phone: existingData.phone || '16-48-950',
         serviceNumber: existingData.serviceNumber || '1',
         department1: existingData.department1 || 'HR Curator',
         department2: existingData.department2 || 'SWAT',
-        invite: existingData.invite || 'Manuell freigegeben',
+        invite: existingData.invite || 'Admin Freigabe',
         lastRankUp: existingData.lastRankUp || '01.01.2026',
         vacation: existingData.vacation || '0/3',
         strike: existingData.strike || '0/3',
         createdAt: existingData.createdAt || new Date().toISOString()
-      }, { merge: true });
+      };
+
+      await setDoc(doc(db, 'accessRequests', targetId), payload, { merge: true });
+      closeAccessModal();
     };
 
-    window.addEmployee = async function () {
+    async function deleteAccessEntry(id) {
       if (!currentUser || !isAdmin(currentUser.email)) return;
-
-      const email = prompt('Email eingeben:');
-      if (!email) return;
-
-      const name = prompt('Name eingeben:', '') || '-';
-      const employeeId = prompt('ID eingeben:', '164895');
-      if (employeeId === null) return;
-      const phone = prompt('Telefonnummer eingeben:', '16-48-950');
-      if (phone === null) return;
-      const serviceNumber = prompt('Dienstnummer eingeben:', '1');
-      if (serviceNumber === null) return;
-      const rankInput = prompt('Mitarbeiter-Rang eingeben:', '0');
-      if (rankInput === null) return;
-      const department1 = prompt('Abteilung 1 eingeben:', 'HR Curator');
-      if (department1 === null) return;
-      const department2 = prompt('Abteilung 2 eingeben:', 'SWAT');
-      if (department2 === null) return;
-      const invite = prompt('Invite eingeben:', 'Manuell hinzugefügt');
-      if (invite === null) return;
-      const lastRankUp = prompt('Last RunkUp eingeben:', '01.01.2026');
-      if (lastRankUp === null) return;
-      const vacation = prompt('Urlaub eingeben:', '0/3');
-      if (vacation === null) return;
-      const strike = prompt('Stike eingeben:', '0/3');
-      if (strike === null) return;
-
-      const existing = await findAccessByEmail(email);
-      const docId = existing?.id || `employee-${Date.now()}`;
-      const existingData = existing?.data || {};
-
-      await setDoc(doc(db, 'accessRequests', docId), {
-        uid: existingData.uid || docId,
-        name,
-        email,
-        approved: true,
-        rank: Number(rankInput) || 0,
-        accessLevel: existingData.accessLevel ?? 0,
-        role: existingData.role || 'user',
-        employeeId,
-        phone,
-        serviceNumber,
-        department1,
-        department2,
-        invite,
-        lastRankUp,
-        vacation,
-        strike,
-        createdAt: existingData.createdAt || new Date().toISOString()
-      }, { merge: true });
-    };
-
-    window.editEmployee = async function (id) {
-      if (!currentUser || !isAdmin(currentUser.email)) return;
-
-      const ref = doc(db, 'accessRequests', id);
-      const snap = await getDoc(ref);
-      if (!snap.exists()) return;
-      const item = snap.data();
-
-      const email = prompt('Email bearbeiten:', item.email || '');
-      if (email === null) return;
-      const name = prompt('Name bearbeiten:', item.name || '');
-      if (name === null) return;
-      const employeeId = prompt('ID bearbeiten:', item.employeeId || '164895');
-      if (employeeId === null) return;
-      const phone = prompt('Telefonnummer bearbeiten:', item.phone || '16-48-950');
-      if (phone === null) return;
-      const serviceNumber = prompt('Dienstnummer bearbeiten:', item.serviceNumber || '1');
-      if (serviceNumber === null) return;
-      const rankInput = prompt('Mitarbeiter-Rang bearbeiten:', String(item.rank ?? 0));
-      if (rankInput === null) return;
-      const department1 = prompt('Abteilung 1 bearbeiten:', item.department1 || 'HR Curator');
-      if (department1 === null) return;
-      const department2 = prompt('Abteilung 2 bearbeiten:', item.department2 || 'SWAT');
-      if (department2 === null) return;
-      const invite = prompt('Invite bearbeiten:', item.invite || '');
-      if (invite === null) return;
-      const lastRankUp = prompt('Last RunkUp bearbeiten:', item.lastRankUp || '01.01.2026');
-      if (lastRankUp === null) return;
-      const vacation = prompt('Urlaub bearbeiten:', item.vacation || '0/3');
-      if (vacation === null) return;
-      const strike = prompt('Stike bearbeiten:', item.strike || '0/3');
-      if (strike === null) return;
-
-      await updateDoc(ref, {
-        email,
-        name,
-        employeeId,
-        phone,
-        serviceNumber,
-        rank: Number(rankInput) || 0,
-        department1,
-        department2,
-        invite,
-        lastRankUp,
-        vacation,
-        strike
-      });
-    };
-
-    window.deleteAccessRequest = async function (id) {
-      if (!currentUser || !isAdmin(currentUser.email)) return;
+      const confirmed = confirm('Diesen Zugriff und die Anfrage wirklich löschen?');
+      if (!confirmed) return;
       await deleteDoc(doc(db, 'accessRequests', id));
-    };
+    }
 
     function subscribeAccessRequests() {
       const q = query(collection(db, 'accessRequests'), orderBy('createdAt', 'desc'));
@@ -914,13 +1079,13 @@
         snapshot.forEach((docSnap) => {
           const item = docSnap.data();
           const emailKey = (item.email || '').toLowerCase();
-
           if (seenEmails.has(emailKey)) return;
           seenEmails.add(emailKey);
 
           const tr = document.createElement('tr');
           const disabled = currentUser && isAdmin(currentUser.email) ? '' : 'disabled';
           const status = item.approved ? 'Freigegeben' : 'Wartet';
+          const accessRank = getWebsiteAccessRank(item);
 
           tr.innerHTML = `
             <td>${item.name || '-'}</td>
@@ -932,18 +1097,20 @@
               </select>
             </td>
             <td class="request-controls">
-              <select data-type="accessLevel" data-id="${docSnap.id}" ${disabled}>
-                ${Array.from({ length: 31 }, (_, i) => `<option value="${i}" ${(item.accessLevel ?? 0) === i ? 'selected' : ''}>${i}</option>`).join('')}
-              </select>
+              <input type="number" min="0" max="30" data-type="websiteAccessRank" data-id="${docSnap.id}" value="${accessRank}" ${disabled} />
             </td>
             <td><span class="status-pill ${item.approved ? 'yes' : 'pending'}">${status}</span></td>
-            <td><button class="delete-btn" data-delete-id="${docSnap.id}" ${disabled}>Löschen</button></td>
+            <td>
+              <div class="request-actions">
+                <button class="danger-btn" data-delete-id="${docSnap.id}" ${disabled}>Löschen</button>
+              </div>
+            </td>
           `;
           body.appendChild(tr);
         });
 
-        body.querySelectorAll('select').forEach(select => {
-          select.addEventListener('change', async (e) => {
+        body.querySelectorAll('select, input[data-type="websiteAccessRank"]').forEach(control => {
+          control.addEventListener('change', async (e) => {
             if (!currentUser || !isAdmin(currentUser.email)) return;
             const id = e.target.dataset.id;
             const type = e.target.dataset.type;
@@ -952,15 +1119,18 @@
             if (type === 'approved') {
               await updateDoc(ref, { approved: e.target.value === 'true' });
             }
-
-            if (type === 'accessLevel') {
-              await updateDoc(ref, { accessLevel: Number(e.target.value) });
+            if (type === 'websiteAccessRank') {
+              const value = Math.max(0, Math.min(30, Number(e.target.value || 0)));
+              e.target.value = value;
+              await updateDoc(ref, { websiteAccessRank: value, role: value >= 30 ? 'admin' : 'user' });
             }
           });
         });
 
         body.querySelectorAll('[data-delete-id]').forEach(btn => {
-          btn.addEventListener('click', () => deleteAccessRequest(btn.dataset.deleteId));
+          btn.addEventListener('click', async () => {
+            await deleteAccessEntry(btn.dataset.deleteId);
+          });
         });
       });
     }
@@ -975,20 +1145,24 @@
         snapshot.forEach((docSnap) => {
           const item = docSnap.data();
           const emailKey = (item.email || '').toLowerCase();
-
           if (!item.approved) return;
           if (seenEmails.has(emailKey)) return;
           seenEmails.add(emailKey);
 
           const tr = document.createElement('tr');
+          const personalRank = getPersonalRank(item);
+          const editDisabled = currentUser && isAdmin(currentUser.email) ? '' : 'disabled';
+
           tr.innerHTML = `
-            <td><button class="icon-btn" data-edit-id="${docSnap.id}">✎</button></td>
             <td>${item.email || '-'}</td>
+            <td>
+              <button class="icon-btn" data-edit-id="${docSnap.id}" ${editDisabled}>✎</button>
+            </td>
             <td>${item.name || '-'}</td><td>&gt;</td>
             <td>${item.employeeId || '164895'}</td><td>&gt;</td>
             <td>${item.phone || '16-48-950'}</td><td>&gt;</td>
             <td>${item.serviceNumber || '1'}</td><td>&gt;</td>
-            <td>${item.rank ?? 0} | ${rankLabel(item.rank ?? 0)}</td><td>&gt;</td>
+            <td>${personalRank} | ${rankLabel(personalRank)}</td><td>&gt;</td>
             <td>${item.department1 || 'HR Curator'}</td><td>&gt;</td>
             <td>${item.department2 || 'Swat'}</td><td>&gt;</td>
             <td>${item.invite || 'Email'}</td><td>&gt;</td>
@@ -997,10 +1171,11 @@
             <td>${item.strike || '0'}</td>
           `;
           tbody.appendChild(tr);
-        });
 
-        tbody.querySelectorAll('[data-edit-id]').forEach(btn => {
-          btn.addEventListener('click', () => editEmployee(btn.dataset.editId));
+          const editBtn = tr.querySelector('[data-edit-id]');
+          if (editBtn) {
+            editBtn.addEventListener('click', () => openEmployeeModal(item, docSnap.id));
+          }
         });
       });
     }
@@ -1013,9 +1188,18 @@
       showPage('page1');
     };
 
+    document.getElementById('addEmployeeBtn').addEventListener('click', () => {
+      if (!currentUser || !isAdmin(currentUser.email)) return;
+      openEmployeeModal();
+    });
+
+    document.getElementById('addAccessBtn').addEventListener('click', () => {
+      if (!currentUser || !isAdmin(currentUser.email)) return;
+      openAccessModal();
+    });
+
     onAuthStateChanged(auth, async (user) => {
       currentUser = user || null;
-
       if (!user) {
         showPage('page1');
         return;
@@ -1023,7 +1207,6 @@
 
       const ref = doc(db, 'accessRequests', user.uid);
       let snap = await getDoc(ref);
-
       if (!snap.exists()) {
         const existingByEmail = await findAccessByEmail(user.email);
         if (existingByEmail) {
@@ -1046,7 +1229,7 @@
       currentUserData = data;
       renderPersonalData(data, user);
 
-      if (isAdmin(user.email)) {
+      if (isAdmin(user.email, data)) {
         showPage('page8');
       } else if (data.approved) {
         showPage('page2');
