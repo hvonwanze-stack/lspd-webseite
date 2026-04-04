@@ -181,7 +181,7 @@
     border-bottom: 1px solid var(--gold);
   }
 
-  .training-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .training-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
 
   .training-category { background: transparent; }
   .cat-header {
@@ -204,9 +204,10 @@
   .training-item input[type=checkbox] { width: 14px; height: 14px; flex-shrink: 0; cursor: not-allowed; }
   .training-item input[type=checkbox] { accent-color: var(--gold); }
   .training-label {
-    width: 28px; padding: 2px 3px; border-radius: 3px; text-align: center;
-    font-family: 'Rajdhani', sans-serif; font-size: 0.65rem; font-weight: 700;
+    flex: 1; padding: 3px 5px; border-radius: 3px; text-align: center;
+    font-family: 'Rajdhani', sans-serif; font-size: 0.72rem; font-weight: 700;
     background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1);
+    line-height: 1.2;
   }
 
   .free-training {
@@ -518,56 +519,56 @@ window.generateIdFromEmail = generateIdFromEmail;
           <div class="training-grid">
             <div class="training-category">
               <div class="cat-header cat-rookie">FÜR ROOKIE</div>
-              <div class="training-item"><input type="checkbox" disabled style="accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">GA</span></div>
-              <div class="training-item"><input type="checkbox" disabled style="accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">EHK</span></div>
+              <div class="training-item"><input type="checkbox" disabled style="accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">Grundausbildung</span></div>
+              <div class="training-item"><input type="checkbox" disabled style="accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">Erste Hilfe Kurs</span></div>
             </div>
             <div class="training-category">
               <div class="cat-header cat-officer">FÜR OFFICER</div>
-              <div class="training-item"><input type="checkbox" disabled style="accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">ES</span></div>
-              <div class="training-item"><input type="checkbox" disabled style="accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">OP</span></div>
+              <div class="training-item"><input type="checkbox" disabled style="accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">Event Schulung</span></div>
+              <div class="training-item"><input type="checkbox" disabled style="accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">Officerprüfung</span></div>
             </div>
             <div class="training-category">
               <div class="cat-header cat-officer2">FÜR OFFICER II</div>
-              <div class="training-item"><input type="checkbox" disabled style="accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">OK</span></div>
-              <div class="training-item"><input type="checkbox" disabled style="accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">FULA</span></div>
+              <div class="training-item"><input type="checkbox" disabled style="accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">Ortskunde Prüfung</span></div>
+              <div class="training-item"><input type="checkbox" disabled style="accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">Funk- und Leitstellenausbildung</span></div>
             </div>
             <div class="training-category">
               <div class="cat-header cat-ofc">FÜR OFFICER FIRST CLASS</div>
-              <div class="training-item"><input type="checkbox" checked disabled style="accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">TST</span></div>
+              <div class="training-item"><input type="checkbox" checked disabled style="accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">Tactical Shootingprüfung</span></div>
             </div>
             <div class="training-category">
               <div class="cat-header cat-sup">FÜR SUPERVISING OFFICER</div>
-              <div class="training-item"><input type="checkbox" disabled style="accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">KS</span></div>
+              <div class="training-item"><input type="checkbox" disabled style="accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">Konvoi Schulung</span></div>
             </div>
             <div class="training-category">
               <div class="cat-header cat-senior">FÜR SENIOR SUPERVISOR</div>
-              <div class="training-item"><input type="checkbox" disabled style="accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">OK+</span></div>
+              <div class="training-item"><input type="checkbox" disabled style="accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">Ortskunde+ Prüfung</span></div>
             </div>
             <div class="training-category">
               <div class="cat-header cat-corp">FÜR CORPORAL</div>
-              <div class="training-item"><input type="checkbox" disabled style="accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">COP</span></div>
+              <div class="training-item"><input type="checkbox" disabled style="accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">Corporate Prüfung</span></div>
             </div>
             <div class="training-category">
               <div class="cat-header cat-lead">FÜR LEAD SUPERVISOR</div>
-              <div class="training-item"><input type="checkbox" disabled style="accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">FT</span></div>
+              <div class="training-item"><input type="checkbox" disabled style="accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">Flugtauglichkeitsprüfung</span></div>
             </div>
             <div class="training-category">
               <div class="cat-header cat-det">FÜR DETECTIVE</div>
-              <div class="training-item"><input type="checkbox" disabled style="accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">JP</span></div>
+              <div class="training-item"><input type="checkbox" disabled style="accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">Juraprüfung</span></div>
             </div>
           </div>
           <div class="free-training">
             <div style="display:flex;gap:10px;align-items:center;margin-bottom:6px;">
               <div class="cat-header cat-aks" style="flex:1;margin:0;">AKS</div>
             </div>
-            <div class="training-item"><input type="checkbox" disabled style="accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">AKS</span></div>
+            <div class="training-item"><input type="checkbox" disabled style="accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">Antikorruptionsschulung</span></div>
           </div>
           <div class="free-training">
             <div class="cat-header" style="background:var(--purple);border:1px solid var(--purple2);">FREIWILLIGE AUSBILDUNGEN</div>
             <div class="free-grid" style="margin-top:8px;">
-              <div class="training-item"><input type="checkbox" disabled style="accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">ZP</span></div>
-              <div class="training-item"><input type="checkbox" disabled style="accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">VHP</span></div>
-              <div class="training-item"><input type="checkbox" disabled style="accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">TOW / BL</span></div>
+              <div class="training-item"><input type="checkbox" disabled style="accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">Zivilprüfung</span></div>
+              <div class="training-item"><input type="checkbox" disabled style="accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">Einsatzleitung und Verhandlungsführungsprüfung</span></div>
+              <div class="training-item"><input type="checkbox" disabled style="accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">TW und Blitzerzertifikat</span></div>
             </div>
           </div>
         </div>
