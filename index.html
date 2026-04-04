@@ -641,11 +641,12 @@ window.generateIdFromEmail = generateIdFromEmail;
     <div id="sub-mitarbeiter" style="display:none;">
       <div class="search-area">
         <button class="btn btn-primary" onclick="openPopup('add-ma')">Mitarbeiter hinzufügen</button>
-        <input class="search-input" placeholder="Mitarbeiter suchen..." id="ma-search" oninput="filterMitarbeiter()" style="max-width:130px;margin-left:8px;margin-right:8px;">
+        <input class="search-input" placeholder="Reisepass suchen..." id="ma-search" oninput="filterMitarbeiter()" style="max-width:150px;margin-left:16px;margin-right:16px;">
         <div style="flex:1"></div>
         <div style="display:flex;align-items:stretch;gap:6px;">
-          <button class="btn btn-primary" onclick="editMitarbeiterById()" style="padding:0 10px;font-size:1rem;align-self:stretch;" title="Mitarbeiter bearbeiten">✏️</button>
-          <input class="search-input" placeholder="ID eingeben" id="ma-id-input" style="max-width:150px;border-radius:5px;">
+          <button class="btn btn-primary" onclick="openEditMaDaten()" style="padding:0 10px;font-size:1rem;align-self:stretch;" title="Daten bearbeiten">✏️</button>
+          <input class="search-input" placeholder="ID eingeben" id="ma-id-input" style="max-width:140px;border-radius:5px;">
+          <button class="btn btn-primary" onclick="openEditAusbildungen()" style="padding:0 10px;font-size:1rem;align-self:stretch;" title="Ausbildungen bearbeiten">📋</button>
         </div>
         <button class="btn btn-primary" onclick="archivieren()">Archivieren</button>
         <button class="btn btn-primary" onclick="showSubPage('archiv')">Mitarbeiter Archiv</button>
@@ -791,6 +792,7 @@ window.generateIdFromEmail = generateIdFromEmail;
     </div>
     <div class="popup-body" style="display:grid;grid-template-columns:1fr 1fr;gap:0 16px;">
       <div class="form-group"><label>IDENTIFIKATIONSNUMMER</label><input type="text" id="ma-identnr" placeholder="z.B. 164895"></div>
+      <div class="form-group"><label>REISEPASSNUMMER</label><input type="text" id="ma-reisepass" placeholder="Reisepassnummer"></div>
       <div class="form-group"><label>ID</label><input type="text" id="ma-new-id" placeholder="z.B. A-001"></div>
       <div class="form-group"><label>DIENSTNUMMER (DN)</label><input type="text" id="ma-dn" placeholder="z.B. DN-001"></div>
       <div class="form-group"><label>NAME</label><input type="text" id="ma-vorname" placeholder="Vorname Nachname"></div>
@@ -805,8 +807,70 @@ window.generateIdFromEmail = generateIdFromEmail;
       <div class="form-group"><label>STRIKE</label><input type="text" id="ma-strike" placeholder="0/3"></div>
     </div>
     <div class="popup-footer" style="justify-content:space-between;">
-      <button class="btn btn-success" onclick="saveMitarbeiter()">Hinzufügen</button>
       <button class="btn btn-primary" onclick="closePopup('add-ma')">Abbrechen</button>
+      <button class="btn btn-success" onclick="saveMitarbeiter()">Hinzufügen</button>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Mitarbeiter Daten Popup -->
+<div class="overlay" id="overlay-edit-ma-daten">
+  <div class="popup" style="max-width:620px;">
+    <div class="popup-header">
+      <h2>MITARBEITER DATEN BEARBEITEN</h2>
+      <button class="popup-close" onclick="closePopup('edit-ma-daten')">✕</button>
+    </div>
+    <div class="popup-body" style="display:grid;grid-template-columns:1fr 1fr;gap:0 16px;">
+      <input type="hidden" id="edit-ma-id">
+      <div class="form-group"><label>ID</label><input type="text" id="edit-ma-new-id" placeholder="ID"></div>
+      <div class="form-group"><label>DIENSTNUMMER (DN)</label><input type="text" id="edit-ma-dn" placeholder="DN"></div>
+      <div class="form-group"><label>NAME</label><input type="text" id="edit-ma-vorname" placeholder="Name"></div>
+      <div class="form-group"><label>TELEFONNUMMER</label><input type="text" id="edit-ma-tel" placeholder="Telefon"></div>
+      <div class="form-group"><label>RANG</label><input type="text" id="edit-ma-rang" placeholder="Rang"></div>
+      <div class="form-group"><label>DIVISION</label><input type="text" id="edit-ma-division" placeholder="Division"></div>
+      <div class="form-group"><label>INVITE-DATUM</label><input type="text" id="edit-ma-invite" placeholder="TT.MM.JJJJ"></div>
+      <div class="form-group"><label>LETZTER RANKUP</label><input type="text" id="edit-ma-rankup" placeholder="TT.MM.JJJJ"></div>
+      <div class="form-group"><label>ABTEILUNG 1</label><input type="text" id="edit-ma-abt1" placeholder="Abteilung 1"></div>
+      <div class="form-group"><label>ABTEILUNG 2</label><input type="text" id="edit-ma-abt2" placeholder="Abteilung 2"></div>
+    </div>
+    <div class="popup-footer" style="justify-content:space-between;">
+      <button class="btn btn-primary" onclick="closePopup('edit-ma-daten')">Abbrechen</button>
+      <button class="btn btn-success" onclick="saveMaDaten()">Speichern</button>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Mitarbeiter Ausbildungen Popup -->
+<div class="overlay" id="overlay-edit-ma-ausb">
+  <div class="popup" style="max-width:500px;">
+    <div class="popup-header">
+      <h2>AUSBILDUNGEN BEARBEITEN</h2>
+      <button class="popup-close" onclick="closePopup('edit-ma-ausb')">✕</button>
+    </div>
+    <div class="popup-body">
+      <input type="hidden" id="edit-ausb-id">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <label style="display:flex;align-items:center;gap:6px;font-family:Rajdhani,sans-serif;font-size:0.8rem;"><input type="checkbox" id="ausb-ga"> Grundausbildung</label>
+        <label style="display:flex;align-items:center;gap:6px;font-family:Rajdhani,sans-serif;font-size:0.8rem;"><input type="checkbox" id="ausb-ehk"> Erste Hilfe Kurs</label>
+        <label style="display:flex;align-items:center;gap:6px;font-family:Rajdhani,sans-serif;font-size:0.8rem;"><input type="checkbox" id="ausb-es"> Event Schulung</label>
+        <label style="display:flex;align-items:center;gap:6px;font-family:Rajdhani,sans-serif;font-size:0.8rem;"><input type="checkbox" id="ausb-op"> Officerprüfung</label>
+        <label style="display:flex;align-items:center;gap:6px;font-family:Rajdhani,sans-serif;font-size:0.8rem;"><input type="checkbox" id="ausb-ok"> Ortskunde Prüfung</label>
+        <label style="display:flex;align-items:center;gap:6px;font-family:Rajdhani,sans-serif;font-size:0.8rem;"><input type="checkbox" id="ausb-fula"> Funk- und Leitstellenausbildung</label>
+        <label style="display:flex;align-items:center;gap:6px;font-family:Rajdhani,sans-serif;font-size:0.8rem;"><input type="checkbox" id="ausb-tst"> Tactical Shootingprüfung</label>
+        <label style="display:flex;align-items:center;gap:6px;font-family:Rajdhani,sans-serif;font-size:0.8rem;"><input type="checkbox" id="ausb-ks"> Konvoi Schulung</label>
+        <label style="display:flex;align-items:center;gap:6px;font-family:Rajdhani,sans-serif;font-size:0.8rem;"><input type="checkbox" id="ausb-okp"> Ortskunde+ Prüfung</label>
+        <label style="display:flex;align-items:center;gap:6px;font-family:Rajdhani,sans-serif;font-size:0.8rem;"><input type="checkbox" id="ausb-cop"> Corporate Prüfung</label>
+        <label style="display:flex;align-items:center;gap:6px;font-family:Rajdhani,sans-serif;font-size:0.8rem;"><input type="checkbox" id="ausb-ft"> Flugtauglichkeitsprüfung</label>
+        <label style="display:flex;align-items:center;gap:6px;font-family:Rajdhani,sans-serif;font-size:0.8rem;"><input type="checkbox" id="ausb-jp"> Juraprüfung</label>
+        <label style="display:flex;align-items:center;gap:6px;font-family:Rajdhani,sans-serif;font-size:0.8rem;"><input type="checkbox" id="ausb-aks"> Antikorruptionsschulung</label>
+        <label style="display:flex;align-items:center;gap:6px;font-family:Rajdhani,sans-serif;font-size:0.8rem;"><input type="checkbox" id="ausb-zp"> Zivilprüfung</label>
+        <label style="display:flex;align-items:center;gap:6px;font-family:Rajdhani,sans-serif;font-size:0.8rem;"><input type="checkbox" id="ausb-vhp"> Einsatzleitung/Verhandlungsführung</label>
+        <label style="display:flex;align-items:center;gap:6px;font-family:Rajdhani,sans-serif;font-size:0.8rem;"><input type="checkbox" id="ausb-tow"> TW und Blitzerzertifikat</label>
+      </div>
+    </div>
+    <div class="popup-footer" style="justify-content:space-between;">
+      <button class="btn btn-primary" onclick="closePopup('edit-ma-ausb')">Abbrechen</button>
+      <button class="btn btn-success" onclick="saveAusbildungen()">Speichern</button>
     </div>
   </div>
 </div>
@@ -1420,6 +1484,7 @@ window.saveMitarbeiter = async function() {
   if (!name) { showNotif('Bitte Name eingeben!', true); return; }
   const ma = {
     identnr: identnr,
+    reisepass: document.getElementById('ma-reisepass') ? document.getElementById('ma-reisepass').value.trim() || '-' : '-',
     id: document.getElementById('ma-new-id').value.trim() || '-',
     dn: document.getElementById('ma-dn') ? document.getElementById('ma-dn').value.trim() || '-' : '-',
     vorname: name,
@@ -1433,13 +1498,16 @@ window.saveMitarbeiter = async function() {
     rankup: document.getElementById('ma-rankup').value.trim() || '-',
     abt1: document.getElementById('ma-abt1').value.trim() || '-',
     abt2: document.getElementById('ma-abt2').value.trim() || '-',
+    ga:false,ehk:false,es:false,op:false,ok:false,fula:false,
+    tst:false,ks:false,okp:false,cop:false,ft:false,jp:false,
+    aks:false,zp:false,vhp:false,tow:false,
     createdAt: new Date().toISOString()
   };
   try {
     const ref = await addDoc(collection(db, 'mitarbeiter'), ma);
     mitarbeiterData.push({ ...ma, _id: ref.id });
     renderMitarbeiter();
-    ['ma-identnr','ma-new-id','ma-dn','ma-vorname','ma-new-tel','ma-rang',
+    ['ma-identnr','ma-reisepass','ma-new-id','ma-dn','ma-vorname','ma-new-tel','ma-rang',
      'ma-division','ma-urlaub','ma-strike','ma-invite','ma-rankup','ma-abt1','ma-abt2']
     .forEach(fid => { const el = document.getElementById(fid); if(el) el.value = ''; });
     closePopup('add-ma');
@@ -1447,20 +1515,137 @@ window.saveMitarbeiter = async function() {
   } catch(e) { showNotif('Fehler: '+e.message, true); }
 };
 
-window.archivieren = function() { showSubPage('archiv'); };
+let archivData = [];
 
-window.editMitarbeiterById = function() {
-  const id = document.getElementById('ma-id-input').value.trim();
-  if (!id) { showNotif('Bitte zuerst eine ID eingeben.', true); return; }
-  const ma = mitarbeiterData.find(m => m.identnr === id || m.id === id);
+window.archivieren = async function() {
+  const searchId = document.getElementById('ma-id-input').value.trim();
+  if (!searchId) { showNotif('Bitte ID eingeben.', true); return; }
+  const ma = mitarbeiterData.find(m => m.id === searchId || m.reisepass === searchId);
   if (!ma) { showNotif('Kein Mitarbeiter mit dieser ID gefunden.', true); return; }
-  openDashWithMA(ma._id);
+  try {
+    const archivEntry = { ...ma, archiviertAm: new Date().toISOString() };
+    await addDoc(collection(db, 'mitarbeiter_archiv'), archivEntry);
+    await deleteDoc(doc(db, 'mitarbeiter', ma._id));
+    mitarbeiterData = mitarbeiterData.filter(m => m._id !== ma._id);
+    renderMitarbeiter();
+    showNotif('Mitarbeiter archiviert!');
+    loadArchiv();
+  } catch(e) { showNotif('Fehler: ' + e.message, true); }
+};
+
+window.loadArchiv = async function() {
+  try {
+    const snap = await getDocs(collection(db, 'mitarbeiter_archiv'));
+    archivData = [];
+    snap.forEach(d => archivData.push({ ...d.data(), _id: d.id }));
+    renderArchiv();
+  } catch(e) {}
+};
+
+function renderArchiv() {
+  const tbody = document.getElementById('archiv-tbody');
+  if (!tbody) return;
+  if (!archivData.length) {
+    tbody.innerHTML = '<tr><td colspan="28" style="text-align:center;color:var(--text-dim);padding:20px;">Keine archivierten Mitarbeiter vorhanden.</td></tr>';
+    return;
+  }
+  const chk = (v) => v ? '✔' : '☐';
+  tbody.innerHTML = archivData.map(m => `
+    <tr>
+      <td>${m.id||'-'}</td><td>${m.dn||'-'}</td><td>${m.vorname||''}</td>
+      <td>${m.tel||'-'}</td><td>${m.rang||'-'}</td><td>${m.division||'-'}</td>
+      <td>${m.urlaub||'-'}</td><td>${m.strike||'-'}</td>
+      <td>${m.invite||'-'}</td><td>${m.rankup||'-'}</td>
+      <td>${m.abt1||'-'}</td><td>${m.abt2||'-'}</td>
+      <td>${chk(m.ga)}</td><td>${chk(m.ehk)}</td><td>${chk(m.es)}</td><td>${chk(m.op)}</td>
+      <td>${chk(m.ok)}</td><td>${chk(m.fula)}</td><td>${chk(m.tst)}</td><td>${chk(m.ks)}</td>
+      <td>${chk(m.okp)}</td><td>${chk(m.ft)}</td><td>${chk(m.cop)}</td><td>${chk(m.jp)}</td>
+      <td>${chk(m.zp)}</td><td>${chk(m.vhp)}</td><td>${chk(m.tow)}</td>
+      <td style="font-size:0.65rem;">${(m.archiviertAm||'').slice(0,10)}</td>
+    </tr>
+  `).join('');
+}
+
+window.openEditMaDaten = function() {
+  const searchId = document.getElementById('ma-id-input').value.trim();
+  if (!searchId) { showNotif('Bitte ID eingeben.', true); return; }
+  const ma = mitarbeiterData.find(m => m.id === searchId || m.reisepass === searchId);
+  if (!ma) { showNotif('Kein Mitarbeiter gefunden.', true); return; }
+  document.getElementById('edit-ma-id').value = ma._id;
+  document.getElementById('edit-ma-new-id').value = ma.id || '';
+  document.getElementById('edit-ma-dn').value = ma.dn || '';
+  document.getElementById('edit-ma-vorname').value = ma.vorname || '';
+  document.getElementById('edit-ma-tel').value = ma.tel || '';
+  document.getElementById('edit-ma-rang').value = ma.rang || '';
+  document.getElementById('edit-ma-division').value = ma.division || '';
+  document.getElementById('edit-ma-invite').value = ma.invite || '';
+  document.getElementById('edit-ma-rankup').value = ma.rankup || '';
+  document.getElementById('edit-ma-abt1').value = ma.abt1 || '';
+  document.getElementById('edit-ma-abt2').value = ma.abt2 || '';
+  openPopup('edit-ma-daten');
+};
+
+window.saveMaDaten = async function() {
+  const docId = document.getElementById('edit-ma-id').value;
+  const update = {
+    id: document.getElementById('edit-ma-new-id').value.trim(),
+    dn: document.getElementById('edit-ma-dn').value.trim(),
+    vorname: document.getElementById('edit-ma-vorname').value.trim(),
+    tel: document.getElementById('edit-ma-tel').value.trim(),
+    rang: document.getElementById('edit-ma-rang').value.trim(),
+    division: document.getElementById('edit-ma-division').value.trim(),
+    invite: document.getElementById('edit-ma-invite').value.trim(),
+    rankup: document.getElementById('edit-ma-rankup').value.trim(),
+    abt1: document.getElementById('edit-ma-abt1').value.trim(),
+    abt2: document.getElementById('edit-ma-abt2').value.trim(),
+  };
+  try {
+    await setDoc(doc(db, 'mitarbeiter', docId), update, { merge: true });
+    const idx = mitarbeiterData.findIndex(m => m._id === docId);
+    if (idx !== -1) mitarbeiterData[idx] = { ...mitarbeiterData[idx], ...update };
+    renderMitarbeiter();
+    closePopup('edit-ma-daten');
+    showNotif('Daten gespeichert!');
+  } catch(e) { showNotif('Fehler: ' + e.message, true); }
+};
+
+window.openEditAusbildungen = function() {
+  const searchId = document.getElementById('ma-id-input').value.trim();
+  if (!searchId) { showNotif('Bitte ID eingeben.', true); return; }
+  const ma = mitarbeiterData.find(m => m.id === searchId || m.reisepass === searchId);
+  if (!ma) { showNotif('Kein Mitarbeiter gefunden.', true); return; }
+  document.getElementById('edit-ausb-id').value = ma._id;
+  ['ga','ehk','es','op','ok','fula','tst','ks','okp','cop','ft','jp','aks','zp','vhp','tow'].forEach(k => {
+    const el = document.getElementById('ausb-' + k);
+    if (el) el.checked = !!ma[k];
+  });
+  openPopup('edit-ma-ausb');
+};
+
+window.saveAusbildungen = async function() {
+  const docId = document.getElementById('edit-ausb-id').value;
+  const update = {};
+  ['ga','ehk','es','op','ok','fula','tst','ks','okp','cop','ft','jp','aks','zp','vhp','tow'].forEach(k => {
+    const el = document.getElementById('ausb-' + k);
+    update[k] = el ? el.checked : false;
+  });
+  try {
+    await setDoc(doc(db, 'mitarbeiter', docId), update, { merge: true });
+    const idx = mitarbeiterData.findIndex(m => m._id === docId);
+    if (idx !== -1) mitarbeiterData[idx] = { ...mitarbeiterData[idx], ...update };
+    renderMitarbeiter();
+    closePopup('edit-ma-ausb');
+    showNotif('Ausbildungen gespeichert!');
+  } catch(e) { showNotif('Fehler: ' + e.message, true); }
 };
 
 window.filterMitarbeiter = function() {
   const term = document.getElementById('ma-search').value.toLowerCase();
+  if (!term) { renderMitarbeiter(); return; }
   const filtered = mitarbeiterData.filter(m =>
-    (m.vorname+' '+m.nachname+' '+m.id).toLowerCase().includes(term)
+    (m.reisepass||'').toLowerCase().includes(term) ||
+    (m.vorname||'').toLowerCase().includes(term) ||
+    (m.id||'').toLowerCase().includes(term)
   );
   renderMitarbeiter(filtered);
 };
@@ -1472,11 +1657,12 @@ function renderMitarbeiter(data) {
     tbody.innerHTML = '<tr><td colspan="30" style="text-align:center;color:var(--text-dim);padding:20px;">Keine eingetragenen Mitarbeiter vorhanden.</td></tr>';
     return;
   }
+  const chk = (v) => v ? '✔' : '☐';
   tbody.innerHTML = arr.map(m => `
     <tr>
       <td>${m.id||'-'}</td>
-      <td>${m.dn||m.id||'-'}</td>
-      <td>${m.vorname||''} ${m.nachname||''}</td>
+      <td>${m.dn||'-'}</td>
+      <td style="font-size:0.8rem;font-weight:600;">${m.vorname||''}</td>
       <td>${m.tel||'-'}</td>
       <td>${m.rang||'-'}</td>
       <td>${m.division||'-'}</td>
@@ -1486,7 +1672,10 @@ function renderMitarbeiter(data) {
       <td>${m.invite||'-'}</td><td>${m.rankup||'-'}</td>
       <td>${m.abt1||'-'}</td><td>${m.abt2||'-'}</td>
       <td class="td-sep"></td>
-      ${Array(15).fill('<td>☐</td>').join('')}
+      <td>${chk(m.ga)}</td><td>${chk(m.ehk)}</td><td>${chk(m.es)}</td><td>${chk(m.op)}</td>
+      <td>${chk(m.ok)}</td><td>${chk(m.fula)}</td><td>${chk(m.tst)}</td><td>${chk(m.ks)}</td>
+      <td>${chk(m.okp)}</td><td>${chk(m.ft)}</td><td>${chk(m.cop)}</td><td>${chk(m.jp)}</td>
+      <td>${chk(m.zp)}</td><td>${chk(m.vhp)}</td><td>${chk(m.tow)}</td>
     </tr>
   `).join('');
 }
@@ -1554,6 +1743,7 @@ function showSubPage(name) {
   const tb = document.getElementById('topbar'); if(tb) tb.style.display = name === 'dashboard' ? 'flex' : 'none';
 
   if (name === 'zugriff') { window.loadZugriffTable && window.loadZugriffTable(); }
+  if (name === 'archiv') { window.loadArchiv && window.loadArchiv(); }
   // Dashboard leeren wenn man direkt navigiert (nicht über Mitarbeiter-Button)
   if (name === 'dashboard' && !window._dashFromMA) { clearDashboard && clearDashboard(); }
   window._dashFromMA = false;
