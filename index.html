@@ -6,28 +6,69 @@
   <title>LSPD Portal</title>
   <style>
     :root {
-      --bg: #000;
-      --text: #fff;
-      --blue: #0e4d86;
-      --gray: #6a6a6a;
-      --line: #5e5e5e;
-      --purple: #b300ff;
-      --orange: #c77711;
-      --red: #ff1a1a;
-      --green: #1d6b32;
+      --bg: #05070b;
+      --bg-soft: #0a1018;
+      --panel: rgba(13, 20, 32, 0.94);
+      --panel-2: rgba(20, 30, 47, 0.96);
+      --panel-3: rgba(10, 17, 27, 0.98);
+      --line: rgba(212, 175, 55, 0.24);
+      --line-strong: rgba(212, 175, 55, 0.52);
+      --text: #eef4ff;
+      --muted: #9eabbf;
+      --blue: #143f72;
+      --blue-2: #1e5aa0;
+      --blue-3: #0d2545;
+      --gold: #d4af37;
+      --gold-soft: rgba(212, 175, 55, 0.12);
+      --red: #b42323;
+      --green: #1f7a46;
+      --orange: #a96b17;
+      --shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+      --radius: 16px;
+      --radius-sm: 10px;
+      --transition: 180ms ease;
       --check-green: #22c55e;
-      --check-border: #8a8a8a;
-      --check-bg: #111;
+      --check-border: #6e7b8a;
+      --check-bg: #0e1420;
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+      scrollbar-width: thin;
+      scrollbar-color: var(--gold) #0c1118;
+    }
+
+    *::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+
+    *::-webkit-scrollbar-track {
+      background: #0c1118;
+    }
+
+    *::-webkit-scrollbar-thumb {
+      background: rgba(212, 175, 55, 0.7);
+      border-radius: 999px;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
 
     body {
       margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background: #000;
-      color: #fff;
       min-height: 100vh;
+      font-family: Inter, Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top center, rgba(30, 90, 160, 0.18), transparent 32%),
+        linear-gradient(180deg, rgba(212, 175, 55, 0.05), transparent 14%),
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px),
+        var(--bg);
+      background-size: auto, auto, 34px 34px, 34px 34px, auto;
+      color: var(--text);
+      letter-spacing: 0.01em;
     }
 
     .hidden { display: none !important; }
@@ -39,14 +80,18 @@
     #authLoadingScreen {
       position: fixed;
       inset: 0;
-      background: #000;
-      color: #fff;
+      z-index: 99999;
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 99999;
-      font-size: 28px;
-      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at center, rgba(30,90,160,0.18), transparent 35%),
+        linear-gradient(180deg, #06101d 0%, #04070b 100%);
+      color: var(--text);
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
     }
 
     body:not(.auth-loading) #authLoadingScreen {
@@ -55,447 +100,695 @@
 
     .page {
       min-height: 100vh;
-      padding: 20px;
-      background:
-        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px),
-        #000;
-      background-size: 36px 36px;
+      padding: 28px;
+      position: relative;
+    }
+
+    .page::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(180deg, rgba(212,175,55,0.05), transparent 160px);
     }
 
     .login-page {
-      background: #000;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
-      padding-top: 30px;
+      padding-top: 42px;
+    }
+
+    .content-wrap,
+    .panel-card,
+    .rank-list-wrap,
+    .archive-page-wrap {
+      width: 100%;
+      max-width: 1480px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .portal-hero {
+      margin-bottom: 26px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      overflow: hidden;
+      background:
+        linear-gradient(90deg, rgba(6, 16, 29, 0.96), rgba(15, 33, 56, 0.96) 45%, rgba(10, 17, 27, 0.96));
+      box-shadow: var(--shadow);
+    }
+
+    .portal-hero-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 14px 24px;
+      border-bottom: 1px solid rgba(212, 175, 55, 0.18);
+      background: linear-gradient(90deg, rgba(212,175,55,0.12), rgba(212,175,55,0.03));
+    }
+
+    .portal-hero-meta {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .hero-chip {
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(212,175,55,0.24);
+      background: rgba(212,175,55,0.08);
+      color: #f2df9c;
+    }
+
+    .portal-hero-main {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      padding: 26px;
     }
 
     .logo-wrap {
       width: 100%;
-      max-width: 1100px;
+      max-width: 1180px;
       display: flex;
       align-items: center;
-      gap: 18px;
-      margin-bottom: 120px;
+      gap: 22px;
+      margin-bottom: 84px;
     }
 
-    .fake-badge {
-      width: 210px;
-      height: 210px;
-      border: 5px solid #f1c232;
+    .fake-badge,
+    .header-badge {
+      width: 140px;
+      min-width: 140px;
+      aspect-ratio: 1;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #f1c232;
-      font-weight: bold;
       text-align: center;
-      padding: 18px;
-      background: radial-gradient(circle at center, #16365c 0%, #0b1f3d 55%, #06111f 100%);
-      box-shadow: 0 0 0 4px #08224a inset;
+      padding: 16px;
+      font-weight: 800;
+      line-height: 1.18;
+      letter-spacing: 0.06em;
+      color: #f8e9af;
+      text-transform: uppercase;
+      border: 3px solid rgba(212, 175, 55, 0.9);
+      background:
+        radial-gradient(circle at 50% 45%, rgba(32, 89, 149, 0.95), rgba(10, 27, 51, 0.98) 58%, rgba(5, 11, 20, 1) 100%);
+      box-shadow:
+        0 0 0 5px rgba(8, 19, 34, 0.95) inset,
+        0 12px 34px rgba(0, 0, 0, 0.36),
+        0 0 24px rgba(212, 175, 55, 0.12);
+    }
+
+    .fake-badge {
+      width: 210px;
+      min-width: 210px;
+      font-size: 20px;
+    }
+
+    .hero-title-block {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .logo-line,
+    .top-title {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-weight: 700;
+      color: #f7fbff;
+      letter-spacing: 0.03em;
+      text-shadow: 0 2px 20px rgba(0,0,0,0.35);
     }
 
     .logo-line {
       flex: 1;
-      border-top: 4px solid #d4af37;
-      border-bottom: 4px solid #d4af37;
-      padding: 18px 24px;
-      font-size: 58px;
-      font-family: Georgia, serif;
-      font-weight: 700;
-      color: #f3f3f3;
+      padding: 20px 24px;
+      font-size: clamp(34px, 4.6vw, 58px);
+      border-top: 3px solid rgba(212, 175, 55, 0.88);
+      border-bottom: 3px solid rgba(212, 175, 55, 0.88);
+      background: linear-gradient(90deg, rgba(212,175,55,0.08), rgba(255,255,255,0.02), rgba(212,175,55,0.08));
+      border-radius: 16px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
     }
 
-    .auth-box {
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-      align-items: center;
-    }
-
-    button {
-      cursor: pointer;
-      border: none;
-      color: #fff;
-      background: var(--blue);
-      padding: 10px 18px;
-      font-size: 16px;
-    }
-
-    .outline-btn {
-      width: 220px;
-      background: transparent;
-      border: 1px solid #aaa;
-      font-size: 24px;
-      padding: 8px 12px;
+    .hero-subline {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
     }
 
     .top-title {
       text-align: center;
-      font-size: 72px;
-      margin: 0 0 10px;
-      font-weight: 300;
+      font-size: clamp(34px, 4vw, 56px);
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .section-subtitle {
+      text-align: center;
+      margin: 0 0 28px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      font-size: 12px;
+    }
+
+    .auth-box {
+      width: 100%;
+      max-width: 460px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      align-items: center;
+      padding: 30px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: linear-gradient(180deg, rgba(11,18,29,0.94), rgba(8,13,21,0.98));
+      box-shadow: var(--shadow);
+    }
+
+    button {
+      cursor: pointer;
+      border: 1px solid rgba(212,175,55,0.18);
+      color: #f7fbff;
+      background: linear-gradient(180deg, #1a4d88, #123963);
+      padding: 11px 18px;
+      font-size: 15px;
+      border-radius: 12px;
+      transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition), background var(--transition);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+      font-weight: 700;
+      letter-spacing: 0.03em;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      border-color: rgba(212,175,55,0.4);
+      box-shadow: 0 16px 26px rgba(0, 0, 0, 0.24);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.55;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .outline-btn {
+      width: 100%;
+      min-height: 56px;
+      background: linear-gradient(180deg, rgba(19,31,49,0.95), rgba(10,18,28,0.98));
+      border: 1px solid rgba(212,175,55,0.32);
+      font-size: 18px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .outline-btn:hover {
+      background: linear-gradient(180deg, rgba(26,53,90,0.95), rgba(13,27,45,0.98));
     }
 
     .nav {
       display: flex;
       justify-content: center;
-      gap: 18px;
+      gap: 12px;
       flex-wrap: wrap;
-      margin: 18px 0 12px;
+      margin: 14px 0 0;
+      padding: 8px 0;
     }
 
     .nav button {
-      min-width: 165px;
-      padding: 8px 14px;
-      background: #0b4c84;
+      position: relative;
+      min-width: 168px;
+      padding: 12px 16px;
+      background: linear-gradient(180deg, rgba(19,43,76,0.98), rgba(10,22,39,0.98));
+      border: 1px solid rgba(212,175,55,0.18);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .nav button::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,0.14) 45%, transparent 100%);
+      transform: translateX(-115%);
+      transition: transform 420ms ease;
+    }
+
+    .nav button:hover::before {
+      transform: translateX(115%);
     }
 
     .nav-separator {
-      height: 10px;
-      background: #6b6b6b;
-      margin: 8px 0 24px;
+      height: 1px;
+      margin: 12px 0 28px;
+      background: linear-gradient(90deg, transparent, rgba(212,175,55,0.7), transparent);
+      box-shadow: 0 0 18px rgba(212,175,55,0.24);
     }
 
     .dashboard-grid {
       display: grid;
-      grid-template-columns: 330px 1fr;
-      gap: 34px;
+      grid-template-columns: 350px 1fr;
+      gap: 28px;
       align-items: start;
-      max-width: 1200px;
-      margin: 0 auto;
     }
 
-    .box-title {
-      text-align: center;
-      padding: 10px;
-      font-size: 20px;
-      margin-bottom: 12px;
+    .box-title,
+    .section-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 52px;
+      margin-bottom: 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(212,175,55,0.18);
+      font-size: 14px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
     }
 
-    .purple { background: var(--purple); }
-    .orange { background: var(--orange); }
+    .purple,
+    .orange,
+    .bg-green,
+    .bg-gold,
+    .bg-blue,
+    .bg-red,
+    .bg-cyan,
+    .bg-pink,
+    .bg-light,
+    .bg-orange,
+    .bg-beige,
+    .bg-violet,
+    .bg-wine {
+      color: #fff;
+      background: linear-gradient(180deg, rgba(27,46,73,0.98), rgba(12,21,34,0.98));
+    }
+
+    .orange,
+    .bg-gold,
+    .bg-orange,
+    .bg-beige {
+      background: linear-gradient(180deg, rgba(160,114,31,0.96), rgba(90,58,15,0.98));
+      color: #fff7df;
+    }
+
+    .purple,
+    .bg-pink,
+    .bg-violet,
+    .bg-wine {
+      background: linear-gradient(180deg, rgba(70,42,102,0.96), rgba(31,18,48,0.98));
+    }
+
+    .bg-green {
+      background: linear-gradient(180deg, rgba(34,112,66,0.96), rgba(17,56,33,0.98));
+    }
+
+    .bg-blue,
+    .bg-cyan,
+    .bg-light {
+      background: linear-gradient(180deg, rgba(33,94,164,0.96), rgba(14,39,72,0.98));
+    }
+
+    .bg-red {
+      background: linear-gradient(180deg, rgba(166,43,43,0.96), rgba(72,18,18,0.98));
+    }
+
+    .panel,
+    .table-shell,
+    .panel-card,
+    .rank-list-wrap,
+    .archive-page-wrap {
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: linear-gradient(180deg, rgba(11,18,29,0.94), rgba(8,13,21,0.98));
+      box-shadow: var(--shadow);
+    }
+
+    .panel-card,
+    .rank-list-wrap,
+    .archive-page-wrap {
+      padding: 22px;
+    }
 
     .info-grid {
       display: grid;
-      grid-template-columns: 110px 1fr;
-      gap: 10px 16px;
+      grid-template-columns: 130px 1fr;
+      gap: 10px 12px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(14,22,35,0.94), rgba(10,16,25,0.98));
     }
 
     .info-grid div {
-      background: var(--purple);
-      padding: 10px;
+      min-height: 42px;
+      padding: 11px 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(212,175,55,0.08);
+      background: rgba(18, 29, 44, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
       text-align: center;
-      min-height: 38px;
+    }
+
+    .info-grid div:nth-child(odd) {
+      color: #f2df9c;
+      font-weight: 700;
+      background: rgba(34, 49, 69, 0.95);
     }
 
     .training-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 16px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(14,22,35,0.94), rgba(10,16,25,0.98));
     }
 
-    .training-card { text-align: center; }
+    .training-card {
+      border: 1px solid rgba(212,175,55,0.12);
+      border-radius: 16px;
+      padding: 12px;
+      background: linear-gradient(180deg, rgba(18,28,44,0.96), rgba(10,17,27,0.98));
+      text-align: center;
+    }
 
     .training-card h4 {
       margin: 0 0 10px;
-      padding: 10px;
-      font-size: 16px;
+      padding: 12px;
+      border-radius: 12px;
+      font-size: 14px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
     }
 
     .mini-row {
       display: grid;
-      grid-template-columns: 38px 38px;
-      justify-content: center;
-      gap: 1px;
+      grid-template-columns: 42px 1fr;
+      align-items: center;
+      gap: 8px;
       margin-bottom: 10px;
     }
 
     .mini-row div {
-      padding: 10px;
-      min-height: 38px;
-      min-width: 38px;
+      min-height: 42px;
       display: flex;
       align-items: center;
       justify-content: center;
+      border-radius: 10px;
+      padding: 10px;
+      font-weight: 700;
     }
 
-    .bg-green { background: #3d7d21; }
-    .bg-gold { background: #a8870f; }
-    .bg-blue { background: #10559b; }
-    .bg-red { background: #cf1404; }
-    .bg-cyan { background: #5ac3d9; }
-    .bg-pink { background: #c86aa2; }
-    .bg-light { background: #b9d3db; color: #fff; }
-    .bg-orange { background: #ef6d2f; }
-    .bg-beige { background: #f5bc77; }
-    .bg-violet { background: #b8acd8; }
-    .bg-wine { background: #6f184f; }
-
-    .content-wrap {
-      max-width: 1400px;
-      margin: 0 auto;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
+    .welcome-box,
+    .small-note {
+      margin-top: 16px;
+      color: var(--muted);
+      text-align: center;
       font-size: 13px;
-      color: #fff;
-      background: rgba(80,80,80,0.85);
+      letter-spacing: 0.06em;
     }
 
-    th, td {
-      border: 1px solid #2d2d2d;
-      padding: 6px 8px;
+    table,
+    .rank-list-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      color: var(--text);
+      background: rgba(10, 16, 25, 0.82);
+      overflow: hidden;
+      border-radius: 16px;
+      border: 1px solid rgba(212,175,55,0.12);
+    }
+
+    th,
+    td,
+    .rank-list-table th,
+    .rank-list-table td {
+      padding: 9px 10px;
       text-align: center;
       white-space: nowrap;
       vertical-align: middle;
+      border-right: 1px solid rgba(255,255,255,0.04);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
     }
 
-    th { background: #666; }
+    th,
+    .rank-list-table th {
+      background: linear-gradient(180deg, rgba(24,62,110,0.98), rgba(12,31,57,0.98));
+      color: #f7e7ab;
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      font-weight: 800;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    tbody tr:hover {
+      background: rgba(30, 59, 98, 0.18);
+    }
 
     .action-cell {
-      width: 55px;
+      width: 58px;
       font-weight: bold;
     }
 
-    .left-btn {
-      margin-top: 20px;
-      background: #666;
-      min-width: 180px;
+    .left-btn,
+    .archive-open-btn,
+    .move-btn,
+    .add-access-btn,
+    .back-btn {
+      min-height: 46px;
+    }
+
+    .left-btn,
+    .add-access-btn,
+    .archive-open-btn,
+    .move-btn {
+      margin-top: 18px;
+      background: linear-gradient(180deg, rgba(35,57,89,0.96), rgba(15,25,38,0.98));
     }
 
     .logout {
       position: fixed;
-      right: 30px;
-      bottom: 26px;
-      background: var(--red);
-      min-width: 165px;
-      font-weight: bold;
-    }
-
-    .panel-card {
-      max-width: 1100px;
-      margin: 0 auto;
+      right: 26px;
+      bottom: 24px;
+      z-index: 50;
+      background: linear-gradient(180deg, #b72d2d, #7b1919);
+      min-width: 170px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
     }
 
     .request-controls select,
-    .request-controls input {
+    .request-controls input,
+    .rank-search-input,
+    .move-id-input,
+    .archive-delete-input,
+    .modal-grid input,
+    .modal-grid select {
       width: 100%;
-      padding: 6px;
-      background: #222;
-      color: #fff;
-      border: 1px solid #555;
+      min-height: 46px;
+      padding: 11px 14px;
+      background: linear-gradient(180deg, rgba(11,18,29,0.98), rgba(7,12,19,0.98));
+      color: var(--text);
+      border: 1px solid rgba(212,175,55,0.16);
+      border-radius: 12px;
+      outline: none;
+      transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
+    }
+
+    .request-controls select:focus,
+    .request-controls input:focus,
+    .rank-search-input:focus,
+    .move-id-input:focus,
+    .archive-delete-input:focus,
+    .modal-grid input:focus,
+    .modal-grid select:focus {
+      border-color: rgba(212,175,55,0.45);
+      box-shadow: 0 0 0 3px rgba(212,175,55,0.12);
+      background: linear-gradient(180deg, rgba(16,26,41,0.98), rgba(8,14,22,0.98));
     }
 
     .status-pill {
-      display: inline-block;
-      padding: 4px 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 108px;
+      padding: 7px 12px;
       border-radius: 999px;
-      font-size: 12px;
-      font-weight: 700;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border: 1px solid rgba(255,255,255,0.08);
     }
 
-    .yes { background: #1d6b32; }
-    .no { background: #8b1e1e; }
-    .pending { background: #7c620f; }
-
-    .small-note {
-      margin-top: 12px;
-      color: #d0d0d0;
-      text-align: center;
-    }
-
-    .welcome-box {
-      text-align: center;
-      margin-top: 14px;
-      color: #ddd;
-    }
+    .yes { background: rgba(31, 122, 70, 0.22); color: #93f0bb; }
+    .no { background: rgba(180, 35, 35, 0.18); color: #ffb8b8; }
+    .pending { background: rgba(169, 107, 23, 0.2); color: #f4d48a; }
 
     .icon-btn,
     .danger-btn,
     .save-btn,
-    .add-access-btn,
     .rank-edit-btn,
     .data-edit-btn,
-    .archive-open-btn,
     .back-btn,
-    .move-btn {
-      border: none;
-      color: #fff;
-      font-size: 14px;
-      padding: 7px 10px;
+    .muted-btn {
       min-width: auto;
+      font-size: 14px;
+      padding: 10px 14px;
     }
 
     .icon-btn,
     .rank-edit-btn,
-    .data-edit-btn {
-      background: #3e3e3e;
-      font-weight: bold;
+    .data-edit-btn,
+    .muted-btn,
+    .back-btn {
+      background: linear-gradient(180deg, rgba(48,62,82,0.96), rgba(20,29,41,0.98));
     }
 
     .danger-btn {
-      background: #8b1e1e;
+      background: linear-gradient(180deg, #a72626, #661616);
     }
 
     .save-btn {
-      background: var(--green);
-    }
-
-    .archive-open-btn {
-      background: #2a2a2a;
-      min-width: 180px;
-      height: 46px;
-    }
-
-    .move-btn {
-      background: #444;
-      min-width: 140px;
-      height: 46px;
-    }
-
-    .back-btn {
-      background: #1f1f1f;
-      border: 1px solid #555;
-      padding: 12px 18px;
-      margin-bottom: 24px;
+      background: linear-gradient(180deg, #238550, #145330);
     }
 
     .employee-actions,
-    .request-actions {
+    .request-actions,
+    .table-action-stack,
+    .modal-actions,
+    .page8-bottom-row,
+    .archive-top-actions,
+    .rank-search-left,
+    .rank-search-right,
+    .rank-search-wrap {
       display: flex;
-      justify-content: center;
-      gap: 8px;
+      gap: 10px;
       flex-wrap: wrap;
+      align-items: center;
     }
 
     .page8-bottom-row {
-      display: flex;
       justify-content: flex-start;
-      margin-top: 20px;
-    }
-
-    .add-access-btn {
-      background: #666;
-      min-width: 180px;
+      margin-top: 18px;
     }
 
     .modal {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.7);
+      z-index: 1000;
+      padding: 24px;
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 1000;
-      padding: 20px;
+      background: rgba(3, 7, 12, 0.76);
+      backdrop-filter: blur(8px);
     }
 
     .modal-content {
       width: 100%;
-      max-width: 720px;
-      background: #111;
-      border: 1px solid #444;
-      padding: 20px;
+      max-width: 760px;
+      border-radius: 22px;
+      border: 1px solid rgba(212,175,55,0.24);
+      background: linear-gradient(180deg, rgba(11,18,29,0.98), rgba(7,11,18,1));
+      box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+      overflow: hidden;
+    }
+
+    .modal-content::before {
+      content: "";
+      display: block;
+      height: 4px;
+      background: linear-gradient(90deg, var(--gold), #f5dea4, var(--gold));
     }
 
     .modal-title {
-      margin: 0 0 18px;
+      margin: 0;
+      padding: 24px 24px 14px;
       text-align: center;
       font-size: 28px;
-      font-weight: 400;
+      font-family: Georgia, serif;
+      color: #fff8df;
+      letter-spacing: 0.04em;
     }
 
     .modal-grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px 16px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px 16px;
+      padding: 0 24px 24px;
     }
 
     .modal-grid label {
       display: flex;
       flex-direction: column;
-      gap: 6px;
-      font-size: 14px;
-      color: #ddd;
-    }
-
-    .modal-grid input,
-    .modal-grid select {
-      width: 100%;
-      background: #1d1d1d;
-      border: 1px solid #444;
-      color: #fff;
-      padding: 10px;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
     }
 
     .modal-grid input[readonly] {
-      background: #141414;
-      color: #cfcfcf;
+      background: linear-gradient(180deg, rgba(17,22,30,0.98), rgba(10,13,18,1));
+      color: #b7c1d3;
       cursor: not-allowed;
     }
 
     .modal-actions {
-      display: flex;
       justify-content: flex-end;
-      gap: 12px;
-      margin-top: 20px;
-      flex-wrap: wrap;
-    }
-
-    .muted-btn {
-      background: #555;
+      padding: 0 24px 24px;
     }
 
     .full-width { grid-column: 1 / -1; }
 
-    .rank-list-wrap {
-      max-width: 1920px;
-      margin: 0 auto;
-    }
-
     .rank-search-wrap {
-      display: flex;
       justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      margin: 0 0 16px;
-      flex-wrap: wrap;
+      margin: 6px 0 18px;
     }
 
     .rank-search-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
       flex: 1;
+      min-width: 320px;
     }
 
     .rank-search-right {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
       justify-content: flex-end;
-      margin-left: auto;
     }
 
-    .rank-search-input,
-    .move-id-input,
-    .archive-delete-input {
-      width: 100%;
-      max-width: 420px;
-      background: #111;
-      color: #fff;
-      border: 1px solid #444;
-      padding: 12px 14px;
-      font-size: 15px;
-      outline: none;
-      height: 46px;
+    .rank-search-input {
+      max-width: 440px;
+      flex: 1;
     }
 
     .move-id-input,
@@ -503,139 +796,77 @@
       max-width: 180px;
     }
 
-    .rank-search-input:focus,
-    .move-id-input:focus,
-    .archive-delete-input:focus {
-      border-color: #0b4c84;
-      box-shadow: 0 0 0 1px #0b4c84 inset;
-    }
-
     .rank-list-table {
-      width: 100%;
-      border-collapse: collapse;
       font-size: 11px;
-      color: #fff;
-      background: rgba(60,60,60,0.94);
+      background: rgba(7, 13, 21, 0.9);
     }
 
     .rank-list-table th,
     .rank-list-table td {
-      border: 1px solid #0f0f0f;
-      padding: 2px 5px;
-      text-align: center;
-      white-space: nowrap;
-      vertical-align: middle;
-      height: 22px;
-    }
-
-    .rank-list-table th {
-      background: #12305c;
-      font-weight: bold;
+      padding: 6px 6px;
+      height: 28px;
     }
 
     .rank-list-table .sep-row td {
-      background: #000;
-      border-color: #000;
+      height: 12px;
       padding: 0;
-      height: 16px;
+      background: transparent;
+      border: 0;
     }
 
     .rank-list-table .left-dark {
-      background: rgba(70,70,70,0.88);
+      background: rgba(16, 24, 36, 0.95);
+    }
+
+    .rank-main-cell,
+    .division-cell {
+      font-weight: 800;
     }
 
     .rank-main-cell {
-      font-weight: bold;
       min-width: 180px;
-      color: #fff;
     }
 
     .division-cell {
-      font-weight: bold;
       min-width: 110px;
     }
 
-    .rank-empty-row td {
-      background: rgba(74,74,74,0.88);
-      color: #d7d7d7;
-    }
-
     .vertical-sep {
-      background: #000 !important;
-      border-color: #000 !important;
-      width: 16px;
-      min-width: 16px;
+      width: 12px;
+      min-width: 12px;
       padding: 0 !important;
-    }
-
-    .table-action-stack {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      flex-wrap: wrap;
-    }
-
-    .archive-page-wrap {
-      max-width: 1500px;
-      margin: 0 auto;
+      background: rgba(0, 0, 0, 0.45) !important;
+      border-right: 0 !important;
     }
 
     .archive-empty {
       text-align: center;
-      color: #bbb;
-      padding: 30px 0;
+      color: var(--muted);
+      padding: 26px 0 6px;
       font-size: 18px;
     }
 
-    .archive-top-actions {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 16px;
-      flex-wrap: wrap;
-    }
+    .rank-30 { background: linear-gradient(180deg, #101010, #000000); color: #fff; }
+    .rank-29, .rank-28 { background: linear-gradient(180deg, #c92f2f, #811b1b); }
+    .rank-27, .rank-24 { background: linear-gradient(180deg, #2457a3, #14345d); }
+    .rank-26, .rank-23, .rank-2 { background: linear-gradient(180deg, #4a86e8, #264f8b); }
+    .rank-25, .rank-3 { background: linear-gradient(180deg, #82b2ea, #4671a6); color: #08101b; }
+    .rank-22, .rank-21, .rank-20, .rank-19, .rank-18 { background: linear-gradient(180deg, #47227f, #251140); }
+    .rank-17 { background: linear-gradient(180deg, #ff43db, #bc18a0); color: #0b0610; }
+    .rank-16, .rank-15, .rank-14, .rank-13, .rank-12, .rank-11 { background: linear-gradient(180deg, #f0b33c, #9c6e14); color: #120c01; }
+    .rank-10, .rank-9, .rank-8, .rank-7, .rank-6, .rank-5 { background: linear-gradient(180deg, #3cd96f, #17803c); color: #07140c; }
+    .rank-4 { background: linear-gradient(180deg, #36d0d0, #169090); color: #031111; }
+    .rank-1 { background: linear-gradient(180deg, #ff3636, #901b1b); }
 
-    .rank-30 { background: #000000; color: #fff; }
-    .rank-29 { background: #d61818; }
-    .rank-28 { background: #d61818; }
-    .rank-27 { background: #2e66c7; }
-    .rank-26 { background: #4a86e8; }
-    .rank-25 { background: #6fa8dc; }
-    .rank-24 { background: #2e66c7; }
-    .rank-23 { background: #4a86e8; }
-    .rank-22 { background: #2e0f63; }
-    .rank-21 { background: #2e0f63; }
-    .rank-20 { background: #2e0f63; }
-    .rank-19 { background: #2e0f63; }
-    .rank-18 { background: #2e0f63; }
-    .rank-17 { background: #ff00ff; color: #000; }
-    .rank-16 { background: #f4a000; color: #000; }
-    .rank-15 { background: #f4a000; color: #000; }
-    .rank-14 { background: #f4a000; color: #000; }
-    .rank-13 { background: #f4a000; color: #000; }
-    .rank-12 { background: #f4a000; color: #000; }
-    .rank-11 { background: #f4a000; color: #000; }
-    .rank-10 { background: #08db1a; color: #000; }
-    .rank-9  { background: #08db1a; color: #000; }
-    .rank-8  { background: #08db1a; color: #000; }
-    .rank-7  { background: #08db1a; color: #000; }
-    .rank-6  { background: #08db1a; color: #000; }
-    .rank-5  { background: #08db1a; color: #000; }
-    .rank-4  { background: #19c7c8; color: #000; }
-    .rank-3  { background: #a8d0f0; color: #000; }
-    .rank-2  { background: #6fa8dc; }
-    .rank-1  { background: #ff1b1b; }
-
-    .division-leadership { background: #b40000; }
-    .division-highcommand { background: #3d85c6; }
-    .division-department { background: #2e0f63; }
-    .division-media { background: #ff00ff; color: #000; }
-    .division-command { background: #f4a000; color: #000; }
-    .division-officer { background: #08db1a; color: #000; }
-    .division-rookie { background: #19c7c8; color: #000; }
-    .division-tow { background: #a8d0f0; color: #000; }
-    .division-suspended { background: #ff1b1b; }
+    .division-leadership { background: linear-gradient(180deg, #b72d2d, #6b1818); }
+    .division-highcommand { background: linear-gradient(180deg, #4e8bd4, #255183); }
+    .division-department { background: linear-gradient(180deg, #47227f, #251140); }
+    .division-media { background: linear-gradient(180deg, #ff43db, #bc18a0); color: #100510; }
+    .division-command { background: linear-gradient(180deg, #f0b33c, #9c6e14); color: #120c01; }
+    .division-officer { background: linear-gradient(180deg, #3cd96f, #17803c); color: #07140c; }
+    .division-rookie { background: linear-gradient(180deg, #36d0d0, #169090); color: #031111; }
+    .division-tow { background: linear-gradient(180deg, #82b2ea, #4671a6); color: #08101b; }
+    .division-suspended { background: linear-gradient(180deg, #ff3636, #901b1b); }
 
     .dashboard-training-checkbox,
     .mini-checkbox,
@@ -644,14 +875,13 @@
       appearance: none;
       border: 2px solid var(--check-border);
       background: var(--check-bg);
-      border-radius: 4px;
+      border-radius: 6px;
       display: inline-block;
       position: relative;
       opacity: 1 !important;
-      cursor: default;
       margin: 0;
       flex: 0 0 auto;
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.03);
     }
 
     .dashboard-training-checkbox,
@@ -687,34 +917,86 @@
 
     .training-edit-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 12px 16px;
+      padding: 0 24px 24px;
     }
 
     .training-edit-item {
       display: flex;
       align-items: center;
       gap: 10px;
-      background: #1a1a1a;
-      border: 1px solid #333;
-      padding: 10px 12px;
-      color: #fff;
+      padding: 12px 14px;
+      color: var(--text);
+      border-radius: 12px;
+      border: 1px solid rgba(212,175,55,0.12);
+      background: linear-gradient(180deg, rgba(16,24,37,0.96), rgba(9,14,22,0.98));
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    @media (max-width: 1200px) {
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
     }
 
     @media (max-width: 1000px) {
-      .logo-wrap { flex-direction: column; }
-      .logo-line { font-size: 40px; text-align: center; }
-      .top-title { font-size: 44px; }
-      .dashboard-grid { grid-template-columns: 1fr; }
-      .logout { position: static; margin-top: 20px; }
-      .modal-grid { grid-template-columns: 1fr; }
-      .training-edit-grid { grid-template-columns: repeat(2, 1fr); }
-      .rank-search-wrap { flex-direction: column; align-items: stretch; }
+      .page {
+        padding: 18px;
+      }
+
+      .logo-wrap,
+      .portal-hero-main {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .fake-badge {
+        width: 170px;
+        min-width: 170px;
+        font-size: 16px;
+      }
+
+      .header-badge {
+        width: 120px;
+        min-width: 120px;
+      }
+
+      .logo-line {
+        font-size: 38px;
+      }
+
+      .logout {
+        position: static;
+        margin-top: 20px;
+      }
+
+      .modal-grid,
+      .training-edit-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .rank-search-wrap,
       .rank-search-left,
-      .rank-search-right { width: 100%; }
-      .rank-search-input { max-width: 100%; }
-      .move-id-input { max-width: 100%; }
-      .archive-delete-input { max-width: 100%; }
+      .rank-search-right,
+      .archive-top-actions,
+      .portal-hero-top {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .rank-search-input,
+      .move-id-input,
+      .archive-delete-input,
+      .add-access-btn,
+      .move-btn,
+      .archive-open-btn {
+        max-width: 100%;
+        width: 100%;
+      }
     }
   </style>
 </head>
@@ -725,11 +1007,15 @@
   <section id="page1" class="page login-page">
     <div class="logo-wrap">
       <div class="fake-badge">LOS SANTOS<br>POLICE<br>DEPARTMENT</div>
-      <div class="logo-line">Los Santos Police Department.</div>
+      <div style="flex:1;">
+        <div class="logo-line">Los Santos Police Department</div>
+        <div class="hero-subline">Official Internal Police Network · Secure Access Portal</div>
+      </div>
     </div>
+
     <div class="auth-box">
       <button class="outline-btn" onclick="loginWithGoogle()">Anmelden</button>
-      <button class="outline-btn" onclick="openRequestModal()">Anfrage</button>
+      <button class="outline-btn" onclick="openRequestModal()">Anfrage senden</button>
       <div id="loginMessage" class="small-note"></div>
     </div>
   </section>
@@ -737,13 +1023,33 @@
   <!-- Seite 2 -->
   <section id="page2" class="page hidden app-page">
     <div class="content-wrap">
-      <h1 class="top-title">Los Santos Police Department</h1>
+      <div class="portal-hero">
+        <div class="portal-hero-top">
+          <div class="portal-hero-meta">
+            <span class="hero-chip">LSPD Internal Affairs Portal</span>
+            <span class="hero-chip">Authorized Personnel Only</span>
+          </div>
+          <div class="portal-hero-meta">
+            <span>Los Santos State Network</span>
+          </div>
+        </div>
+        <div class="portal-hero-main">
+          <div class="header-badge">LSPD<br>GovNet</div>
+          <div class="hero-title-block">
+            <h1 class="top-title">Los Santos Police Department</h1>
+            <p class="section-subtitle">Dashboard · Personnel · Access Control · Service Records</p>
+          </div>
+        </div>
+      </div>
+
       <div id="navMount"></div>
+
       <div class="dashboard-grid">
         <div>
           <div class="box-title purple">Persönliche Daten</div>
           <div class="info-grid" id="personalDataGrid"></div>
         </div>
+
         <div>
           <div class="box-title orange">Ausbildungen</div>
           <div class="training-grid">
@@ -752,44 +1058,54 @@
               <div class="mini-row"><div class="bg-green"><input class="dashboard-training-checkbox" data-training="GA" type="checkbox" disabled></div><div class="bg-green">GA</div></div>
               <div class="mini-row"><div class="bg-green"><input class="dashboard-training-checkbox" data-training="EHK" type="checkbox" disabled></div><div class="bg-green">EHK</div></div>
             </div>
+
             <div class="training-card">
               <h4 class="bg-gold">Für Officer</h4>
               <div class="mini-row"><div class="bg-gold"><input class="dashboard-training-checkbox" data-training="ES" type="checkbox" disabled></div><div class="bg-gold">ES</div></div>
               <div class="mini-row"><div class="bg-gold"><input class="dashboard-training-checkbox" data-training="Officer" type="checkbox" disabled></div><div class="bg-gold">OP</div></div>
             </div>
+
             <div class="training-card">
               <h4 class="bg-blue">Für Officer II</h4>
               <div class="mini-row"><div class="bg-blue"><input class="dashboard-training-checkbox" data-training="OK" type="checkbox" disabled></div><div class="bg-blue">OK</div></div>
               <div class="mini-row"><div class="bg-blue"><input class="dashboard-training-checkbox" data-training="FULA" type="checkbox" disabled></div><div class="bg-blue">FULA</div></div>
             </div>
+
             <div class="training-card">
               <h4 class="bg-red">Für Officer First Class</h4>
               <div class="mini-row"><div class="bg-red"><input class="dashboard-training-checkbox" data-training="TST" type="checkbox" disabled></div><div class="bg-red">TST</div></div>
             </div>
+
             <div class="training-card">
               <h4 class="bg-cyan">Für Supervising Officer</h4>
               <div class="mini-row"><div class="bg-cyan"><input class="dashboard-training-checkbox" data-training="KS" type="checkbox" disabled></div><div class="bg-cyan">KS</div></div>
             </div>
+
             <div class="training-card">
               <h4 class="bg-pink">Für Senior Supervisor</h4>
               <div class="mini-row"><div class="bg-pink"><input class="dashboard-training-checkbox" data-training="OKPLUS" type="checkbox" disabled></div><div class="bg-pink">OK+</div></div>
             </div>
+
             <div class="training-card">
               <h4 class="bg-light">Für Corporal</h4>
               <div class="mini-row"><div class="bg-light"><input class="dashboard-training-checkbox" data-training="COP" type="checkbox" disabled></div><div class="bg-light">COP</div></div>
             </div>
+
             <div class="training-card">
               <h4 class="bg-orange">Für Lead Supervisor</h4>
               <div class="mini-row"><div class="bg-orange"><input class="dashboard-training-checkbox" data-training="FT" type="checkbox" disabled></div><div class="bg-orange">FT</div></div>
             </div>
+
             <div class="training-card">
               <h4 class="bg-beige">Für Detective</h4>
               <div class="mini-row"><div class="bg-beige"><input class="dashboard-training-checkbox" data-training="JP" type="checkbox" disabled></div><div class="bg-beige">JP</div></div>
             </div>
+
             <div class="training-card">
               <h4 class="bg-violet">AKS</h4>
               <div class="mini-row"><div class="bg-violet"><input class="dashboard-training-checkbox" data-training="AKS" type="checkbox" disabled></div><div class="bg-violet">AKS</div></div>
             </div>
+
             <div class="training-card" style="grid-column: 1 / -1;">
               <h4 class="bg-wine">Freiwillige Ausbildungen</h4>
               <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
@@ -802,22 +1118,25 @@
           <div class="welcome-box" id="welcomeBox"></div>
         </div>
       </div>
+
       <button class="logout" onclick="logout()">Abmelden</button>
     </div>
   </section>
 
   <!-- Seite 3 -->
   <section id="page3" class="page hidden app-page">
-    <div class="content-wrap">
+    <div class="content-wrap panel-card">
       <h1 class="top-title">Los Santos Police Department</h1>
+      <p class="section-subtitle">Kleiderordnung</p>
       <div id="navMount3"></div>
     </div>
   </section>
 
   <!-- Seite 4 -->
   <section id="page4" class="page hidden app-page">
-    <div class="content-wrap">
+    <div class="content-wrap panel-card">
       <h1 class="top-title">Los Santos Police Department</h1>
+      <p class="section-subtitle">Rangbefugnisse</p>
       <div id="navMount4"></div>
       <table>
         <thead>
@@ -840,6 +1159,7 @@
   <section id="page5" class="page hidden app-page">
     <div class="content-wrap panel-card">
       <h1 class="top-title">Los Santos Police Department</h1>
+      <p class="section-subtitle">Fahrzeugordnung</p>
       <div id="navMount5"></div>
       <table>
         <thead>
@@ -857,6 +1177,7 @@
   <section id="page6" class="page hidden app-page">
     <div class="content-wrap panel-card">
       <h1 class="top-title">Los Santos Police Department</h1>
+      <p class="section-subtitle">Sanktionskatalog</p>
       <div id="navMount6"></div>
       <table>
         <thead>
@@ -878,26 +1199,17 @@
   <section id="page7" class="page hidden app-page">
     <div class="rank-list-wrap">
       <h1 class="top-title">Los Santos Police Department</h1>
+      <p class="section-subtitle">Mitarbeiter Register</p>
       <div id="navMount7"></div>
 
       <div class="rank-search-wrap">
         <div class="rank-search-left">
-          <input
-            id="employeeSearchInput"
-            class="rank-search-input"
-            type="text"
-            placeholder="Mitarbeiter suchen..."
-          />
+          <input id="employeeSearchInput" class="rank-search-input" type="text" placeholder="Mitarbeiter suchen..." />
           <button class="add-access-btn" id="addEmployeeBtn">Mitarbeiter hinzufügen</button>
         </div>
 
         <div class="rank-search-right">
-          <input
-            id="moveEmployeeIdInput"
-            class="move-id-input"
-            type="text"
-            placeholder="ID eingeben"
-          />
+          <input id="moveEmployeeIdInput" class="move-id-input" type="text" placeholder="ID eingeben" />
           <button class="move-btn" id="moveEmployeeBtn">Archivieren</button>
           <button class="archive-open-btn" id="openArchiveBtn">Mitarbeiter Archiv</button>
         </div>
@@ -948,8 +1260,9 @@
 
   <!-- Seite 8 -->
   <section id="page8" class="page hidden app-page">
-    <div class="content-wrap">
+    <div class="content-wrap panel-card">
       <h1 class="top-title">Los Santos Police Department</h1>
+      <p class="section-subtitle">Zugriffsanfrage</p>
       <div id="navMount8"></div>
       <table>
         <thead>
@@ -976,18 +1289,14 @@
   </section>
 
   <!-- Seite 9 -->
-  <section id="page9" class="page hidden app-page" style="background:#000;">
+  <section id="page9" class="page hidden app-page">
     <div class="archive-page-wrap">
       <button class="back-btn" onclick="showPage('page7')">&lt;- Zurück</button>
       <h1 class="top-title">Mitarbeiter Archiv</h1>
+      <p class="section-subtitle">Archivierte Datensätze</p>
 
       <div class="archive-top-actions">
-        <input
-          id="archiveDeleteEmployeeIdInput"
-          class="archive-delete-input"
-          type="text"
-          placeholder="ID eingeben"
-        />
+        <input id="archiveDeleteEmployeeIdInput" class="archive-delete-input" type="text" placeholder="ID eingeben" />
         <button class="danger-btn" id="deleteArchivedEmployeeBtn">Löschen</button>
       </div>
 
@@ -1179,9 +1488,7 @@
     const db = getFirestore(app);
     const provider = new GoogleAuthProvider();
 
-    provider.setCustomParameters({
-      prompt: 'select_account'
-    });
+    provider.setCustomParameters({ prompt: 'select_account' });
 
     await setPersistence(auth, browserLocalPersistence);
 
@@ -2014,7 +2321,6 @@
 
     function getDivisionLabel(rank) {
       const r = Number(rank || 1);
-
       if (r >= 28) return 'Leadership';
       if (r >= 23 && r <= 27) return 'High Command';
       if (r >= 18 && r <= 22) return 'Department';
@@ -2029,7 +2335,6 @@
 
     function getDivisionClass(rank) {
       const r = Number(rank || 1);
-
       if (r >= 28) return 'division-leadership';
       if (r >= 23 && r <= 27) return 'division-highcommand';
       if (r >= 18 && r <= 22) return 'division-department';
