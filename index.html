@@ -3243,6 +3243,7 @@ window.doAbmelden = async function() {
   try {
     await signOut(auth);
     try { localStorage.removeItem('lspd_last_page'); } catch(e) {}
+    window._cachedMaData = null;
     window._loaderDone = false;
     showPage('login');
     showNotif('Erfolgreich abgemeldet.');
@@ -4067,6 +4068,7 @@ window.openDashWithMA = function(id) {
     set('dash-rankup', ma.rankup || '-');
     set('dash-urlaub', ma.urlaub || '0/3');
     set('dash-strike', ma.strike || '0/3');
+    window._cachedMaData = ma;
     window._dashFromMA = true;
     showSubPage('dashboard');
   }
@@ -4146,7 +4148,8 @@ async function fillDashboardFromMitarbeiter() {
       return;
     }
 
-    // Schritt 3: Daten ins Dashboard schreiben
+    // Schritt 3: Daten ins Dashboard schreiben und cachen
+    window._cachedMaData = ma;
     applyMaToDashboard(ma);
     console.log('fillDashboard: Daten geladen für ID', userPassId);
 
@@ -4189,9 +4192,17 @@ function showSubPage(name) {
 
   if (name === 'zugriff') { window.loadZugriffTable && window.loadZugriffTable(); }
   if (name === 'archiv') { window.loadArchiv && window.loadArchiv(); }
-  // Dashboard leeren wenn man direkt navigiert (nicht über Mitarbeiter-Button)
-  if (name === 'dashboard' && !window._dashFromMA) { clearDashboard && clearDashboard(); }
-  window._dashFromMA = false;
+  // Wenn zum Dashboard navigiert: gecachte Mitarbeiterdaten wiederherstellen
+  if (name === 'dashboard') {
+    window._dashFromMA = false;
+    setTimeout(() => {
+      if (window._cachedMaData) {
+        window.applyMaToDashboard && window.applyMaToDashboard(window._cachedMaData);
+      } else {
+        window.fillDashboardFromMitarbeiter && window.fillDashboardFromMitarbeiter();
+      }
+    }, 50);
+  }
 
   // Letzte Seite merken (nicht beim initialen Laden)
   if (!window._initialLoad) {
