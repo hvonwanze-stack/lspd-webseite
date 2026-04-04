@@ -4012,25 +4012,31 @@ window.saveAusbildungen = async function() {
 };
 
 window.filterMitarbeiter = function() {
-  const term = document.getElementById('ma-search').value.toLowerCase();
-  if (!term) { renderMitarbeiter(); return; }
-  const filtered = mitarbeiterData.filter(m =>
-    (m.reisepass||'').toLowerCase().includes(term) ||
-    (m.vorname||'').toLowerCase().includes(term) ||
-    (m.id||'').toLowerCase().includes(term)
-  );
-  renderMitarbeiter(filtered);
+  renderMitarbeiter();
 };
 
 function renderMitarbeiter(data) {
   const arr = data || mitarbeiterData;
-  const tbody = document.getElementById('ma-tbody');
-  if (!arr.length) {
-    tbody.innerHTML = '<tr><td colspan="30" style="text-align:center;color:var(--text-dim);padding:20px;">Keine eingetragenen Mitarbeiter vorhanden.</td></tr>';
-    return;
-  }
+  const container = document.getElementById('ma-rang-container');
+  if (!container) return;
+
   const chk = (v) => v ? '<span style="color:#27ae60;font-weight:900;">✔</span>' : '☐';
-  tbody.innerHTML = arr.map(m => `
+
+  const theadHTML = `
+    <thead>
+      <tr>
+        <th>ID</th><th>DN</th><th>NAME</th><th>TEL. NR.</th>
+        <th>RANG</th><th class="th-sep"></th><th>DIVISION</th><th class="th-sep"></th>
+        <th>URLAUB</th><th>STRIKE</th>
+        <th>INVITE-DATUM</th><th>LETZTER RANKUP</th><th>ABTEILUNG</th><th>ZWEIT ABTEILUNG</th>
+        <th class="th-sep"></th>
+        <th>GA</th><th>EHK</th><th>ES</th><th>OP</th><th>OK</th><th>FULA</th>
+        <th>TST</th><th>KS</th><th>OK+</th><th>FT</th><th>COP</th><th>JP</th>
+        <th>ZP</th><th>VHP</th><th>TOW/BL</th>
+      </tr>
+    </thead>`;
+
+  const rowHTML = (m) => `
     <tr>
       <td>${m.id||'-'}</td>
       <td>${m.dn||'-'}</td>
@@ -4040,8 +4046,8 @@ function renderMitarbeiter(data) {
       <td class="td-sep"></td>
       <td>${m.division||'-'}</td>
       <td class="td-sep"></td>
-      <td>${m.urlaub||'0/3'}</td>
-      <td>${m.strike||'0/3'}</td>
+      <td>${m.urlaub||'0'}</td>
+      <td>${m.strike||'0'}</td>
       <td>${m.invite||'-'}</td><td>${m.rankup||'-'}</td>
       <td>${m.abt1||'-'}</td><td>${m.abt2||'-'}</td>
       <td class="td-sep"></td>
@@ -4049,8 +4055,34 @@ function renderMitarbeiter(data) {
       <td>${chk(m.ok)}</td><td>${chk(m.fula)}</td><td>${chk(m.tst)}</td><td>${chk(m.ks)}</td>
       <td>${chk(m.okp)}</td><td>${chk(m.ft)}</td><td>${chk(m.cop)}</td><td>${chk(m.jp)}</td>
       <td>${chk(m.zp)}</td><td>${chk(m.vhp)}</td><td>${chk(m.tow)}</td>
-    </tr>
-  `).join('');
+    </tr>`;
+
+  let html = '';
+  // Rang 30 bis Rang 1 (absteigend)
+  for (let rang = 30; rang >= 1; rang--) {
+    const members = arr.filter(m => parseInt(m.rang) === rang);
+    const emptyRow = `<tr><td colspan="30" style="text-align:center;color:var(--text-dim);padding:8px;font-size:0.7rem;">Keine eingetragenen Mitarbeiter vorhanden.</td></tr>`;
+    html += `
+      <div style="margin-bottom:8px;">
+        <div style="
+          background:linear-gradient(90deg,var(--blue-accent),var(--bg3));
+          border:1px solid var(--gold);
+          padding:5px 14px;
+          font-family:'Rajdhani',sans-serif;
+          font-size:0.8rem;font-weight:700;letter-spacing:2px;
+          color:var(--gold);
+          border-radius:4px 4px 0 0;
+          text-align:center;
+        ">Rang ${rang}</div>
+        <div class="table-wrap register-table-wrap" style="border-radius:0 0 4px 4px;border-top:none;">
+          <table class="data-table register-table">
+            ${theadHTML}
+            <tbody>${members.length ? members.map(rowHTML).join('') : emptyRow}</tbody>
+          </table>
+        </div>
+      </div>`;
+  }
+  container.innerHTML = html;
 }
 
 window.openDashWithMA = function(id) {
