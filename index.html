@@ -152,7 +152,7 @@
   .page-content { padding: 20px; }
 
   /* ===== DASHBOARD (Bild 3) ===== */
-  .dashboard-grid { display: flex; gap: 20px; }
+  .dashboard-grid { display: flex; gap: 20px; justify-content: center; align-items: flex-start; }
 
   .personal-panel {
     width: 320px; flex-shrink: 0;
@@ -200,7 +200,8 @@
   .cat-det { background: var(--orange); border: 1px solid #c87a00; }
   .cat-aks { background: #3a1a3a; border: 1px solid #7a3a7a; }
 
-  .training-item { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+  .training-item { display: flex; align-items: center; gap: 0; margin-bottom: 5px; }
+  .training-item input[type=checkbox] { flex: 1; height: 28px; cursor: not-allowed; }
   .training-item input[type=checkbox] { accent-color: var(--gold); }
   .training-label {
     flex: 1; padding: 6px 10px; border-radius: 3px; text-align: center;
@@ -354,7 +355,7 @@
   /* Trennwände Tabelle */
   .th-sep, .td-sep {
     background: #000 !important;
-    width: 4px !important; min-width: 4px !important; max-width: 4px !important;
+    width: 8px !important; min-width: 8px !important; max-width: 8px !important;
     padding: 0 !important; border: none !important;
   }
 
@@ -504,56 +505,56 @@ window.generateIdFromEmail = generateIdFromEmail;
           <div class="training-grid">
             <div class="training-category">
               <div class="cat-header cat-rookie">FÜR ROOKIE</div>
-              <div class="training-item"><input type="checkbox"><span class="training-label">GA</span></div>
-              <div class="training-item"><input type="checkbox"><span class="training-label">EHK</span></div>
+              <div class="training-item"><input type="checkbox" disabled style="width:100%;accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">GA</span></div>
+              <div class="training-item"><input type="checkbox" disabled style="width:100%;accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">EHK</span></div>
             </div>
             <div class="training-category">
               <div class="cat-header cat-officer">FÜR OFFICER</div>
-              <div class="training-item"><input type="checkbox"><span class="training-label">ES</span></div>
-              <div class="training-item"><input type="checkbox"><span class="training-label">OP</span></div>
+              <div class="training-item"><input type="checkbox" disabled style="width:100%;accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">ES</span></div>
+              <div class="training-item"><input type="checkbox" disabled style="width:100%;accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">OP</span></div>
             </div>
             <div class="training-category">
               <div class="cat-header cat-officer2">FÜR OFFICER II</div>
-              <div class="training-item"><input type="checkbox"><span class="training-label">OK</span></div>
-              <div class="training-item"><input type="checkbox"><span class="training-label">FULA</span></div>
+              <div class="training-item"><input type="checkbox" disabled style="width:100%;accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">OK</span></div>
+              <div class="training-item"><input type="checkbox" disabled style="width:100%;accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">FULA</span></div>
             </div>
             <div class="training-category">
               <div class="cat-header cat-ofc">FÜR OFFICER FIRST CLASS</div>
-              <div class="training-item"><input type="checkbox" checked><span class="training-label">TST</span></div>
+              <div class="training-item"><input type="checkbox" checked disabled style="width:100%;accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">TST</span></div>
             </div>
             <div class="training-category">
               <div class="cat-header cat-sup">FÜR SUPERVISING OFFICER</div>
-              <div class="training-item"><input type="checkbox"><span class="training-label">KS</span></div>
+              <div class="training-item"><input type="checkbox" disabled style="width:100%;accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">KS</span></div>
             </div>
             <div class="training-category">
               <div class="cat-header cat-senior">FÜR SENIOR SUPERVISOR</div>
-              <div class="training-item"><input type="checkbox"><span class="training-label">OK+</span></div>
+              <div class="training-item"><input type="checkbox" disabled style="width:100%;accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">OK+</span></div>
             </div>
             <div class="training-category">
               <div class="cat-header cat-corp">FÜR CORPORAL</div>
-              <div class="training-item"><input type="checkbox"><span class="training-label">COP</span></div>
+              <div class="training-item"><input type="checkbox" disabled style="width:100%;accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">COP</span></div>
             </div>
             <div class="training-category">
               <div class="cat-header cat-lead">FÜR LEAD SUPERVISOR</div>
-              <div class="training-item"><input type="checkbox"><span class="training-label">FT</span></div>
+              <div class="training-item"><input type="checkbox" disabled style="width:100%;accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">FT</span></div>
             </div>
             <div class="training-category">
               <div class="cat-header cat-det">FÜR DETECTIVE</div>
-              <div class="training-item"><input type="checkbox"><span class="training-label">JP</span></div>
+              <div class="training-item"><input type="checkbox" disabled style="width:100%;accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">JP</span></div>
             </div>
           </div>
           <div class="free-training">
             <div style="display:flex;gap:10px;align-items:center;margin-bottom:6px;">
               <div class="cat-header cat-aks" style="flex:1;margin:0;">AKS</div>
             </div>
-            <div class="training-item"><input type="checkbox"><span class="training-label">AKS</span></div>
+            <div class="training-item"><input type="checkbox" disabled style="width:100%;accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">AKS</span></div>
           </div>
           <div class="free-training">
             <div class="cat-header" style="background:var(--purple);border:1px solid var(--purple2);">FREIWILLIGE AUSBILDUNGEN</div>
             <div class="free-grid" style="margin-top:8px;">
-              <div class="training-item"><input type="checkbox"><span class="training-label">ZP</span></div>
-              <div class="training-item"><input type="checkbox"><span class="training-label">VHP</span></div>
-              <div class="training-item"><input type="checkbox"><span class="training-label">TOW / BL</span></div>
+              <div class="training-item"><input type="checkbox" disabled style="width:100%;accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">ZP</span></div>
+              <div class="training-item"><input type="checkbox" disabled style="width:100%;accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">VHP</span></div>
+              <div class="training-item"><input type="checkbox" disabled style="width:100%;accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">TOW / BL</span></div>
             </div>
           </div>
         </div>
@@ -581,60 +582,6 @@ window.generateIdFromEmail = generateIdFromEmail;
 
     <!-- RANGBEFUGNISSE (Bild 4) -->
     <div id="sub-rang" style="display:none;">
-      <div class="table-wrap">
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th>FDA NUTZEN</th><th>SUSPENDIERT</th><th>TOW OFFICER</th><th>CADET</th>
-              <th>ROOKIE</th><th>OFFICER I</th><th>OFFICER II</th><th>OFFICER FIRST CLASS</th>
-              <th>SUPERVISING OFFICER</th><th>SENIOR SUPERVISOR</th><th>LEAD SUPERVISOR</th>
-              <th>CORPORAL</th><th>DETECTIVE</th><th>SENIOR DETECTIVE</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Handschellen</td>
-              <td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td>
-              <td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td>
-              <td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td>
-              <td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td>
-              <td><input type="checkbox"></td>
-            </tr>
-            <tr>
-              <td>Wegweisen</td>
-              <td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td>
-              <td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td>
-              <td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td>
-              <td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td>
-              <td><input type="checkbox"></td>
-            </tr>
-            <tr>
-              <td>Festnehmen</td>
-              <td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td>
-              <td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td>
-              <td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td>
-              <td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td>
-              <td><input type="checkbox"></td>
-            </tr>
-            <tr>
-              <td>Durchsuchen</td>
-              <td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td>
-              <td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td>
-              <td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td>
-              <td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td>
-              <td><input type="checkbox"></td>
-            </tr>
-            <tr>
-              <td>Warnen</td>
-              <td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td>
-              <td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td>
-              <td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td>
-              <td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td>
-              <td><input type="checkbox"></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
     </div>
 
     <!-- FAHRZEUGORDNUNG (Bild 5) -->
@@ -699,7 +646,7 @@ window.generateIdFromEmail = generateIdFromEmail;
         <table class="data-table register-table">
           <thead>
             <tr>
-              <th>✏️</th><th>ID</th><th>DN</th><th>NAME</th><th>TEL. NR.</th>
+              <th>ID</th><th>DN</th><th>NAME</th><th>TEL. NR.</th>
               <th>RANG</th><th class="th-sep"></th><th>DIVISION</th><th>URLAUB</th><th class="th-sep"></th><th>STRIKE</th>
               <th>INVITE-DATUM</th><th>LETZTER RANKUP</th><th>ABTEILUNG 1</th><th>ABTEILUNG 2</th>
               <th class="th-sep"></th>
@@ -709,7 +656,7 @@ window.generateIdFromEmail = generateIdFromEmail;
             </tr>
           </thead>
           <tbody id="ma-tbody">
-            <tr><td colspan="28" style="text-align:center;color:var(--text-dim);padding:20px;">Keine eingetragenen Mitarbeiter vorhanden.</td></tr>
+            <tr><td colspan="30" style="text-align:center;color:var(--text-dim);padding:20px;">Keine eingetragenen Mitarbeiter vorhanden.</td></tr>
           </tbody>
         </table>
       </div>
@@ -1514,12 +1461,11 @@ function renderMitarbeiter(data) {
   const arr = data || mitarbeiterData;
   const tbody = document.getElementById('ma-tbody');
   if (!arr.length) {
-    tbody.innerHTML = '<tr><td colspan="28" style="text-align:center;color:var(--text-dim);padding:20px;">Keine eingetragenen Mitarbeiter vorhanden.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="30" style="text-align:center;color:var(--text-dim);padding:20px;">Keine eingetragenen Mitarbeiter vorhanden.</td></tr>';
     return;
   }
   tbody.innerHTML = arr.map(m => `
     <tr>
-      <td><button class="btn btn-primary" style="padding:3px 8px;font-size:0.75rem;" onclick="openDashWithMA('${m._id}')">✏️</button></td>
       <td>${m.identnr||'-'}</td>
       <td>${m.id||'-'}</td>
       <td>${m.vorname||''} ${m.nachname||''}</td>
