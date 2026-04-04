@@ -828,16 +828,26 @@ window.generateIdFromEmail = generateIdFromEmail;
 
 <!-- Add Mitarbeiter -->
 <div class="overlay" id="overlay-add-ma">
-  <div class="popup" style="max-width:620px;">
+  <div class="popup" style="max-width:680px;">
     <div class="popup-header">
       <h2>MITARBEITER HINZUFÜGEN</h2>
       <button class="popup-close" onclick="closePopup('add-ma')">✕</button>
     </div>
-    <div class="popup-body" style="display:grid;grid-template-columns:1fr 1fr;gap:0 16px;">
-      <div class="form-group"><label>ID <span style="color:var(--red2);">*</span></label><input type="text" id="ma-new-id" placeholder="ID (Pflichtfeld)"></div>
-      <div class="form-group"><label>DIENSTNUMMER (DN)</label>
-        <select id="ma-dn" class="search-input" style="border-radius:5px;width:100%;">
-          <option value="">-- Dienstnummer wählen --</option>
+    <div class="popup-body" style="display:grid;grid-template-columns:1fr 1fr;gap:0 20px;">
+      <!-- LINKE SPALTE -->
+      <div style="display:flex;flex-direction:column;gap:0;">
+        <div class="form-group"><label>ID <span style="color:var(--red2);">*</span></label><input type="text" id="ma-new-id" placeholder="ID (Pflichtfeld)"></div>
+        <div class="form-group"><label>NAME <span style="color:var(--red2);">*</span></label><input type="text" id="ma-vorname" placeholder="Name (Pflichtfeld)"></div>
+        <div class="form-group"><label>TELEFONNUMMER (TEL. NR.)</label><input type="text" id="ma-new-tel" placeholder="z.B. 16-48-950"></div>
+        <div class="form-group"><label>LETZTER RANKUP</label><input type="text" id="ma-rankup" placeholder="TT.MM.JJJJ"></div>
+        <div class="form-group"><label>INVITE-DATUM</label><input type="text" id="ma-invite" placeholder="TT.MM.JJJJ"></div>
+        <div class="form-group"><label>DIVISION</label><input type="text" id="ma-division" placeholder="Division"></div>
+      </div>
+      <!-- RECHTE SPALTE -->
+      <div style="display:flex;flex-direction:column;gap:0;">
+        <div class="form-group"><label>DIENSTNUMMER (DN)</label>
+          <select id="ma-dn" class="search-input" style="border-radius:5px;width:100%;">
+            <option value="">-- Dienstnummer wählen --</option>
           <option value="DN-1">Dienstnummer 1</option>
           <option value="DN-2">Dienstnummer 2</option>
           <option value="DN-3">Dienstnummer 3</option>
@@ -1838,10 +1848,8 @@ window.generateIdFromEmail = generateIdFromEmail;
           <option value="DN-998">Dienstnummer 998</option>
           <option value="DN-999">Dienstnummer 999</option>
           <option value="DN-1000">Dienstnummer 1000</option>
-        </select>
-      </div>
-      <div class="form-group"><label>NAME <span style="color:var(--red2);">*</span></label><input type="text" id="ma-vorname" placeholder="Name (Pflichtfeld)"></div>
-      <div class="form-group"><label>TELEFONNUMMER (TEL. NR.)</label><input type="text" id="ma-new-tel" placeholder="z.B. 16-48-950"></div>
+          </select>
+        </div>
       <div class="form-group"><label>RANG (1-30)</label>
         <div class="num-spinner">
           <button type="button" onclick="spinNum('ma-rang-val',1,30,-1)">−</button>
@@ -1849,7 +1857,46 @@ window.generateIdFromEmail = generateIdFromEmail;
           <button type="button" onclick="spinNum('ma-rang-val',1,30,1)">+</button>
         </div>
       </div>
-      <div class="form-group"><label>DIVISION</label><input type="text" id="ma-division" placeholder="Division"></div>
+        <div class="form-group"><label>ABTEILUNG</label>
+          <select id="ma-abt1" class="search-input" style="border-radius:5px;width:100%;">
+            <option value="">-- Abteilung wählen --</option>
+          <option value="IU">IU</option>
+          <option value="HR">HR</option>
+          <option value="PA">PA</option>
+          <option value="TF">TF</option>
+          <option value="SWAT">SWAT</option>
+          <option value="IU Vize-Leitung">IU Vize-Leitung</option>
+          <option value="IU Leitung">IU Leitung</option>
+          <option value="HR Vize-Leitung">HR Vize-Leitung</option>
+          <option value="HR Leitung">HR Leitung</option>
+          <option value="PA Vize-Leitung">PA Vize-Leitung</option>
+          <option value="PA Leitung">PA Leitung</option>
+          <option value="TF Vize-Leitung">TF Vize-Leitung</option>
+          <option value="TF Leitung">TF Leitung</option>
+          <option value="SWAT Vize-Leitung">SWAT Vize-Leitung</option>
+          <option value="SWAT Leitung">SWAT Leitung</option>
+          </select>
+        </div>
+        <div class="form-group"><label>ZWEIT ABTEILUNG</label>
+          <select id="ma-abt2" class="search-input" style="border-radius:5px;width:100%;">
+            <option value="">-- Zweit Abteilung wählen --</option>
+          <option value="IU">IU</option>
+          <option value="HR">HR</option>
+          <option value="PA">PA</option>
+          <option value="TF">TF</option>
+          <option value="SWAT">SWAT</option>
+          <option value="IU Vize-Leitung">IU Vize-Leitung</option>
+          <option value="IU Leitung">IU Leitung</option>
+          <option value="HR Vize-Leitung">HR Vize-Leitung</option>
+          <option value="HR Leitung">HR Leitung</option>
+          <option value="PA Vize-Leitung">PA Vize-Leitung</option>
+          <option value="PA Leitung">PA Leitung</option>
+          <option value="TF Vize-Leitung">TF Vize-Leitung</option>
+          <option value="TF Leitung">TF Leitung</option>
+          <option value="SWAT Vize-Leitung">SWAT Vize-Leitung</option>
+          <option value="SWAT Leitung">SWAT Leitung</option>
+          </select>
+        </div>
       <div class="form-group"><label>URLAUB</label>
         <div class="num-spinner">
           <button type="button" onclick="spinNum('ma-urlaub-val',0,99,-1)">−</button>
@@ -1864,47 +1911,6 @@ window.generateIdFromEmail = generateIdFromEmail;
           <button type="button" onclick="spinNum('ma-strike-val',0,99,1)">+</button>
         </div>
       </div>
-      <div class="form-group"><label>INVITE-DATUM</label><input type="text" id="ma-invite" placeholder="TT.MM.JJJJ"></div>
-      <div class="form-group"><label>LETZTER RANKUP</label><input type="text" id="ma-rankup" placeholder="TT.MM.JJJJ"></div>
-      <div class="form-group"><label>ABTEILUNG</label>
-        <select id="ma-abt1" class="search-input" style="border-radius:5px;width:100%;">
-          <option value="">-- Abteilung wählen --</option>
-          <option value="IU">IU</option>
-          <option value="HR">HR</option>
-          <option value="PA">PA</option>
-          <option value="TF">TF</option>
-          <option value="SWAT">SWAT</option>
-          <option value="IU Vize-Leitung">IU Vize-Leitung</option>
-          <option value="IU Leitung">IU Leitung</option>
-          <option value="HR Vize-Leitung">HR Vize-Leitung</option>
-          <option value="HR Leitung">HR Leitung</option>
-          <option value="PA Vize-Leitung">PA Vize-Leitung</option>
-          <option value="PA Leitung">PA Leitung</option>
-          <option value="TF Vize-Leitung">TF Vize-Leitung</option>
-          <option value="TF Leitung">TF Leitung</option>
-          <option value="SWAT Vize-Leitung">SWAT Vize-Leitung</option>
-          <option value="SWAT Leitung">SWAT Leitung</option>
-        </select>
-      </div>
-      <div class="form-group"><label>ZWEIT ABTEILUNG</label>
-        <select id="ma-abt2" class="search-input" style="border-radius:5px;width:100%;">
-          <option value="">-- Zweit Abteilung wählen --</option>
-          <option value="IU">IU</option>
-          <option value="HR">HR</option>
-          <option value="PA">PA</option>
-          <option value="TF">TF</option>
-          <option value="SWAT">SWAT</option>
-          <option value="IU Vize-Leitung">IU Vize-Leitung</option>
-          <option value="IU Leitung">IU Leitung</option>
-          <option value="HR Vize-Leitung">HR Vize-Leitung</option>
-          <option value="HR Leitung">HR Leitung</option>
-          <option value="PA Vize-Leitung">PA Vize-Leitung</option>
-          <option value="PA Leitung">PA Leitung</option>
-          <option value="TF Vize-Leitung">TF Vize-Leitung</option>
-          <option value="TF Leitung">TF Leitung</option>
-          <option value="SWAT Vize-Leitung">SWAT Vize-Leitung</option>
-          <option value="SWAT Leitung">SWAT Leitung</option>
-        </select>
       </div>
     </div>
     <div class="popup-footer" style="justify-content:space-between;">
@@ -1916,17 +1922,27 @@ window.generateIdFromEmail = generateIdFromEmail;
 
 <!-- Edit Mitarbeiter Daten Popup -->
 <div class="overlay" id="overlay-edit-ma-daten">
-  <div class="popup" style="max-width:620px;">
+  <div class="popup" style="max-width:680px;">
     <div class="popup-header">
       <h2>MITARBEITER DATEN BEARBEITEN</h2>
       <button class="popup-close" onclick="closePopup('edit-ma-daten')">✕</button>
     </div>
-    <div class="popup-body" style="display:grid;grid-template-columns:1fr 1fr;gap:0 16px;">
+    <div class="popup-body" style="display:grid;grid-template-columns:1fr 1fr;gap:0 20px;">
       <input type="hidden" id="edit-ma-id">
-      <div class="form-group"><label>ID</label><input type="text" id="edit-ma-new-id" placeholder="ID"></div>
-      <div class="form-group"><label>DIENSTNUMMER (DN)</label>
-        <select id="edit-ma-dn" class="search-input" style="border-radius:5px;width:100%;">
-          <option value="">-- Dienstnummer wählen --</option>
+      <!-- LINKE SPALTE -->
+      <div style="display:flex;flex-direction:column;gap:0;">
+        <div class="form-group"><label>ID</label><input type="text" id="edit-ma-new-id" placeholder="ID"></div>
+        <div class="form-group"><label>NAME</label><input type="text" id="edit-ma-vorname" placeholder="Name"></div>
+        <div class="form-group"><label>TELEFONNUMMER (TEL. NR.)</label><input type="text" id="edit-ma-tel" placeholder="Telefon"></div>
+        <div class="form-group"><label>LETZTER RANKUP</label><input type="text" id="edit-ma-rankup" placeholder="TT.MM.JJJJ"></div>
+        <div class="form-group"><label>INVITE-DATUM</label><input type="text" id="edit-ma-invite" placeholder="TT.MM.JJJJ"></div>
+        <div class="form-group"><label>DIVISION</label><input type="text" id="edit-ma-division" placeholder="Division"></div>
+      </div>
+      <!-- RECHTE SPALTE -->
+      <div style="display:flex;flex-direction:column;gap:0;">
+        <div class="form-group"><label>DIENSTNUMMER (DN)</label>
+          <select id="edit-ma-dn" class="search-input" style="border-radius:5px;width:100%;">
+            <option value="">-- Dienstnummer wählen --</option>
           <option value="DN-1">Dienstnummer 1</option>
           <option value="DN-2">Dienstnummer 2</option>
           <option value="DN-3">Dienstnummer 3</option>
@@ -2927,37 +2943,18 @@ window.generateIdFromEmail = generateIdFromEmail;
           <option value="DN-998">Dienstnummer 998</option>
           <option value="DN-999">Dienstnummer 999</option>
           <option value="DN-1000">Dienstnummer 1000</option>
-        </select>
-      </div>
-      <div class="form-group"><label>NAME</label><input type="text" id="edit-ma-vorname" placeholder="Name"></div>
-      <div class="form-group"><label>TELEFONNUMMER (TEL. NR.)</label><input type="text" id="edit-ma-tel" placeholder="Telefon"></div>
-      <div class="form-group"><label>RANG (1-30)</label>
-        <div class="num-spinner">
-          <button type="button" onclick="spinNum('edit-ma-rang-val',1,30,-1)">−</button>
-          <input type="number" id="edit-ma-rang-val" value="0" min="1" max="30">
-          <button type="button" onclick="spinNum('edit-ma-rang-val',1,30,1)">+</button>
+          </select>
         </div>
-      </div>
-      <div class="form-group"><label>DIVISION</label><input type="text" id="edit-ma-division" placeholder="Division"></div>
-      <div class="form-group"><label>URLAUB</label>
-        <div class="num-spinner">
-          <button type="button" onclick="spinNum('edit-ma-urlaub-val',0,99,-1)">−</button>
-          <input type="number" id="edit-ma-urlaub-val" value="0" min="0" max="99">
-          <button type="button" onclick="spinNum('edit-ma-urlaub-val',0,99,1)">+</button>
+        <div class="form-group"><label>RANG (1-30)</label>
+          <div class="num-spinner">
+            <button type="button" onclick="spinNum('edit-ma-rang-val',1,30,-1)">−</button>
+            <input type="number" id="edit-ma-rang-val" value="0" min="1" max="30">
+            <button type="button" onclick="spinNum('edit-ma-rang-val',1,30,1)">+</button>
+          </div>
         </div>
-      </div>
-      <div class="form-group"><label>STRIKE</label>
-        <div class="num-spinner">
-          <button type="button" onclick="spinNum('edit-ma-strike-val',0,99,-1)">−</button>
-          <input type="number" id="edit-ma-strike-val" value="0" min="0" max="99">
-          <button type="button" onclick="spinNum('edit-ma-strike-val',0,99,1)">+</button>
-        </div>
-      </div>
-      <div class="form-group"><label>INVITE-DATUM</label><input type="text" id="edit-ma-invite" placeholder="TT.MM.JJJJ"></div>
-      <div class="form-group"><label>LETZTER RANKUP</label><input type="text" id="edit-ma-rankup" placeholder="TT.MM.JJJJ"></div>
-      <div class="form-group"><label>ABTEILUNG</label>
-        <select id="edit-ma-abt1" class="search-input" style="border-radius:5px;width:100%;">
-          <option value="">-- Abteilung wählen --</option>
+        <div class="form-group"><label>ABTEILUNG</label>
+          <select id="edit-ma-abt1" class="search-input" style="border-radius:5px;width:100%;">
+            <option value="">-- Abteilung wählen --</option>
           <option value="IU">IU</option>
           <option value="HR">HR</option>
           <option value="PA">PA</option>
@@ -2973,11 +2970,11 @@ window.generateIdFromEmail = generateIdFromEmail;
           <option value="TF Leitung">TF Leitung</option>
           <option value="SWAT Vize-Leitung">SWAT Vize-Leitung</option>
           <option value="SWAT Leitung">SWAT Leitung</option>
-        </select>
-      </div>
-      <div class="form-group"><label>ZWEIT ABTEILUNG</label>
-        <select id="edit-ma-abt2" class="search-input" style="border-radius:5px;width:100%;">
-          <option value="">-- Zweit Abteilung wählen --</option>
+          </select>
+        </div>
+        <div class="form-group"><label>ZWEIT ABTEILUNG</label>
+          <select id="edit-ma-abt2" class="search-input" style="border-radius:5px;width:100%;">
+            <option value="">-- Zweit Abteilung wählen --</option>
           <option value="IU">IU</option>
           <option value="HR">HR</option>
           <option value="PA">PA</option>
@@ -2993,7 +2990,22 @@ window.generateIdFromEmail = generateIdFromEmail;
           <option value="TF Leitung">TF Leitung</option>
           <option value="SWAT Vize-Leitung">SWAT Vize-Leitung</option>
           <option value="SWAT Leitung">SWAT Leitung</option>
-        </select>
+          </select>
+        </div>
+        <div class="form-group"><label>URLAUB</label>
+          <div class="num-spinner">
+            <button type="button" onclick="spinNum('edit-ma-urlaub-val',0,99,-1)">−</button>
+            <input type="number" id="edit-ma-urlaub-val" value="0" min="0" max="99">
+            <button type="button" onclick="spinNum('edit-ma-urlaub-val',0,99,1)">+</button>
+          </div>
+        </div>
+        <div class="form-group"><label>STRIKE</label>
+          <div class="num-spinner">
+            <button type="button" onclick="spinNum('edit-ma-strike-val',0,99,-1)">−</button>
+            <input type="number" id="edit-ma-strike-val" value="0" min="0" max="99">
+            <button type="button" onclick="spinNum('edit-ma-strike-val',0,99,1)">+</button>
+          </div>
+        </div>
       </div>
     </div>
     <div class="popup-footer" style="justify-content:space-between;">
@@ -3925,7 +3937,7 @@ window.openEditMaDaten = function() {
   if (!ma) { showNotif('Kein Mitarbeiter gefunden.', true); return; }
   document.getElementById('edit-ma-id').value = ma._id;
   document.getElementById('edit-ma-new-id').value = ma.id || '';
-  document.getElementById('edit-ma-dn').value = ma.dn || '';
+  setTimeout(() => { const s = document.getElementById('edit-ma-dn'); if(s) s.value = ma.dn || ''; }, 50);
   document.getElementById('edit-ma-vorname').value = ma.vorname || '';
   document.getElementById('edit-ma-tel').value = ma.tel || '';
   document.getElementById('edit-ma-division').value = ma.division || '';
