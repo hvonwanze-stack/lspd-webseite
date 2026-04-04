@@ -1,1 +1,1172 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LSPD Portal</title>
+  <style>
+    :root {
+      --bg: #030b17;
+      --panel: rgba(5, 16, 34, 0.92);
+      --panel-2: rgba(8, 26, 53, 0.96);
+      --line: rgba(212, 164, 37, 0.55);
+      --gold: #d6a328;
+      --gold-2: #a56f10;
+      --blue: #0b2f67;
+      --blue-2: #184c96;
+      --blue-3: #0e1e3b;
+      --red: #8a1218;
+      --green: #176c3b;
+      --purple: #5e2d84;
+      --text: #f6f1e9;
+      --muted: #89abd7;
+      --shadow: 0 0 0 1px rgba(214,163,40,.35), 0 10px 30px rgba(0,0,0,.45);
+      --radius: 18px;
+    }
 
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: Inter, Arial, sans-serif;
+      color: var(--text);
+      background:
+        linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px),
+        radial-gradient(circle at top, #08204a 0%, #030b17 38%, #020811 100%);
+      background-size: 24px 24px, 24px 24px, cover;
+      min-height: 100vh;
+    }
+
+    .hidden { display: none !important; }
+    .app { min-height: 100vh; }
+    .page {
+      width: min(1280px, calc(100% - 28px));
+      margin: 12px auto;
+      padding-bottom: 32px;
+    }
+
+    .card {
+      background: linear-gradient(180deg, rgba(8,22,44,.95), rgba(3,11,23,.96));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .hero {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      padding: 16px 18px;
+      background: linear-gradient(90deg, rgba(5,22,52,.98), rgba(2,12,28,.98));
+    }
+
+    .logo {
+      width: 126px;
+      height: 126px;
+      border-radius: 50%;
+      border: 3px solid var(--gold);
+      display: grid;
+      place-items: center;
+      text-align: center;
+      background: radial-gradient(circle at 35% 30%, #234f91 0%, #143364 45%, #07131f 100%);
+      color: #ffe39b;
+      font-weight: 800;
+      letter-spacing: .4px;
+      line-height: 1.05;
+      box-shadow: inset 0 0 30px rgba(0,0,0,.4), 0 0 18px rgba(17,79,164,.2);
+      flex: 0 0 auto;
+    }
+
+    .logo.small {
+      width: 92px;
+      height: 92px;
+      font-size: 1.2rem;
+    }
+
+    .headlineBox {
+      flex: 1;
+      min-height: 110px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 16px 22px;
+      background: linear-gradient(180deg, rgba(11,34,70,.65), rgba(4,12,24,.35));
+    }
+
+    h1, h2, h3, .serif {
+      font-family: Georgia, "Times New Roman", serif;
+      margin: 0;
+      text-shadow: 0 1px 0 #fff, 0 0 20px rgba(255,255,255,.05);
+      letter-spacing: 1px;
+    }
+
+    .headlineBox h1 {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      line-height: .95;
+    }
+
+    .subline {
+      margin-top: 8px;
+      font-size: .78rem;
+      color: #8cb6e8;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+
+    .centerBox {
+      width: min(360px, calc(100% - 32px));
+      margin: 76px auto 0;
+      padding: 20px;
+    }
+
+    .btn, button, select, input {
+      font: inherit;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 38px;
+      padding: 10px 18px;
+      border-radius: 12px;
+      border: 1px solid rgba(214,163,40,.45);
+      background: linear-gradient(180deg, #163966, #0c1d39);
+      color: white;
+      font-weight: 800;
+      letter-spacing: .5px;
+      text-decoration: none;
+      cursor: pointer;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 6px 16px rgba(0,0,0,.35);
+      transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
+    }
+
+    .btn:hover { transform: translateY(-1px); filter: brightness(1.06); }
+    .btn:active { transform: translateY(0); }
+    .btn.block { display: flex; width: 100%; margin-top: 12px; }
+    .btn.gold { background: linear-gradient(180deg, #b9801d, #75500d); }
+    .btn.red { background: linear-gradient(180deg, #c8302f, #7f1214); }
+    .btn.green { background: linear-gradient(180deg, #2d8b50, #12562d); }
+    .btn.purple { background: linear-gradient(180deg, #7e48a8, #43235f); }
+    .btn.small { min-height: 30px; padding: 6px 12px; border-radius: 10px; font-size: .85rem; }
+
+    .topStrip {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 16px;
+      border-bottom: 1px solid rgba(214,163,40,.25);
+      font-size: .74rem;
+      color: #84a9da;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .chipRow {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border: 1px solid rgba(214,163,40,.45);
+      border-radius: 999px;
+      background: rgba(214,163,40,.12);
+      color: #ffde8e;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .dashboardHero {
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .dashboardHeader {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      padding: 16px 20px 18px;
+      background: linear-gradient(180deg, rgba(4,29,71,.95), rgba(4,17,37,.96));
+    }
+
+    .dashboardHeader h1 {
+      font-size: clamp(2.2rem, 4vw, 3.8rem);
+    }
+
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      padding: 24px 14px 4px;
+    }
+
+    .tab {
+      min-width: 110px;
+      text-align: center;
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: .86rem;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 18px;
+      margin-top: 10px;
+    }
+
+    .sideCard, .mainCard { padding: 12px; }
+
+    .sectionTitle {
+      margin-bottom: 12px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      text-transform: uppercase;
+      font-weight: 900;
+      letter-spacing: 1px;
+      text-align: center;
+      background: linear-gradient(180deg, #6632a0, #3d1b63);
+      border: 1px solid rgba(214,163,40,.35);
+    }
+
+    .sectionTitle.gold {
+      background: linear-gradient(180deg, #b9831f, #7c570f);
+    }
+
+    .dataList {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 8px;
+    }
+
+    .label, .value {
+      min-height: 30px;
+      border-radius: 8px;
+      border: 1px solid rgba(214,163,40,.16);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px;
+      background: linear-gradient(180deg, rgba(25,55,96,.85), rgba(8,20,36,.9));
+      font-size: .9rem;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .trainingGrid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(180px, 1fr));
+      gap: 12px;
+    }
+
+    .trainCard {
+      border: 1px solid rgba(214,163,40,.18);
+      border-radius: 14px;
+      padding: 12px;
+      background: linear-gradient(180deg, rgba(8,18,34,.8), rgba(5,14,24,.95));
+    }
+
+    .trainHead {
+      text-align: center;
+      padding: 8px 10px;
+      border-radius: 10px;
+      font-weight: 900;
+      letter-spacing: .7px;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      font-size: .88rem;
+      border: 1px solid rgba(214,163,40,.2);
+    }
+
+    .trainHead.green { background: linear-gradient(180deg, #1e7a42, #14542e); }
+    .trainHead.gold { background: linear-gradient(180deg, #b38019, #82570d); }
+    .trainHead.blue { background: linear-gradient(180deg, #2361b2, #113a71); }
+    .trainHead.red { background: linear-gradient(180deg, #c63131, #7b1819); }
+    .trainHead.purple { background: linear-gradient(180deg, #7b41a7, #4c236e); }
+
+    .trainItem {
+      display: grid;
+      grid-template-columns: 22px 1fr;
+      gap: 8px;
+      align-items: center;
+      margin-top: 7px;
+    }
+
+    .tick {
+      width: 22px;
+      height: 22px;
+      border-radius: 7px;
+      border: 1px solid rgba(214,163,40,.22);
+      background: linear-gradient(180deg, #14335c, #091728);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.05);
+    }
+
+    .pill {
+      min-height: 30px;
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      letter-spacing: .7px;
+      border: 1px solid rgba(214,163,40,.18);
+      text-transform: uppercase;
+    }
+
+    .pill.green { background: linear-gradient(180deg, #1d7d45, #165733); }
+    .pill.gold { background: linear-gradient(180deg, #ba8721, #8d6215); }
+    .pill.blue { background: linear-gradient(180deg, #2c73ca, #164b8d); }
+    .pill.red { background: linear-gradient(180deg, #bf2d30, #8a191c); }
+    .pill.purple { background: linear-gradient(180deg, #8a47ba, #5b2d82); }
+
+    .fullWidth { grid-column: 1 / -1; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border-radius: 12px;
+      border: 1px solid rgba(214,163,40,.2);
+      background: rgba(5,16,34,.75);
+    }
+
+    thead th {
+      background: linear-gradient(180deg, #174684, #0f264b);
+      color: #ffe38c;
+      font-size: .68rem;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      padding: 8px 6px;
+      white-space: nowrap;
+      border-right: 1px solid rgba(255,255,255,.05);
+    }
+
+    tbody td {
+      padding: 9px 8px;
+      border-top: 1px solid rgba(255,255,255,.05);
+      border-right: 1px solid rgba(255,255,255,.04);
+      font-size: .92rem;
+      text-align: center;
+    }
+
+    tbody td.left { text-align: left; }
+    tbody tr:hover { background: rgba(255,255,255,.03); }
+
+    .pageSection {
+      margin-top: 14px;
+      padding: 16px;
+    }
+
+    .pageTitle {
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    .pageTitle h1 {
+      font-size: clamp(2.6rem, 4.8vw, 4rem);
+      line-height: 1;
+    }
+
+    .tinySub {
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      color: #87b1df;
+      font-size: .74rem;
+      margin-bottom: 18px;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .toolbar .left,
+    .toolbar .right {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .field {
+      background: rgba(3,12,26,.82);
+      color: #f4f6fa;
+      border: 1px solid rgba(214,163,40,.25);
+      border-radius: 10px;
+      padding: 10px 12px;
+      min-height: 40px;
+      outline: none;
+    }
+
+    .field::placeholder { color: #7d95b6; }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 92px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: .74rem;
+      font-weight: 900;
+      letter-spacing: .6px;
+      text-transform: uppercase;
+      border: 1px solid rgba(255,255,255,.08);
+    }
+
+    .status.pending { background: rgba(166,109,13,.25); color: #ffd580; }
+    .status.approved { background: rgba(23,108,59,.25); color: #8ff1b6; }
+    .status.rejected { background: rgba(138,18,24,.24); color: #ff9aa3; }
+
+    .checkboxTiny {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border: 1px solid #fff;
+      box-shadow: 0 0 0 1px rgba(214,163,40,.4);
+    }
+
+    .modalWrap {
+      position: fixed;
+      inset: 0;
+      background: rgba(2,6,12,.7);
+      backdrop-filter: blur(5px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+      padding: 20px;
+    }
+
+    .modalWrap.show { display: flex; }
+
+    .modal {
+      width: min(620px, 100%);
+      padding: 20px;
+    }
+
+    .modal h2 {
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 8px;
+    }
+
+    .modalGrid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .modalGrid .full { grid-column: 1 / -1; }
+
+    .note {
+      margin-top: 10px;
+      padding: 10px 12px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(214,163,40,.18);
+      border-radius: 10px;
+      color: #a5c4ea;
+      font-size: .92rem;
+    }
+
+    .msg {
+      margin-top: 14px;
+      min-height: 22px;
+      color: #ffe08a;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .approvedHint {
+      text-align: center;
+      margin-top: 14px;
+      color: #99c0ef;
+      font-size: .95rem;
+    }
+
+    .footerMini {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+      color: #7ea8d8;
+      font-size: .8rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+      .trainingGrid { grid-template-columns: 1fr; }
+      .dashboardHeader { flex-direction: column; text-align: center; }
+      .hero { flex-direction: column; }
+      .headlineBox { text-align: center; }
+      .modalGrid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <section id="loginPage" class="page">
+      <div class="hero">
+        <div class="logo">LOS SANTOS<br>POLICE<br>DEPARTMENT</div>
+        <div class="headlineBox">
+          <h1>Los Santos Police<br>Department</h1>
+          <div class="subline">Official Internal Police Network · Secure Access Portal</div>
+        </div>
+      </div>
+
+      <div class="centerBox card">
+        <button id="loginBtn" class="btn block">ANMELDEN</button>
+        <button id="requestBtn" class="btn block">ANFRAGE SENDEN</button>
+        <div class="approvedHint">Freigabe notwendig. Erst nach Admin-Freischaltung ist eine Anmeldung möglich.</div>
+        <div id="authMessage" class="msg"></div>
+      </div>
+    </section>
+
+    <section id="portalPage" class="page hidden">
+      <div class="dashboardHero card">
+        <div class="topStrip">
+          <div class="chipRow">
+            <span class="chip">LSPD INTERNAL AFFAIRS PORTAL</span>
+            <span class="chip">AUTHORIZED PERSONNEL ONLY</span>
+          </div>
+          <div>Los Santos State Network</div>
+        </div>
+        <div class="dashboardHeader">
+          <div class="logo small">LSPD<br>GOVNET</div>
+          <div style="flex:1;text-align:center;">
+            <h1>Los Santos Police Department</h1>
+            <div class="subline" style="margin-top:6px;">Dashboard · Personnel · Access Control · Service Records</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <button class="btn tab navBtn" data-target="dashboardView">LSPD Dashboard</button>
+        <button class="btn tab navBtn" data-target="uniformView">Kleiderordnung</button>
+        <button class="btn tab navBtn" data-target="ranksView">Rangbefugnisse</button>
+        <button class="btn tab navBtn" data-target="vehiclesView">Fahrzeugordnung</button>
+        <button class="btn tab navBtn" data-target="sanctionsView">Sanktionskatalog</button>
+        <button class="btn tab navBtn" data-target="registerView">Mitarbeiter Register</button>
+        <button class="btn tab navBtn" data-target="accessView">Zugriffsanfrage</button>
+      </div>
+
+      <div id="dashboardView" class="viewSection">
+        <div class="layout">
+          <div class="sideCard card">
+            <div class="sectionTitle">Persönliche Daten</div>
+            <div class="dataList" id="personalDataList">
+              <div class="label">Name:</div><div class="value">-</div>
+              <div class="label">ID:</div><div class="value">-</div>
+              <div class="label">Telefonnummer:</div><div class="value">-</div>
+              <div class="label">Dienstnummer:</div><div class="value">-</div>
+              <div class="label">Rang:</div><div class="value">-</div>
+              <div class="label">Abteilung 1:</div><div class="value">-</div>
+              <div class="label">Abteilung 2:</div><div class="value">-</div>
+              <div class="label">Invite:</div><div class="value">-</div>
+              <div class="label">Letzter RankUp:</div><div class="value">-</div>
+              <div class="label">Urlaub:</div><div class="value">0/3</div>
+              <div class="label">Strike:</div><div class="value">0/3</div>
+            </div>
+          </div>
+
+          <div class="mainCard card">
+            <div class="sectionTitle gold">Ausbildungen</div>
+            <div class="trainingGrid">
+              <div class="trainCard">
+                <div class="trainHead green">Für Rookie</div>
+                <div class="trainItem"><span class="tick"></span><div class="pill green">GA</div></div>
+                <div class="trainItem"><span class="tick"></span><div class="pill green">EHK</div></div>
+              </div>
+              <div class="trainCard">
+                <div class="trainHead gold">Für Officer</div>
+                <div class="trainItem"><span class="tick"></span><div class="pill gold">ES</div></div>
+                <div class="trainItem"><span class="tick"></span><div class="pill gold">OP</div></div>
+              </div>
+              <div class="trainCard">
+                <div class="trainHead blue">Für Officer II</div>
+                <div class="trainItem"><span class="tick"></span><div class="pill blue">OK</div></div>
+                <div class="trainItem"><span class="tick"></span><div class="pill blue">FULA</div></div>
+              </div>
+              <div class="trainCard">
+                <div class="trainHead red">Für Officer First Class</div>
+                <div class="trainItem"><span class="tick"></span><div class="pill red">TST</div></div>
+              </div>
+              <div class="trainCard">
+                <div class="trainHead blue">Für Supervising Officer</div>
+                <div class="trainItem"><span class="tick"></span><div class="pill blue">KS</div></div>
+              </div>
+              <div class="trainCard">
+                <div class="trainHead purple">Für Senior Supervisor</div>
+                <div class="trainItem"><span class="tick"></span><div class="pill purple">OK+</div></div>
+              </div>
+              <div class="trainCard">
+                <div class="trainHead blue">Für Corporal</div>
+                <div class="trainItem"><span class="tick"></span><div class="pill blue">COP</div></div>
+              </div>
+              <div class="trainCard">
+                <div class="trainHead gold">Für Lead Supervisor</div>
+                <div class="trainItem"><span class="tick"></span><div class="pill gold">FT</div></div>
+              </div>
+              <div class="trainCard">
+                <div class="trainHead gold">Für Detective</div>
+                <div class="trainItem"><span class="tick"></span><div class="pill gold">JP</div></div>
+              </div>
+              <div class="trainCard">
+                <div class="trainHead purple">AKS</div>
+                <div class="trainItem"><span class="tick"></span><div class="pill purple">AKS</div></div>
+              </div>
+              <div class="trainCard fullWidth">
+                <div class="trainHead purple">Freiwillige Ausbildungen</div>
+                <div class="trainingGrid" style="grid-template-columns:repeat(3,1fr)">
+                  <div class="trainItem"><span class="tick"></span><div class="pill purple">ZP</div></div>
+                  <div class="trainItem"><span class="tick"></span><div class="pill purple">VHP</div></div>
+                  <div class="trainItem"><span class="tick"></span><div class="pill purple">TOW / BL</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="uniformView" class="viewSection hidden">
+        <div class="pageSection card">
+          <div class="pageTitle"><h1>Los Santos Police Department</h1></div>
+          <div class="tinySub">Kleiderordnung</div>
+          <div class="note">Platzhalter-Seite im Stil des Systems. Hier kannst du später die Inhalte für die Kleiderordnung ergänzen.</div>
+        </div>
+      </div>
+
+      <div id="ranksView" class="viewSection hidden">
+        <div class="pageSection card">
+          <div class="pageTitle"><h1>Los Santos Police Department</h1></div>
+          <div class="tinySub">Rangbefugnisse</div>
+          <table>
+            <thead>
+              <tr>
+                <th>FDA Nutzen</th><th>Suspendiert</th><th>Tow Officer</th><th>Cadet</th><th>Rookie</th><th>Officer I</th><th>Officer II</th><th>Officer First Class</th><th>Supervising Officer</th><th>Senior Supervisor</th><th>Lead Supervisor</th><th>Corporal</th><th>Detective</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td class="left">Handschellen</td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td></tr>
+              <tr><td class="left">Wegweisen</td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td></tr>
+              <tr><td class="left">Festnehmen</td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td></tr>
+              <tr><td class="left">Durchsuchen</td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td></tr>
+              <tr><td class="left">Warnen</td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="vehiclesView" class="viewSection hidden">
+        <div class="pageSection card">
+          <div class="pageTitle"><h1>Los Santos Police Department</h1></div>
+          <div class="tinySub">Fahrzeugordnung</div>
+          <table>
+            <thead>
+              <tr><th>Fahrzeug</th><th>&gt;</th><th>Rang</th><th>&gt;</th><th>Abteilung</th></tr>
+            </thead>
+            <tbody id="vehicleTableBody">
+              <tr><td>AMG GT 20</td><td>&gt;</td><td>29 | Deputy Chief of Police</td><td>&gt;</td><td>HR</td></tr>
+            </tbody>
+          </table>
+          <div style="margin-top:12px;"><button class="btn small">Fahrzeug +</button></div>
+        </div>
+      </div>
+
+      <div id="sanctionsView" class="viewSection hidden">
+        <div class="pageSection card">
+          <div class="pageTitle"><h1>Los Santos Police Department</h1></div>
+          <div class="tinySub">Sanktionskatalog</div>
+          <table>
+            <thead>
+              <tr>
+                <th>§</th><th>Regeldefinition</th><th>&gt;</th><th>Geldstrafe</th><th>Tow Fahrt</th><th>Human Labs</th><th>NG Runde</th><th>Rankup-Sperre</th><th>Strike</th><th>Suspendierung</th><th>Kündigung</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>§1</td>
+                <td class="left">Beleidigungen, Respektlosigkeit und sonstiges niederes Verhalten</td>
+                <td>&gt;</td>
+                <td>150</td>
+                <td>10 Autos</td>
+                <td>30 min</td>
+                <td>2</td>
+                <td>2 Wochen</td>
+                <td>1</td>
+                <td>3 Tage</td>
+                <td>✓</td>
+              </tr>
+            </tbody>
+          </table>
+          <div style="margin-top:12px;"><button class="btn small">Sanktion +</button></div>
+        </div>
+      </div>
+
+      <div id="registerView" class="viewSection hidden">
+        <div class="pageSection card">
+          <div class="pageTitle"><h1>Los Santos Police Department</h1></div>
+          <div class="tinySub">Mitarbeiter Register</div>
+          <div class="toolbar">
+            <div class="left">
+              <input id="employeeSearch" class="field" placeholder="Mitarbeiter suchen..." />
+              <button id="addEmployeeBtn" class="btn">Mitarbeiter hinzufügen</button>
+            </div>
+            <div class="right">
+              <input id="archiveIdInput" class="field" placeholder="ID eingeben" />
+              <button id="archiveBtn" class="btn">Archivieren</button>
+              <button class="btn">Mitarbeiter Archiv</button>
+            </div>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Daten</th><th>ID</th><th>DN</th><th>Name</th><th>Tel. Nr.</th><th>Rang</th><th>Division</th><th>Urlaub</th><th>Strike</th><th>Invite-Datum</th><th>Letzter Rankup</th><th>Abteilung 1</th><th>Abteilung 2</th><th>GA</th><th>EHK</th><th>ES</th><th>OP</th><th>OK</th><th>FULA</th><th>TST</th><th>KS</th><th>OK+</th><th>FT</th><th>COP</th><th>JP</th><th>ZP</th><th>VHP</th><th>TOW/BL</th>
+              </tr>
+            </thead>
+            <tbody id="employeeTableBody">
+              <tr><td colspan="28">Keine eingetragenen Mitarbeiter vorhanden</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="accessView" class="viewSection hidden">
+        <div class="pageSection card">
+          <div class="pageTitle"><h1>Los Santos Police Department</h1></div>
+          <div class="tinySub">Zugriffsanfrage</div>
+          <div class="toolbar">
+            <div class="left">
+              <button id="addAccessBtn" class="btn">Zugriff hinzufügen</button>
+            </div>
+            <div class="right">
+              <button id="refreshRequestsBtn" class="btn small">⟲</button>
+              <input id="accessFilterInput" class="field" placeholder="Identifikationsnummer eingeben" />
+              <button id="clearAccessFilterBtn" class="btn red">X</button>
+            </div>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th><th>Identifikationsnummer</th><th>Nachname</th><th>Email</th><th>Telefonnummer</th><th>Freigeben</th><th>Zugriffsrang</th><th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="accessRequestsBody">
+              <tr><td colspan="8">Keine Zugriffsanfragen vorhanden</td></tr>
+            </tbody>
+          </table>
+          <div class="footerMini">
+            <div id="currentUserLabel">Nicht angemeldet</div>
+            <div>
+              <button id="logoutBtn" class="btn small red">Abmelden</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div id="requestModal" class="modalWrap">
+    <div class="modal card">
+      <h2>IC INFOS</h2>
+      <div class="tinySub" style="margin-bottom:0;">Zugriffsanfrage</div>
+      <div class="modalGrid">
+        <input id="firstName" class="field" placeholder="Name" />
+        <input id="lastName" class="field" placeholder="Nachname" />
+        <input id="phone" class="field" placeholder="Telefonnummer" />
+        <input id="passport" class="field" placeholder="Reisepassnummer" />
+      </div>
+      <div class="note">Nach dem Klick auf „Weiter“ meldest du dich mit deinem Google-Konto an. Dein Konto bleibt gesperrt, bis ein Admin dich freischaltet.</div>
+      <div id="requestMsg" class="msg"></div>
+      <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap;">
+        <button id="closeModalBtn" class="btn">Schließen</button>
+        <button id="continueRequestBtn" class="btn gold">Weiter</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+    import {
+      getAuth,
+      GoogleAuthProvider,
+      signInWithPopup,
+      onAuthStateChanged,
+      signOut
+    } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+    import {
+      getFirestore,
+      doc,
+      getDoc,
+      setDoc,
+      updateDoc,
+      collection,
+      getDocs,
+      query,
+      orderBy,
+      serverTimestamp
+    } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+    const firebaseConfig = {
+      apiKey: 'AIzaSyBx0jRBLp3FUM77iG5j3BBPWQaR2c0mLsE',
+      authDomain: 'lspd-leidstelle.firebaseapp.com',
+      projectId: 'lspd-leidstelle',
+      storageBucket: 'lspd-leidstelle.firebasestorage.app',
+      messagingSenderId: '223539849158',
+      appId: '1:223539849158:web:3ebbc332339de19fd974c7',
+      measurementId: 'G-65J0VDPSTS'
+    };
+
+    const ADMIN_EMAIL = 'h.vonwanze@gmail.com';
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const provider = new GoogleAuthProvider();
+
+    const loginPage = document.getElementById('loginPage');
+    const portalPage = document.getElementById('portalPage');
+    const authMessage = document.getElementById('authMessage');
+    const requestModal = document.getElementById('requestModal');
+    const requestMsg = document.getElementById('requestMsg');
+    const currentUserLabel = document.getElementById('currentUserLabel');
+    const accessRequestsBody = document.getElementById('accessRequestsBody');
+    const employeeTableBody = document.getElementById('employeeTableBody');
+    const accessFilterInput = document.getElementById('accessFilterInput');
+
+    let currentUserData = null;
+
+    function showLogin() {
+      loginPage.classList.remove('hidden');
+      portalPage.classList.add('hidden');
+    }
+
+    function showPortal() {
+      loginPage.classList.add('hidden');
+      portalPage.classList.remove('hidden');
+    }
+
+    function setMessage(el, text, error = false) {
+      el.textContent = text;
+      el.style.color = error ? '#ff9aa3' : '#ffe08a';
+    }
+
+    function openModal() { requestModal.classList.add('show'); }
+    function closeModal() { requestModal.classList.remove('show'); requestMsg.textContent = ''; }
+
+    function getRequestFormData() {
+      return {
+        firstName: document.getElementById('firstName').value.trim(),
+        lastName: document.getElementById('lastName').value.trim(),
+        phone: document.getElementById('phone').value.trim(),
+        passport: document.getElementById('passport').value.trim()
+      };
+    }
+
+    function validateRequestData(data) {
+      return data.firstName && data.lastName && data.phone && data.passport;
+    }
+
+    function switchView(targetId) {
+      document.querySelectorAll('.viewSection').forEach(v => v.classList.add('hidden'));
+      document.getElementById(targetId).classList.remove('hidden');
+    }
+
+    function updatePersonalData(profile) {
+      const values = document.querySelectorAll('#personalDataList .value');
+      const fill = [
+        profile.firstName || '-',
+        profile.passport || '-',
+        profile.phone || '-',
+        '-', '-', '-', '-', '-', '-',
+        profile.vacation || '0/3',
+        profile.strike || '0/3'
+      ];
+      values.forEach((node, i) => node.textContent = fill[i] ?? '-');
+    }
+
+    async function ensureUserDoc(user, requestData = null) {
+      const userRef = doc(db, 'users', user.uid);
+      const snap = await getDoc(userRef);
+      const isAdmin = user.email === ADMIN_EMAIL;
+
+      if (!snap.exists()) {
+        const payload = {
+          uid: user.uid,
+          email: user.email,
+          displayName: user.displayName || '',
+          role: isAdmin ? 'admin' : 'user',
+          status: isAdmin ? 'approved' : 'pending',
+          firstName: requestData?.firstName || '',
+          lastName: requestData?.lastName || '',
+          phone: requestData?.phone || '',
+          passport: requestData?.passport || '',
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp()
+        };
+        await setDoc(userRef, payload);
+        if (!isAdmin && requestData) {
+          await setDoc(doc(db, 'accessRequests', user.uid), {
+            uid: user.uid,
+            email: user.email,
+            firstName: requestData.firstName,
+            lastName: requestData.lastName,
+            phone: requestData.phone,
+            passport: requestData.passport,
+            accessRank: '11 | WebAdmin XI',
+            approved: false,
+            status: 'pending',
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp()
+          });
+        }
+        return payload;
+      }
+
+      const existing = snap.data();
+      if (isAdmin && existing.status !== 'approved') {
+        await updateDoc(userRef, { status: 'approved', role: 'admin', updatedAt: serverTimestamp() });
+        existing.status = 'approved';
+        existing.role = 'admin';
+      }
+      return existing;
+    }
+
+    async function loginWithGoogle(mode = 'login') {
+      try {
+        const result = await signInWithPopup(auth, provider);
+        const user = result.user;
+        const storedRequest = sessionStorage.getItem('pendingRequestData');
+        const requestData = storedRequest ? JSON.parse(storedRequest) : null;
+        const profile = await ensureUserDoc(user, mode === 'request' ? requestData : null);
+
+        if (mode === 'request') {
+          sessionStorage.removeItem('pendingRequestData');
+          setMessage(authMessage, 'Anfrage gespeichert. Warte jetzt auf die Freischaltung durch den Admin.');
+          closeModal();
+          await signOut(auth);
+          showLogin();
+          return;
+        }
+
+        if (user.email === ADMIN_EMAIL || profile.status === 'approved') {
+          currentUserData = { ...profile, email: user.email, uid: user.uid };
+          currentUserLabel.textContent = `${user.email} · ${user.email === ADMIN_EMAIL ? 'Admin' : 'Freigeschaltet'}`;
+          updatePersonalData(profile);
+          showPortal();
+          switchView('dashboardView');
+          await loadAccessRequests();
+          await loadEmployees();
+          setMessage(authMessage, '');
+        } else {
+          setMessage(authMessage, 'Dein Konto ist noch nicht freigeschaltet.', true);
+          await signOut(auth);
+          showLogin();
+        }
+      } catch (error) {
+        console.error(error);
+        setMessage(authMessage, 'Anmeldung fehlgeschlagen: ' + error.message, true);
+      }
+    }
+
+    async function loadAccessRequests() {
+      try {
+        const q = query(collection(db, 'accessRequests'), orderBy('createdAt', 'desc'));
+        const snap = await getDocs(q);
+        const filter = accessFilterInput.value.trim().toLowerCase();
+        if (snap.empty) {
+          accessRequestsBody.innerHTML = '<tr><td colspan="8">Keine Zugriffsanfragen vorhanden</td></tr>';
+          return;
+        }
+
+        const rows = [];
+        snap.forEach(docSnap => {
+          const item = docSnap.data();
+          if (filter && !(String(item.passport || '').toLowerCase().includes(filter))) return;
+          const isAdmin = currentUserData?.email === ADMIN_EMAIL;
+          const canEdit = isAdmin;
+          rows.push(`
+            <tr>
+              <td>${item.firstName || '-'}</td>
+              <td>${item.passport || '-'}</td>
+              <td>${item.lastName || '-'}</td>
+              <td>${item.email || '-'}</td>
+              <td>${item.phone || '-'}</td>
+              <td>
+                ${canEdit ? `
+                  <select class="field approveSelect" data-uid="${item.uid}" style="min-width:90px;padding:6px 10px;height:auto;">
+                    <option value="false" ${item.approved ? '' : 'selected'}>Nein</option>
+                    <option value="true" ${item.approved ? 'selected' : ''}>Ja</option>
+                  </select>
+                ` : (item.approved ? 'Ja' : 'Nein')}
+              </td>
+              <td>
+                ${canEdit ? `
+                  <select class="field rankSelect" data-uid="${item.uid}" style="min-width:150px;padding:6px 10px;height:auto;">
+                    <option ${item.accessRank === '11 | WebAdmin XI' ? 'selected' : ''}>11 | WebAdmin XI</option>
+                    <option ${item.accessRank === '10 | Personnel Access' ? 'selected' : ''}>10 | Personnel Access</option>
+                    <option ${item.accessRank === '09 | Registry User' ? 'selected' : ''}>09 | Registry User</option>
+                  </select>
+                ` : (item.accessRank || '-')}
+              </td>
+              <td><span class="status ${item.status || 'pending'}">${(item.status || 'pending').toUpperCase()}</span></td>
+            </tr>
+          `);
+        });
+
+        accessRequestsBody.innerHTML = rows.join('') || '<tr><td colspan="8">Keine passenden Anfragen gefunden</td></tr>';
+        bindAccessActions();
+      } catch (error) {
+        console.error(error);
+        accessRequestsBody.innerHTML = `<tr><td colspan="8">Fehler beim Laden: ${error.message}</td></tr>`;
+      }
+    }
+
+    function bindAccessActions() {
+      document.querySelectorAll('.approveSelect').forEach(select => {
+        select.addEventListener('change', async (e) => {
+          const uid = e.target.dataset.uid;
+          const approved = e.target.value === 'true';
+          const requestRef = doc(db, 'accessRequests', uid);
+          const userRef = doc(db, 'users', uid);
+          await updateDoc(requestRef, {
+            approved,
+            status: approved ? 'approved' : 'rejected',
+            updatedAt: serverTimestamp()
+          });
+          await updateDoc(userRef, {
+            status: approved ? 'approved' : 'rejected',
+            updatedAt: serverTimestamp()
+          });
+          await loadAccessRequests();
+        });
+      });
+
+      document.querySelectorAll('.rankSelect').forEach(select => {
+        select.addEventListener('change', async (e) => {
+          const uid = e.target.dataset.uid;
+          await updateDoc(doc(db, 'accessRequests', uid), {
+            accessRank: e.target.value,
+            updatedAt: serverTimestamp()
+          });
+        });
+      });
+    }
+
+    async function loadEmployees() {
+      try {
+        const snap = await getDocs(query(collection(db, 'users'), orderBy('createdAt', 'desc')));
+        const employees = [];
+        snap.forEach(docSnap => {
+          const u = docSnap.data();
+          if (u.status === 'approved') employees.push(u);
+        });
+        if (!employees.length) {
+          employeeTableBody.innerHTML = '<tr><td colspan="28">Keine eingetragenen Mitarbeiter vorhanden</td></tr>';
+          return;
+        }
+        employeeTableBody.innerHTML = employees.map(u => `
+          <tr>
+            <td>•</td>
+            <td>${u.passport || '-'}</td>
+            <td>-</td>
+            <td>${u.firstName || '-'} ${u.lastName || ''}</td>
+            <td>${u.phone || '-'}</td>
+            <td>${u.role === 'admin' ? 'Admin' : '-'}</td>
+            <td>-</td>
+            <td>0/3</td>
+            <td>0/3</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+          </tr>
+        `).join('');
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    document.getElementById('requestBtn').addEventListener('click', openModal);
+    document.getElementById('closeModalBtn').addEventListener('click', closeModal);
+    document.getElementById('loginBtn').addEventListener('click', () => loginWithGoogle('login'));
+    document.getElementById('continueRequestBtn').addEventListener('click', async () => {
+      const data = getRequestFormData();
+      if (!validateRequestData(data)) {
+        setMessage(requestMsg, 'Bitte alle Felder ausfüllen.', true);
+        return;
+      }
+      sessionStorage.setItem('pendingRequestData', JSON.stringify(data));
+      setMessage(requestMsg, 'Google-Anmeldung wird geöffnet...');
+      await loginWithGoogle('request');
+    });
+
+    document.querySelectorAll('.navBtn').forEach(btn => {
+      btn.addEventListener('click', () => switchView(btn.dataset.target));
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      await signOut(auth);
+      currentUserData = null;
+      showLogin();
+    });
+
+    document.getElementById('refreshRequestsBtn').addEventListener('click', loadAccessRequests);
+    document.getElementById('clearAccessFilterBtn').addEventListener('click', () => {
+      accessFilterInput.value = '';
+      loadAccessRequests();
+    });
+    accessFilterInput.addEventListener('input', loadAccessRequests);
+
+    document.getElementById('addEmployeeBtn').addEventListener('click', () => {
+      alert('Mitarbeiter können über Zugriffsanfragen freigeschaltet werden.');
+    });
+    document.getElementById('archiveBtn').addEventListener('click', () => {
+      alert('Archiv-Funktion ist als UI vorbereitet und kann später erweitert werden.');
+    });
+    document.getElementById('addAccessBtn').addEventListener('click', openModal);
+
+    requestModal.addEventListener('click', (e) => {
+      if (e.target === requestModal) closeModal();
+    });
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        showLogin();
+        return;
+      }
+      const profile = await ensureUserDoc(user);
+      if (user.email === ADMIN_EMAIL || profile.status === 'approved') {
+        currentUserData = { ...profile, email: user.email, uid: user.uid };
+        currentUserLabel.textContent = `${user.email} · ${user.email === ADMIN_EMAIL ? 'Admin' : 'Freigeschaltet'}`;
+        updatePersonalData(profile);
+        showPortal();
+        switchView('dashboardView');
+        await loadAccessRequests();
+        await loadEmployees();
+      } else {
+        await signOut(auth);
+        setMessage(authMessage, 'Dein Konto ist noch nicht freigeschaltet.', true);
+      }
+    });
+  </script>
+</body>
+</html>
