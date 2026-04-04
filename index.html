@@ -643,11 +643,12 @@ window.generateIdFromEmail = generateIdFromEmail;
         <button class="btn btn-primary" onclick="openPopup('add-ma')">Mitarbeiter hinzufügen</button>
         <div style="flex:1"></div>
         <div style="display:flex;align-items:stretch;gap:6px;">
+          <button class="btn btn-danger" onclick="deleteMitarbeiterById()" style="padding:0 12px;font-size:0.85rem;align-self:stretch;white-space:nowrap;" title="Mitarbeiter löschen">✕</button>
           <button class="btn btn-primary" onclick="openEditMaDaten()" style="padding:0 10px;font-size:1rem;align-self:stretch;" title="Daten bearbeiten">✏️</button>
           <input class="search-input" placeholder="ID eingeben" id="ma-id-input" style="max-width:140px;border-radius:5px;">
+          <button class="btn btn-primary" onclick="archivieren()" style="padding:0 10px;align-self:stretch;font-size:0.8rem;" title="Archivieren">Archivieren</button>
           <button class="btn btn-primary" onclick="openEditAusbildungen()" style="padding:0 10px;font-size:1rem;align-self:stretch;" title="Ausbildungen bearbeiten">📋</button>
         </div>
-        <button class="btn btn-primary" onclick="archivieren()">Archivieren</button>
         <button class="btn btn-primary" onclick="showSubPage('archiv')">Mitarbeiter Archiv</button>
       </div>
       <div class="table-wrap register-table-wrap">
@@ -853,20 +854,17 @@ window.generateIdFromEmail = generateIdFromEmail;
     </div>
     <div class="popup-body" style="display:grid;grid-template-columns:1fr 1fr;gap:0 16px;">
       <input type="hidden" id="edit-ma-id">
-      <div class="form-group"><label>IDENTIFIKATIONSNUMMER</label><input type="text" id="edit-ma-identnr" placeholder="Identifikationsnummer"></div>
-      <div class="form-group"><label>REISEPASSNUMMER</label><input type="text" id="edit-ma-reisepass" placeholder="Reisepassnummer"></div>
       <div class="form-group"><label>ID</label><input type="text" id="edit-ma-new-id" placeholder="ID"></div>
       <div class="form-group"><label>DIENSTNUMMER (DN)</label><input type="text" id="edit-ma-dn" placeholder="DN"></div>
       <div class="form-group"><label>NAME</label><input type="text" id="edit-ma-vorname" placeholder="Name"></div>
-      <div class="form-group"><label>TELEFONNUMMER</label><input type="text" id="edit-ma-tel" placeholder="Telefon"></div>
-      <div class="form-group"><label>RANG</label><input type="text" id="edit-ma-rang" placeholder="Rang"></div>
+      <div class="form-group"><label>TELEFONNUMMER (TEL. NR.)</label><input type="text" id="edit-ma-tel" placeholder="Telefon"></div>
       <div class="form-group"><label>DIVISION</label><input type="text" id="edit-ma-division" placeholder="Division"></div>
-      <div class="form-group"><label>INVITE-DATUM</label><input type="text" id="edit-ma-invite" placeholder="TT.MM.JJJJ"></div>
-      <div class="form-group"><label>LETZTER RANKUP</label><input type="text" id="edit-ma-rankup" placeholder="TT.MM.JJJJ"></div>
-      <div class="form-group"><label>ABTEILUNG 1</label><input type="text" id="edit-ma-abt1" placeholder="Abteilung 1"></div>
-      <div class="form-group"><label>ABTEILUNG 2</label><input type="text" id="edit-ma-abt2" placeholder="Abteilung 2"></div>
       <div class="form-group"><label>URLAUB</label><input type="text" id="edit-ma-urlaub" placeholder="0/3"></div>
       <div class="form-group"><label>STRIKE</label><input type="text" id="edit-ma-strike" placeholder="0/3"></div>
+      <div class="form-group"><label>INVITE-DATUM</label><input type="text" id="edit-ma-invite" placeholder="TT.MM.JJJJ"></div>
+      <div class="form-group"><label>LETZTER RANKUP</label><input type="text" id="edit-ma-rankup" placeholder="TT.MM.JJJJ"></div>
+      <div class="form-group"><label>ABTEILUNG</label><input type="text" id="edit-ma-abt1" placeholder="Abteilung"></div>
+      <div class="form-group"><label>ZWEIT ABTEILUNG</label><input type="text" id="edit-ma-abt2" placeholder="Zweit Abteilung"></div>
     </div>
     <div class="popup-footer" style="justify-content:space-between;">
       <button class="btn btn-primary" onclick="closePopup('edit-ma-daten')">Abbrechen</button>
@@ -955,6 +953,26 @@ window.generateIdFromEmail = generateIdFromEmail;
     <div class="popup-footer" style="justify-content:space-between;">
       <button class="btn btn-danger" onclick="confirmArchivDelete()">JA, LÖSCHEN</button>
       <button class="btn btn-primary" onclick="closePopup('confirm-archiv-delete')">NEIN, ABBRECHEN</button>
+    </div>
+  </div>
+</div>
+
+<!-- Confirm Delete Mitarbeiter -->
+<div class="overlay" id="overlay-confirm-delete-ma">
+  <div class="popup" style="max-width:380px;">
+    <div class="popup-header">
+      <h2>MITARBEITER LÖSCHEN</h2>
+      <button class="popup-close" onclick="closePopup('confirm-delete-ma')">✕</button>
+    </div>
+    <div class="popup-body">
+      <div class="info-box" style="border-color:var(--red2);background:rgba(139,26,26,0.2);text-align:center;">
+        ⚠️ Mitarbeiter wirklich löschen?<br>
+        <span id="confirm-delete-ma-name" style="color:var(--gold);font-weight:700;"></span>
+      </div>
+    </div>
+    <div class="popup-footer" style="justify-content:space-between;">
+      <button class="btn btn-danger" onclick="confirmDeleteMa()">JA, LÖSCHEN</button>
+      <button class="btn btn-primary" onclick="closePopup('confirm-delete-ma')">NEIN, ABBRECHEN</button>
     </div>
   </div>
 </div>
@@ -1418,11 +1436,13 @@ window.saveZugriff = async function() {
   if (!vorname) { showNotif('Bitte Vorname eingeben.', true); return; }
   if (!passNr) { showNotif('Bitte ID eingeben.', true); return; }
   try {
-    // Prüfen ob ID (pass) bereits vergeben
+    // Prüfen ob ID (pass) bereits vergeben → Warnung aber trotzdem fortfahren
     const snap = await getDocs(collection(db, 'zugriffsanfragen'));
     let existingDoc = null;
     snap.forEach(d => { if ((d.data().pass||'') === passNr) existingDoc = d; });
-    if (existingDoc) { showNotif('Ein Eintrag mit dieser ID existiert bereits.', true); return; }
+    if (existingDoc) {
+      showNotif('⚠️ Diese ID existiert bereits — Zugriff wird trotzdem hinzugefügt.');
+    }
 
     await addDoc(collection(db, 'zugriffsanfragen'), {
       vorname, nachname, pass: passNr, email, tel,
@@ -1636,6 +1656,29 @@ window.deleteMitarbeiter = async function(docId) {
   } catch(e) { showNotif('Fehler: ' + e.message, true); }
 };
 
+window.deleteMitarbeiterById = function() {
+  const searchId = document.getElementById('ma-id-input').value.trim();
+  if (!searchId) { showNotif('Bitte ID eingeben.', true); return; }
+  const ma = mitarbeiterData.find(m => m.id === searchId);
+  if (!ma) { showNotif('Kein Mitarbeiter mit dieser ID gefunden.', true); return; }
+  window._deleteMaId = ma._id;
+  window._deleteMaName = ma.vorname || ma.id;
+  document.getElementById('confirm-delete-ma-name').textContent = window._deleteMaName;
+  openPopup('confirm-delete-ma');
+};
+
+window.confirmDeleteMa = async function() {
+  if (!window._deleteMaId) return;
+  try {
+    await deleteDoc(doc(db, 'mitarbeiter', window._deleteMaId));
+    mitarbeiterData = mitarbeiterData.filter(m => m._id !== window._deleteMaId);
+    renderMitarbeiter();
+    closePopup('confirm-delete-ma');
+    showNotif('Mitarbeiter gelöscht.');
+    window._deleteMaId = null;
+  } catch(e) { showNotif('Fehler: ' + e.message, true); }
+};
+
 // Track selected archiv entry for deletion
 window._selectedArchivId = null;
 
@@ -1738,13 +1781,10 @@ window.openEditMaDaten = function() {
   const ma = mitarbeiterData.find(m => m.id === searchId || m.reisepass === searchId);
   if (!ma) { showNotif('Kein Mitarbeiter gefunden.', true); return; }
   document.getElementById('edit-ma-id').value = ma._id;
-  document.getElementById('edit-ma-identnr').value = ma.identnr || '';
-  document.getElementById('edit-ma-reisepass').value = ma.reisepass || '';
   document.getElementById('edit-ma-new-id').value = ma.id || '';
   document.getElementById('edit-ma-dn').value = ma.dn || '';
   document.getElementById('edit-ma-vorname').value = ma.vorname || '';
   document.getElementById('edit-ma-tel').value = ma.tel || '';
-  document.getElementById('edit-ma-rang').value = ma.rang || '';
   document.getElementById('edit-ma-division').value = ma.division || '';
   document.getElementById('edit-ma-invite').value = ma.invite || '';
   document.getElementById('edit-ma-rankup').value = ma.rankup || '';
@@ -1758,13 +1798,10 @@ window.openEditMaDaten = function() {
 window.saveMaDaten = async function() {
   const docId = document.getElementById('edit-ma-id').value;
   const update = {
-    identnr: document.getElementById('edit-ma-identnr').value.trim(),
-    reisepass: document.getElementById('edit-ma-reisepass').value.trim(),
     id: document.getElementById('edit-ma-new-id').value.trim(),
     dn: document.getElementById('edit-ma-dn').value.trim(),
     vorname: document.getElementById('edit-ma-vorname').value.trim(),
     tel: document.getElementById('edit-ma-tel').value.trim(),
-    rang: document.getElementById('edit-ma-rang').value.trim(),
     division: document.getElementById('edit-ma-division').value.trim(),
     invite: document.getElementById('edit-ma-invite').value.trim(),
     rankup: document.getElementById('edit-ma-rankup').value.trim(),
