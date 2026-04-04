@@ -1,1248 +1,1146 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LSPD Portal</title>
-  <style>
-    :root {
-      --bg: #030b17;
-      --panel: rgba(5, 16, 34, 0.92);
-      --panel-2: rgba(8, 26, 53, 0.96);
-      --line: rgba(212, 164, 37, 0.55);
-      --gold: #d6a328;
-      --gold-2: #a56f10;
-      --blue: #0b2f67;
-      --blue-2: #184c96;
-      --blue-3: #0e1e3b;
-      --red: #8a1218;
-      --green: #176c3b;
-      --purple: #5e2d84;
-      --text: #f6f1e9;
-      --muted: #89abd7;
-      --shadow: 0 0 0 1px rgba(214,163,40,.35), 0 10px 30px rgba(0,0,0,.45);
-      --radius: 18px;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Los Santos Police Department</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
 
-    * { box-sizing: border-box; }
-    html, body { height: 100%; }
-    body {
-      margin: 0;
-      font-family: Inter, Arial, sans-serif;
-      color: var(--text);
-      background:
-        radial-gradient(circle at top center, rgba(11, 49, 105, 0.35) 0%, rgba(4, 20, 44, 0.12) 28%, rgba(2, 10, 20, 0) 52%),
-        linear-gradient(180deg, #05152d 0%, #031020 55%, #020913 100%);
-      min-height: 100vh;
-    }
+<style>
+  :root {
+    --bg: #0a0f1e;
+    --bg2: #0d1628;
+    --bg3: #111d35;
+    --border: #1e3a5f;
+    --gold: #c9a227;
+    --gold2: #e8c547;
+    --blue-accent: #1a4a8a;
+    --blue-light: #2a6abf;
+    --text: #c8d8f0;
+    --text-dim: #6a8ab0;
+    --red: #8b1a1a;
+    --red2: #c0392b;
+    --green: #1a5c2a;
+    --green2: #27ae60;
+    --purple: #3d1a6e;
+    --purple2: #6c3483;
+    --teal: #0e4a5e;
+    --orange: #7a4a00;
+    --header-h: 160px;
+    --nav-h: 50px;
+  }
 
-    .hidden { display: none !important; }
-    .app { min-height: 100vh; }
-    .page {
-      width: min(1280px, calc(100% - 28px));
-      margin: 12px auto;
-      padding-bottom: 32px;
-    }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    .card {
-      background: linear-gradient(180deg, rgba(8,22,44,.95), rgba(3,11,23,.96));
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-    }
+  body {
+    font-family: 'Exo 2', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
 
-    .hero {
-      display: flex;
-      align-items: center;
-      gap: 22px;
-      padding: 16px 18px;
-      background: linear-gradient(90deg, rgba(5,22,52,.98), rgba(2,12,28,.98));
-    }
+  /* ===== PAGES ===== */
+  .page { display: none; min-height: 100vh; }
+  .page.active { display: block; }
 
-    .logo {
-      width: 126px;
-      height: 126px;
-      border-radius: 50%;
-      border: 3px solid var(--gold);
-      display: grid;
-      place-items: center;
-      text-align: center;
-      background: radial-gradient(circle at 35% 30%, #234f91 0%, #143364 45%, #07131f 100%);
-      color: #ffe39b;
-      font-weight: 800;
-      letter-spacing: .4px;
-      line-height: 1.05;
-      box-shadow: inset 0 0 30px rgba(0,0,0,.4), 0 0 18px rgba(17,79,164,.2);
-      flex: 0 0 auto;
-    }
+  /* ===== LOGIN PAGE (Bild 2) ===== */
+  #page-login {
+    display: none;
+    background: var(--bg);
+    min-height: 100vh;
+    padding: 40px 20px;
+  }
+  #page-login.active { display: flex; flex-direction: column; align-items: center; }
 
-    .logo.small {
-      width: 92px;
-      height: 92px;
-      font-size: 1.2rem;
-    }
+  .login-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background: linear-gradient(135deg, var(--bg2), var(--bg3));
+    border: 1px solid var(--gold);
+    border-radius: 8px;
+    padding: 20px 30px;
+    width: 100%;
+    max-width: 820px;
+    margin-bottom: 30px;
+  }
 
-    .headlineBox {
-      flex: 1;
-      min-height: 110px;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 16px 22px;
-      background: linear-gradient(180deg, rgba(11,34,70,.65), rgba(4,12,24,.35));
-    }
+  .login-badge {
+    width: 100px; height: 100px;
+    border-radius: 50%;
+    border: 3px solid var(--gold);
+    background: radial-gradient(circle, #0a1a3a 60%, #0d2a5a);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 10px; font-weight: 700; letter-spacing: 1px;
+    color: var(--gold); text-align: center; line-height: 1.4;
+    flex-shrink: 0;
+  }
 
-    h1, h2, h3, .serif {
-      font-family: Georgia, "Times New Roman", serif;
-      margin: 0;
-      text-shadow: 0 1px 0 #fff, 0 0 20px rgba(255,255,255,.05);
-      letter-spacing: 1px;
-    }
+  .login-title-block { flex: 1; }
+  .login-title-block h1 { font-family: 'Orbitron', sans-serif; font-size: 2.4rem; font-weight: 700; color: #fff; }
+  .login-title-block .subtitle { font-family: 'Rajdhani', sans-serif; font-size: 0.7rem; letter-spacing: 3px; color: var(--text-dim); margin-top: 6px; }
 
-    .headlineBox h1 {
-      font-size: clamp(2.5rem, 5vw, 4rem);
-      line-height: .95;
-    }
+  .login-box {
+    background: linear-gradient(135deg, var(--bg2), var(--bg3));
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 30px 40px;
+    width: 100%;
+    max-width: 420px;
+    display: flex; flex-direction: column; gap: 12px;
+  }
 
-    .subline {
-      margin-top: 8px;
-      font-size: .78rem;
-      color: #8cb6e8;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-    }
+  .login-btn {
+    padding: 16px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.9rem; font-weight: 700; letter-spacing: 3px;
+    color: var(--text);
+    background: linear-gradient(135deg, var(--bg3), var(--blue-accent));
+    border: 1px solid var(--blue-light);
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+  }
+  .login-btn:hover { background: linear-gradient(135deg, var(--blue-accent), var(--blue-light)); color: #fff; }
 
-    .centerBox {
-      width: min(360px, calc(100% - 32px));
-      margin: 76px auto 0;
-      padding: 20px;
-    }
+  /* ===== MAIN LAYOUT (Bilder 1,3-7) ===== */
+  .main-header {
+    background: linear-gradient(180deg, #0d1e3a 0%, #0a1628 100%);
+    border-bottom: 2px solid var(--gold);
+    padding: 25px 30px 15px;
+    text-align: center;
+    position: relative;
+  }
+  .main-header h1 { font-family: 'Orbitron', sans-serif; font-size: 2.2rem; font-weight: 900; color: #fff; text-shadow: 0 0 20px rgba(201,162,39,0.3); }
+  .main-header .page-label { font-family: 'Rajdhani', sans-serif; font-size: 0.65rem; letter-spacing: 4px; color: var(--text-dim); margin-top: 4px; }
 
-    .btn, button, select, input {
-      font: inherit;
-    }
+  /* Top bar for dashboard only */
+  .top-bar {
+    background: #050a14;
+    padding: 4px 16px;
+    display: flex; justify-content: space-between;
+    font-family: 'Rajdhani', sans-serif; font-size: 0.65rem; letter-spacing: 2px;
+    color: var(--text-dim);
+  }
+  .top-bar span { color: var(--gold); }
 
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      min-height: 38px;
-      padding: 10px 18px;
-      border-radius: 12px;
-      border: 1px solid rgba(214,163,40,.45);
-      background: linear-gradient(180deg, #163966, #0c1d39);
-      color: white;
-      font-weight: 800;
-      letter-spacing: .5px;
-      text-decoration: none;
-      cursor: pointer;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 6px 16px rgba(0,0,0,.35);
-      transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
-    }
+  .nav-bar {
+    display: flex; gap: 8px; padding: 12px 20px;
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
 
-    .btn:hover { transform: translateY(-1px); filter: brightness(1.06); }
-    .btn:active { transform: translateY(0); }
-    .btn.block { display: flex; width: 100%; margin-top: 12px; }
-    .btn.gold { background: linear-gradient(180deg, #b9801d, #75500d); }
-    .btn.red { background: linear-gradient(180deg, #c8302f, #7f1214); }
-    .btn.green { background: linear-gradient(180deg, #2d8b50, #12562d); }
-    .btn.purple { background: linear-gradient(180deg, #7e48a8, #43235f); }
-    .btn.small { min-height: 30px; padding: 6px 12px; border-radius: 10px; font-size: .85rem; }
+  .nav-btn {
+    padding: 7px 14px;
+    font-family: 'Rajdhani', sans-serif; font-size: 0.75rem; font-weight: 600; letter-spacing: 1px;
+    color: var(--text);
+    background: transparent;
+    border: 1px solid var(--blue-accent);
+    border-radius: 20px;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .nav-btn:hover, .nav-btn.active { background: var(--blue-accent); color: #fff; border-color: var(--blue-light); }
 
-    .topStrip {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      padding: 10px 16px;
-      border-bottom: 1px solid rgba(214,163,40,.25);
-      font-size: .74rem;
-      color: #84a9da;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-    }
+  .page-content { padding: 20px; }
 
-    .chipRow {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
+  /* ===== DASHBOARD (Bild 3) ===== */
+  .dashboard-grid { display: flex; gap: 20px; }
 
-    .chip {
-      display: inline-flex;
-      align-items: center;
-      padding: 4px 10px;
-      border: 1px solid rgba(214,163,40,.45);
-      border-radius: 999px;
-      background: rgba(214,163,40,.12);
-      color: #ffde8e;
-      font-weight: 700;
-      letter-spacing: 1px;
-    }
+  .personal-panel {
+    width: 220px; flex-shrink: 0;
+    background: linear-gradient(180deg, var(--purple) 0%, #2a0f5a 100%);
+    border: 1px solid #5a2d9a;
+    border-radius: 6px; padding: 12px;
+  }
+  .personal-panel h3 {
+    font-family: 'Rajdhani', sans-serif; font-size: 0.7rem; font-weight: 700; letter-spacing: 3px;
+    color: var(--gold); text-align: center; padding: 6px; margin-bottom: 10px;
+    border-bottom: 1px solid var(--purple2);
+  }
+  .data-row { display: flex; margin-bottom: 6px; }
+  .data-label { font-size: 0.7rem; color: var(--text-dim); width: 95px; text-align: right; padding-right: 8px; font-family: 'Rajdhani', sans-serif; font-weight: 600; }
+  .data-val { flex: 1; background: rgba(255,255,255,0.05); border-radius: 3px; padding: 2px 6px; font-size: 0.7rem; font-family: 'Rajdhani', sans-serif; }
 
-    .dashboardHero {
-      padding: 0;
-      overflow: hidden;
-    }
+  .training-panel {
+    flex: 1;
+    background: linear-gradient(180deg, #4a3a00 0%, #2a2000 100%);
+    border: 1px solid var(--gold);
+    border-radius: 6px; padding: 12px;
+  }
+  .training-panel h3 {
+    font-family: 'Rajdhani', sans-serif; font-size: 0.7rem; font-weight: 700; letter-spacing: 3px;
+    color: var(--gold); text-align: center; padding: 6px; margin-bottom: 10px;
+    border-bottom: 1px solid var(--gold);
+  }
 
-    .dashboardHeader {
-      display: flex;
-      align-items: center;
-      gap: 24px;
-      padding: 16px 20px 18px;
-      background: linear-gradient(180deg, rgba(4,29,71,.95), rgba(4,17,37,.96));
-    }
+  .training-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
 
-    .dashboardHeader h1 {
-      font-size: clamp(2.2rem, 4vw, 3.8rem);
-    }
+  .training-category { background: transparent; }
+  .cat-header {
+    padding: 6px 10px; border-radius: 4px; text-align: center;
+    font-family: 'Rajdhani', sans-serif; font-size: 0.65rem; font-weight: 700; letter-spacing: 2px;
+    margin-bottom: 6px;
+  }
+  .cat-rookie { background: var(--green); border: 1px solid var(--green2); }
+  .cat-officer { background: var(--orange); border: 1px solid #c87a00; }
+  .cat-officer2 { background: var(--blue-accent); border: 1px solid var(--blue-light); }
+  .cat-ofc { background: var(--red); border: 1px solid var(--red2); }
+  .cat-sup { background: var(--teal); border: 1px solid #1a7a9e; }
+  .cat-senior { background: var(--purple); border: 1px solid var(--purple2); }
+  .cat-corp { background: var(--blue-accent); border: 1px solid var(--blue-light); }
+  .cat-lead { background: var(--orange); border: 1px solid #c87a00; }
+  .cat-det { background: var(--orange); border: 1px solid #c87a00; }
+  .cat-aks { background: #3a1a3a; border: 1px solid #7a3a7a; }
 
-    .tabs {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: center;
-      padding: 24px 14px 4px;
-    }
+  .training-item { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+  .training-item input[type=checkbox] { accent-color: var(--gold); }
+  .training-label {
+    flex: 1; padding: 4px 8px; border-radius: 3px; text-align: center;
+    font-family: 'Rajdhani', sans-serif; font-size: 0.75rem; font-weight: 600;
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1);
+  }
 
-    .tab {
-      min-width: 110px;
-      text-align: center;
-      border-radius: 999px;
-      padding: 8px 14px;
-      font-size: .86rem;
-    }
+  .free-training {
+    margin-top: 14px; border-top: 1px solid var(--gold); padding-top: 12px;
+  }
+  .free-training .cat-header { background: var(--purple); border: 1px solid var(--purple2); }
+  .free-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 8px; }
 
-    .layout {
-      display: grid;
-      grid-template-columns: 260px 1fr;
-      gap: 18px;
-      margin-top: 10px;
-    }
+  /* ===== TABLES ===== */
+  .data-table { width: 100%; border-collapse: collapse; font-size: 0.72rem; }
+  .data-table th {
+    padding: 8px 10px; text-align: center;
+    font-family: 'Rajdhani', sans-serif; font-size: 0.6rem; font-weight: 700; letter-spacing: 2px;
+    background: var(--bg3); color: var(--gold); border: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  .data-table td {
+    padding: 8px 10px; text-align: center;
+    border: 1px solid var(--border);
+    background: var(--bg2); font-family: 'Rajdhani', sans-serif;
+  }
+  .data-table tr:hover td { background: #0f1e38; }
 
-    .sideCard, .mainCard { padding: 12px; }
+  .table-wrap { background: var(--bg2); border: 1px solid var(--border); border-radius: 6px; overflow: auto; }
 
-    .sectionTitle {
-      margin-bottom: 12px;
-      padding: 10px 12px;
-      border-radius: 12px;
-      text-transform: uppercase;
-      font-weight: 900;
-      letter-spacing: 1px;
-      text-align: center;
-      background: linear-gradient(180deg, #6632a0, #3d1b63);
-      border: 1px solid rgba(214,163,40,.35);
-    }
+  /* Status badges */
+  .badge-denied { background: var(--red); border: 1px solid var(--red2); color: #fff; padding: 3px 10px; border-radius: 3px; font-family: 'Rajdhani', sans-serif; font-size: 0.65rem; font-weight: 700; letter-spacing: 2px; }
+  .badge-ok { background: var(--green); border: 1px solid var(--green2); color: #fff; padding: 3px 10px; border-radius: 3px; font-family: 'Rajdhani', sans-serif; font-size: 0.65rem; font-weight: 700; letter-spacing: 2px; }
 
-    .sectionTitle.gold {
-      background: linear-gradient(180deg, #b9831f, #7c570f);
-    }
+  /* Dropdown */
+  select.td-select {
+    background: var(--bg3); border: 1px solid var(--border); color: var(--text);
+    padding: 3px 6px; font-family: 'Rajdhani', sans-serif; font-size: 0.7rem; border-radius: 3px;
+    width: 100%;
+  }
 
-    .dataList {
-      display: grid;
-      grid-template-columns: 1fr 1.2fr;
-      gap: 8px;
-    }
+  /* Action buttons */
+  .btn {
+    padding: 7px 14px; border-radius: 5px; cursor: pointer;
+    font-family: 'Rajdhani', sans-serif; font-size: 0.75rem; font-weight: 700; letter-spacing: 1px;
+    border: 1px solid; transition: all 0.2s;
+  }
+  .btn-primary { background: var(--bg3); border-color: var(--blue-light); color: var(--text); }
+  .btn-primary:hover { background: var(--blue-accent); }
+  .btn-danger { background: var(--red2); border-color: #e74c3c; color: #fff; }
+  .btn-danger:hover { background: #e74c3c; }
+  .btn-success { background: var(--green); border-color: var(--green2); color: #fff; }
+  .btn-success:hover { background: var(--green2); }
 
-    .label, .value {
-      min-height: 30px;
-      border-radius: 8px;
-      border: 1px solid rgba(214,163,40,.16);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 6px;
-      background: linear-gradient(180deg, rgba(25,55,96,.85), rgba(8,20,36,.9));
-      font-size: .9rem;
-      font-weight: 700;
-      text-align: center;
-    }
+  /* Search area */
+  .search-area { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
+  .search-input {
+    padding: 8px 12px; background: var(--bg3); border: 1px solid var(--border);
+    color: var(--text); border-radius: 20px; font-family: 'Exo 2', sans-serif; font-size: 0.8rem;
+    outline: none; flex: 1; min-width: 180px;
+  }
+  .search-input:focus { border-color: var(--blue-light); }
 
-    .trainingGrid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(180px, 1fr));
-      gap: 12px;
-    }
+  /* Sanktionskatalog */
+  .sank-row td:first-child { font-weight: 700; color: var(--gold); }
 
-    .trainCard {
-      border: 1px solid rgba(214,163,40,.18);
-      border-radius: 14px;
-      padding: 12px;
-      background: linear-gradient(180deg, rgba(8,18,34,.8), rgba(5,14,24,.95));
-    }
+  /* Fahrzeug */
+  .arrow-cell { color: var(--gold); font-weight: 700; }
 
-    .trainHead {
-      text-align: center;
-      padding: 8px 10px;
-      border-radius: 10px;
-      font-weight: 900;
-      letter-spacing: .7px;
-      margin-bottom: 8px;
-      text-transform: uppercase;
-      font-size: .88rem;
-      border: 1px solid rgba(214,163,40,.2);
-    }
+  /* ===== ZUGRIFFSANFRAGE ===== */
+  .zugriff-controls { display: flex; justify-content: flex-end; align-items: flex-start; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+  .zugriff-id-input {
+    padding: 8px 12px; background: var(--bg3); border: 1px solid var(--border);
+    color: var(--text); border-radius: 5px; font-family: 'Exo 2', sans-serif; font-size: 0.8rem;
+  }
 
-    .trainHead.green { background: linear-gradient(180deg, #1e7a42, #14542e); }
-    .trainHead.gold { background: linear-gradient(180deg, #b38019, #82570d); }
-    .trainHead.blue { background: linear-gradient(180deg, #2361b2, #113a71); }
-    .trainHead.red { background: linear-gradient(180deg, #c63131, #7b1819); }
-    .trainHead.purple { background: linear-gradient(180deg, #7b41a7, #4c236e); }
+  /* ===== POPUP ===== */
+  .overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.85); backdrop-filter: blur(4px);
+    z-index: 1000; align-items: center; justify-content: center;
+  }
+  .overlay.open { display: flex; }
 
-    .trainItem {
-      display: grid;
-      grid-template-columns: 22px 1fr;
-      gap: 8px;
-      align-items: center;
-      margin-top: 7px;
-    }
+  .popup {
+    background: linear-gradient(135deg, #0a1628 0%, #0d1e38 50%, #0a1628 100%);
+    border: 1px solid var(--gold);
+    border-radius: 8px; padding: 0; width: 90%; max-width: 500px;
+    box-shadow: 0 0 60px rgba(201,162,39,0.2);
+    overflow: hidden;
+  }
+  .popup-header {
+    background: linear-gradient(135deg, #0d2a5a, #1a3a7a);
+    padding: 16px 24px; border-bottom: 1px solid var(--gold);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .popup-header h2 { font-family: 'Orbitron', sans-serif; font-size: 1rem; font-weight: 700; color: var(--gold); letter-spacing: 3px; }
+  .popup-close { background: none; border: none; color: var(--text-dim); font-size: 1.2rem; cursor: pointer; }
+  .popup-close:hover { color: #fff; }
+  .popup-body { padding: 24px; }
 
-    .tick {
-      width: 22px;
-      height: 22px;
-      border-radius: 7px;
-      border: 1px solid rgba(214,163,40,.22);
-      background: linear-gradient(180deg, #14335c, #091728);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.05);
-    }
+  .form-group { margin-bottom: 14px; }
+  .form-group label { display: block; font-family: 'Rajdhani', sans-serif; font-size: 0.75rem; font-weight: 700; letter-spacing: 2px; color: var(--text-dim); margin-bottom: 5px; }
+  .form-group input {
+    width: 100%; padding: 10px 12px;
+    background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+    color: var(--text); border-radius: 4px;
+    font-family: 'Exo 2', sans-serif; font-size: 0.85rem; outline: none;
+  }
+  .form-group input:focus { border-color: var(--blue-light); }
 
-    .pill {
-      min-height: 30px;
-      border-radius: 9px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 900;
-      letter-spacing: .7px;
-      border: 1px solid rgba(214,163,40,.18);
-      text-transform: uppercase;
-    }
+  .popup-footer { padding: 16px 24px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; }
 
-    .pill.green { background: linear-gradient(180deg, #1d7d45, #165733); }
-    .pill.gold { background: linear-gradient(180deg, #ba8721, #8d6215); }
-    .pill.blue { background: linear-gradient(180deg, #2c73ca, #164b8d); }
-    .pill.red { background: linear-gradient(180deg, #bf2d30, #8a191c); }
-    .pill.purple { background: linear-gradient(180deg, #8a47ba, #5b2d82); }
+  /* Step indicator */
+  .step-indicator { display: flex; gap: 6px; margin-bottom: 18px; justify-content: center; }
+  .step { width: 28px; height: 4px; border-radius: 2px; background: var(--border); }
+  .step.done { background: var(--gold); }
+  .step.active { background: var(--blue-light); }
 
-    .fullWidth { grid-column: 1 / -1; }
+  /* Google Sign-in button */
+  .google-btn {
+    display: flex; align-items: center; gap: 12px; justify-content: center;
+    width: 100%; padding: 12px; border-radius: 5px;
+    background: #fff; color: #333; border: none; cursor: pointer;
+    font-family: 'Rajdhani', sans-serif; font-size: 0.85rem; font-weight: 700; letter-spacing: 1px;
+    transition: background 0.2s;
+  }
+  .google-btn:hover { background: #f0f0f0; }
+  .google-btn svg { width: 20px; height: 20px; }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      overflow: hidden;
-      border-radius: 12px;
-      border: 1px solid rgba(214,163,40,.2);
-      background: rgba(5,16,34,.75);
-    }
+  .info-box {
+    background: rgba(26,74,138,0.3); border: 1px solid var(--blue-accent);
+    border-radius: 5px; padding: 12px 16px;
+    font-family: 'Rajdhani', sans-serif; font-size: 0.8rem; line-height: 1.6; color: var(--text);
+  }
 
-    thead th {
-      background: linear-gradient(180deg, #174684, #0f264b);
-      color: #ffe38c;
-      font-size: .68rem;
-      text-transform: uppercase;
-      letter-spacing: .5px;
-      padding: 8px 6px;
-      white-space: nowrap;
-      border-right: 1px solid rgba(255,255,255,.05);
-    }
+  .wait-box {
+    text-align: center; padding: 20px 0;
+  }
+  .wait-box .icon { font-size: 2.5rem; margin-bottom: 12px; }
+  .wait-box h3 { font-family: 'Orbitron', sans-serif; font-size: 0.9rem; color: var(--gold); margin-bottom: 8px; }
+  .wait-box p { font-size: 0.8rem; color: var(--text-dim); line-height: 1.6; }
 
-    tbody td {
-      padding: 9px 8px;
-      border-top: 1px solid rgba(255,255,255,.05);
-      border-right: 1px solid rgba(255,255,255,.04);
-      font-size: .92rem;
-      text-align: center;
-    }
+  /* Mitarbeiter Register */
+  .register-table-wrap { overflow-x: auto; }
+  .register-table { white-space: nowrap; }
 
-    tbody td.left { text-align: left; }
-    tbody tr:hover { background: rgba(255,255,255,.03); }
+  /* Kleiderordnung placeholder */
+  .kleid-content { padding: 30px; text-align: center; color: var(--text-dim); font-family: 'Rajdhani', sans-serif; font-size: 1rem; letter-spacing: 2px; }
 
-    .pageSection {
-      margin-top: 14px;
-      padding: 16px;
-    }
+  /* Responsive */
+  @media (max-width: 768px) {
+    .dashboard-grid { flex-direction: column; }
+    .training-grid { grid-template-columns: repeat(2, 1fr); }
+    .personal-panel { width: 100%; }
+  }
 
-    .pageTitle {
-      text-align: center;
-      margin-bottom: 8px;
-    }
-
-    .pageTitle h1 {
-      font-size: clamp(2.6rem, 4.8vw, 4rem);
-      line-height: 1;
-    }
-
-    .tinySub {
-      text-align: center;
-      text-transform: uppercase;
-      letter-spacing: 3px;
-      color: #87b1df;
-      font-size: .74rem;
-      margin-bottom: 18px;
-    }
-
-    .toolbar {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 14px;
-    }
-
-    .toolbar .left,
-    .toolbar .right {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-
-    .field {
-      background: rgba(3,12,26,.82);
-      color: #f4f6fa;
-      border: 1px solid rgba(214,163,40,.25);
-      border-radius: 10px;
-      padding: 10px 12px;
-      min-height: 40px;
-      outline: none;
-    }
-
-    .field::placeholder { color: #7d95b6; }
-
-    .status {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-width: 92px;
-      padding: 5px 10px;
-      border-radius: 999px;
-      font-size: .74rem;
-      font-weight: 900;
-      letter-spacing: .6px;
-      text-transform: uppercase;
-      border: 1px solid rgba(255,255,255,.08);
-    }
-
-    .status.pending { background: rgba(166,109,13,.25); color: #ffd580; }
-    .status.approved { background: rgba(23,108,59,.25); color: #8ff1b6; }
-    .status.rejected { background: rgba(138,18,24,.24); color: #ff9aa3; }
-
-    .checkboxTiny {
-      display: inline-block;
-      width: 10px;
-      height: 10px;
-      border: 1px solid #fff;
-      box-shadow: 0 0 0 1px rgba(214,163,40,.4);
-    }
-
-    .modalWrap {
-      position: fixed;
-      inset: 0;
-      background: rgba(2,6,12,.7);
-      backdrop-filter: blur(5px);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 50;
-      padding: 20px;
-    }
-
-    .modalWrap.show { display: flex; }
-
-    .modal {
-      width: min(620px, 100%);
-      padding: 20px;
-    }
-
-    .modal h2 {
-      text-align: center;
-      font-size: 2rem;
-      margin-bottom: 8px;
-    }
-
-    .modalGrid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 16px;
-    }
-
-    .modalGrid .full { grid-column: 1 / -1; }
-
-    .note {
-      margin-top: 10px;
-      padding: 10px 12px;
-      background: rgba(255,255,255,.04);
-      border: 1px solid rgba(214,163,40,.18);
-      border-radius: 10px;
-      color: #a5c4ea;
-      font-size: .92rem;
-    }
-
-    .msg {
-      margin-top: 14px;
-      min-height: 22px;
-      color: #ffe08a;
-      font-weight: 700;
-      text-align: center;
-    }
-
-    .approvedHint {
-      text-align: center;
-      margin-top: 14px;
-      color: #99c0ef;
-      font-size: .95rem;
-    }
-
-    .footerMini {
-      display: flex;
-      justify-content: space-between;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-top: 16px;
-      color: #7ea8d8;
-      font-size: .8rem;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-    }
-
-    @media (max-width: 900px) {
-      .layout { grid-template-columns: 1fr; }
-      .trainingGrid { grid-template-columns: 1fr; }
-      .dashboardHeader { flex-direction: column; text-align: center; }
-      .hero { flex-direction: column; }
-      .headlineBox { text-align: center; }
-      .modalGrid { grid-template-columns: 1fr; }
-    }
-  </style>
+  /* Notification */
+  .notification {
+    position: fixed; top: 20px; right: 20px; z-index: 2000;
+    background: var(--bg3); border: 1px solid var(--green2); border-radius: 6px;
+    padding: 12px 20px; font-family: 'Rajdhani', sans-serif; font-size: 0.85rem;
+    color: var(--text); transform: translateX(120%); transition: transform 0.3s;
+    max-width: 300px;
+  }
+  .notification.show { transform: translateX(0); }
+  .notification.error { border-color: var(--red2); }
+</style>
 </head>
 <body>
-  <div class="app">
-    <section id="loginPage" class="page">
-      <div class="hero">
-        <div class="logo">LOS SANTOS<br>POLICE<br>DEPARTMENT</div>
-        <div class="headlineBox">
-          <h1>Los Santos Police<br>Department</h1>
-          <div class="subline">Official Internal Police Network · Secure Access Portal</div>
-        </div>
-      </div>
 
-      <div class="centerBox card">
-        <button id="loginBtn" class="btn block">ANMELDEN</button>
-        <button id="requestBtn" class="btn block">ANFRAGE SENDEN</button>
-        <div class="approvedHint">Freigabe notwendig. Erst nach Admin-Freischaltung ist eine Anmeldung möglich.</div>
-        <div id="authMessage" class="msg"></div>
-      </div>
-    </section>
+<div class="notification" id="notif"></div>
 
-    <section id="portalPage" class="page hidden">
-      <div class="dashboardHero card">
-        <div class="topStrip">
-          <div class="chipRow">
-            <span class="chip">LSPD INTERNAL AFFAIRS PORTAL</span>
-            <span class="chip">AUTHORIZED PERSONNEL ONLY</span>
-          </div>
-          <div>Los Santos State Network</div>
-        </div>
-        <div class="dashboardHeader">
-          <div class="logo small">LSPD<br>GOVNET</div>
-          <div style="flex:1;text-align:center;">
-            <h1>Los Santos Police Department</h1>
-            <div class="subline" style="margin-top:6px;">Dashboard · Personnel · Access Control · Service Records</div>
-          </div>
-        </div>
-      </div>
+<!-- ============================== PAGE: LOGIN (Bild 2) ============================== -->
+<div id="page-login" class="page active">
+  <div class="login-header">
+    <div class="login-badge">LOS<br>SANTOS<br>POLICE<br>DEPARTMENT</div>
+    <div class="login-title-block">
+      <h1>Los Santos Police Department</h1>
+      <div class="subtitle">OFFICIAL INTERNAL POLICE NETWORK · SECURE ACCESS PORTAL</div>
+    </div>
+  </div>
+  <div class="login-box">
+    <button class="login-btn" onclick="openPopup('step-ic')">ANFRAGE SENDEN</button>
+    <button class="login-btn" onclick="doGoogleLogin()">ANMELDEN</button>
+  </div>
+</div>
 
-      <div class="tabs">
-        <button class="btn tab navBtn" data-target="dashboardView">LSPD Dashboard</button>
-        <button class="btn tab navBtn" data-target="uniformView">Kleiderordnung</button>
-        <button class="btn tab navBtn" data-target="ranksView">Rangbefugnisse</button>
-        <button class="btn tab navBtn" data-target="vehiclesView">Fahrzeugordnung</button>
-        <button class="btn tab navBtn" data-target="sanctionsView">Sanktionskatalog</button>
-        <button class="btn tab navBtn" data-target="registerView">Mitarbeiter Register</button>
-        <button class="btn tab navBtn" data-target="accessView">Zugriffsanfrage</button>
-      </div>
-
-      <div id="dashboardView" class="viewSection">
-        <div class="layout">
-          <div class="sideCard card">
-            <div class="sectionTitle">Persönliche Daten</div>
-            <div class="dataList" id="personalDataList">
-              <div class="label">Name:</div><div class="value">-</div>
-              <div class="label">ID:</div><div class="value">-</div>
-              <div class="label">Telefonnummer:</div><div class="value">-</div>
-              <div class="label">Dienstnummer:</div><div class="value">-</div>
-              <div class="label">Rang:</div><div class="value">-</div>
-              <div class="label">Abteilung 1:</div><div class="value">-</div>
-              <div class="label">Abteilung 2:</div><div class="value">-</div>
-              <div class="label">Invite:</div><div class="value">-</div>
-              <div class="label">Letzter RankUp:</div><div class="value">-</div>
-              <div class="label">Urlaub:</div><div class="value">0/3</div>
-              <div class="label">Strike:</div><div class="value">0/3</div>
-            </div>
-          </div>
-
-          <div class="mainCard card">
-            <div class="sectionTitle gold">Ausbildungen</div>
-            <div class="trainingGrid">
-              <div class="trainCard">
-                <div class="trainHead green">Für Rookie</div>
-                <div class="trainItem"><span class="tick"></span><div class="pill green">GA</div></div>
-                <div class="trainItem"><span class="tick"></span><div class="pill green">EHK</div></div>
-              </div>
-              <div class="trainCard">
-                <div class="trainHead gold">Für Officer</div>
-                <div class="trainItem"><span class="tick"></span><div class="pill gold">ES</div></div>
-                <div class="trainItem"><span class="tick"></span><div class="pill gold">OP</div></div>
-              </div>
-              <div class="trainCard">
-                <div class="trainHead blue">Für Officer II</div>
-                <div class="trainItem"><span class="tick"></span><div class="pill blue">OK</div></div>
-                <div class="trainItem"><span class="tick"></span><div class="pill blue">FULA</div></div>
-              </div>
-              <div class="trainCard">
-                <div class="trainHead red">Für Officer First Class</div>
-                <div class="trainItem"><span class="tick"></span><div class="pill red">TST</div></div>
-              </div>
-              <div class="trainCard">
-                <div class="trainHead blue">Für Supervising Officer</div>
-                <div class="trainItem"><span class="tick"></span><div class="pill blue">KS</div></div>
-              </div>
-              <div class="trainCard">
-                <div class="trainHead purple">Für Senior Supervisor</div>
-                <div class="trainItem"><span class="tick"></span><div class="pill purple">OK+</div></div>
-              </div>
-              <div class="trainCard">
-                <div class="trainHead blue">Für Corporal</div>
-                <div class="trainItem"><span class="tick"></span><div class="pill blue">COP</div></div>
-              </div>
-              <div class="trainCard">
-                <div class="trainHead gold">Für Lead Supervisor</div>
-                <div class="trainItem"><span class="tick"></span><div class="pill gold">FT</div></div>
-              </div>
-              <div class="trainCard">
-                <div class="trainHead gold">Für Detective</div>
-                <div class="trainItem"><span class="tick"></span><div class="pill gold">JP</div></div>
-              </div>
-              <div class="trainCard">
-                <div class="trainHead purple">AKS</div>
-                <div class="trainItem"><span class="tick"></span><div class="pill purple">AKS</div></div>
-              </div>
-              <div class="trainCard fullWidth">
-                <div class="trainHead purple">Freiwillige Ausbildungen</div>
-                <div class="trainingGrid" style="grid-template-columns:repeat(3,1fr)">
-                  <div class="trainItem"><span class="tick"></span><div class="pill purple">ZP</div></div>
-                  <div class="trainItem"><span class="tick"></span><div class="pill purple">VHP</div></div>
-                  <div class="trainItem"><span class="tick"></span><div class="pill purple">TOW / BL</div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div id="uniformView" class="viewSection hidden">
-        <div class="pageSection card">
-          <div class="pageTitle"><h1>Los Santos Police Department</h1></div>
-          <div class="tinySub">Kleiderordnung</div>
-          <div class="note">Platzhalter-Seite im Stil des Systems. Hier kannst du später die Inhalte für die Kleiderordnung ergänzen.</div>
-        </div>
-      </div>
-
-      <div id="ranksView" class="viewSection hidden">
-        <div class="pageSection card">
-          <div class="pageTitle"><h1>Los Santos Police Department</h1></div>
-          <div class="tinySub">Rangbefugnisse</div>
-          <table>
-            <thead>
-              <tr>
-                <th>FDA Nutzen</th><th>Suspendiert</th><th>Tow Officer</th><th>Cadet</th><th>Rookie</th><th>Officer I</th><th>Officer II</th><th>Officer First Class</th><th>Supervising Officer</th><th>Senior Supervisor</th><th>Lead Supervisor</th><th>Corporal</th><th>Detective</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td class="left">Handschellen</td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td></tr>
-              <tr><td class="left">Wegweisen</td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td></tr>
-              <tr><td class="left">Festnehmen</td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td></tr>
-              <tr><td class="left">Durchsuchen</td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td></tr>
-              <tr><td class="left">Warnen</td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td><td><span class="checkboxTiny"></span></td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <div id="vehiclesView" class="viewSection hidden">
-        <div class="pageSection card">
-          <div class="pageTitle"><h1>Los Santos Police Department</h1></div>
-          <div class="tinySub">Fahrzeugordnung</div>
-          <table>
-            <thead>
-              <tr><th>Fahrzeug</th><th>&gt;</th><th>Rang</th><th>&gt;</th><th>Abteilung</th></tr>
-            </thead>
-            <tbody id="vehicleTableBody">
-              <tr><td>AMG GT 20</td><td>&gt;</td><td>29 | Deputy Chief of Police</td><td>&gt;</td><td>HR</td></tr>
-            </tbody>
-          </table>
-          <div style="margin-top:12px;"><button class="btn small">Fahrzeug +</button></div>
-        </div>
-      </div>
-
-      <div id="sanctionsView" class="viewSection hidden">
-        <div class="pageSection card">
-          <div class="pageTitle"><h1>Los Santos Police Department</h1></div>
-          <div class="tinySub">Sanktionskatalog</div>
-          <table>
-            <thead>
-              <tr>
-                <th>§</th><th>Regeldefinition</th><th>&gt;</th><th>Geldstrafe</th><th>Tow Fahrt</th><th>Human Labs</th><th>NG Runde</th><th>Rankup-Sperre</th><th>Strike</th><th>Suspendierung</th><th>Kündigung</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>§1</td>
-                <td class="left">Beleidigungen, Respektlosigkeit und sonstiges niederes Verhalten</td>
-                <td>&gt;</td>
-                <td>150</td>
-                <td>10 Autos</td>
-                <td>30 min</td>
-                <td>2</td>
-                <td>2 Wochen</td>
-                <td>1</td>
-                <td>3 Tage</td>
-                <td>✓</td>
-              </tr>
-            </tbody>
-          </table>
-          <div style="margin-top:12px;"><button class="btn small">Sanktion +</button></div>
-        </div>
-      </div>
-
-      <div id="registerView" class="viewSection hidden">
-        <div class="pageSection card">
-          <div class="pageTitle"><h1>Los Santos Police Department</h1></div>
-          <div class="tinySub">Mitarbeiter Register</div>
-          <div class="toolbar">
-            <div class="left">
-              <input id="employeeSearch" class="field" placeholder="Mitarbeiter suchen..." />
-              <button id="addEmployeeBtn" class="btn">Mitarbeiter hinzufügen</button>
-            </div>
-            <div class="right">
-              <input id="archiveIdInput" class="field" placeholder="ID eingeben" />
-              <button id="archiveBtn" class="btn">Archivieren</button>
-              <button class="btn">Mitarbeiter Archiv</button>
-            </div>
-          </div>
-          <table>
-            <thead>
-              <tr>
-                <th>Daten</th><th>ID</th><th>DN</th><th>Name</th><th>Tel. Nr.</th><th>Rang</th><th>Division</th><th>Urlaub</th><th>Strike</th><th>Invite-Datum</th><th>Letzter Rankup</th><th>Abteilung 1</th><th>Abteilung 2</th><th>GA</th><th>EHK</th><th>ES</th><th>OP</th><th>OK</th><th>FULA</th><th>TST</th><th>KS</th><th>OK+</th><th>FT</th><th>COP</th><th>JP</th><th>ZP</th><th>VHP</th><th>TOW/BL</th>
-              </tr>
-            </thead>
-            <tbody id="employeeTableBody">
-              <tr><td colspan="28">Keine eingetragenen Mitarbeiter vorhanden</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <div id="accessView" class="viewSection hidden">
-        <div class="pageSection card">
-          <div class="pageTitle"><h1>Los Santos Police Department</h1></div>
-          <div class="tinySub">Zugriffsanfrage</div>
-          <div class="toolbar">
-            <div class="left">
-              <button id="addAccessBtn" class="btn">Zugriff hinzufügen</button>
-            </div>
-            <div class="right">
-              <button id="refreshRequestsBtn" class="btn small">⟲</button>
-              <input id="accessFilterInput" class="field" placeholder="Identifikationsnummer eingeben" />
-              <button id="clearAccessFilterBtn" class="btn red">X</button>
-            </div>
-          </div>
-          <table>
-            <thead>
-              <tr>
-                <th>Name</th><th>Identifikationsnummer</th><th>Nachname</th><th>Email</th><th>Telefonnummer</th><th>Freigeben</th><th>Zugriffsrang</th><th>Status</th>
-              </tr>
-            </thead>
-            <tbody id="accessRequestsBody">
-              <tr><td colspan="8">Keine Zugriffsanfragen vorhanden</td></tr>
-            </tbody>
-          </table>
-          <div class="footerMini">
-            <div id="currentUserLabel">Nicht angemeldet</div>
-            <div>
-              <button id="logoutBtn" class="btn small red">Abmelden</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+<!-- ============================== INNER PAGES WRAPPER ============================== -->
+<div id="page-main" class="page">
+  <!-- Top bar (dashboard only) -->
+  <div class="top-bar" id="topbar">
+    <span>LSPD INTERNAL AFFAIRS PORTAL</span>
+    <span>AUTHORIZED PERSONNEL ONLY</span>
+    <span>LOS SANTOS STATE NETWORK</span>
   </div>
 
-  <div id="requestModal" class="modalWrap">
-    <div class="modal card">
-      <h2>IC INFOS</h2>
-      <div class="tinySub" style="margin-bottom:0;">Zugriffsanfrage</div>
-      <div class="modalGrid">
-        <input id="firstName" class="field" placeholder="Name" />
-        <input id="lastName" class="field" placeholder="Nachname" />
-        <input id="phone" class="field" placeholder="Telefonnummer" />
-        <input id="passport" class="field" placeholder="Reisepassnummer" />
-      </div>
-      <div class="note">Nach dem Klick auf „Weiter“ meldest du dich mit deinem Google-Konto an. Dein Konto bleibt gesperrt, bis ein Admin dich freischaltet.</div>
-      <div id="requestMsg" class="msg"></div>
-      <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap;">
-        <button id="closeModalBtn" class="btn">Schließen</button>
-        <button id="continueRequestBtn" class="btn gold">Weiter</button>
+  <!-- Main Header -->
+  <div class="main-header">
+    <div style="display:flex;align-items:center;gap:16px;justify-content:center;">
+      <div class="login-badge" id="header-badge" style="display:none;width:60px;height:60px;font-size:8px;">LSPD<br>GOVNET</div>
+      <div>
+        <h1>Los Santos Police Department</h1>
+        <div class="page-label" id="page-label-text">DASHBOARD · PERSONNEL · ACCESS CONTROL · SERVICE RECORDS</div>
       </div>
     </div>
   </div>
 
-  <script type="module">
-    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-    import {
-      getAuth,
-      GoogleAuthProvider,
-      signInWithPopup,
-      onAuthStateChanged,
-      signOut
-    } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
-    import {
-      getFirestore,
-      doc,
-      getDoc,
-      setDoc,
-      updateDoc,
-      collection,
-      getDocs,
-      query,
-      orderBy,
-      serverTimestamp
-    } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+  <!-- Nav -->
+  <div class="nav-bar">
+    <button class="nav-btn active" onclick="showSubPage('dashboard')">LSPD Dashboard</button>
+    <button class="nav-btn" onclick="showSubPage('kleider')">Kleiderordnung</button>
+    <button class="nav-btn" onclick="showSubPage('rang')">Rangbefugnisse</button>
+    <button class="nav-btn" onclick="showSubPage('fahr')">Fahrzeugordnung</button>
+    <button class="nav-btn" onclick="showSubPage('sank')">Sanktionskatalog</button>
+    <button class="nav-btn" onclick="showSubPage('mitarbeiter')">Mitarbeiter Register</button>
+    <button class="nav-btn" onclick="showSubPage('zugriff')">Zugriffsanfrage</button>
+  </div>
 
-    const firebaseConfig = {
-      apiKey: 'AIzaSyBx0jRBLp3FUM77iG5j3BBPWQaR2c0mLsE',
-      authDomain: 'lspd-leidstelle.firebaseapp.com',
-      projectId: 'lspd-leidstelle',
-      storageBucket: 'lspd-leidstelle.firebasestorage.app',
-      messagingSenderId: '223539849158',
-      appId: '1:223539849158:web:3ebbc332339de19fd974c7',
-      measurementId: 'G-65J0VDPSTS'
-    };
+  <div class="page-content">
 
-    const ADMIN_EMAIL = 'h.vonwanze@gmail.com'.trim().toLowerCase();
+    <!-- DASHBOARD (Bild 3) -->
+    <div id="sub-dashboard">
+      <div class="dashboard-grid">
+        <!-- Personal -->
+        <div class="personal-panel">
+          <h3>PERSÖNLICHE DATEN</h3>
+          <div class="data-row"><span class="data-label">Name:</span><span class="data-val" id="dash-name">-</span></div>
+          <div class="data-row"><span class="data-label">ID:</span><span class="data-val" id="dash-id">-</span></div>
+          <div class="data-row"><span class="data-label">Telefonnummer:</span><span class="data-val" id="dash-tel">-</span></div>
+          <div class="data-row"><span class="data-label">Dienstnummer:</span><span class="data-val">-</span></div>
+          <div class="data-row"><span class="data-label">Rang:</span><span class="data-val">-</span></div>
+          <div class="data-row"><span class="data-label">Abteilung 1:</span><span class="data-val">-</span></div>
+          <div class="data-row"><span class="data-label">Abteilung 2:</span><span class="data-val">-</span></div>
+          <div class="data-row"><span class="data-label">Invite:</span><span class="data-val">-</span></div>
+          <div class="data-row"><span class="data-label">Letzter RankUp:</span><span class="data-val">-</span></div>
+          <div class="data-row"><span class="data-label">Urlaub:</span><span class="data-val">0/3</span></div>
+          <div class="data-row"><span class="data-label">Strike:</span><span class="data-val">0/3</span></div>
+        </div>
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-    const provider = new GoogleAuthProvider();
+        <!-- Trainings -->
+        <div class="training-panel">
+          <h3>AUSBILDUNGEN</h3>
+          <div class="training-grid">
+            <div class="training-category">
+              <div class="cat-header cat-rookie">FÜR ROOKIE</div>
+              <div class="training-item"><input type="checkbox"><span class="training-label">GA</span></div>
+              <div class="training-item"><input type="checkbox"><span class="training-label">EHK</span></div>
+            </div>
+            <div class="training-category">
+              <div class="cat-header cat-officer">FÜR OFFICER</div>
+              <div class="training-item"><input type="checkbox"><span class="training-label">ES</span></div>
+              <div class="training-item"><input type="checkbox"><span class="training-label">OP</span></div>
+            </div>
+            <div class="training-category">
+              <div class="cat-header cat-officer2">FÜR OFFICER II</div>
+              <div class="training-item"><input type="checkbox"><span class="training-label">OK</span></div>
+              <div class="training-item"><input type="checkbox"><span class="training-label">FULA</span></div>
+            </div>
+            <div class="training-category">
+              <div class="cat-header cat-ofc">FÜR OFFICER FIRST CLASS</div>
+              <div class="training-item"><input type="checkbox" checked><span class="training-label">TST</span></div>
+            </div>
+            <div class="training-category">
+              <div class="cat-header cat-sup">FÜR SUPERVISING OFFICER</div>
+              <div class="training-item"><input type="checkbox"><span class="training-label">KS</span></div>
+            </div>
+            <div class="training-category">
+              <div class="cat-header cat-senior">FÜR SENIOR SUPERVISOR</div>
+              <div class="training-item"><input type="checkbox"><span class="training-label">OK+</span></div>
+            </div>
+            <div class="training-category">
+              <div class="cat-header cat-corp">FÜR CORPORAL</div>
+              <div class="training-item"><input type="checkbox"><span class="training-label">COP</span></div>
+            </div>
+            <div class="training-category">
+              <div class="cat-header cat-lead">FÜR LEAD SUPERVISOR</div>
+              <div class="training-item"><input type="checkbox"><span class="training-label">FT</span></div>
+            </div>
+            <div class="training-category">
+              <div class="cat-header cat-det">FÜR DETECTIVE</div>
+              <div class="training-item"><input type="checkbox"><span class="training-label">JP</span></div>
+            </div>
+          </div>
+          <div class="free-training">
+            <div style="display:flex;gap:10px;align-items:center;margin-bottom:6px;">
+              <div class="cat-header cat-aks" style="flex:1;margin:0;">AKS</div>
+            </div>
+            <div class="training-item"><input type="checkbox"><span class="training-label">AKS</span></div>
+          </div>
+          <div class="free-training">
+            <div class="cat-header" style="background:var(--purple);border:1px solid var(--purple2);">FREIWILLIGE AUSBILDUNGEN</div>
+            <div class="free-grid" style="margin-top:8px;">
+              <div class="training-item"><input type="checkbox"><span class="training-label">ZP</span></div>
+              <div class="training-item"><input type="checkbox"><span class="training-label">VHP</span></div>
+              <div class="training-item"><input type="checkbox"><span class="training-label">TOW / BL</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-    provider.setCustomParameters({
-      prompt: 'select_account'
-    });
+    <!-- KLEIDERORDNUNG -->
+    <div id="sub-kleider" style="display:none;">
+      <div class="kleid-content">KLEIDERORDNUNG — INHALT WIRD VOM ADMIN BEFÜLLT</div>
+    </div>
 
-    const loginPage = document.getElementById('loginPage');
-    const portalPage = document.getElementById('portalPage');
-    const authMessage = document.getElementById('authMessage');
-    const requestModal = document.getElementById('requestModal');
-    const requestMsg = document.getElementById('requestMsg');
-    const currentUserLabel = document.getElementById('currentUserLabel');
-    const accessRequestsBody = document.getElementById('accessRequestsBody');
-    const employeeTableBody = document.getElementById('employeeTableBody');
-    const accessFilterInput = document.getElementById('accessFilterInput');
-
-    let currentUserData = null;
-
-    function showLogin() {
-      loginPage.classList.remove('hidden');
-      portalPage.classList.add('hidden');
-    }
-
-    function showPortal() {
-      loginPage.classList.add('hidden');
-      portalPage.classList.remove('hidden');
-    }
-
-    function setMessage(el, text, error = false) {
-      el.textContent = text;
-      el.style.color = error ? '#ff9aa3' : '#ffe08a';
-    }
-
-    function openModal() { requestModal.classList.add('show'); }
-    function closeModal() { requestModal.classList.remove('show'); requestMsg.textContent = ''; }
-
-    function getRequestFormData() {
-      return {
-        firstName: document.getElementById('firstName').value.trim(),
-        lastName: document.getElementById('lastName').value.trim(),
-        phone: document.getElementById('phone').value.trim(),
-        passport: document.getElementById('passport').value.trim()
-      };
-    }
-
-    function validateRequestData(data) {
-      return data.firstName && data.lastName && data.phone && data.passport;
-    }
-
-    function switchView(targetId) {
-      document.querySelectorAll('.viewSection').forEach(v => v.classList.add('hidden'));
-      document.getElementById(targetId).classList.remove('hidden');
-    }
-
-    function updatePersonalData(profile) {
-      const values = document.querySelectorAll('#personalDataList .value');
-      const fill = [
-        profile.firstName || '-',
-        profile.passport || '-',
-        profile.phone || '-',
-        '-', '-', '-', '-', '-', '-',
-        profile.vacation || '0/3',
-        profile.strike || '0/3'
-      ];
-      values.forEach((node, i) => node.textContent = fill[i] ?? '-');
-    }
-
-    async function ensureUserDoc(user, requestData = null) {
-      const userRef = doc(db, 'users', user.uid);
-      const snap = await getDoc(userRef);
-      const userEmail = (user.email || '').trim().toLowerCase();
-      const isAdmin = userEmail === ADMIN_EMAIL;
-
-      if (!snap.exists()) {
-        const payload = {
-          uid: user.uid,
-          email: user.email || '',
-          displayName: user.displayName || '',
-          role: isAdmin ? 'admin' : 'user',
-          status: isAdmin ? 'approved' : 'pending',
-          firstName: requestData?.firstName || '',
-          lastName: requestData?.lastName || '',
-          phone: requestData?.phone || '',
-          passport: requestData?.passport || '',
-          vacation: '0/3',
-          strike: '0/3',
-          createdAt: serverTimestamp(),
-          updatedAt: serverTimestamp()
-        };
-
-        await setDoc(userRef, payload);
-
-        if (!isAdmin && requestData) {
-          await setDoc(doc(db, 'accessRequests', user.uid), {
-            uid: user.uid,
-            email: user.email || '',
-            firstName: requestData.firstName,
-            lastName: requestData.lastName,
-            phone: requestData.phone,
-            passport: requestData.passport,
-            accessRank: '11 | WebAdmin XI',
-            approved: false,
-            status: 'pending',
-            createdAt: serverTimestamp(),
-            updatedAt: serverTimestamp()
-          });
-        }
-
-        return payload;
-      }
-
-      const existing = snap.data();
-      const normalizedExistingEmail = (existing.email || user.email || '').trim().toLowerCase();
-
-      if (isAdmin || normalizedExistingEmail === ADMIN_EMAIL) {
-        await updateDoc(userRef, {
-          email: user.email || existing.email || '',
-          role: 'admin',
-          status: 'approved',
-          updatedAt: serverTimestamp()
-        });
-
-        return {
-          ...existing,
-          email: user.email || existing.email || '',
-          role: 'admin',
-          status: 'approved'
-        };
-      }
-
-      return existing;
-    }
-
-    async function loginWithGoogle(mode = 'login') {
-      try {
-        const result = await signInWithPopup(auth, provider);
-        const user = result.user;
-        const userEmail = (user.email || '').trim().toLowerCase();
-
-        const storedRequest = sessionStorage.getItem('pendingRequestData');
-        const requestData = storedRequest ? JSON.parse(storedRequest) : null;
-
-        const profile = await ensureUserDoc(user, mode === 'request' ? requestData : null);
-        const isAdmin =
-          userEmail === ADMIN_EMAIL ||
-          (profile.email || '').trim().toLowerCase() === ADMIN_EMAIL;
-
-        if (mode === 'request') {
-          if (isAdmin) {
-            currentUserData = {
-              ...profile,
-              email: user.email,
-              uid: user.uid,
-              role: 'admin',
-              status: 'approved'
-            };
-            currentUserLabel.textContent = `${user.email} · Admin`;
-            updatePersonalData(profile);
-            closeModal();
-            showPortal();
-            switchView('dashboardView');
-            await loadAccessRequests();
-            await loadEmployees();
-            setMessage(authMessage, '');
-            return;
-          }
-
-          sessionStorage.removeItem('pendingRequestData');
-          setMessage(authMessage, 'Anfrage gespeichert. Warte jetzt auf die Freischaltung durch den Admin.');
-          closeModal();
-          await signOut(auth);
-          showLogin();
-          return;
-        }
-
-        if (isAdmin || profile.status === 'approved') {
-          currentUserData = { ...profile, email: user.email, uid: user.uid };
-          currentUserLabel.textContent = `${user.email} · ${isAdmin ? 'Admin' : 'Freigeschaltet'}`;
-          updatePersonalData(profile);
-          showPortal();
-          switchView('dashboardView');
-          await loadAccessRequests();
-          await loadEmployees();
-          setMessage(authMessage, '');
-        } else {
-          setMessage(authMessage, 'Dein Konto ist noch nicht freigeschaltet.', true);
-          await signOut(auth);
-          showLogin();
-        }
-      } catch (error) {
-        console.error(error);
-        setMessage(authMessage, 'Anmeldung fehlgeschlagen: ' + error.message, true);
-      }
-    }
-
-    async function loadAccessRequests() {
-      try {
-        const q = query(collection(db, 'accessRequests'), orderBy('createdAt', 'desc'));
-        const snap = await getDocs(q);
-        const filter = accessFilterInput.value.trim().toLowerCase();
-
-        if (snap.empty) {
-          accessRequestsBody.innerHTML = '<tr><td colspan="8">Keine Zugriffsanfragen vorhanden</td></tr>';
-          return;
-        }
-
-        const rows = [];
-        snap.forEach(docSnap => {
-          const item = docSnap.data();
-          if (filter && !(String(item.passport || '').toLowerCase().includes(filter))) return;
-
-          const isAdmin = (currentUserData?.email || '').trim().toLowerCase() === ADMIN_EMAIL;
-          const canEdit = isAdmin;
-
-          rows.push(`
+    <!-- RANGBEFUGNISSE (Bild 4) -->
+    <div id="sub-rang" style="display:none;">
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
             <tr>
-              <td>${item.firstName || '-'}</td>
-              <td>${item.passport || '-'}</td>
-              <td>${item.lastName || '-'}</td>
-              <td>${item.email || '-'}</td>
-              <td>${item.phone || '-'}</td>
-              <td>
-                ${canEdit ? `
-                  <select class="field approveSelect" data-uid="${item.uid}" style="min-width:90px;padding:6px 10px;height:auto;">
-                    <option value="false" ${item.approved ? '' : 'selected'}>Nein</option>
-                    <option value="true" ${item.approved ? 'selected' : ''}>Ja</option>
-                  </select>
-                ` : (item.approved ? 'Ja' : 'Nein')}
-              </td>
-              <td>
-                ${canEdit ? `
-                  <select class="field rankSelect" data-uid="${item.uid}" style="min-width:150px;padding:6px 10px;height:auto;">
-                    <option ${item.accessRank === '11 | WebAdmin XI' ? 'selected' : ''}>11 | WebAdmin XI</option>
-                    <option ${item.accessRank === '10 | Personnel Access' ? 'selected' : ''}>10 | Personnel Access</option>
-                    <option ${item.accessRank === '09 | Registry User' ? 'selected' : ''}>09 | Registry User</option>
-                  </select>
-                ` : (item.accessRank || '-')}
-              </td>
-              <td><span class="status ${item.status || 'pending'}">${(item.status || 'pending').toUpperCase()}</span></td>
+              <th>FDA NUTZEN</th><th>SUSPENDIERT</th><th>TOW OFFICER</th><th>CADET</th>
+              <th>ROOKIE</th><th>OFFICER I</th><th>OFFICER II</th><th>OFFICER FIRST CLASS</th>
+              <th>SUPERVISING OFFICER</th><th>SENIOR SUPERVISOR</th><th>LEAD SUPERVISOR</th>
+              <th>CORPORAL</th><th>DETECTIVE</th><th>SENIOR DETECTIVE</th>
             </tr>
-          `);
-        });
+          </thead>
+          <tbody>
+            <tr>
+              <td>Handschellen</td>
+              <td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td>
+              <td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td>
+              <td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td>
+              <td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td>
+              <td><input type="checkbox"></td>
+            </tr>
+            <tr>
+              <td>Wegweisen</td>
+              <td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td>
+              <td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td>
+              <td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td>
+              <td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td>
+              <td><input type="checkbox"></td>
+            </tr>
+            <tr>
+              <td>Festnehmen</td>
+              <td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td>
+              <td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td>
+              <td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td>
+              <td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td>
+              <td><input type="checkbox"></td>
+            </tr>
+            <tr>
+              <td>Durchsuchen</td>
+              <td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td>
+              <td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td>
+              <td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td>
+              <td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td>
+              <td><input type="checkbox"></td>
+            </tr>
+            <tr>
+              <td>Warnen</td>
+              <td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td>
+              <td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td>
+              <td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td>
+              <td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td>
+              <td><input type="checkbox"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
 
-        accessRequestsBody.innerHTML = rows.join('') || '<tr><td colspan="8">Keine passenden Anfragen gefunden</td></tr>';
-        bindAccessActions();
-      } catch (error) {
-        console.error(error);
-        accessRequestsBody.innerHTML = `<tr><td colspan="8">Fehler beim Laden: ${error.message}</td></tr>`;
-      }
-    }
+    <!-- FAHRZEUGORDNUNG (Bild 5) -->
+    <div id="sub-fahr" style="display:none;">
+      <div class="table-wrap" style="margin-bottom:12px;">
+        <table class="data-table">
+          <thead>
+            <tr><th>FAHRZEUG</th><th>&gt;</th><th>RANG</th><th>&gt;</th><th>ABTEILUNG</th></tr>
+          </thead>
+          <tbody id="fahr-tbody">
+            <tr>
+              <td>AMG GT 20</td><td class="arrow-cell">&gt;</td>
+              <td>29 | Deputy Chief of Police</td><td class="arrow-cell">&gt;</td><td>HR</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <button class="btn btn-primary" onclick="addFahrzeug()">Fahrzeug +</button>
+    </div>
 
-    function bindAccessActions() {
-      document.querySelectorAll('.approveSelect').forEach(select => {
-        select.addEventListener('change', async (e) => {
-          const uid = e.target.dataset.uid;
-          const approved = e.target.value === 'true';
-          const requestRef = doc(db, 'accessRequests', uid);
-          const userRef = doc(db, 'users', uid);
+    <!-- SANKTIONSKATALOG (Bild 6) -->
+    <div id="sub-sank" style="display:none;">
+      <div class="table-wrap" style="margin-bottom:12px;">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>§</th><th>REGELDEFINITION</th><th>&gt;</th>
+              <th>GELDSTRAFE</th><th>TOW FAHRT</th><th>HUMAN LABS</th>
+              <th>NG RUNDE</th><th>RANKUP-SPERRE</th><th>STRIKE</th>
+              <th>SUSPENDIERUNG</th><th>KÜNDIGUNG</th>
+            </tr>
+          </thead>
+          <tbody id="sank-tbody">
+            <tr class="sank-row">
+              <td>§1</td>
+              <td style="text-align:left;padding-left:10px;">Beleidigungen, Respektlosigkeit und sonstiges niederes Verhalten</td>
+              <td class="arrow-cell">&gt;</td>
+              <td>150</td><td>10 Autos</td><td>30 min</td>
+              <td>2</td><td>2 Wochen</td><td>1</td>
+              <td>3 Tage</td><td>✔</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <button class="btn btn-primary" onclick="addSanktion()">Sanktion +</button>
+    </div>
 
-          await updateDoc(requestRef, {
-            approved,
-            status: approved ? 'approved' : 'rejected',
-            updatedAt: serverTimestamp()
-          });
+    <!-- MITARBEITER REGISTER (Bild 7) -->
+    <div id="sub-mitarbeiter" style="display:none;">
+      <div class="search-area">
+        <input class="search-input" placeholder="Mitarbeiter suchen..." id="ma-search" oninput="filterMitarbeiter()">
+        <button class="btn btn-primary" onclick="openPopup('add-ma')">Mitarbeiter hinzufügen</button>
+        <div style="flex:1"></div>
+        <input class="search-input" placeholder="ID eingeben" id="ma-id-input" style="max-width:160px;">
+        <button class="btn btn-primary" onclick="archivieren()">Archivieren</button>
+        <button class="btn btn-primary" onclick="showNotif('Mitarbeiter Archiv wird geladen...')">Mitarbeiter Archiv</button>
+      </div>
+      <div class="table-wrap register-table-wrap">
+        <table class="data-table register-table">
+          <thead>
+            <tr>
+              <th>DATEN</th><th>ID</th><th>DN</th><th>NAME</th><th>TEL. NR.</th>
+              <th>RANG</th><th>DIVISION</th><th>URLAUB</th><th>STRIKE</th>
+              <th>INVITE-DATUM</th><th>LETZTER RANKUP</th><th>ABTEILUNG 1</th><th>ABTEILUNG 2</th>
+              <th>GA</th><th>EHK</th><th>ES</th><th>OP</th><th>OK</th><th>FULA</th>
+              <th>TST</th><th>KS</th><th>OK+</th><th>FT</th><th>COP</th><th>JP</th>
+              <th>ZP</th><th>VHP</th><th>TOW/BL</th>
+            </tr>
+          </thead>
+          <tbody id="ma-tbody">
+            <tr><td colspan="28" style="text-align:center;color:var(--text-dim);padding:20px;">Keine eingetragenen Mitarbeiter vorhanden.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
 
-          await updateDoc(userRef, {
-            status: approved ? 'approved' : 'rejected',
-            updatedAt: serverTimestamp()
-          });
+    <!-- ZUGRIFFSANFRAGE (Bild 1) -->
+    <div id="sub-zugriff" style="display:none;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
+        <button class="btn btn-primary" onclick="openPopup('add-zugriff')">Zugriff hinzufügen</button>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <button class="btn btn-primary" style="padding:10px 14px;font-size:1.1rem;" onclick="openPopup('key-icon')" title="Schlüssel">🔑</button>
+          <input class="search-input" placeholder="Identifikationsnummer eingeben" id="zugriff-id-input" style="border-radius:5px;">
+          <button class="btn btn-danger" onclick="deleteZugriff()">X</button>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>NAME</th><th>IDENTIFIKATIONSNUMMER</th><th>NACHNAME</th>
+              <th>EMAIL</th><th>TELEFONNUMMER</th><th>FREIGEBEN</th><th>ZUGRIFFSRANG</th><th>STATUS</th>
+            </tr>
+          </thead>
+          <tbody id="zugriff-tbody">
+            <!-- Will be populated from Firebase -->
+          </tbody>
+        </table>
+      </div>
+    </div>
 
-          await loadAccessRequests();
-        });
-      });
+  </div><!-- end page-content -->
+</div><!-- end page-main -->
 
-      document.querySelectorAll('.rankSelect').forEach(select => {
-        select.addEventListener('change', async (e) => {
-          const uid = e.target.dataset.uid;
-          await updateDoc(doc(db, 'accessRequests', uid), {
-            accessRank: e.target.value,
-            updatedAt: serverTimestamp()
-          });
-        });
-      });
-    }
 
-    async function loadEmployees() {
-      try {
-        const snap = await getDocs(query(collection(db, 'users'), orderBy('createdAt', 'desc')));
-        const employees = [];
+<!-- ============================== POPUPS ============================== -->
 
-        snap.forEach(docSnap => {
-          const u = docSnap.data();
-          if (u.status === 'approved') employees.push(u);
-        });
+<!-- IC INFOS Step 1 -->
+<div class="overlay" id="overlay-step-ic">
+  <div class="popup">
+    <div class="popup-header">
+      <h2>IC INFOS</h2>
+      <button class="popup-close" onclick="closePopup('step-ic')">✕</button>
+    </div>
+    <div class="popup-body">
+      <div class="step-indicator">
+        <div class="step active"></div><div class="step"></div><div class="step"></div>
+      </div>
+      <div class="form-group"><label>VORNAME</label><input type="text" id="ic-vorname" placeholder="Vorname eingeben"></div>
+      <div class="form-group"><label>NACHNAME</label><input type="text" id="ic-nachname" placeholder="Nachname eingeben"></div>
+      <div class="form-group"><label>TELEFONNUMMER</label><input type="text" id="ic-tel" placeholder="z.B. 16-48-950"></div>
+      <div class="form-group"><label>REISEPASSNUMMER</label><input type="text" id="ic-pass" placeholder="Reisepassnummer eingeben"></div>
+    </div>
+    <div class="popup-footer">
+      <button class="btn btn-primary" onclick="goToStep2()">Weiter →</button>
+    </div>
+  </div>
+</div>
 
-        if (!employees.length) {
-          employeeTableBody.innerHTML = '<tr><td colspan="28">Keine eingetragenen Mitarbeiter vorhanden</td></tr>';
-          return;
-        }
+<!-- Step 2: Google Registration -->
+<div class="overlay" id="overlay-step-google">
+  <div class="popup">
+    <div class="popup-header">
+      <h2>IC INFOS</h2>
+      <button class="popup-close" onclick="closePopup('step-google')">✕</button>
+    </div>
+    <div class="popup-body">
+      <div class="step-indicator">
+        <div class="step done"></div><div class="step active"></div><div class="step"></div>
+      </div>
+      <div class="info-box" style="margin-bottom:16px;">
+        Bitte registriere dich mit deinem Google-Konto. Deine IC-Daten werden gespeichert und du musst warten bis ein Admin dich freischaltet.
+      </div>
+      <button class="google-btn" onclick="doGoogleRegister()">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+        </svg>
+        MIT GOOGLE REGISTRIEREN
+      </button>
+    </div>
+    <div class="popup-footer" style="justify-content:space-between;">
+      <button class="btn btn-primary" onclick="closePopup('step-google');openPopup('step-ic')">← Zurück</button>
+    </div>
+  </div>
+</div>
 
-        employeeTableBody.innerHTML = employees.map(u => `
-          <tr>
-            <td>•</td>
-            <td>${u.passport || '-'}</td>
-            <td>-</td>
-            <td>${u.firstName || '-'} ${u.lastName || ''}</td>
-            <td>${u.phone || '-'}</td>
-            <td>${(u.email || '').trim().toLowerCase() === ADMIN_EMAIL ? 'Admin' : '-'}</td>
-            <td>-</td>
-            <td>0/3</td>
-            <td>0/3</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
-          </tr>
-        `).join('');
-      } catch (error) {
-        console.error(error);
-      }
-    }
+<!-- Step 3: Waiting for approval -->
+<div class="overlay" id="overlay-step-wait">
+  <div class="popup">
+    <div class="popup-header">
+      <h2>IC INFOS</h2>
+      <button class="popup-close" onclick="closePopup('step-wait')">✕</button>
+    </div>
+    <div class="popup-body">
+      <div class="step-indicator">
+        <div class="step done"></div><div class="step done"></div><div class="step active"></div>
+      </div>
+      <div class="wait-box">
+        <div class="icon">⏳</div>
+        <h3>ANFRAGE GESENDET</h3>
+        <p>Deine Anfrage wurde erfolgreich übermittelt.<br>Bitte warte bis ein Administrator dein Konto freischaltet.<br><br>Du wirst per E-Mail benachrichtigt sobald du Zugriff erhältst.</p>
+      </div>
+    </div>
+    <div class="popup-footer">
+      <button class="btn btn-primary" onclick="closePopup('step-wait')">Schließen</button>
+    </div>
+  </div>
+</div>
 
-    document.getElementById('requestBtn').addEventListener('click', openModal);
-    document.getElementById('closeModalBtn').addEventListener('click', closeModal);
-    document.getElementById('loginBtn').addEventListener('click', () => loginWithGoogle('login'));
+<!-- Add Mitarbeiter -->
+<div class="overlay" id="overlay-add-ma">
+  <div class="popup">
+    <div class="popup-header">
+      <h2>MITARBEITER HINZUFÜGEN</h2>
+      <button class="popup-close" onclick="closePopup('add-ma')">✕</button>
+    </div>
+    <div class="popup-body">
+      <div class="form-group"><label>VORNAME</label><input type="text" id="ma-vorname" placeholder="Vorname"></div>
+      <div class="form-group"><label>NACHNAME</label><input type="text" id="ma-nachname" placeholder="Nachname"></div>
+      <div class="form-group"><label>ID</label><input type="text" id="ma-new-id" placeholder="Identifikationsnummer"></div>
+      <div class="form-group"><label>TELEFONNUMMER</label><input type="text" id="ma-new-tel" placeholder="z.B. 16-48-950"></div>
+      <div class="form-group"><label>RANG</label><input type="text" id="ma-rang" placeholder="Rang"></div>
+    </div>
+    <div class="popup-footer">
+      <button class="btn btn-success" onclick="saveMitarbeiter()">Speichern</button>
+    </div>
+  </div>
+</div>
 
-    document.getElementById('continueRequestBtn').addEventListener('click', async () => {
-      const data = getRequestFormData();
+<!-- Add Zugriff -->
+<div class="overlay" id="overlay-add-zugriff">
+  <div class="popup">
+    <div class="popup-header">
+      <h2>ZUGRIFF HINZUFÜGEN</h2>
+      <button class="popup-close" onclick="closePopup('add-zugriff')">✕</button>
+    </div>
+    <div class="popup-body">
+      <div class="form-group"><label>VORNAME</label><input type="text" id="z-vorname" placeholder="Vorname"></div>
+      <div class="form-group"><label>NACHNAME</label><input type="text" id="z-nachname" placeholder="Nachname"></div>
+      <div class="form-group"><label>IDENTIFIKATIONSNUMMER</label><input type="text" id="z-id" placeholder="ID-Nummer"></div>
+      <div class="form-group"><label>EMAIL</label><input type="email" id="z-email" placeholder="email@beispiel.com"></div>
+      <div class="form-group"><label>TELEFONNUMMER</label><input type="text" id="z-tel" placeholder="Telefonnummer"></div>
+    </div>
+    <div class="popup-footer">
+      <button class="btn btn-success" onclick="saveZugriff()">Hinzufügen</button>
+    </div>
+  </div>
+</div>
 
-      if (!validateRequestData(data)) {
-        setMessage(requestMsg, 'Bitte alle Felder ausfüllen.', true);
-        return;
-      }
+<!-- Firebase SDKs -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, doc, setDoc, getDoc, collection, getDocs, addDoc, deleteDoc, query, where }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-      sessionStorage.setItem('pendingRequestData', JSON.stringify(data));
-      setMessage(requestMsg, 'Google-Anmeldung wird geöffnet...');
-      await loginWithGoogle('request');
-    });
+const firebaseConfig = {
+  apiKey: "AIzaSyBWu8fy2ssPiohHS3m6ZQyfO0lNgUiLcho",
+  authDomain: "lspd-webseite-e94df.firebaseapp.com",
+  projectId: "lspd-webseite-e94df",
+  storageBucket: "lspd-webseite-e94df.firebasestorage.app",
+  messagingSenderId: "894435177811",
+  appId: "1:894435177811:web:365081afc02e2284029da6",
+  measurementId: "G-DEL1Q0SDDX"
+};
 
-    document.querySelectorAll('.navBtn').forEach(btn => {
-      btn.addEventListener('click', () => switchView(btn.dataset.target));
-    });
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const provider = new GoogleAuthProvider();
 
-    document.getElementById('logoutBtn').addEventListener('click', async () => {
+// Expose to window
+window._auth = auth;
+window._db = db;
+window._provider = provider;
+window._signInWithPopup = signInWithPopup;
+window._GoogleAuthProvider = GoogleAuthProvider;
+window._doc = doc;
+window._setDoc = setDoc;
+window._getDoc = getDoc;
+window._collection = collection;
+window._getDocs = getDocs;
+window._addDoc = addDoc;
+window._deleteDoc = deleteDoc;
+window._query = query;
+window._where = where;
+window._signOut = signOut;
+
+// Temp IC data storage
+window._icData = {};
+window._pendingEmail = null;
+
+// Auth state
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    // Check if user is approved
+    const userDoc = await getDoc(doc(db, 'users', user.uid));
+    if (userDoc.exists() && userDoc.data().approved === true) {
+      // Load user data into dashboard
+      const data = userDoc.data();
+      document.getElementById('dash-name').textContent = data.vorname || '-';
+      document.getElementById('dash-id').textContent = data.id || '-';
+      document.getElementById('dash-tel').textContent = data.tel || '-';
+      showPage('main');
+      loadZugriffTable();
+    } else {
+      // Not yet approved or new
+      showNotif('Dein Konto wurde noch nicht freigeschalten. Bitte warte auf Admin-Bestätigung.', true);
       await signOut(auth);
-      currentUserData = null;
-      showLogin();
+    }
+  }
+});
+
+// Login function
+window.doGoogleLogin = async function() {
+  try {
+    const result = await signInWithPopup(auth, provider);
+    const user = result.user;
+    const userDoc = await getDoc(doc(db, 'users', user.uid));
+    if (!userDoc.exists() || !userDoc.data().approved) {
+      showNotif('Konto noch nicht freigeschalten. Bitte warte auf Admin.', true);
+      await signOut(auth);
+    }
+  } catch(e) {
+    showNotif('Anmeldung fehlgeschlagen: ' + e.message, true);
+  }
+};
+
+// Register flow
+window.doGoogleRegister = async function() {
+  try {
+    const result = await signInWithPopup(auth, provider);
+    const user = result.user;
+    // Save request
+    await setDoc(doc(db, 'users', user.uid), {
+      uid: user.uid,
+      email: user.email,
+      displayName: user.displayName,
+      vorname: window._icData.vorname || '',
+      nachname: window._icData.nachname || '',
+      tel: window._icData.tel || '',
+      pass: window._icData.pass || '',
+      approved: false,
+      requestedAt: new Date().toISOString()
     });
-
-    document.getElementById('refreshRequestsBtn').addEventListener('click', loadAccessRequests);
-
-    document.getElementById('clearAccessFilterBtn').addEventListener('click', () => {
-      accessFilterInput.value = '';
-      loadAccessRequests();
+    // Also add to zugriff table
+    await addDoc(collection(db, 'zugriffsanfragen'), {
+      uid: user.uid,
+      vorname: window._icData.vorname || '',
+      nachname: window._icData.nachname || '',
+      email: user.email,
+      tel: window._icData.tel || '',
+      id: window._icData.pass || '',
+      status: 'VERWEIGERT',
+      zugriffsrang: '11 | Web Admin XI',
+      freigeben: 'Nein',
+      createdAt: new Date().toISOString()
     });
+    await signOut(auth);
+    closePopup('step-google');
+    openPopup('step-wait');
+    showNotif('Anfrage erfolgreich übermittelt!');
+  } catch(e) {
+    showNotif('Fehler: ' + e.message, true);
+  }
+};
 
-    accessFilterInput.addEventListener('input', loadAccessRequests);
-
-    document.getElementById('addEmployeeBtn').addEventListener('click', () => {
-      alert('Mitarbeiter können über Zugriffsanfragen freigeschaltet werden.');
+// Load Zugriffsanfragen
+window.loadZugriffTable = async function() {
+  const tbody = document.getElementById('zugriff-tbody');
+  try {
+    const snap = await getDocs(collection(db, 'zugriffsanfragen'));
+    tbody.innerHTML = '';
+    if (snap.empty) {
+      tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:var(--text-dim);padding:16px;">Keine Anfragen vorhanden.</td></tr>';
+      return;
+    }
+    snap.forEach(d => {
+      const row = d.data();
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${row.vorname || '-'}</td>
+        <td>${row.id || '-'}</td>
+        <td>${row.nachname || '-'}</td>
+        <td>${row.email || '-'}</td>
+        <td>${row.tel || '-'}</td>
+        <td><select class="td-select" onchange="updateZugriff('${d.id}','freigeben',this.value)">
+          <option ${row.freigeben==='Nein'?'selected':''}>Nein</option>
+          <option ${row.freigeben==='Ja'?'selected':''}>Ja</option>
+        </select></td>
+        <td><select class="td-select" onchange="updateZugriff('${d.id}','zugriffsrang',this.value)">
+          <option ${row.zugriffsrang==='11 | Web Admin XI'?'selected':''}>11 | Web Admin XI</option>
+          <option>1 | Gast</option><option>5 | Mitarbeiter</option>
+          <option>10 | Admin</option>
+        </select></td>
+        <td><span class="${row.status==='VERWEIGERT'?'badge-denied':'badge-ok'}">${row.status||'VERWEIGERT'}</span></td>
+      `;
+      tbody.appendChild(tr);
     });
+  } catch(e) {
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:var(--red2);">Fehler beim Laden.</td></tr>';
+  }
+};
 
-    document.getElementById('archiveBtn').addEventListener('click', () => {
-      alert('Archiv-Funktion ist als UI vorbereitet und kann später erweitert werden.');
-    });
+window.updateZugriff = async function(docId, field, val) {
+  try {
+    const ref = doc(db, 'zugriffsanfragen', docId);
+    const update = {};
+    update[field] = val;
+    if (field === 'freigeben' && val === 'Ja') update.status = 'FREIGEGEBEN';
+    else if (field === 'freigeben' && val === 'Nein') update.status = 'VERWEIGERT';
+    await setDoc(ref, update, { merge: true });
+    loadZugriffTable();
+  } catch(e) {}
+};
 
-    document.getElementById('addAccessBtn').addEventListener('click', openModal);
+window.saveZugriff = async function() {
+  const data = {
+    vorname: document.getElementById('z-vorname').value,
+    nachname: document.getElementById('z-nachname').value,
+    id: document.getElementById('z-id').value,
+    email: document.getElementById('z-email').value,
+    tel: document.getElementById('z-tel').value,
+    status: 'VERWEIGERT', freigeben: 'Nein', zugriffsrang: '1 | Gast',
+    createdAt: new Date().toISOString()
+  };
+  try {
+    await addDoc(collection(db, 'zugriffsanfragen'), data);
+    closePopup('add-zugriff');
+    showNotif('Zugriff hinzugefügt!');
+    loadZugriffTable();
+  } catch(e) { showNotif('Fehler: '+e.message, true); }
+};
 
-    requestModal.addEventListener('click', (e) => {
-      if (e.target === requestModal) closeModal();
-    });
+window.deleteZugriff = async function() {
+  const id = document.getElementById('zugriff-id-input').value.trim();
+  if (!id) { showNotif('Bitte ID eingeben.', true); return; }
+  showNotif('Suche nach ID: ' + id);
+};
 
-    onAuthStateChanged(auth, async (user) => {
-      if (!user) {
-        showLogin();
-        return;
-      }
+// Mitarbeiter
+let mitarbeiterData = [];
 
-      try {
-        const profile = await ensureUserDoc(user);
-        const userEmail = (user.email || '').trim().toLowerCase();
-        const isAdmin =
-          userEmail === ADMIN_EMAIL ||
-          (profile.email || '').trim().toLowerCase() === ADMIN_EMAIL;
+window.saveMitarbeiter = async function() {
+  const ma = {
+    vorname: document.getElementById('ma-vorname').value,
+    nachname: document.getElementById('ma-nachname').value,
+    id: document.getElementById('ma-new-id').value,
+    tel: document.getElementById('ma-new-tel').value,
+    rang: document.getElementById('ma-rang').value,
+    division: '-', urlaub: '0/3', strike: '0/3',
+    invite: '-', rankup: '-', abt1: '-', abt2: '-',
+    createdAt: new Date().toISOString()
+  };
+  try {
+    const ref = await addDoc(collection(db, 'mitarbeiter'), ma);
+    mitarbeiterData.push({ ...ma, _id: ref.id });
+    renderMitarbeiter();
+    closePopup('add-ma');
+    showNotif('Mitarbeiter hinzugefügt!');
+  } catch(e) { showNotif('Fehler: '+e.message, true); }
+};
 
-        if (isAdmin || profile.status === 'approved') {
-          currentUserData = { ...profile, email: user.email, uid: user.uid };
-          currentUserLabel.textContent = `${user.email} · ${isAdmin ? 'Admin' : 'Freigeschaltet'}`;
-          updatePersonalData(profile);
-          showPortal();
-          switchView('dashboardView');
-          await loadAccessRequests();
-          await loadEmployees();
-        } else {
-          await signOut(auth);
-          setMessage(authMessage, 'Dein Konto ist noch nicht freigeschaltet.', true);
-        }
-      } catch (error) {
-        console.error(error);
-        setMessage(authMessage, 'Fehler beim Prüfen des Kontos: ' + error.message, true);
-        await signOut(auth);
-        showLogin();
-      }
-    });
-  </script>
+window.archivieren = function() { showNotif('Archivierung: Funktion in Entwicklung.'); };
+
+window.filterMitarbeiter = function() {
+  const term = document.getElementById('ma-search').value.toLowerCase();
+  const filtered = mitarbeiterData.filter(m =>
+    (m.vorname+' '+m.nachname+' '+m.id).toLowerCase().includes(term)
+  );
+  renderMitarbeiter(filtered);
+};
+
+function renderMitarbeiter(data) {
+  const arr = data || mitarbeiterData;
+  const tbody = document.getElementById('ma-tbody');
+  if (!arr.length) {
+    tbody.innerHTML = '<tr><td colspan="28" style="text-align:center;color:var(--text-dim);padding:20px;">Keine eingetragenen Mitarbeiter vorhanden.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = arr.map(m => `
+    <tr>
+      <td><button class="btn btn-primary" style="padding:3px 8px;font-size:0.65rem;" onclick="openDashWithMA('${m._id}')">📋</button></td>
+      <td>${m.id||'-'}</td><td>-</td>
+      <td>${m.vorname||''} ${m.nachname||''}</td>
+      <td>${m.tel||'-'}</td><td>${m.rang||'-'}</td>
+      <td>${m.division||'-'}</td><td>${m.urlaub||'0/3'}</td><td>${m.strike||'0/3'}</td>
+      <td>${m.invite||'-'}</td><td>${m.rankup||'-'}</td>
+      <td>${m.abt1||'-'}</td><td>${m.abt2||'-'}</td>
+      ${Array(15).fill('<td>☐</td>').join('')}
+    </tr>
+  `).join('');
+}
+
+window.openDashWithMA = function(id) {
+  const ma = mitarbeiterData.find(m => m._id === id);
+  if (ma) {
+    document.getElementById('dash-name').textContent = ma.vorname || '-';
+    document.getElementById('dash-id').textContent = ma.id || '-';
+    document.getElementById('dash-tel').textContent = ma.tel || '-';
+    showSubPage('dashboard');
+  }
+};
+
+// Load mitarbeiter on init
+async function loadMitarbeiter() {
+  try {
+    const snap = await getDocs(collection(db, 'mitarbeiter'));
+    mitarbeiterData = [];
+    snap.forEach(d => mitarbeiterData.push({ ...d.data(), _id: d.id }));
+    renderMitarbeiter();
+  } catch(e) {}
+}
+loadMitarbeiter();
+</script>
+
+<script>
+// ===== PAGE NAVIGATION =====
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  if (name === 'login') {
+    document.getElementById('page-login').classList.add('active');
+  } else if (name === 'main') {
+    document.getElementById('page-main').classList.add('active');
+    document.getElementById('header-badge').style.display = 'flex';
+  }
+}
+
+function showSubPage(name) {
+  const subs = ['dashboard','kleider','rang','fahr','sank','mitarbeiter','zugriff'];
+  subs.forEach(s => { document.getElementById('sub-'+s).style.display = 'none'; });
+  document.getElementById('sub-'+name).style.display = 'block';
+
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  const labels = { dashboard:'LSPD Dashboard', kleider:'Kleiderordnung', rang:'Rangbefugnisse', fahr:'Fahrzeugordnung', sank:'Sanktionskatalog', mitarbeiter:'Mitarbeiter Register', zugriff:'Zugriffsanfrage' };
+  document.querySelectorAll('.nav-btn').forEach(b => { if(b.textContent.trim() === labels[name]) b.classList.add('active'); });
+
+  const pageLabels = { dashboard:'DASHBOARD · PERSONNEL · ACCESS CONTROL · SERVICE RECORDS', kleider:'KLEIDERORDNUNG', rang:'RANGBEFUGNISSE', fahr:'FAHRZEUGORDNUNG', sank:'SANKTIONSKATALOG', mitarbeiter:'MITARBEITER REGISTER', zugriff:'ZUGRIFFSANFRAGE' };
+  document.getElementById('page-label-text').textContent = pageLabels[name] || '';
+  document.getElementById('topbar').style.display = name === 'dashboard' ? 'flex' : 'none';
+
+  if (name === 'zugriff') { window.loadZugriffTable && window.loadZugriffTable(); }
+}
+
+// ===== POPUP =====
+function openPopup(id) {
+  document.getElementById('overlay-'+id).classList.add('open');
+}
+function closePopup(id) {
+  document.getElementById('overlay-'+id).classList.remove('open');
+}
+
+function goToStep2() {
+  const v = document.getElementById('ic-vorname').value.trim();
+  const n = document.getElementById('ic-nachname').value.trim();
+  const t = document.getElementById('ic-tel').value.trim();
+  const p = document.getElementById('ic-pass').value.trim();
+  if (!v || !n || !t || !p) { showNotif('Bitte alle Felder ausfüllen!', true); return; }
+  window._icData = { vorname: v, nachname: n, tel: t, pass: p };
+  closePopup('step-ic');
+  openPopup('step-google');
+}
+
+// ===== FAHRZEUG =====
+function addFahrzeug() {
+  const fahr = prompt('Fahrzeugname:');
+  const rang = prompt('Mindest-Rang:');
+  const abt = prompt('Abteilung:');
+  if (fahr && rang && abt) {
+    const tbody = document.getElementById('fahr-tbody');
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${fahr}</td><td class="arrow-cell">></td><td>${rang}</td><td class="arrow-cell">></td><td>${abt}</td>`;
+    tbody.appendChild(tr);
+  }
+}
+
+// ===== SANKTIONSKATALOG =====
+let sankNum = 1;
+function addSanktion() {
+  sankNum++;
+  const def = prompt('Regeldefinition:');
+  if (!def) return;
+  const tbody = document.getElementById('sank-tbody');
+  const tr = document.createElement('tr');
+  tr.className = 'sank-row';
+  tr.innerHTML = `<td>§${sankNum}</td><td style="text-align:left;padding-left:10px;">${def}</td><td class="arrow-cell">></td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td></td>`;
+  tbody.appendChild(tr);
+}
+
+// ===== NOTIFICATION =====
+function showNotif(msg, isError) {
+  const n = document.getElementById('notif');
+  n.textContent = msg;
+  n.className = 'notification' + (isError ? ' error' : '');
+  n.classList.add('show');
+  setTimeout(() => n.classList.remove('show'), 3500);
+}
+window.showNotif = showNotif;
+
+// Close overlays on background click
+document.querySelectorAll('.overlay').forEach(o => {
+  o.addEventListener('click', function(e) { if(e.target === this) this.classList.remove('open'); });
+});
+
+// Init
+showSubPage('dashboard');
+</script>
+
 </body>
 </html>
