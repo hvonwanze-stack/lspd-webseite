@@ -3374,6 +3374,7 @@ window.doGoogleLogin = async function() {
       const data = userDoc.data();
       window._currentRolle = data.rolle || 'user';
       window._currentUserData = data;
+      window._loginHandled = true; // onAuthStateChanged überspringen
       loadZugriffTable();
       setLoadStatus('ZUGRIFF GEWÄHRT');
       window._initialLoad = true;
@@ -3382,7 +3383,9 @@ window.doGoogleLogin = async function() {
       window._initialLoad = false;
       try { localStorage.setItem('lspd_last_page', 'dashboard'); } catch(e) {}
       setTimeout(hideLoader, 500);
+      setTimeout(() => { window.fillDashboardFromMitarbeiter && window.fillDashboardFromMitarbeiter(); }, 1000);
     } else {
+      window._loginHandled = true;
       showNotif('Konto noch nicht freigeschalten. Bitte warte auf Admin.', true);
       await signOut(auth);
       setLoadStatus('BITTE ANMELDEN');
@@ -3674,7 +3677,7 @@ window.confirmDeleteZugriff = async function() {
     await deleteDoc(zaRef);
 
     closePopup('confirm-delete');
-    showNotif('Eintrag gelöscht. Die Person kann eine neue Anfrage stellen.');
+    showNotif('Eintrag vollständig gelöscht.');
     loadZugriffTable();
     window._deleteDocId = null;
   } catch(e) {
@@ -3800,13 +3803,44 @@ window.archivieren = async function() {
   const ma = mitarbeiterData.find(m => m.id === searchId);
   if (!ma) { showNotif('Kein Mitarbeiter mit dieser ID gefunden.', true); return; }
   try {
+    // 1. Ins Archiv kopieren
     const archivEntry = { ...ma, archiviertAm: new Date().toISOString() };
     await addDoc(collection(db, 'mitarbeiter_archiv'), archivEntry);
+
+    // 2. Aus mitarbeiter löschen
     await deleteDoc(doc(db, 'mitarbeiter', ma._id));
     mitarbeiterData = mitarbeiterData.filter(m => m._id !== ma._id);
     renderMitarbeiter();
-    showNotif('Mitarbeiter archiviert!');
+
+    // 3. In zugriffsanfragen: freigeben auf Nein, status auf VERWEIGERT setzen
+    // Suche anhand der ID (pass-Feld in zugriffsanfragen = ID des Mitarbeiters)
+    const zaSnap = await getDocs(collection(db, 'zugriffsanfragen'));
+    for (const d of zaSnap.docs) {
+      if ((d.data().pass || '').toLowerCase() === searchId.toLowerCase()) {
+        const zaUid = d.data().uid;
+        const zaEmail = d.data().email;
+
+        // 4. Aus users löschen
+        if (zaUid) {
+          try { await deleteDoc(doc(db, 'users', zaUid)); } catch(e) {}
+        } else if (zaEmail) {
+          const usersSnap = await getDocs(collection(db, 'users'));
+          for (const ud of usersSnap.docs) {
+            if ((ud.data().email || '').toLowerCase() === zaEmail.toLowerCase()) {
+              try { await deleteDoc(doc(db, 'users', ud.id)); } catch(e) {}
+            }
+          }
+        }
+
+        // 5. Aus zugriffsanfragen löschen
+        await deleteDoc(doc(db, 'zugriffsanfragen', d.id));
+        break;
+      }
+    }
+
+    showNotif('Mitarbeiter archiviert und Zugriff entzogen!');
     loadArchiv();
+    if (window.loadZugriffTable) loadZugriffTable();
   } catch(e) { showNotif('Fehler: ' + e.message, true); }
 };
 
