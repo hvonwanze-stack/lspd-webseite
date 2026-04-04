@@ -166,11 +166,31 @@
 
     .dashboard-grid {
       display: grid;
-      grid-template-columns: 380px 1fr;
-      gap: 34px;
+      grid-template-columns: 430px 1fr;
+      gap: 24px;
       align-items: start;
-      max-width: 1300px;
+      max-width: 1450px;
       margin: 0 auto;
+    }
+
+    .dashboard-panel {
+      background: linear-gradient(180deg, rgba(20,20,20,0.98), rgba(10,10,10,0.98));
+      border: 1px solid #24466e;
+      box-shadow: 0 0 0 1px rgba(17,59,109,0.35) inset;
+      padding: 18px;
+    }
+
+    .dashboard-section-title {
+      background: linear-gradient(180deg, #103663, #0b2746);
+      border: 1px solid #1c3454;
+      color: #fff;
+      text-align: center;
+      padding: 12px 16px;
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
     .box-title {
@@ -185,8 +205,8 @@
 
     .info-grid {
       display: grid;
-      grid-template-columns: 145px minmax(0, 1fr);
-      gap: 10px 16px;
+      grid-template-columns: 165px minmax(0, 1fr);
+      gap: 8px;
     }
 
     .info-label,
@@ -199,15 +219,16 @@
       justify-content: center;
       overflow-wrap: anywhere;
       word-break: break-word;
+      border: 1px solid #1c3454;
     }
 
     .info-label {
-      background: var(--purple);
+      background: linear-gradient(180deg, #103663, #0b2746);
       font-weight: bold;
     }
 
     .info-value {
-      background: #8a00c8;
+      background: rgba(47,47,47,0.96);
       min-width: 0;
     }
 
@@ -222,44 +243,51 @@
     .training-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
+      gap: 14px;
     }
 
-    .training-card { text-align: center; }
+    .training-card {
+      text-align: center;
+      background: rgba(18,18,18,0.96);
+      border: 1px solid #1c3454;
+      padding: 10px;
+    }
 
     .training-card h4 {
       margin: 0 0 10px;
       padding: 10px;
       font-size: 16px;
+      border: 1px solid rgba(255,255,255,0.08);
     }
 
     .mini-row {
       display: grid;
-      grid-template-columns: 38px 38px;
+      grid-template-columns: 42px 1fr;
       justify-content: center;
       gap: 1px;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
     .mini-row div {
       padding: 10px;
-      min-height: 38px;
-      min-width: 38px;
+      min-height: 40px;
+      min-width: 40px;
       display: flex;
       align-items: center;
       justify-content: center;
+      border: 1px solid rgba(255,255,255,0.08);
     }
 
     .bg-green { background: #3d7d21; }
     .bg-gold { background: #a8870f; }
     .bg-blue { background: #10559b; }
     .bg-red { background: #cf1404; }
-    .bg-cyan { background: #5ac3d9; }
+    .bg-cyan { background: #5ac3d9; color: #000; }
     .bg-pink { background: #c86aa2; }
-    .bg-light { background: #b9d3db; color: #fff; }
+    .bg-light { background: #b9d3db; color: #000; }
     .bg-orange { background: #ef6d2f; }
-    .bg-beige { background: #f5bc77; }
-    .bg-violet { background: #b8acd8; }
+    .bg-beige { background: #f5bc77; color: #000; }
+    .bg-violet { background: #b8acd8; color: #000; }
     .bg-wine { background: #6f184f; }
 
     .content-wrap {
@@ -291,9 +319,10 @@
     }
 
     .left-btn {
-      margin-top: 20px;
-      background: #666;
-      min-width: 180px;
+      margin-top: 0;
+      background: #173e70;
+      min-width: 220px;
+      border: 1px solid #335d95;
     }
 
     .logout {
@@ -306,7 +335,7 @@
     }
 
     .panel-card {
-      max-width: 1200px;
+      max-width: 1280px;
       margin: 0 auto;
     }
 
@@ -357,8 +386,11 @@
 
     .welcome-box {
       text-align: center;
-      margin-top: 14px;
-      color: #ddd;
+      margin-top: 18px;
+      color: #d7e8ff;
+      padding: 12px;
+      background: linear-gradient(180deg, rgba(16,54,99,0.7), rgba(11,39,70,0.7));
+      border: 1px solid #1c3454;
     }
 
     .icon-btn,
@@ -369,7 +401,9 @@
     .data-edit-btn,
     .archive-open-btn,
     .back-btn,
-    .move-btn {
+    .move-btn,
+    .vehicle-edit-btn,
+    .sanction-edit-btn {
       border: none;
       color: #fff;
       font-size: 14px;
@@ -379,7 +413,9 @@
 
     .icon-btn,
     .rank-edit-btn,
-    .data-edit-btn {
+    .data-edit-btn,
+    .vehicle-edit-btn,
+    .sanction-edit-btn {
       background: #3e3e3e;
       font-weight: bold;
     }
@@ -420,6 +456,12 @@
       flex-wrap: wrap;
     }
 
+    .page8-top-row {
+      display: flex;
+      justify-content: flex-start;
+      margin-bottom: 16px;
+    }
+
     .page8-bottom-row {
       display: flex;
       justify-content: flex-start;
@@ -427,8 +469,9 @@
     }
 
     .add-access-btn {
-      background: #666;
-      min-width: 180px;
+      background: #173e70;
+      min-width: 220px;
+      border: 1px solid #335d95;
     }
 
     .modal {
@@ -444,7 +487,7 @@
 
     .modal-content {
       width: 100%;
-      max-width: 720px;
+      max-width: 820px;
       background: #111;
       border: 1px solid #444;
       padding: 20px;
@@ -472,12 +515,18 @@
     }
 
     .modal-grid input,
-    .modal-grid select {
+    .modal-grid select,
+    .modal-grid textarea {
       width: 100%;
       background: #1d1d1d;
       border: 1px solid #444;
       color: #fff;
       padding: 10px;
+    }
+
+    .modal-grid textarea {
+      min-height: 100px;
+      resize: vertical;
     }
 
     .modal-grid input[readonly] {
@@ -755,7 +804,10 @@
       display: flex;
       gap: 12px;
       margin-top: 18px;
+      margin-bottom: 18px;
       flex-wrap: wrap;
+      align-items: center;
+      justify-content: flex-start;
     }
 
     .page-tools button {
@@ -892,6 +944,7 @@
       .rule-grid,
       .policy-grid { grid-template-columns: 1fr; }
       .info-grid { grid-template-columns: 1fr; }
+      .training-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -916,13 +969,15 @@
     <div class="content-wrap">
       <h1 class="top-title">Los Santos Police Department</h1>
       <div id="navMount"></div>
+
       <div class="dashboard-grid">
-        <div>
-          <div class="box-title purple">Persönliche Daten</div>
+        <div class="dashboard-panel">
+          <div class="dashboard-section-title">Persönliche Daten</div>
           <div class="info-grid" id="personalDataGrid"></div>
         </div>
-        <div>
-          <div class="box-title orange">Ausbildungen</div>
+
+        <div class="dashboard-panel">
+          <div class="dashboard-section-title">Ausbildungen</div>
           <div class="training-grid">
             <div class="training-card">
               <h4 class="bg-green">Für Rookie</h4>
@@ -979,6 +1034,7 @@
           <div class="welcome-box" id="welcomeBox"></div>
         </div>
       </div>
+
       <button class="logout" onclick="logout()">Abmelden</button>
     </div>
   </section>
@@ -1096,18 +1152,16 @@
           </div>
         </div>
 
+        <div class="page-tools">
+          <button class="left-btn" id="addVehicleBtn">Fahrzeug Hinzufügen</button>
+        </div>
+
         <table class="lspd-data-table">
           <thead>
-            <tr><th>Fahrzeug</th><th>Erforderlicher Rang</th><th>Abteilung</th></tr>
+            <tr><th>Fahrzeug</th><th>Erforderlicher Rang</th><th>Abteilung</th><th>Bearbeiten</th></tr>
           </thead>
-          <tbody>
-            <tr><td>AMG GT 20</td><td>29 | Deputy Chief of Police</td><td>HR</td></tr>
-          </tbody>
+          <tbody id="vehicleTableBody"></tbody>
         </table>
-
-        <div class="page-tools">
-          <button class="left-btn">Fahrzeug +</button>
-        </div>
       </div>
     </div>
   </section>
@@ -1128,7 +1182,7 @@
           </div>
           <div class="info-card">
             <h3>Führungsebene</h3>
-            <p>Endgültige Entscheidungen können durch die zuständige Command- oder HR-Ebene angepasst werden.</p>
+            <p>Endgültige Entscheidungen können durch die zuständige Leaderschaft oder Interne-Ebene angepasst werden.</p>
           </div>
           <div class="info-card">
             <h3>Dokumentation</h3>
@@ -1136,40 +1190,28 @@
           </div>
         </div>
 
+        <div class="page-tools">
+          <button class="left-btn" id="addSanctionBtn">Sanktion +</button>
+        </div>
+
         <table class="lspd-data-table">
           <thead>
             <tr>
+              <th>Bearbeiten</th>
               <th>§</th>
               <th>Regeldefinition</th>
               <th>Geldstrafe</th>
               <th>TOW Fahrt</th>
               <th>Human Labs</th>
-              <th>NG Runde</th>
+              <th>NG Runden</th>
               <th>RankUp-Sperre</th>
               <th>Strike</th>
               <th>Suspendierung</th>
               <th>Kündigung</th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td>§1</td>
-              <td>Beleidigungen, Respektlosigkeit und sonstiges niederes Verhalten</td>
-              <td>150</td>
-              <td>10 Autos</td>
-              <td>30 min</td>
-              <td>2</td>
-              <td>2 Wochen</td>
-              <td>1</td>
-              <td>3 Tage</td>
-              <td>✓</td>
-            </tr>
-          </tbody>
+          <tbody id="sanctionTableBody"></tbody>
         </table>
-
-        <div class="page-tools">
-          <button class="left-btn">Sanktion +</button>
-        </div>
       </div>
     </div>
   </section>
@@ -1251,11 +1293,17 @@
     <div class="content-wrap">
       <h1 class="top-title">Los Santos Police Department</h1>
       <div id="navMount8"></div>
+
+      <div class="page8-top-row">
+        <button class="add-access-btn" id="addAccessBtn">Zugriff Hinzufügen</button>
+      </div>
+
       <table>
         <thead>
           <tr>
             <th>Bearbeiten</th>
             <th>Identifikationsnummer</th>
+            <th>ID</th>
             <th>Name</th>
             <th>Nachname</th>
             <th>Email</th>
@@ -1268,10 +1316,6 @@
         </thead>
         <tbody id="accessRequestBody"></tbody>
       </table>
-
-      <div class="page8-bottom-row">
-        <button class="add-access-btn" id="addAccessBtn">Zugriff hinzufügen</button>
-      </div>
     </div>
   </section>
 
@@ -1301,13 +1345,16 @@
             <th>Name</th>
             <th>Tel. Nr.</th>
             <th>Rang</th>
+            <th class="vertical-sep"></th>
             <th>Division</th>
+            <th class="vertical-sep"></th>
             <th>Urlaub</th>
             <th>Strike</th>
             <th>Invite-Datum</th>
             <th>Letzter RankUp</th>
             <th>Abteilung 1</th>
             <th>Abteilung 2</th>
+            <th class="vertical-sep"></th>
             <th>GA</th>
             <th>EHK</th>
             <th>ES</th>
@@ -1394,7 +1441,8 @@
       <h2 class="modal-title" id="accessModalTitle">Zugriff hinzufügen</h2>
       <div class="modal-grid">
         <label>Name<input id="accessName" type="text" /></label>
-        <label>Identifikationsnummer<input id="accessId" type="text" readonly /></label>
+        <label>Identifikationsnummer<input id="accessStableId" type="text" readonly /></label>
+        <label>ID<input id="accessRequestId" type="text" /></label>
         <label>Nachname<input id="accessLastName" type="text" /></label>
         <label>Email<input id="accessEmail" type="email" /></label>
         <label>Telefonnummer<input id="accessPhone" type="text" /></label>
@@ -1432,6 +1480,66 @@
     </div>
   </div>
 
+  <!-- Fahrzeug Modal -->
+  <div id="vehicleModal" class="modal hidden">
+    <div class="modal-content">
+      <h2 class="modal-title" id="vehicleModalTitle">Fahrzeug hinzufügen</h2>
+      <div class="modal-grid">
+        <label>Fahrzeug<input id="vehicleName" type="text" /></label>
+        <label>Erforderlicher Rang
+          <select id="vehicleRank"></select>
+        </label>
+        <label>Abteilung
+          <select id="vehicleDepartment"></select>
+        </label>
+      </div>
+      <div class="modal-actions">
+        <button class="muted-btn" type="button" onclick="closeVehicleModal()">Abbrechen</button>
+        <button class="save-btn" type="button" onclick="saveVehicle()">Speichern</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sanktions Modal -->
+  <div id="sanctionModal" class="modal hidden">
+    <div class="modal-content">
+      <h2 class="modal-title" id="sanctionModalTitle">Sanktion hinzufügen</h2>
+      <div class="modal-grid">
+        <label>§<input id="sanctionParagraph" type="text" /></label>
+        <label class="full-width">Regeldefinition<textarea id="sanctionDefinition"></textarea></label>
+
+        <label>Geldstrafe
+          <select id="sanctionFine"></select>
+        </label>
+        <label>TOW Fahrt
+          <select id="sanctionTow"></select>
+        </label>
+        <label>Human Labs
+          <select id="sanctionLabs"></select>
+        </label>
+        <label>NG Runden
+          <select id="sanctionNg"></select>
+        </label>
+        <label>RankUp-Sperre
+          <select id="sanctionRankup"></select>
+        </label>
+        <label>Strike
+          <select id="sanctionStrike"></select>
+        </label>
+        <label>Suspendierung
+          <select id="sanctionSuspend"></select>
+        </label>
+        <label>Kündigung
+          <select id="sanctionDismissal"></select>
+        </label>
+      </div>
+      <div class="modal-actions">
+        <button class="muted-btn" type="button" onclick="closeSanctionModal()">Abbrechen</button>
+        <button class="save-btn" type="button" onclick="saveSanction()">Speichern</button>
+      </div>
+    </div>
+  </div>
+
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js';
     import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
@@ -1461,6 +1569,8 @@
 
     const ACCESS_COLLECTION = 'accessRequests';
     const EMPLOYEE_COLLECTION = 'employees';
+    const VEHICLE_COLLECTION = 'vehicles';
+    const SANCTION_COLLECTION = 'sanctions';
 
     const PREAPPROVED_USERS = [
       {
@@ -1472,7 +1582,8 @@
         approved: true,
         websiteAccessRank: 30,
         role: 'admin',
-        employeeId: '164895',
+        requestId: '164895',
+        stableId: '164895001',
         phone: '16-48-950',
         serviceNumber: '1',
         rank: 30,
@@ -1493,6 +1604,49 @@
       'OKPLUS', 'FT', 'COP', 'JP', 'ZP', 'VHP', 'TOWBL', 'AKS'
     ];
 
+    const RANK_OPTIONS = [
+      { value: 30, label: '30 | Chief of Police' },
+      { value: 29, label: '29 | Deputy Chief of Police' },
+      { value: 28, label: '28 | Assistant Chief of Police' },
+      { value: 27, label: '27 | Advising Chief of Police' },
+      { value: 26, label: '26 | Chief of Department' },
+      { value: 25, label: '25 | Deputy Chief of Department' },
+      { value: 24, label: '24 | Police Commander' },
+      { value: 23, label: '23 | Police Inspector' },
+      { value: 22, label: '22 | IU Investigator' },
+      { value: 21, label: '21 | HR Coordinator' },
+      { value: 20, label: '20 | S.W.A.T. Captain' },
+      { value: 19, label: '19 | Enforcement Supervisor' },
+      { value: 18, label: '18 | Press Associator' },
+      { value: 17, label: '17 | Special Police Officer' },
+      { value: 16, label: '16 | Commander' },
+      { value: 15, label: '15 | Captain' },
+      { value: 14, label: '14 | Lieutenant' },
+      { value: 13, label: '13 | Sergeant' },
+      { value: 12, label: '12 | Detective' },
+      { value: 11, label: '11 | Corporal' },
+      { value: 10, label: '10 | Lead Supervisor' },
+      { value: 9, label: '9 | Senior Supervisor' },
+      { value: 8, label: '8 | Supervising Officer' },
+      { value: 7, label: '7 | Officer First Class' },
+      { value: 6, label: '6 | Officer II' },
+      { value: 5, label: '5 | Officer I' },
+      { value: 4, label: '4 | Rookie' },
+      { value: 3, label: '3 | TOW Officer' },
+      { value: 2, label: '2 | Cadet' },
+      { value: 1, label: '1 | Suspended' }
+    ];
+
+    const VEHICLE_DEPARTMENTS = ['X', 'IU', 'HR', 'PA', 'SWAT', 'TF'];
+
+    const FINE_OPTIONS = ['X', '10K', '20K', '30K', '40K', '50K', '60K', '70K', '80K', '90K', '100K', '110K', '120K', '130K', '140K', '150K'];
+    const TOW_OPTIONS = ['X', '1 Auto', '2 Autos', '3 Autos', '4 Autos', '5 Autos', '6 Autos', '7 Autos', '8 Autos', '9 Autos', '10 Autos', '11 Autos', '12 Autos', '13 Autos', '14 Autos', '15 Autos', '16 Autos', '17 Autos', '18 Autos', '19 Autos', '20 Autos'];
+    const LAB_OPTIONS = ['X', '5 Min', '10 Min', '15 Min', '20 Min', '25 Min', '30 Min', '35 Min', '40 Min', '45 Min', '50 Min', '55 Min', '60 Min'];
+    const NG_OPTIONS = ['X', '1 Runde', '2 Runden', '3 Runden', '4 Runden', '5 Runden', '6 Runden', '7 Runden', '8 Runden', '9 Runden', '10 Runden', '11 Runden', '12 Runden', '13 Runden', '14 Runden', '15 Runden', '16 Runden', '17 Runden', '18 Runden', '19 Runden', '20 Runden'];
+    const RANKUP_OPTIONS = ['X', '1 Tag', '2 Tage', '3 Tage', '4 Tage', '5 Tage', '6 Tage', '7 Tage', '8 Tage', '9 Tage', '10 Tage', '11 Tage', '12 Tage', '13 Tage', '14 Tage'];
+    const SUSPEND_OPTIONS = ['X', '1 Tag', '2 Tage', '3 Tage', '4 Tage', '5 Tage', '6 Tage', '7 Tage', '8 Tage', '9 Tage', '10 Tage', '11 Tage', '12 Tage', '13 Tage', '14 Tage'];
+    const CHECK_OR_X_OPTIONS = ['X', '✓'];
+
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
@@ -1509,10 +1663,16 @@
     let editingEmployeeId = null;
     let editingEmployeeTrainings = {};
     let editingTrainingId = null;
+    let editingVehicleId = null;
+    let editingSanctionId = null;
     let employeeSearchTerm = '';
     let archiveSearchTerm = '';
     let employeesCache = [];
+    let vehiclesCache = [];
+    let sanctionsCache = [];
     let unsubscribeEmployeesSnapshot = null;
+    let unsubscribeVehiclesSnapshot = null;
+    let unsubscribeSanctionsSnapshot = null;
     const LAST_PAGE_KEY = 'lspd_last_page';
 
     const navItems = [
@@ -1549,7 +1709,15 @@
         hash = ((hash << 5) - hash) + normalized.charCodeAt(i);
         hash |= 0;
       }
-      return String(Math.abs(hash)).padStart(6, '0').slice(0, 8);
+      return String(Math.abs(hash)).padStart(8, '0').slice(0, 9);
+    }
+
+    function getRequestId(data = {}) {
+      return String(data?.requestId || data?.employeeId || '').trim();
+    }
+
+    function getStableAccessId(data = {}) {
+      return String(data?.stableId || buildStableIdFromEmail(data?.email || '') || '').trim();
     }
 
     function mountNav(targetId) {
@@ -1639,6 +1807,15 @@
       return `${String(firstName || '').trim()} ${String(lastName || '').trim()}`.trim();
     }
 
+    function fillSelectOptions(select, options, selectedValue = '') {
+      if (!select) return;
+      select.innerHTML = options.map(option => {
+        const value = typeof option === 'object' ? option.value : option;
+        const label = typeof option === 'object' ? option.label : option;
+        return `<option value="${value}" ${String(selectedValue) === String(value) ? 'selected' : ''}>${label}</option>`;
+      }).join('');
+    }
+
     async function ensurePreapprovedUsers() {
       for (const user of PREAPPROVED_USERS) {
         const accessRef = doc(db, ACCESS_COLLECTION, getAccessDocIdByEmail(user.email));
@@ -1649,7 +1826,9 @@
           lastName: user.lastName,
           fullName: user.fullName,
           email: user.email,
-          employeeId: user.employeeId || buildStableIdFromEmail(user.email),
+          requestId: user.requestId || '',
+          stableId: user.stableId || buildStableIdFromEmail(user.email),
+          employeeId: user.requestId || '',
           phone: user.phone,
           approved: true,
           websiteAccessRank: user.websiteAccessRank,
@@ -1657,6 +1836,37 @@
           createdAt: user.createdAt
         }, { merge: true });
       }
+    }
+
+    async function ensureDefaultVehicles() {
+      const snapshot = await getDocs(collection(db, VEHICLE_COLLECTION));
+      if (!snapshot.empty) return;
+
+      await setDoc(doc(db, VEHICLE_COLLECTION, 'vehicle_default_amggt20'), {
+        name: 'AMG GT 20',
+        requiredRank: 29,
+        department: 'HR',
+        createdAt: new Date().toISOString()
+      });
+    }
+
+    async function ensureDefaultSanctions() {
+      const snapshot = await getDocs(collection(db, SANCTION_COLLECTION));
+      if (!snapshot.empty) return;
+
+      await setDoc(doc(db, SANCTION_COLLECTION, 'sanction_default_1'), {
+        paragraph: '§1',
+        definition: 'Beleidigungen, Respektlosigkeit und sonstiges niederes Verhalten',
+        fine: '150K',
+        tow: '10 Autos',
+        labs: '30 Min',
+        ng: '2 Runden',
+        rankup: '14 Tage',
+        strike: '✓',
+        suspend: '3 Tage',
+        dismissal: '✓',
+        createdAt: new Date().toISOString()
+      });
     }
 
     async function findAccessByEmail(email) {
@@ -1684,7 +1894,7 @@
       const snap = await getDocs(collection(db, ACCESS_COLLECTION));
       for (const docSnap of snap.docs) {
         const data = docSnap.data();
-        if (String(data.employeeId || '').trim() === normalizedId) {
+        if (String(getRequestId(data)).trim() === normalizedId) {
           return { id: docSnap.id, data };
         }
       }
@@ -1730,7 +1940,7 @@
         17: 'Special Police Officer',
         18: 'Press Associator',
         19: 'Enforcement Supervisor',
-        20: 'S.W.A.T Captain',
+        20: 'S.W.A.T. Captain',
         21: 'HR Coordinator',
         22: 'IU Investigator',
         23: 'Police Inspector',
@@ -1835,7 +2045,8 @@
 
     async function createOrUpdateAccessFromGoogleUser(user, extraData = {}) {
       const existingAccess = await findAccessByEmail(user.email);
-      const stableEmployeeId = existingAccess?.data?.employeeId || extraData.employeeId || buildStableIdFromEmail(user.email);
+      const stableId = existingAccess?.data?.stableId || buildStableIdFromEmail(user.email);
+      const requestId = extraData.requestId || existingAccess?.data?.requestId || existingAccess?.data?.employeeId || '';
       const targetId = existingAccess?.id || getAccessDocIdByEmail(user.email);
 
       const payload = {
@@ -1847,7 +2058,9 @@
           extraData.name || existingAccess?.data?.name || user.displayName || user.email.split('@')[0],
           extraData.lastName || existingAccess?.data?.lastName || ''
         ),
-        employeeId: stableEmployeeId,
+        requestId,
+        employeeId: requestId,
+        stableId,
         phone: extraData.phone || existingAccess?.data?.phone || '',
         approved: existingAccess?.data?.approved ?? false,
         websiteAccessRank: existingAccess?.data?.websiteAccessRank ?? 0,
@@ -1898,10 +2111,10 @@
     window.submitRequestWithGoogle = async function () {
       const firstName = document.getElementById('requestFirstName').value.trim();
       const lastName = document.getElementById('requestLastName').value.trim();
-      const employeeId = document.getElementById('requestEmployeeId').value.trim();
+      const requestId = document.getElementById('requestEmployeeId').value.trim();
       const phone = document.getElementById('requestPhone').value.trim();
 
-      if (!firstName || !lastName || !employeeId || !phone) {
+      if (!firstName || !lastName || !requestId || !phone) {
         alert('Bitte Name, Nachname, ID und Telefonnummer eintragen.');
         return;
       }
@@ -1916,7 +2129,7 @@
           name: firstName,
           lastName,
           fullName: buildFullName(firstName, lastName),
-          employeeId,
+          requestId,
           phone
         });
 
@@ -1978,6 +2191,10 @@
       selectElement.innerHTML = Array.from({ length: 31 }, (_, i) => `
         <option value="${i}" ${Number(selectedValue) === i ? 'selected' : ''}>${i}</option>
       `).join('');
+    }
+
+    function populateRankDropdown(selectElement, selectedValue = 1) {
+      fillSelectOptions(selectElement, RANK_OPTIONS, selectedValue);
     }
 
     function resetEmployeeModal() {
@@ -2098,6 +2315,7 @@
           name: firstName,
           lastName,
           fullName: payload.fullName,
+          requestId: payload.employeeId,
           employeeId: payload.employeeId,
           phone: payload.phone
         }, { merge: true });
@@ -2166,12 +2384,14 @@
     function openAccessModal(item = null, docId = null) {
       const title = document.getElementById('accessModalTitle');
       const emailValue = item?.email || '';
-      const stableId = item?.employeeId || (emailValue ? buildStableIdFromEmail(emailValue) : '');
+      const stableId = getStableAccessId(item || {});
+      const requestId = getRequestId(item || {});
 
       document.getElementById('accessName').value = item?.name || '';
       document.getElementById('accessLastName').value = item?.lastName || '';
       document.getElementById('accessEmail').value = emailValue;
-      document.getElementById('accessId').value = stableId;
+      document.getElementById('accessStableId').value = stableId;
+      document.getElementById('accessRequestId').value = requestId;
       document.getElementById('accessPhone').value = item?.phone || '';
       document.getElementById('accessApproved').value = String(item?.approved ?? true);
       populateAccessRankSelect(document.getElementById('accessRank'), getWebsiteAccessRank(item || {}));
@@ -2198,10 +2418,11 @@
       const accessRankValue = Math.max(0, Math.min(30, Number(document.getElementById('accessRank').value || 0)));
       const firstName = document.getElementById('accessName').value.trim();
       const lastName = document.getElementById('accessLastName').value.trim();
-      const stableEmployeeId = existingData.employeeId || buildStableIdFromEmail(email);
+      const requestId = document.getElementById('accessRequestId').value.trim();
+      const stableId = existingData.stableId || document.getElementById('accessStableId').value.trim() || buildStableIdFromEmail(email);
       const phone = document.getElementById('accessPhone').value.trim();
 
-      document.getElementById('accessId').value = stableEmployeeId;
+      document.getElementById('accessStableId').value = stableId;
 
       const payload = {
         uid: existingData.uid || targetId,
@@ -2212,7 +2433,9 @@
           firstName || existingData.name || email.split('@')[0],
           lastName || existingData.lastName || ''
         ),
-        employeeId: stableEmployeeId,
+        requestId: requestId || existingData.requestId || existingData.employeeId || '',
+        employeeId: requestId || existingData.requestId || existingData.employeeId || '',
+        stableId,
         phone: phone || existingData.phone || '',
         approved: document.getElementById('accessApproved').value === 'true',
         websiteAccessRank: accessRankValue,
@@ -2274,7 +2497,8 @@
             <td>
               <button class="icon-btn" data-access-edit-id="${docSnap.id}" ${disabled}>✎</button>
             </td>
-            <td>${item.employeeId || buildStableIdFromEmail(item.email || '') || '-'}</td>
+            <td>${getStableAccessId(item) || '-'}</td>
+            <td>${getRequestId(item) || '-'}</td>
             <td>${item.name || '-'}</td>
             <td>${item.lastName || '-'}</td>
             <td>${item.email || '-'}</td>
@@ -2446,13 +2670,16 @@
           <td>${nameValue}</td>
           <td>${item.phone || ''}</td>
           <td class="rank-${personalRank}">${personalRank} | ${rankLabel(personalRank)}</td>
+          <td class="vertical-sep"></td>
           <td class="${getDivisionClass(personalRank)}">${getDivisionLabel(personalRank)}</td>
+          <td class="vertical-sep"></td>
           <td>${item.vacation || '0/3'}</td>
           <td>${item.strike || '0/3'}</td>
           <td>${item.invite || '-'}</td>
           <td>${item.lastRankUp || '-'}</td>
           <td>${item.department1 || '-'}</td>
           <td>${item.department2 || '-'}</td>
+          <td class="vertical-sep"></td>
           ${createTrainingCell(item, 'GA')}
           ${createTrainingCell(item, 'EHK')}
           ${createTrainingCell(item, 'ES')}
@@ -2585,7 +2812,7 @@
         emptyState.classList.remove('hidden');
         tbody.innerHTML = `
           <tr class="archive-empty-row">
-            <td colspan="30">Keine eingetragenen Mitarbeiter vorhanden.</td>
+            <td colspan="33">Keine eingetragenen Mitarbeiter vorhanden.</td>
           </tr>
         `;
         return;
@@ -2623,6 +2850,225 @@
       });
     }
 
+    function resetVehicleModal() {
+      editingVehicleId = null;
+      document.getElementById('vehicleModalTitle').textContent = 'Fahrzeug hinzufügen';
+      document.getElementById('vehicleName').value = '';
+      populateRankDropdown(document.getElementById('vehicleRank'), 1);
+      fillSelectOptions(document.getElementById('vehicleDepartment'), VEHICLE_DEPARTMENTS, 'X');
+    }
+
+    function openVehicleModal(item = null, docId = null) {
+      resetVehicleModal();
+      if (item && docId) {
+        editingVehicleId = docId;
+        document.getElementById('vehicleModalTitle').textContent = 'Fahrzeug bearbeiten';
+        document.getElementById('vehicleName').value = item.name || '';
+        populateRankDropdown(document.getElementById('vehicleRank'), item.requiredRank || 1);
+        fillSelectOptions(document.getElementById('vehicleDepartment'), VEHICLE_DEPARTMENTS, item.department || 'X');
+      }
+      document.getElementById('vehicleModal').classList.remove('hidden');
+    }
+
+    window.closeVehicleModal = function () {
+      document.getElementById('vehicleModal').classList.add('hidden');
+    };
+
+    window.saveVehicle = async function () {
+      if (!currentUser || !isAdmin(currentUser.email)) return;
+
+      const name = document.getElementById('vehicleName').value.trim();
+      const requiredRank = Number(document.getElementById('vehicleRank').value || 1);
+      const department = document.getElementById('vehicleDepartment').value;
+
+      if (!name) {
+        alert('Bitte einen Fahrzeugnamen eintragen.');
+        return;
+      }
+
+      const targetId = editingVehicleId || `vehicle_${Date.now()}`;
+      await setDoc(doc(db, VEHICLE_COLLECTION, targetId), {
+        name,
+        requiredRank,
+        department,
+        createdAt: vehiclesCache.find(v => v.id === targetId)?.data?.createdAt || new Date().toISOString()
+      }, { merge: true });
+
+      closeVehicleModal();
+    };
+
+    function renderVehicles() {
+      const body = document.getElementById('vehicleTableBody');
+      if (!body) return;
+      body.innerHTML = '';
+
+      const disabled = currentUser && isAdmin(currentUser.email) ? '' : 'disabled';
+      const sorted = [...vehiclesCache].sort((a, b) => Number(b.data.requiredRank || 0) - Number(a.data.requiredRank || 0));
+
+      if (sorted.length === 0) {
+        body.innerHTML = `<tr><td colspan="4">Keine Fahrzeuge vorhanden.</td></tr>`;
+        return;
+      }
+
+      sorted.forEach(item => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${item.data.name || '-'}</td>
+          <td>${item.data.requiredRank ? `${item.data.requiredRank} | ${rankLabel(item.data.requiredRank)}` : '-'}</td>
+          <td>${item.data.department || '-'}</td>
+          <td><button class="vehicle-edit-btn" data-vehicle-edit-id="${item.id}" ${disabled}>✎</button></td>
+        `;
+        body.appendChild(tr);
+      });
+
+      body.querySelectorAll('[data-vehicle-edit-id]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const found = vehiclesCache.find(item => item.id === btn.dataset.vehicleEditId);
+          if (!found) return;
+          openVehicleModal(found.data, found.id);
+        });
+      });
+    }
+
+    function subscribeVehicles() {
+      if (unsubscribeVehiclesSnapshot) {
+        unsubscribeVehiclesSnapshot();
+      }
+
+      const q = query(collection(db, VEHICLE_COLLECTION), orderBy('createdAt', 'desc'));
+      unsubscribeVehiclesSnapshot = onSnapshot(q, (snapshot) => {
+        vehiclesCache = snapshot.docs.map(docSnap => ({
+          id: docSnap.id,
+          data: docSnap.data()
+        }));
+        renderVehicles();
+      });
+    }
+
+    function resetSanctionModal() {
+      editingSanctionId = null;
+      document.getElementById('sanctionModalTitle').textContent = 'Sanktion hinzufügen';
+      document.getElementById('sanctionParagraph').value = '';
+      document.getElementById('sanctionDefinition').value = '';
+      fillSelectOptions(document.getElementById('sanctionFine'), FINE_OPTIONS, 'X');
+      fillSelectOptions(document.getElementById('sanctionTow'), TOW_OPTIONS, 'X');
+      fillSelectOptions(document.getElementById('sanctionLabs'), LAB_OPTIONS, 'X');
+      fillSelectOptions(document.getElementById('sanctionNg'), NG_OPTIONS, 'X');
+      fillSelectOptions(document.getElementById('sanctionRankup'), RANKUP_OPTIONS, 'X');
+      fillSelectOptions(document.getElementById('sanctionStrike'), CHECK_OR_X_OPTIONS, 'X');
+      fillSelectOptions(document.getElementById('sanctionSuspend'), SUSPEND_OPTIONS, 'X');
+      fillSelectOptions(document.getElementById('sanctionDismissal'), CHECK_OR_X_OPTIONS, 'X');
+    }
+
+    function openSanctionModal(item = null, docId = null) {
+      resetSanctionModal();
+      if (item && docId) {
+        editingSanctionId = docId;
+        document.getElementById('sanctionModalTitle').textContent = 'Sanktion bearbeiten';
+        document.getElementById('sanctionParagraph').value = item.paragraph || '';
+        document.getElementById('sanctionDefinition').value = item.definition || '';
+        fillSelectOptions(document.getElementById('sanctionFine'), FINE_OPTIONS, item.fine || 'X');
+        fillSelectOptions(document.getElementById('sanctionTow'), TOW_OPTIONS, item.tow || 'X');
+        fillSelectOptions(document.getElementById('sanctionLabs'), LAB_OPTIONS, item.labs || 'X');
+        fillSelectOptions(document.getElementById('sanctionNg'), NG_OPTIONS, item.ng || 'X');
+        fillSelectOptions(document.getElementById('sanctionRankup'), RANKUP_OPTIONS, item.rankup || 'X');
+        fillSelectOptions(document.getElementById('sanctionStrike'), CHECK_OR_X_OPTIONS, item.strike || 'X');
+        fillSelectOptions(document.getElementById('sanctionSuspend'), SUSPEND_OPTIONS, item.suspend || 'X');
+        fillSelectOptions(document.getElementById('sanctionDismissal'), CHECK_OR_X_OPTIONS, item.dismissal || 'X');
+      }
+      document.getElementById('sanctionModal').classList.remove('hidden');
+    }
+
+    window.closeSanctionModal = function () {
+      document.getElementById('sanctionModal').classList.add('hidden');
+    };
+
+    window.saveSanction = async function () {
+      if (!currentUser || !isAdmin(currentUser.email)) return;
+
+      const paragraph = document.getElementById('sanctionParagraph').value.trim();
+      const definition = document.getElementById('sanctionDefinition').value.trim();
+
+      if (!paragraph || !definition) {
+        alert('Bitte § und Regeldefinition eintragen.');
+        return;
+      }
+
+      const targetId = editingSanctionId || `sanction_${Date.now()}`;
+      await setDoc(doc(db, SANCTION_COLLECTION, targetId), {
+        paragraph,
+        definition,
+        fine: document.getElementById('sanctionFine').value,
+        tow: document.getElementById('sanctionTow').value,
+        labs: document.getElementById('sanctionLabs').value,
+        ng: document.getElementById('sanctionNg').value,
+        rankup: document.getElementById('sanctionRankup').value,
+        strike: document.getElementById('sanctionStrike').value,
+        suspend: document.getElementById('sanctionSuspend').value,
+        dismissal: document.getElementById('sanctionDismissal').value,
+        createdAt: sanctionsCache.find(s => s.id === targetId)?.data?.createdAt || new Date().toISOString()
+      }, { merge: true });
+
+      closeSanctionModal();
+    };
+
+    function renderSanctions() {
+      const body = document.getElementById('sanctionTableBody');
+      if (!body) return;
+      body.innerHTML = '';
+
+      const disabled = currentUser && isAdmin(currentUser.email) ? '' : 'disabled';
+      const sorted = [...sanctionsCache].sort((a, b) => {
+        return String(a.data.paragraph || '').localeCompare(String(b.data.paragraph || ''), 'de', { numeric: true });
+      });
+
+      if (sorted.length === 0) {
+        body.innerHTML = `<tr><td colspan="11">Keine Sanktionen vorhanden.</td></tr>`;
+        return;
+      }
+
+      sorted.forEach(item => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><button class="sanction-edit-btn" data-sanction-edit-id="${item.id}" ${disabled}>✎</button></td>
+          <td>${item.data.paragraph || '-'}</td>
+          <td>${item.data.definition || '-'}</td>
+          <td>${item.data.fine || 'X'}</td>
+          <td>${item.data.tow || 'X'}</td>
+          <td>${item.data.labs || 'X'}</td>
+          <td>${item.data.ng || 'X'}</td>
+          <td>${item.data.rankup || 'X'}</td>
+          <td>${item.data.strike || 'X'}</td>
+          <td>${item.data.suspend || 'X'}</td>
+          <td>${item.data.dismissal || 'X'}</td>
+        `;
+        body.appendChild(tr);
+      });
+
+      body.querySelectorAll('[data-sanction-edit-id]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const found = sanctionsCache.find(item => item.id === btn.dataset.sanctionEditId);
+          if (!found) return;
+          openSanctionModal(found.data, found.id);
+        });
+      });
+    }
+
+    function subscribeSanctions() {
+      if (unsubscribeSanctionsSnapshot) {
+        unsubscribeSanctionsSnapshot();
+      }
+
+      const q = query(collection(db, SANCTION_COLLECTION), orderBy('createdAt', 'desc'));
+      unsubscribeSanctionsSnapshot = onSnapshot(q, (snapshot) => {
+        sanctionsCache = snapshot.docs.map(docSnap => ({
+          id: docSnap.id,
+          data: docSnap.data()
+        }));
+        renderSanctions();
+      });
+    }
+
     window.logout = async function () {
       await signOut(auth);
       currentUser = null;
@@ -2652,7 +3098,7 @@
       const modal = document.getElementById('accessModal');
       const isEdit = !!(modal.dataset.editId || '');
       if (isEdit) return;
-      document.getElementById('accessId').value = buildStableIdFromEmail(e.target.value.trim());
+      document.getElementById('accessStableId').value = buildStableIdFromEmail(e.target.value.trim());
     });
 
     document.getElementById('openArchiveBtn').addEventListener('click', () => {
@@ -2688,7 +3134,27 @@
       renderArchivedEmployeesFromCache();
     });
 
+    document.getElementById('addVehicleBtn').addEventListener('click', () => {
+      if (!currentUser || !isAdmin(currentUser.email)) return;
+      openVehicleModal();
+    });
+
+    document.getElementById('addSanctionBtn').addEventListener('click', () => {
+      if (!currentUser || !isAdmin(currentUser.email)) return;
+      openSanctionModal();
+    });
+
     populateAccessRankSelect(document.getElementById('accessRank'), 0);
+    populateRankDropdown(document.getElementById('vehicleRank'), 1);
+    fillSelectOptions(document.getElementById('vehicleDepartment'), VEHICLE_DEPARTMENTS, 'X');
+    fillSelectOptions(document.getElementById('sanctionFine'), FINE_OPTIONS, 'X');
+    fillSelectOptions(document.getElementById('sanctionTow'), TOW_OPTIONS, 'X');
+    fillSelectOptions(document.getElementById('sanctionLabs'), LAB_OPTIONS, 'X');
+    fillSelectOptions(document.getElementById('sanctionNg'), NG_OPTIONS, 'X');
+    fillSelectOptions(document.getElementById('sanctionRankup'), RANKUP_OPTIONS, 'X');
+    fillSelectOptions(document.getElementById('sanctionStrike'), CHECK_OR_X_OPTIONS, 'X');
+    fillSelectOptions(document.getElementById('sanctionSuspend'), SUSPEND_OPTIONS, 'X');
+    fillSelectOptions(document.getElementById('sanctionDismissal'), CHECK_OR_X_OPTIONS, 'X');
 
     onAuthStateChanged(auth, async (user) => {
       try {
@@ -2737,7 +3203,11 @@
 
     subscribeAccessRequests();
     subscribeEmployees();
+    subscribeVehicles();
+    subscribeSanctions();
     ensurePreapprovedUsers();
+    ensureDefaultVehicles();
+    ensureDefaultSanctions();
   </script>
 </body>
 </html>
