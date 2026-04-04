@@ -1038,21 +1038,42 @@ window.doGoogleLogin = async function() {
     // Nutzer in Firestore prüfen
     let userDoc = await getDoc(doc(db, 'users', user.uid));
 
-    // Kein Eintrag = neu, anlegen mit approved:false
+    // Kein Eintrag vorhanden → prüfen ob manuell in zugriffsanfragen freigegeben
     if (!userDoc.exists()) {
       const autoId = window.generateIdFromEmail(user.email);
+
+      // In zugriffsanfragen nach dieser E-Mail suchen
+      const zaSnap = await getDocs(collection(db, 'zugriffsanfragen'));
+      let zaEntry = null;
+      zaSnap.forEach(d => {
+        if ((d.data().email || '').toLowerCase() === user.email.toLowerCase()) zaEntry = d.data();
+      });
+
+      // Wurde manuell freigegeben? → approved:true setzen
+      const isApproved = zaEntry && zaEntry.freigeben === 'Ja';
+
       await setDoc(doc(db, 'users', user.uid), {
         uid: user.uid,
         email: user.email,
         displayName: user.displayName || '',
-        vorname: user.displayName || '',
-        nachname: '',
-        tel: '-',
+        vorname: zaEntry ? (zaEntry.vorname || user.displayName || '') : (user.displayName || ''),
+        nachname: zaEntry ? (zaEntry.nachname || '') : '',
+        tel: zaEntry ? (zaEntry.tel || '-') : '-',
         id: autoId,
-        approved: false,
+        approved: isApproved,
         rolle: 'user',
         createdAt: new Date().toISOString()
       });
+
+      // UID in zugriffsanfragen speichern damit spätere Updates funktionieren
+      if (zaEntry) {
+        zaSnap.forEach(async d => {
+          if ((d.data().email || '').toLowerCase() === user.email.toLowerCase()) {
+            await setDoc(doc(db, 'zugriffsanfragen', d.id), { uid: user.uid }, { merge: true });
+          }
+        });
+      }
+
       userDoc = await getDoc(doc(db, 'users', user.uid));
     }
 
