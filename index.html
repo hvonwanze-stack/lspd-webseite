@@ -388,8 +388,8 @@
   @keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(201,162,39,0.4)} 50%{box-shadow:0 0 0 12px rgba(201,162,39,0)} }
   .load-title { font-family: 'Orbitron', sans-serif; font-size: 1.4rem; font-weight: 700; color: #fff; }
   .load-bar-wrap { width: 220px; height: 3px; background: #1e3a5f; border-radius: 2px; overflow: hidden; }
-  .load-bar { height: 100%; background: #c9a227; border-radius: 2px; animation: loadbar 1.8s ease-in-out infinite; }
-  @keyframes loadbar { 0%{width:0%} 60%{width:80%} 100%{width:100%} }
+  .load-bar { height: 100%; background: #c9a227; border-radius: 2px; animation: loadbar 1.2s ease-out forwards; }
+  @keyframes loadbar { 0%{width:0%} 100%{width:100%} }
   .load-status { font-family: 'Rajdhani', sans-serif; font-size: 0.7rem; letter-spacing: 3px; color: #6a8ab0; }
 </style>
 </head>
@@ -927,12 +927,23 @@ window.doGoogleLogin = async function() {
     provider.setCustomParameters({ prompt: 'select_account' });
     const result = await signInWithPopup(auth, provider);
     const user = result.user;
+
+    // Ladescreen anzeigen während geprüft wird
+    window._loaderDone = false;
+    document.getElementById('loading-screen').style.display = 'flex';
+    document.getElementById('loading-screen').style.opacity = '1';
+    document.getElementById('loading-screen').classList.remove('fade-out');
+    setLoadStatus('ZUGRIFF WIRD GEPRÜFT ...');
+
     if (isAdmin(user.email)) return; // onAuthStateChanged übernimmt
+
     const userDoc = await getDoc(doc(db, 'users', user.uid));
     if (!userDoc.exists() || !userDoc.data().approved) {
       showNotif('Konto noch nicht freigeschalten. Bitte warte auf Admin.', true);
       await signOut(auth);
+      window._finishLoader(false);
     }
+    // Erfolg: onAuthStateChanged ruft _finishLoader(true) auf → Seite 2
   } catch(e) {
     if (e.code !== 'auth/popup-closed-by-user') {
       showNotif('Anmeldung fehlgeschlagen: ' + e.message, true);
@@ -1245,18 +1256,18 @@ window._finishLoader = function(goToMain, lastPage) {
       showPage('main');
       const lp = lastPage || (function(){ try{ return localStorage.getItem('lspd_last_page'); }catch(e){return null;} })() || 'dashboard';
       showSubPage(lp);
-    }, 600);
+    }, 400);
   } else {
     setLoadStatus('BITTE ANMELDEN');
     setTimeout(() => {
       hideLoader();
       showPage('login');
-    }, 400);
+    }, 300);
   }
 };
 
 // Timeout-Fallback falls Firebase nicht antwortet
-setTimeout(() => { window._finishLoader(false); }, 4000);
+setTimeout(() => { window._finishLoader(false); }, 3000);
 
 // Init subpage default (wird später überschrieben)
 showSubPage('dashboard');
