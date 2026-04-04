@@ -1029,9 +1029,11 @@ window.doGoogleLogin = async function() {
     const result = await signInWithPopup(auth, provider);
     const user = result.user;
 
-    // Ladescreen anzeigen (nur visuell - kein _startupDone touch)
-    showLoaderScreen();
+    // Ladescreen anzeigen
+    window._loaderDone = false;
     setLoadStatus('ZUGRIFF WIRD GEPRÜFT ...');
+    const ls = document.getElementById('loading-screen');
+    if (ls) { ls.style.display = 'flex'; ls.style.opacity = '1'; ls.classList.remove('fade-out'); }
 
     // Nutzer in Firestore prüfen
     let userDoc = await getDoc(doc(db, 'users', user.uid));
