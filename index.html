@@ -679,17 +679,17 @@
     <div id="sub-zugriff" style="display:none;">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
         <button class="btn btn-primary" onclick="openPopup('add-zugriff')">Zugriff hinzufügen</button>
-        <div style="display:flex;flex-direction:column;gap:6px;">
-          <button class="btn btn-primary" style="padding:10px 14px;font-size:1.1rem;" onclick="openPopup('key-icon')" title="Schlüssel">🔑</button>
-          <input class="search-input" placeholder="Identifikationsnummer eingeben" id="zugriff-id-input" style="border-radius:5px;">
-          <button class="btn btn-danger" onclick="deleteZugriff()">X</button>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <button class="btn btn-danger" onclick="deleteZugriff()" style="padding:5px 10px;font-size:0.75rem;white-space:nowrap;">X</button>
+          <input class="search-input" placeholder="Identifikationsnummer eingeben" id="zugriff-id-input" style="border-radius:5px;max-width:220px;">
+          <button class="btn btn-primary" onclick="editZugriff()" style="padding:7px 12px;font-size:1rem;" title="Bearbeiten">✏️</button>
         </div>
       </div>
       <div class="table-wrap">
         <table class="data-table">
           <thead>
             <tr>
-              <th>IDENTIFIKATIONSNUMMER</th><th>NAME</th><th>REISEPASSNUMMER</th><th>NACHNAME</th>
+              <th>IDENTIFIKATIONSNUMMER</th><th>REISEPASSNUMMER</th><th>NAME</th><th>NACHNAME</th>
               <th>EMAIL</th><th>TELEFONNUMMER</th><th>FREIGEBEN</th><th>ZUGRIFFSRANG</th><th>STATUS</th>
             </tr>
           </thead>
@@ -1040,8 +1040,8 @@ window.loadZugriffTable = async function() {
       const tr = document.createElement('tr');
       tr.innerHTML = `
         <td>${row.id || '-'}</td>
-        <td>${row.vorname || '-'}</td>
         <td>${row.pass || '-'}</td>
+        <td>${row.vorname || '-'}</td>
         <td>${row.nachname || '-'}</td>
         <td>${row.email || '-'}</td>
         <td>${row.tel || '-'}</td>
@@ -1095,8 +1095,14 @@ window.saveZugriff = async function() {
 
 window.deleteZugriff = async function() {
   const id = document.getElementById('zugriff-id-input').value.trim();
-  if (!id) { showNotif('Bitte ID eingeben.', true); return; }
+  if (!id) { showNotif('Bitte Identifikationsnummer eingeben.', true); return; }
   showNotif('Suche nach ID: ' + id);
+};
+
+window.editZugriff = function() {
+  const id = document.getElementById('zugriff-id-input').value.trim();
+  if (!id) { showNotif('Bitte zuerst eine Identifikationsnummer eingeben.', true); return; }
+  showNotif('Bearbeite Eintrag mit ID: ' + id);
 };
 
 // Mitarbeiter
