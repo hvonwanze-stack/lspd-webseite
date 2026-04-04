@@ -4088,51 +4088,71 @@ loadMitarbeiter();
 
 // Nach Laden der Mitarbeiter: Dashboard mit Mitarbeiterdaten befüllen
 // Abgleich: pass in zugriffsanfragen (= ID auf Seite 8) mit id in mitarbeiter (= ID auf Seite 7)
-async function fillDashboardFromMitarbeiter() {
-  if (!window._currentUserData) return;
-  const userData = window._currentUserData;
+// Helper to write to dashboard fields
+function applyMaToDashboard(ma) {
+  const set = (elId, val) => { const el = document.getElementById(elId); if(el) el.textContent = (val !== undefined && val !== null && val !== '') ? String(val) : '-'; };
+  set('dash-name', ma.vorname);
+  set('dash-id', ma.id);
+  set('dash-dn', ma.dn);
+  set('dash-tel', ma.tel);
+  set('dash-rang', ma.rang);
+  set('dash-abt1', ma.abt1);
+  set('dash-abt2', ma.abt2);
+  set('dash-invite', ma.invite);
+  set('dash-rankup', ma.rankup);
+  set('dash-urlaub', ma.urlaub !== undefined ? String(ma.urlaub) : '-');
+  set('dash-strike', ma.strike !== undefined ? String(ma.strike) : '-');
+}
+window.applyMaToDashboard = applyMaToDashboard;
 
-  // Lade zugriffsanfragen um die ID (pass) des eingeloggten Nutzers zu finden
-  let userPassId = '';
+// Main fill function: called after login AND after mitarbeiter loads
+async function fillDashboardFromMitarbeiter() {
   try {
+    // Brauchen eingeloggten User
+    const auth2 = window._auth;
+    if (!auth2 || !auth2.currentUser) return;
+    const userEmail = auth2.currentUser.email;
+    if (!userEmail) return;
+
+    // Schritt 1: Finde die ID (pass) des Nutzers in zugriffsanfragen
+    let userPassId = '';
     const zaSnap = await getDocs(collection(db, 'zugriffsanfragen'));
     zaSnap.forEach(d => {
-      if ((d.data().email || '').toLowerCase() === (userData.email || '').toLowerCase()) {
-        userPassId = d.data().pass || '';
+      const dd = d.data();
+      if ((dd.email || '').toLowerCase() === userEmail.toLowerCase()) {
+        userPassId = dd.pass || '';
       }
     });
-  } catch(e) {}
 
-  if (!userPassId) return;
+    if (!userPassId) {
+      console.log('fillDashboard: kein pass-Eintrag für', userEmail);
+      return;
+    }
 
-  // Suche Mitarbeiter dessen ID mit der Zugriffs-ID übereinstimmt
-  const ma = mitarbeiterData.find(m => (m.id || '').toLowerCase() === userPassId.toLowerCase());
-  if (!ma) return;
-  const set = (elId, val) => { const el = document.getElementById(elId); if(el) el.textContent = val || '-'; };
-  set('dash-name', ma.vorname || '-');
-  set('dash-id', ma.id || '-');
-  set('dash-dn', ma.dn || '-');
-  set('dash-tel', ma.tel || '-');
-  set('dash-rang', ma.rang || '-');
-  set('dash-abt1', ma.abt1 || '-');
-  set('dash-abt2', ma.abt2 || '-');
-  set('dash-invite', ma.invite || '-');
-  set('dash-rankup', ma.rankup || '-');
-  set('dash-urlaub', ma.urlaub || '0/3');
-  set('dash-strike', ma.strike || '0/3');
-  // Ausbildungen setzen
-  const ausbMap = {
-    'dash-ausb-ga': ma.ga, 'dash-ausb-ehk': ma.ehk, 'dash-ausb-es': ma.es,
-    'dash-ausb-op': ma.op, 'dash-ausb-ok': ma.ok, 'dash-ausb-fula': ma.fula,
-    'dash-ausb-tst': ma.tst, 'dash-ausb-ks': ma.ks, 'dash-ausb-okp': ma.okp,
-    'dash-ausb-cop': ma.cop, 'dash-ausb-ft': ma.ft, 'dash-ausb-jp': ma.jp,
-    'dash-ausb-aks': ma.aks, 'dash-ausb-zp': ma.zp, 'dash-ausb-vhp': ma.vhp,
-    'dash-ausb-tow': ma.tow
-  };
-  Object.entries(ausbMap).forEach(([id, val]) => {
-    const el = document.getElementById(id);
-    if (el) el.checked = !!val;
-  });
+    // Schritt 2: Finde Mitarbeiter mit dieser ID auf Seite 7
+    let ma = mitarbeiterData.find(m => (m.id || '').toLowerCase() === userPassId.toLowerCase());
+
+    // Falls mitarbeiterData noch leer: Firestore direkt abfragen
+    if (!ma) {
+      const maSnap = await getDocs(collection(db, 'mitarbeiter'));
+      maSnap.forEach(d => {
+        const dd = d.data();
+        if ((dd.id || '').toLowerCase() === userPassId.toLowerCase()) ma = dd;
+      });
+    }
+
+    if (!ma) {
+      console.log('fillDashboard: kein Mitarbeiter mit ID', userPassId);
+      return;
+    }
+
+    // Schritt 3: Daten ins Dashboard schreiben
+    applyMaToDashboard(ma);
+    console.log('fillDashboard: Daten geladen für ID', userPassId);
+
+  } catch(e) {
+    console.error('fillDashboard error:', e);
+  }
 }
 window.fillDashboardFromMitarbeiter = fillDashboardFromMitarbeiter;
 </script>
