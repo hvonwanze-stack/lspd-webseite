@@ -985,14 +985,14 @@ onAuthStateChanged(auth, async (user) => {
       document.getElementById('dash-tel').textContent = data.tel || '-';
       window._currentRolle = data.rolle || 'user';
       loadZugriffTable();
-      window._finishLoader && window._finishLoader(true);
+      window._finishLoader(true);
     } else {
       showNotif('Dein Konto wurde noch nicht freigeschalten. Bitte warte auf Admin-Bestätigung.', true);
       await signOut(auth);
-      window._finishLoader && window._finishLoader(false);
+      window._finishLoader(false);
     }
   } else {
-    window._finishLoader && window._finishLoader(false);
+    window._finishLoader(false);
   }
 });
 
@@ -1468,17 +1468,20 @@ loadMitarbeiter();
 function showPage(name) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   if (name === 'login') {
-    document.getElementById('page-login').classList.add('active');
+    const el = document.getElementById('page-login');
+    if (el) el.classList.add('active');
   } else if (name === 'main') {
-    document.getElementById('page-main').classList.add('active');
-    document.getElementById('header-badge').style.display = 'flex';
+    const el = document.getElementById('page-main');
+    if (el) el.classList.add('active');
+    const hb = document.getElementById('header-badge');
+    if (hb) hb.style.display = 'flex';
   }
 }
 
 function showSubPage(name) {
   const subs = ['dashboard','kleider','rang','fahr','sank','mitarbeiter','zugriff','archiv'];
-  subs.forEach(s => { document.getElementById('sub-'+s).style.display = 'none'; });
-  document.getElementById('sub-'+name).style.display = 'block';
+  subs.forEach(s => { const el = document.getElementById('sub-'+s); if(el) el.style.display = 'none'; });
+  const subEl = document.getElementById('sub-'+name); if(subEl) subEl.style.display = 'block';
 
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   const labels = { dashboard:'LSPD Dashboard', kleider:'Kleiderordnung', rang:'Rangbefugnisse', fahr:'Fahrzeugordnung', sank:'Sanktionskatalog', mitarbeiter:'Mitarbeiter Register', zugriff:'Zugriffsanfrage', archiv:'Mitarbeiter Archiv' };
@@ -1486,7 +1489,7 @@ function showSubPage(name) {
 
   const pageLabels = { dashboard:'DASHBOARD · PERSONNEL · ACCESS CONTROL · SERVICE RECORDS', kleider:'KLEIDERORDNUNG', rang:'RANGBEFUGNISSE', fahr:'FAHRZEUGORDNUNG', sank:'SANKTIONSKATALOG', mitarbeiter:'MITARBEITER REGISTER', zugriff:'ZUGRIFFSANFRAGE', archiv:'MITARBEITER ARCHIV' };
   document.getElementById('page-label-text').textContent = pageLabels[name] || '';
-  document.getElementById('topbar').style.display = name === 'dashboard' ? 'flex' : 'none';
+  const tb = document.getElementById('topbar'); if(tb) tb.style.display = name === 'dashboard' ? 'flex' : 'none';
 
   if (name === 'zugriff') { window.loadZugriffTable && window.loadZugriffTable(); }
 
@@ -1561,15 +1564,7 @@ function hideLoader() {
   const ls = document.getElementById('loading-screen');
   if (!ls) return;
   ls.classList.add('fade-out');
-  setTimeout(() => { ls.style.display = 'none'; }, 300);
-}
-
-function showLoaderScreen() {
-  const ls = document.getElementById('loading-screen');
-  if (!ls) return;
-  ls.style.display = 'flex';
-  ls.style.opacity = '1';
-  ls.classList.remove('fade-out');
+  setTimeout(() => { if (ls) ls.style.display = 'none'; }, 300);
 }
 
 function setLoadStatus(msg) {
@@ -1577,14 +1572,12 @@ function setLoadStatus(msg) {
   if (el) el.textContent = msg;
 }
 
-// _finishLoader: NUR vom onAuthStateChanged beim Seitenstart aufgerufen
-// doGoogleLogin navigiert selbst direkt
-window._startupDone = false;
-window._finishStartup = function(goToMain) {
-  if (window._startupDone) return;
-  window._startupDone = true;
+// Einheitliches Loader-System
+window._loaderDone = false;
+window._finishLoader = function(goToMain) {
+  if (window._loaderDone) return;
+  window._loaderDone = true;
   if (goToMain) {
-    setLoadStatus('ZUGRIFF GEWÄHRT');
     let lp = 'dashboard';
     try { lp = localStorage.getItem('lspd_last_page') || 'dashboard'; } catch(e) {}
     window._initialLoad = true;
@@ -1593,19 +1586,17 @@ window._finishStartup = function(goToMain) {
     window._initialLoad = false;
     setTimeout(hideLoader, 300);
   } else {
-    setLoadStatus('BITTE ANMELDEN');
     showPage('login');
     setTimeout(hideLoader, 200);
   }
 };
+// Kompatibilität: _finishStartup zeigt auf _finishLoader
+window._finishStartup = window._finishLoader;
 
-// Harter Fallback: nach 3s → Login zeigen
+// Fallback nach 5s — kein console.warn, kein Fehler
 setTimeout(() => {
-  if (!window._startupDone) {
-    console.warn('Startup timeout');
-    window._finishStartup(false);
-  }
-}, 3000);
+  if (!window._loaderDone) window._finishLoader(false);
+}, 5000);
 
 // Init subpage (ohne localStorage zu überschreiben)
 window._initialLoad = true;
