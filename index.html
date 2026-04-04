@@ -135,6 +135,7 @@
     background: var(--bg2);
     border-bottom: 1px solid var(--border);
     flex-wrap: wrap;
+    justify-content: center;
   }
 
   .nav-btn {
@@ -165,8 +166,8 @@
     border-bottom: 1px solid var(--purple2);
   }
   .data-row { display: flex; margin-bottom: 6px; }
-  .data-label { font-size: 0.7rem; color: var(--text-dim); width: 95px; text-align: right; padding-right: 8px; font-family: 'Rajdhani', sans-serif; font-weight: 600; }
-  .data-val { flex: 1; background: rgba(255,255,255,0.05); border-radius: 3px; padding: 2px 6px; font-size: 0.7rem; font-family: 'Rajdhani', sans-serif; }
+  .data-label { font-size: 0.8rem; color: var(--text-dim); width: 110px; text-align: right; padding-right: 8px; font-family: 'Rajdhani', sans-serif; font-weight: 700; }
+  .data-val { flex: 1; background: rgba(255,255,255,0.05); border-radius: 3px; padding: 3px 8px; font-size: 0.8rem; font-family: 'Rajdhani', sans-serif; font-weight: 600; }
 
   .training-panel {
     flex: 1;
@@ -475,23 +476,23 @@ window.generateIdFromEmail = generateIdFromEmail;
     <div id="sub-dashboard">
       <div class="dashboard-grid">
         <!-- Personal -->
-        <div class="personal-panel">
+        <div class="personal-panel" style="width:300px;">
           <h3>PERSÖNLICHE DATEN</h3>
-          <div class="data-row"><span class="data-label">Name:</span><span class="data-val" id="dash-name">-</span></div>
-          <div class="data-row"><span class="data-label">ID:</span><span class="data-val" id="dash-id">-</span></div>
-          <div class="data-row"><span class="data-label">Telefonnummer:</span><span class="data-val" id="dash-tel">-</span></div>
-          <div class="data-row"><span class="data-label">Dienstnummer:</span><span class="data-val">-</span></div>
-          <div class="data-row"><span class="data-label">Rang:</span><span class="data-val">-</span></div>
-          <div class="data-row"><span class="data-label">Abteilung 1:</span><span class="data-val">-</span></div>
-          <div class="data-row"><span class="data-label">Abteilung 2:</span><span class="data-val">-</span></div>
-          <div class="data-row"><span class="data-label">Invite:</span><span class="data-val">-</span></div>
-          <div class="data-row"><span class="data-label">Letzter RankUp:</span><span class="data-val">-</span></div>
-          <div class="data-row"><span class="data-label">Urlaub:</span><span class="data-val">0/3</span></div>
-          <div class="data-row"><span class="data-label">Strike:</span><span class="data-val">0/3</span></div>
+          <div class="data-row"><span class="data-label">Name:</span><span class="data-val" id="dash-name" style="font-weight:700;font-size:0.85rem;">-</span></div>
+          <div class="data-row"><span class="data-label">ID:</span><span class="data-val" id="dash-id" style="font-weight:700;font-size:0.85rem;">-</span></div>
+          <div class="data-row"><span class="data-label">Telefonnummer:</span><span class="data-val" id="dash-tel" style="font-weight:700;font-size:0.85rem;">-</span></div>
+          <div class="data-row"><span class="data-label">Dienstnummer:</span><span class="data-val" id="dash-dn" style="font-weight:700;font-size:0.85rem;">-</span></div>
+          <div class="data-row"><span class="data-label">Rang:</span><span class="data-val" id="dash-rang" style="font-weight:700;font-size:0.85rem;">-</span></div>
+          <div class="data-row"><span class="data-label">Abteilung 1:</span><span class="data-val" id="dash-abt1" style="font-weight:700;font-size:0.85rem;">-</span></div>
+          <div class="data-row"><span class="data-label">Abteilung 2:</span><span class="data-val" id="dash-abt2" style="font-weight:700;font-size:0.85rem;">-</span></div>
+          <div class="data-row"><span class="data-label">Invite:</span><span class="data-val" id="dash-invite" style="font-weight:700;font-size:0.85rem;">-</span></div>
+          <div class="data-row"><span class="data-label">Letzter RankUp:</span><span class="data-val" id="dash-rankup" style="font-weight:700;font-size:0.85rem;">-</span></div>
+          <div class="data-row"><span class="data-label">Urlaub:</span><span class="data-val" id="dash-urlaub" style="font-weight:700;font-size:0.85rem;">-</span></div>
+          <div class="data-row"><span class="data-label">Strike:</span><span class="data-val" id="dash-strike" style="font-weight:700;font-size:0.85rem;">-</span></div>
         </div>
 
         <!-- Trainings -->
-        <div class="training-panel">
+        <div class="training-panel" style="max-width:50%;">
           <h3>AUSBILDUNGEN</h3>
           <div class="training-grid">
             <div class="training-category">
@@ -705,10 +706,16 @@ window.generateIdFromEmail = generateIdFromEmail;
 
     <!-- ZUGRIFFSANFRAGE (Bild 1) -->
     <div id="sub-zugriff" style="display:none;">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
-        <button class="btn btn-primary" onclick="openPopup('add-zugriff')">Zugriff hinzufügen</button>
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <!-- Reisepassnummer-Suche links -->
+          <input class="search-input" placeholder="Reisepassnummer suchen..." id="zugriff-pass-input" style="border-radius:5px;max-width:200px;">
+          <button class="btn btn-primary" onclick="searchByPass()" style="padding:7px 12px;" title="Suchen">🔍</button>
+          <!-- Zugriff hinzufügen etwas nach rechts -->
+          <button class="btn btn-primary" onclick="openPopup('add-zugriff')" style="margin-left:12px;">Zugriff hinzufügen</button>
+        </div>
         <div style="display:flex;align-items:stretch;gap:8px;">
-          <button class="btn btn-danger" onclick="deleteZugriff()" style="padding:0 14px;font-size:0.8rem;white-space:nowrap;height:auto;align-self:stretch;">X</button>
+          <button class="btn btn-danger" onclick="deleteZugriff()" style="padding:0 14px;font-size:0.8rem;white-space:nowrap;align-self:stretch;">X</button>
           <input class="search-input" placeholder="Identifikationsnummer eingeben" id="zugriff-id-input" style="border-radius:5px;max-width:220px;">
           <button class="btn btn-primary" onclick="editZugriff()" style="padding:0 12px;font-size:1rem;align-self:stretch;" title="Bearbeiten">✏️</button>
         </div>
@@ -1394,6 +1401,22 @@ window.confirmDeleteZugriff = async function() {
   }
 };
 
+window.searchByPass = async function() {
+  const pass = document.getElementById('zugriff-pass-input').value.trim();
+  if (!pass) { showNotif('Bitte Reisepassnummer eingeben.', true); return; }
+  try {
+    const snap = await getDocs(collection(db, 'zugriffsanfragen'));
+    let found = null;
+    snap.forEach(d => {
+      if ((d.data().pass || '').toLowerCase() === pass.toLowerCase()) found = d.data();
+    });
+    if (!found) { showNotif('Kein Eintrag mit dieser Reisepassnummer gefunden.', true); return; }
+    showNotif('Gefunden: ' + (found.vorname || '') + ' ' + (found.nachname || '') + ' | ID: ' + (found.id || '-'));
+    // ID ins Suchfeld eintragen für weitere Aktionen
+    document.getElementById('zugriff-id-input').value = found.id || '';
+  } catch(e) { showNotif('Fehler: ' + e.message, true); }
+};
+
 window.editZugriff = async function() {
   const searchId = document.getElementById('zugriff-id-input').value.trim();
   if (!searchId) { showNotif('Bitte zuerst eine Identifikationsnummer eingeben.', true); return; }
@@ -1493,12 +1516,24 @@ function renderMitarbeiter(data) {
 window.openDashWithMA = function(id) {
   const ma = mitarbeiterData.find(m => m._id === id);
   if (ma) {
-    document.getElementById('dash-name').textContent = ma.vorname || '-';
-    document.getElementById('dash-id').textContent = ma.id || '-';
-    document.getElementById('dash-tel').textContent = ma.tel || '-';
+    const set = (elId, val) => { const el = document.getElementById(elId); if(el) el.textContent = val || '-'; };
+    set('dash-name', (ma.vorname || '') + ' ' + (ma.nachname || ''));
+    set('dash-id', ma.identnr || '-');
+    set('dash-dn', ma.id || '-');
+    set('dash-tel', ma.tel || '-');
+    set('dash-rang', ma.rang || '-');
+    set('dash-abt1', ma.abt1 || '-');
+    set('dash-abt2', ma.abt2 || '-');
+    set('dash-invite', ma.invite || '-');
+    set('dash-rankup', ma.rankup || '-');
+    set('dash-urlaub', ma.urlaub || '0/3');
+    set('dash-strike', ma.strike || '0/3');
+    window._dashFromMA = true;
     showSubPage('dashboard');
   }
 };
+
+
 
 // Load mitarbeiter on init
 async function loadMitarbeiter() {
@@ -1541,6 +1576,9 @@ function showSubPage(name) {
   const tb = document.getElementById('topbar'); if(tb) tb.style.display = name === 'dashboard' ? 'flex' : 'none';
 
   if (name === 'zugriff') { window.loadZugriffTable && window.loadZugriffTable(); }
+  // Dashboard leeren wenn man direkt navigiert (nicht über Mitarbeiter-Button)
+  if (name === 'dashboard' && !window._dashFromMA) { clearDashboard && clearDashboard(); }
+  window._dashFromMA = false;
 
   // Letzte Seite merken (nicht beim initialen Laden)
   if (!window._initialLoad) {
@@ -1602,6 +1640,12 @@ function showNotif(msg, isError) {
   setTimeout(() => n.classList.remove('show'), 5000);
 }
 window.showNotif = showNotif;
+
+// Seite 2 leeren wenn man direkt navigiert
+function clearDashboard() {
+  const fields = ['dash-name','dash-id','dash-dn','dash-tel','dash-rang','dash-abt1','dash-abt2','dash-invite','dash-rankup','dash-urlaub','dash-strike'];
+  fields.forEach(function(id) { var el = document.getElementById(id); if(el) el.textContent = '-'; });
+}
 
 // Close overlays on background click
 document.querySelectorAll('.overlay').forEach(o => {
