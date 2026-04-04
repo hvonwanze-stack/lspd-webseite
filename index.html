@@ -872,28 +872,31 @@ window._pendingEmail = null;
 const ADMIN_EMAILS = ['lionsleepy2005@gmail.com'];
 
 function isAdmin(email) { return ADMIN_EMAILS.includes((email||'').toLowerCase()); }
+window.isAdmin = isAdmin;
 
-async function ensureAdminInFirestore(user) {
-  const ref = doc(db, 'users', user.uid);
-  await setDoc(ref, {
-    uid: user.uid,
-    email: user.email,
-    displayName: user.displayName || 'Admin',
-    vorname: 'Admin',
-    nachname: '',
-    tel: '-',
-    approved: true,
-    rolle: 'admin',
-    updatedAt: new Date().toISOString()
-  }, { merge: true });
+window.ensureAdminInFirestore = async function(user) {
+  try {
+    const ref = doc(db, 'users', user.uid);
+    await setDoc(ref, {
+      uid: user.uid,
+      email: user.email,
+      displayName: user.displayName || 'Admin',
+      vorname: 'Admin',
+      nachname: '',
+      tel: '-',
+      approved: true,
+      rolle: 'admin',
+      updatedAt: new Date().toISOString()
+    }, { merge: true });
+  } catch(e) { console.warn('ensureAdmin error:', e); }
 }
 
 // Auth state
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     // Admin-Whitelist: sofortiger Zugriff
-    if (isAdmin(user.email)) {
-      await ensureAdminInFirestore(user);
+    if (window.isAdmin(user.email)) {
+      await window.ensureAdminInFirestore(user);
       document.getElementById('dash-name').textContent = user.displayName || 'Admin';
       document.getElementById('dash-id').textContent = 'ADMIN';
       document.getElementById('dash-tel').textContent = '-';
@@ -937,8 +940,8 @@ window.doGoogleLogin = async function() {
     setLoadStatus('ZUGRIFF WIRD GEPRÜFT ...');
 
     // Admin direkt durchlassen
-    if (isAdmin(user.email)) {
-      await ensureAdminInFirestore(user);
+    if (window.isAdmin(user.email)) {
+      await window.ensureAdminInFirestore(user);
       document.getElementById('dash-name').textContent = user.displayName || 'Admin';
       document.getElementById('dash-id').textContent = 'ADMIN';
       document.getElementById('dash-tel').textContent = '-';
@@ -973,9 +976,10 @@ window.doGoogleLogin = async function() {
       setTimeout(() => { hideLoader(); showPage('login'); }, 300);
     }
   } catch(e) {
+    console.error('Login error:', e.code, e.message);
     setLoadStatus('BITTE ANMELDEN');
     setTimeout(() => { hideLoader(); showPage('login'); }, 300);
-    if (e.code !== 'auth/popup-closed-by-user') {
+    if (e.code !== 'auth/popup-closed-by-user' && e.code !== 'auth/cancelled-popup-request') {
       showNotif('Anmeldung fehlgeschlagen: ' + e.message, true);
     }
   }
