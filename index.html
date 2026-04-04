@@ -1042,8 +1042,21 @@ window.doGoogleLogin = async function() {
     }
 
     if (userDoc.data().approved === true) {
-      // onAuthStateChanged übernimmt die Weiterleitung
-      return;
+      const data = userDoc.data();
+      document.getElementById('dash-name').textContent = data.vorname || data.displayName || '-';
+      document.getElementById('dash-id').textContent = data.id || '-';
+      document.getElementById('dash-tel').textContent = data.tel || '-';
+      window._currentRolle = data.rolle || 'user';
+      loadZugriffTable();
+      setLoadStatus('ZUGRIFF GEWÄHRT');
+      setTimeout(() => {
+        showPage('main');
+        window._initialLoad = true;
+        showSubPage('dashboard');
+        window._initialLoad = false;
+        try { localStorage.setItem('lspd_last_page', 'dashboard'); } catch(e) {}
+        hideLoader();
+      }, 400);
     } else {
       showNotif('Konto noch nicht freigeschalten. Bitte warte auf Admin.', true);
       await signOut(auth);
