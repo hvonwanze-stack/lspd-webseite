@@ -3421,27 +3421,35 @@ window.doGoogleRegister = async function() {
       requestedAt: new Date().toISOString()
     });
 
-    // Zugriffsanfragen: nur hinzufügen wenn noch nicht vorhanden
+    // Prüfen ob die eingegebene ID bereits in zugriffsanfragen vorhanden
     const snap = await getDocs(collection(db, 'zugriffsanfragen'));
-    let alreadyInZugriff = false;
+    let alreadyById = false;
+    let alreadyByEmail = false;
     snap.forEach(d => {
-      if ((d.data().email || '').toLowerCase() === user.email.toLowerCase()) alreadyInZugriff = true;
+      const dd = d.data();
+      if ((dd.pass || '').toLowerCase() === (window._icData.pass || '').toLowerCase()) alreadyById = true;
+      if ((dd.email || '').toLowerCase() === user.email.toLowerCase()) alreadyByEmail = true;
     });
 
-    if (!alreadyInZugriff) {
-      await addDoc(collection(db, 'zugriffsanfragen'), {
-        uid: user.uid,
-        vorname: window._icData.vorname || '',
-        nachname: window._icData.nachname || '',
-        email: user.email,
-        tel: window._icData.tel || '',
-        pass: window._icData.pass || '',
-        status: 'VERWEIGERT',
-        zugriffsrang: '1 | Gast',
-        freigeben: 'Nein',
-        createdAt: new Date().toISOString()
-      });
+    if (alreadyById || alreadyByEmail) {
+      await signOut(auth);
+      document.querySelectorAll('.overlay').forEach(o => o.classList.remove('open'));
+      showNotif('Sie haben sich bereits schon registriert.', true);
+      return;
     }
+
+    await addDoc(collection(db, 'zugriffsanfragen'), {
+      uid: user.uid,
+      vorname: window._icData.vorname || '',
+      nachname: window._icData.nachname || '',
+      email: user.email,
+      tel: window._icData.tel || '',
+      pass: window._icData.pass || '',
+      status: 'VERWEIGERT',
+      zugriffsrang: '1 | Gast',
+      freigeben: 'Nein',
+      createdAt: new Date().toISOString()
+    });
 
     // Sign out AFTER all writes are done
     await signOut(auth);
@@ -3566,12 +3574,13 @@ window.saveZugriff = async function() {
   if (!vorname) { showNotif('Bitte Vorname eingeben.', true); return; }
   if (!passNr) { showNotif('Bitte ID eingeben.', true); return; }
   try {
-    // Prüfen ob ID (pass) bereits vergeben → Warnung aber trotzdem fortfahren
+    // Prüfen ob ID (pass) bereits vergeben → Fehlermeldung, abbrechen
     const snap = await getDocs(collection(db, 'zugriffsanfragen'));
     let existingDoc = null;
-    snap.forEach(d => { if ((d.data().pass||'') === passNr) existingDoc = d; });
+    snap.forEach(d => { if ((d.data().pass||'').toLowerCase() === passNr.toLowerCase()) existingDoc = d; });
     if (existingDoc) {
-      showNotif('⚠️ Diese ID existiert bereits — Zugriff wird trotzdem hinzugefügt.');
+      showNotif('Diese ID existiert bereits!', true);
+      return;
     }
 
     await addDoc(collection(db, 'zugriffsanfragen'), {
