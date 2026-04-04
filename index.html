@@ -200,12 +200,12 @@
   .cat-det { background: var(--orange); border: 1px solid #c87a00; }
   .cat-aks { background: #3a1a3a; border: 1px solid #7a3a7a; }
 
-  .training-item { display: flex; align-items: center; gap: 4px; margin-bottom: 4px; justify-content: center; }
-  .training-item input[type=checkbox] { width: 16px; height: 16px; flex-shrink: 0; cursor: not-allowed; }
+  .training-item { display: flex; align-items: center; gap: 2px; margin-bottom: 4px; justify-content: center; }
+  .training-item input[type=checkbox] { width: 14px; height: 14px; flex-shrink: 0; cursor: not-allowed; }
   .training-item input[type=checkbox] { accent-color: var(--gold); }
   .training-label {
-    flex: 1; padding: 3px 6px; border-radius: 3px; text-align: center;
-    font-family: 'Rajdhani', sans-serif; font-size: 0.72rem; font-weight: 700;
+    width: 28px; padding: 2px 3px; border-radius: 3px; text-align: center;
+    font-family: 'Rajdhani', sans-serif; font-size: 0.65rem; font-weight: 700;
     background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1);
   }
 
@@ -484,7 +484,8 @@ window.generateIdFromEmail = generateIdFromEmail;
     <div id="sub-dashboard">
       <div class="dashboard-grid">
         <!-- Personal -->
-        <div class="personal-panel" style="width:300px;">
+        <div style="display:flex;flex-direction:column;align-items:stretch;">
+        <div class="personal-panel" style="width:320px;">
           <h3>PERSÖNLICHE DATEN</h3>
           <div class="data-row"><span class="data-label">Name:</span><span class="data-val" id="dash-name" style="font-weight:700;font-size:0.85rem;">-</span></div>
           <div class="data-row"><span class="data-label">ID:</span><span class="data-val" id="dash-id" style="font-weight:700;font-size:0.85rem;">-</span></div>
@@ -497,17 +498,18 @@ window.generateIdFromEmail = generateIdFromEmail;
           <div class="data-row"><span class="data-label">Letzter RankUp:</span><span class="data-val" id="dash-rankup" style="font-weight:700;font-size:0.85rem;">-</span></div>
           <div class="data-row"><span class="data-label">Urlaub:</span><span class="data-val" id="dash-urlaub" style="font-weight:700;font-size:0.85rem;">-</span></div>
           <div class="data-row"><span class="data-label">Strike:</span><span class="data-val" id="dash-strike" style="font-weight:700;font-size:0.85rem;">-</span></div>
-          <div style="margin-top:16px;">
-            <button onclick="doAbmelden()" style="
-              background:var(--red2);border:1px solid #e74c3c;color:#fff;
-              padding:9px 0;border-radius:6px;cursor:pointer;
-              font-family:'Rajdhani',sans-serif;font-size:0.85rem;
-              font-weight:700;letter-spacing:2px;width:100%;
-              box-shadow:0 4px 12px rgba(192,57,43,0.3);transition:background 0.2s;
-            " onmouseover="this.style.background='#e74c3c'" onmouseout="this.style.background='var(--red2)'">
-              ABMELDEN
-            </button>
-          </div>
+        </div>
+        <!-- Abmelden Button unter persönliche Daten -->
+        <button onclick="doAbmelden()" style="
+          background:var(--red2);border:1px solid #e74c3c;color:#fff;
+          padding:9px 0;border-radius:6px;cursor:pointer;
+          font-family:'Rajdhani',sans-serif;font-size:0.85rem;
+          font-weight:700;letter-spacing:2px;width:100%;margin-top:10px;
+          box-shadow:0 4px 12px rgba(192,57,43,0.3);transition:background 0.2s;
+          display:block;
+        " onmouseover="this.style.background='#e74c3c'" onmouseout="this.style.background='var(--red2)'">
+          ABMELDEN
+        </button>
         </div>
 
         <!-- Trainings -->
