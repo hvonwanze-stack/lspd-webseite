@@ -466,6 +466,7 @@ window.generateIdFromEmail = generateIdFromEmail;
     <button class="nav-btn" onclick="showSubPage('sank')">Sanktionskatalog</button>
     <button class="nav-btn" onclick="showSubPage('mitarbeiter')">Mitarbeiter Register</button>
     <button class="nav-btn" onclick="showSubPage('zugriff')">Zugriffsanfrage</button>
+    <button class="nav-btn" id="nav-archiv" style="display:none;" onclick="showSubPage('archiv')">Mitarbeiter Archiv</button>
   </div>
 
   <div class="page-content">
@@ -796,20 +797,29 @@ window.generateIdFromEmail = generateIdFromEmail;
 
 <!-- Add Mitarbeiter -->
 <div class="overlay" id="overlay-add-ma">
-  <div class="popup">
+  <div class="popup" style="max-width:560px;">
     <div class="popup-header">
       <h2>MITARBEITER HINZUFÜGEN</h2>
       <button class="popup-close" onclick="closePopup('add-ma')">✕</button>
     </div>
-    <div class="popup-body">
-      <div class="form-group"><label>VORNAME</label><input type="text" id="ma-vorname" placeholder="Vorname"></div>
+    <div class="popup-body" style="display:grid;grid-template-columns:1fr 1fr;gap:0 16px;">
+      <div class="form-group"><label>IDENTIFIKATIONSNUMMER (ID)</label><input type="text" id="ma-identnr" placeholder="z.B. 164895"></div>
+      <div class="form-group"><label>DIENSTNUMMER (DN)</label><input type="text" id="ma-new-id" placeholder="z.B. DN-001"></div>
+      <div class="form-group"><label>NAME (VORNAME)</label><input type="text" id="ma-vorname" placeholder="Vorname"></div>
       <div class="form-group"><label>NACHNAME</label><input type="text" id="ma-nachname" placeholder="Nachname"></div>
-      <div class="form-group"><label>ID</label><input type="text" id="ma-new-id" placeholder="Identifikationsnummer"></div>
       <div class="form-group"><label>TELEFONNUMMER</label><input type="text" id="ma-new-tel" placeholder="z.B. 16-48-950"></div>
       <div class="form-group"><label>RANG</label><input type="text" id="ma-rang" placeholder="Rang"></div>
+      <div class="form-group"><label>DIVISION</label><input type="text" id="ma-division" placeholder="Division"></div>
+      <div class="form-group"><label>URLAUB</label><input type="text" id="ma-urlaub" placeholder="0/3"></div>
+      <div class="form-group"><label>STRIKE</label><input type="text" id="ma-strike" placeholder="0/3"></div>
+      <div class="form-group"><label>INVITE-DATUM</label><input type="text" id="ma-invite" placeholder="TT.MM.JJJJ"></div>
+      <div class="form-group"><label>LETZTER RANKUP</label><input type="text" id="ma-rankup" placeholder="TT.MM.JJJJ"></div>
+      <div class="form-group"><label>ABTEILUNG 1</label><input type="text" id="ma-abt1" placeholder="Abteilung 1"></div>
+      <div class="form-group" style="grid-column:1/-1;"><label>ABTEILUNG 2</label><input type="text" id="ma-abt2" placeholder="Abteilung 2"></div>
     </div>
     <div class="popup-footer">
       <button class="btn btn-success" onclick="saveMitarbeiter()">Speichern</button>
+      <button class="btn btn-primary" onclick="closePopup('add-ma')">Abbrechen</button>
     </div>
   </div>
 </div>
@@ -1389,26 +1399,40 @@ window.saveRangEdit = async function() {
 let mitarbeiterData = [];
 
 window.saveMitarbeiter = async function() {
+  const identnr = document.getElementById('ma-identnr').value.trim();
+  const vorname = document.getElementById('ma-vorname').value.trim();
+  if (!identnr) { showNotif('Bitte Identifikationsnummer eingeben!', true); return; }
+  if (!vorname) { showNotif('Bitte Name eingeben!', true); return; }
   const ma = {
-    vorname: document.getElementById('ma-vorname').value,
-    nachname: document.getElementById('ma-nachname').value,
-    id: document.getElementById('ma-new-id').value,
-    tel: document.getElementById('ma-new-tel').value,
-    rang: document.getElementById('ma-rang').value,
-    division: '-', urlaub: '0/3', strike: '0/3',
-    invite: '-', rankup: '-', abt1: '-', abt2: '-',
+    identnr: identnr,
+    id: document.getElementById('ma-new-id').value.trim() || '-',
+    vorname: vorname,
+    nachname: document.getElementById('ma-nachname').value.trim() || '-',
+    tel: document.getElementById('ma-new-tel').value.trim() || '-',
+    rang: document.getElementById('ma-rang').value.trim() || '-',
+    division: document.getElementById('ma-division').value.trim() || '-',
+    urlaub: document.getElementById('ma-urlaub').value.trim() || '0/3',
+    strike: document.getElementById('ma-strike').value.trim() || '0/3',
+    invite: document.getElementById('ma-invite').value.trim() || '-',
+    rankup: document.getElementById('ma-rankup').value.trim() || '-',
+    abt1: document.getElementById('ma-abt1').value.trim() || '-',
+    abt2: document.getElementById('ma-abt2').value.trim() || '-',
     createdAt: new Date().toISOString()
   };
   try {
     const ref = await addDoc(collection(db, 'mitarbeiter'), ma);
     mitarbeiterData.push({ ...ma, _id: ref.id });
     renderMitarbeiter();
+    // Reset form
+    ['ma-identnr','ma-new-id','ma-vorname','ma-nachname','ma-new-tel','ma-rang',
+     'ma-division','ma-urlaub','ma-strike','ma-invite','ma-rankup','ma-abt1','ma-abt2']
+    .forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
     closePopup('add-ma');
     showNotif('Mitarbeiter hinzugefügt!');
   } catch(e) { showNotif('Fehler: '+e.message, true); }
 };
 
-window.archivieren = function() { showNotif('Archivierung: Funktion in Entwicklung.'); };
+window.archivieren = function() { showSubPage('archiv'); };
 
 window.filterMitarbeiter = function() {
   const term = document.getElementById('ma-search').value.toLowerCase();
@@ -1428,7 +1452,8 @@ function renderMitarbeiter(data) {
   tbody.innerHTML = arr.map(m => `
     <tr>
       <td><button class="btn btn-primary" style="padding:3px 8px;font-size:0.65rem;" onclick="openDashWithMA('${m._id}')">📋</button></td>
-      <td>${m.id||'-'}</td><td>-</td>
+      <td>${m.identnr||m.id||'-'}</td>
+      <td>${m.id||'-'}</td>
       <td>${m.vorname||''} ${m.nachname||''}</td>
       <td>${m.tel||'-'}</td><td>${m.rang||'-'}</td>
       <td>${m.division||'-'}</td><td>${m.urlaub||'0/3'}</td><td>${m.strike||'0/3'}</td>
@@ -1474,15 +1499,15 @@ function showPage(name) {
 }
 
 function showSubPage(name) {
-  const subs = ['dashboard','kleider','rang','fahr','sank','mitarbeiter','zugriff'];
+  const subs = ['dashboard','kleider','rang','fahr','sank','mitarbeiter','zugriff','archiv'];
   subs.forEach(s => { document.getElementById('sub-'+s).style.display = 'none'; });
   document.getElementById('sub-'+name).style.display = 'block';
 
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  const labels = { dashboard:'LSPD Dashboard', kleider:'Kleiderordnung', rang:'Rangbefugnisse', fahr:'Fahrzeugordnung', sank:'Sanktionskatalog', mitarbeiter:'Mitarbeiter Register', zugriff:'Zugriffsanfrage' };
+  const labels = { dashboard:'LSPD Dashboard', kleider:'Kleiderordnung', rang:'Rangbefugnisse', fahr:'Fahrzeugordnung', sank:'Sanktionskatalog', mitarbeiter:'Mitarbeiter Register', zugriff:'Zugriffsanfrage', archiv:'Mitarbeiter Archiv' };
   document.querySelectorAll('.nav-btn').forEach(b => { if(b.textContent.trim() === labels[name]) b.classList.add('active'); });
 
-  const pageLabels = { dashboard:'DASHBOARD · PERSONNEL · ACCESS CONTROL · SERVICE RECORDS', kleider:'KLEIDERORDNUNG', rang:'RANGBEFUGNISSE', fahr:'FAHRZEUGORDNUNG', sank:'SANKTIONSKATALOG', mitarbeiter:'MITARBEITER REGISTER', zugriff:'ZUGRIFFSANFRAGE' };
+  const pageLabels = { dashboard:'DASHBOARD · PERSONNEL · ACCESS CONTROL · SERVICE RECORDS', kleider:'KLEIDERORDNUNG', rang:'RANGBEFUGNISSE', fahr:'FAHRZEUGORDNUNG', sank:'SANKTIONSKATALOG', mitarbeiter:'MITARBEITER REGISTER', zugriff:'ZUGRIFFSANFRAGE', archiv:'MITARBEITER ARCHIV' };
   document.getElementById('page-label-text').textContent = pageLabels[name] || '';
   document.getElementById('topbar').style.display = name === 'dashboard' ? 'flex' : 'none';
 
