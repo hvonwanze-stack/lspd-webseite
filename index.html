@@ -1129,6 +1129,57 @@
       <h1 class="top-title">Los Santos Police Department</h1>
       <p class="section-subtitle">Kleiderordnung</p>
       <div id="navMount3"></div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Bereich</th>
+            <th>Dienstgrad / Einheit</th>
+            <th>Uniformvorgabe</th>
+            <th>Ausrüstung</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Streifendienst</td>
+            <td>Cadet / Rookie / Officer</td>
+            <td>Dunkelblaue Standarduniform mit Dienstweste</td>
+            <td>Bodycam, Funk, Standard-Holster</td>
+            <td><span class="status-pill yes">Aktiv</span></td>
+          </tr>
+          <tr>
+            <td>Supervision</td>
+            <td>Supervising Officer bis Lead Supervisor</td>
+            <td>Class-A Uniform oder taktische Supervisor-Weste</td>
+            <td>Bodycam, Funk, Supervisor-Kennzeichnung</td>
+            <td><span class="status-pill yes">Aktiv</span></td>
+          </tr>
+          <tr>
+            <td>Detective Bureau</td>
+            <td>Detective / Sergeant+</td>
+            <td>Zivile Dienstkleidung in gedeckten Farben</td>
+            <td>Dienstmarke sichtbar, Concealed Setup</td>
+            <td><span class="status-pill yes">Aktiv</span></td>
+          </tr>
+          <tr>
+            <td>High Command</td>
+            <td>Lieutenant+</td>
+            <td>Class-A Uniform, Mantel oder Command-Outfit</td>
+            <td>Goldene Kennzeichnung, Command-Insignien</td>
+            <td><span class="status-pill yes">Aktiv</span></td>
+          </tr>
+          <tr>
+            <td>Sonderlage</td>
+            <td>Freigegebene Einheiten</td>
+            <td>Taktische Ausrüstung gemäß Einsatzleitung</td>
+            <td>Helm, Langwaffe, Heavy Vest</td>
+            <td><span class="status-pill pending">Freigabe nötig</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="welcome-box">Hinweis: Private Kleidung, auffällige Farben und nicht autorisierte Maskierungen sind im regulären Dienstbetrieb untersagt.</div>
     </div>
   </section>
 
@@ -1145,11 +1196,15 @@
           </tr>
         </thead>
         <tbody>
-          <tr><td>Handschellen</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☑</td><td>☑</td></tr>
-          <tr><td>Wegweisen</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☑</td><td>☑</td></tr>
-          <tr><td>Festnehmen</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☑</td><td>☑</td></tr>
-          <tr><td>Durchsuchen</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☑</td><td>☑</td></tr>
-          <tr><td>Warnen</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☑</td><td>☑</td></tr>
+          <tr><td>Handschellen</td><td>☐</td><td>☐</td><td>☐</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td></tr>
+          <tr><td>Wegweisen</td><td>☐</td><td>☐</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td></tr>
+          <tr><td>Festnehmen</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td></tr>
+          <tr><td>Durchsuchen</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td></tr>
+          <tr><td>Fahrzeugkontrolle</td><td>☐</td><td>☐</td><td>☐</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td></tr>
+          <tr><td>Streifenleitung</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td></tr>
+          <tr><td>Strike vergeben</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td></tr>
+          <tr><td>Bewerbungen prüfen</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td></tr>
+          <tr><td>HR-Freigaben</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☑</td><td>☑</td><td>☑</td><td>☑</td></tr>
         </tbody>
       </table>
     </div>
@@ -1163,10 +1218,16 @@
       <div id="navMount5"></div>
       <table>
         <thead>
-          <tr><th>Fahrzeug</th><th class="action-cell">&gt;</th><th>Rang</th><th class="action-cell">&gt;</th><th>Abteilung</th></tr>
+          <tr><th>Fahrzeug</th><th class="action-cell">&gt;</th><th>Mindest-Rang</th><th class="action-cell">&gt;</th><th>Abteilung / Freigabe</th></tr>
         </thead>
         <tbody>
-          <tr><td>AMG GT 20</td><td>&gt;</td><td>29 | Deputy Chief of Police</td><td>&gt;</td><td>HR</td></tr>
+          <tr><td>Vapid Scout Cruiser</td><td>&gt;</td><td>4 | Rookie</td><td>&gt;</td><td>Patrol Division</td></tr>
+          <tr><td>Buffalo STX Interceptor</td><td>&gt;</td><td>6 | Officer II</td><td>&gt;</td><td>Patrol / Traffic</td></tr>
+          <tr><td>Stanier Patrol Unit</td><td>&gt;</td><td>5 | Officer I</td><td>&gt;</td><td>Standard Patrol</td></tr>
+          <tr><td>Granger Command SUV</td><td>&gt;</td><td>10 | Lead Supervisor</td><td>&gt;</td><td>Command Staff</td></tr>
+          <tr><td>Unmarked Buffalo</td><td>&gt;</td><td>12 | Detective</td><td>&gt;</td><td>Detective Bureau</td></tr>
+          <tr><td>Bearcat Tactical</td><td>&gt;</td><td>20 | S.W.A.T Captain</td><td>&gt;</td><td>S.W.A.T / Sonderlage</td></tr>
+          <tr><td>AMG GT 20</td><td>&gt;</td><td>29 | Deputy Chief of Police</td><td>&gt;</td><td>High Command</td></tr>
         </tbody>
       </table>
       <button class="left-btn">Fahrzeug +</button>
@@ -1186,9 +1247,12 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>§1</td><td>Beleidigungen, Respektlosigkeit und sonstiges niederes Verhalten</td><td>&gt;</td><td>150</td><td>10 Autos</td><td>30 min</td><td>2</td><td>2 Wochen</td><td>1</td><td>3 Tage</td><td>✓</td>
-          </tr>
+          <tr><td>§1</td><td>Beleidigungen, Respektlosigkeit und sonstiges niederes Verhalten</td><td>&gt;</td><td>150</td><td>10 Autos</td><td>30 min</td><td>2</td><td>2 Wochen</td><td>1</td><td>3 Tage</td><td>✓</td></tr>
+          <tr><td>§2</td><td>Unentschuldigtes Verlassen des Dienstes</td><td>&gt;</td><td>250</td><td>15 Autos</td><td>45 min</td><td>3</td><td>3 Wochen</td><td>1</td><td>5 Tage</td><td>✓</td></tr>
+          <tr><td>§3</td><td>Missbrauch von Dienstfahrzeugen oder Dienstwaffen</td><td>&gt;</td><td>400</td><td>20 Autos</td><td>60 min</td><td>4</td><td>4 Wochen</td><td>2</td><td>7 Tage</td><td>✓</td></tr>
+          <tr><td>§4</td><td>Weitergabe interner Informationen an Unbefugte</td><td>&gt;</td><td>600</td><td>25 Autos</td><td>90 min</td><td>5</td><td>6 Wochen</td><td>2</td><td>14 Tage</td><td>✓</td></tr>
+          <tr><td>§5</td><td>Nicht autorisierte Nutzung von Sonderrechten</td><td>&gt;</td><td>300</td><td>15 Autos</td><td>45 min</td><td>3</td><td>3 Wochen</td><td>1</td><td>5 Tage</td><td>–</td></tr>
+          <tr><td>§6</td><td>Falsche Dokumentation oder manipulierte Reports</td><td>&gt;</td><td>500</td><td>20 Autos</td><td>60 min</td><td>4</td><td>5 Wochen</td><td>2</td><td>10 Tage</td><td>✓</td></tr>
         </tbody>
       </table>
       <button class="left-btn">Sanktion +</button>
