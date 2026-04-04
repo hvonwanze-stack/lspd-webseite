@@ -49,9 +49,11 @@
     display: none;
     background: var(--bg);
     min-height: 100vh;
-    padding: 40px 20px;
+
   }
-  #page-login.active { display: flex; flex-direction: column; align-items: center; }
+  #page-login.active { display: flex; flex-direction: column; align-items: stretch; }
+  .login-top { padding: 30px 40px; }
+  .login-center { flex: 1; display: flex; align-items: center; justify-content: center; }
 
   .login-header {
     display: flex;
@@ -358,12 +360,12 @@
   .notification {
     position: fixed; top: 20px; right: 20px; z-index: 2000;
     background: var(--bg3); border: 1px solid var(--green2); border-radius: 6px;
-    padding: 12px 20px; font-family: 'Rajdhani', sans-serif; font-size: 0.85rem;
-    color: var(--text); transform: translateX(120%); transition: transform 0.3s;
-    max-width: 300px;
+    padding: 14px 22px; font-family: 'Rajdhani', sans-serif; font-size: 0.9rem; font-weight: 600;
+    color: #fff; transform: translateX(120%); transition: transform 0.3s;
+    max-width: 360px; box-shadow: 0 4px 20px rgba(0,0,0,0.5);
   }
   .notification.show { transform: translateX(0); }
-  .notification.error { border-color: var(--red2); }
+  .notification.error { border-color: var(--red2); background: #1a0808; }
 </style>
 </head>
 <body>
@@ -372,16 +374,20 @@
 
 <!-- ============================== PAGE: LOGIN (Bild 2) ============================== -->
 <div id="page-login" class="page active">
-  <div class="login-header">
-    <div class="login-badge">LOS<br>SANTOS<br>POLICE<br>DEPARTMENT</div>
-    <div class="login-title-block">
-      <h1>Los Santos Police Department</h1>
-      <div class="subtitle">OFFICIAL INTERNAL POLICE NETWORK · SECURE ACCESS PORTAL</div>
+  <div class="login-top">
+    <div class="login-header">
+      <div class="login-badge">LOS<br>SANTOS<br>POLICE<br>DEPARTMENT</div>
+      <div class="login-title-block">
+        <h1>Los Santos Police Department</h1>
+        <div class="subtitle">OFFICIAL INTERNAL POLICE NETWORK · SECURE ACCESS PORTAL</div>
+      </div>
     </div>
   </div>
-  <div class="login-box">
-    <button class="login-btn" onclick="openPopup('step-ic')">ANFRAGE SENDEN</button>
-    <button class="login-btn" onclick="doGoogleLogin()">ANMELDEN</button>
+  <div class="login-center">
+    <div class="login-box">
+      <button class="login-btn" onclick="doGoogleLogin()">ANMELDEN</button>
+      <button class="login-btn" onclick="openPopup('step-ic')">ANFRAGE SENDEN</button>
+    </div>
   </div>
 </div>
 
@@ -826,13 +832,42 @@ window._signOut = signOut;
 window._icData = {};
 window._pendingEmail = null;
 
+// Admin whitelist – diese E-Mails haben immer vollen Zugriff
+const ADMIN_EMAILS = ['lionsleepy2005@gmail.com'];
+
+function isAdmin(email) { return ADMIN_EMAILS.includes((email||'').toLowerCase()); }
+
+async function ensureAdminInFirestore(user) {
+  const ref = doc(db, 'users', user.uid);
+  await setDoc(ref, {
+    uid: user.uid,
+    email: user.email,
+    displayName: user.displayName || 'Admin',
+    vorname: 'Admin',
+    nachname: '',
+    tel: '-',
+    approved: true,
+    rolle: 'admin',
+    updatedAt: new Date().toISOString()
+  }, { merge: true });
+}
+
 // Auth state
 onAuthStateChanged(auth, async (user) => {
   if (user) {
-    // Check if user is approved
+    // Admin-Whitelist: sofortiger Zugriff
+    if (isAdmin(user.email)) {
+      await ensureAdminInFirestore(user);
+      document.getElementById('dash-name').textContent = user.displayName || 'Admin';
+      document.getElementById('dash-id').textContent = 'ADMIN';
+      document.getElementById('dash-tel').textContent = '-';
+      showPage('main');
+      loadZugriffTable();
+      return;
+    }
+    // Normale Nutzer: approved prüfen
     const userDoc = await getDoc(doc(db, 'users', user.uid));
     if (userDoc.exists() && userDoc.data().approved === true) {
-      // Load user data into dashboard
       const data = userDoc.data();
       document.getElementById('dash-name').textContent = data.vorname || '-';
       document.getElementById('dash-id').textContent = data.id || '-';
@@ -840,7 +875,6 @@ onAuthStateChanged(auth, async (user) => {
       showPage('main');
       loadZugriffTable();
     } else {
-      // Not yet approved or new
       showNotif('Dein Konto wurde noch nicht freigeschalten. Bitte warte auf Admin-Bestätigung.', true);
       await signOut(auth);
     }
@@ -852,6 +886,7 @@ window.doGoogleLogin = async function() {
   try {
     const result = await signInWithPopup(auth, provider);
     const user = result.user;
+    if (isAdmin(user.email)) return; // onAuthStateChanged übernimmt
     const userDoc = await getDoc(doc(db, 'users', user.uid));
     if (!userDoc.exists() || !userDoc.data().approved) {
       showNotif('Konto noch nicht freigeschalten. Bitte warte auf Admin.', true);
@@ -894,8 +929,8 @@ window.doGoogleRegister = async function() {
     });
     await signOut(auth);
     closePopup('step-google');
-    openPopup('step-wait');
-    showNotif('Anfrage erfolgreich übermittelt!');
+    closePopup('step-ic');
+    showNotif('Anfrage erfolgreich versendet, Warte auf Freischaltung durch Admin.');
   } catch(e) {
     showNotif('Fehler: ' + e.message, true);
   }
@@ -1129,7 +1164,7 @@ function showNotif(msg, isError) {
   n.textContent = msg;
   n.className = 'notification' + (isError ? ' error' : '');
   n.classList.add('show');
-  setTimeout(() => n.classList.remove('show'), 3500);
+  setTimeout(() => n.classList.remove('show'), 5000);
 }
 window.showNotif = showNotif;
 
