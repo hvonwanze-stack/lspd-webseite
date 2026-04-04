@@ -651,7 +651,6 @@ window.generateIdFromEmail = generateIdFromEmail;
         <button class="btn btn-primary" onclick="openPopup('add-ma')">Mitarbeiter hinzufügen</button>
         <div style="flex:1"></div>
         <div style="display:flex;align-items:stretch;gap:6px;">
-          <button class="btn btn-danger" onclick="deleteMitarbeiterById()" style="padding:0 12px;font-size:0.85rem;align-self:stretch;white-space:nowrap;" title="Mitarbeiter löschen">✕</button>
           <button class="btn btn-primary" onclick="openEditMaDaten()" style="padding:0 10px;font-size:1rem;align-self:stretch;" title="Daten bearbeiten">✏️</button>
           <input class="search-input" placeholder="ID eingeben" id="ma-id-input" style="max-width:140px;border-radius:5px;">
           <button class="btn btn-primary" onclick="openEditAusbildungen()" style="padding:0 10px;font-size:1rem;align-self:stretch;" title="Ausbildungen bearbeiten">📋</button>
@@ -721,7 +720,7 @@ window.generateIdFromEmail = generateIdFromEmail;
             padding:9px 14px;border-radius:6px;cursor:pointer;
             font-family:'Rajdhani',sans-serif;font-size:0.9rem;font-weight:700;
           ">✕</button>
-          <input class="search-input" placeholder="Reisepassnummer suchen..." id="archiv-search" oninput="filterArchiv()" style="max-width:220px;border-radius:5px;">
+          <input class="search-input" placeholder="ID suchen..." id="archiv-search" oninput="filterArchiv()" style="max-width:220px;border-radius:5px;">
         </div>
       </div>
       <div class="table-wrap register-table-wrap">
@@ -3838,12 +3837,12 @@ window.confirmDeleteMa = async function() {
 window._selectedArchivId = null;
 
 window.deleteArchivEntry = function() {
-  const pass = document.getElementById('archiv-search') ? document.getElementById('archiv-search').value.trim() : '';
-  if (!pass) { showNotif('Bitte Reisepassnummer ins Suchfeld eingeben.', true); return; }
-  const found = (window._currentArchivData || []).find(m => (m.reisepass||'').toLowerCase() === pass.toLowerCase());
-  if (!found) { showNotif('Kein Archiveintrag mit dieser Reisepassnummer gefunden.', true); return; }
+  const searchId = document.getElementById('archiv-search') ? document.getElementById('archiv-search').value.trim() : '';
+  if (!searchId) { showNotif('Bitte ID ins Suchfeld eingeben.', true); return; }
+  const found = (window._currentArchivData || []).find(m => (m.id||'').toLowerCase() === searchId.toLowerCase());
+  if (!found) { showNotif('Kein Archiveintrag mit dieser ID gefunden.', true); return; }
   window._selectedArchivId = found._id;
-  document.getElementById('archiv-delete-name').textContent = found.vorname || found.id || found._id;
+  document.getElementById('archiv-delete-name').textContent = (found.vorname || found.id || found._id);
   openPopup('confirm-archiv-delete');
 };
 
@@ -3863,9 +3862,8 @@ window.filterArchiv = function() {
   const term = (document.getElementById('archiv-search').value || '').toLowerCase();
   if (!term) { renderArchiv(); return; }
   const filtered = (archivData || []).filter(m =>
-    (m.reisepass||'').toLowerCase().includes(term) ||
-    (m.vorname||'').toLowerCase().includes(term) ||
-    (m.id||'').toLowerCase().includes(term)
+    (m.id||'').toLowerCase().includes(term) ||
+    (m.vorname||'').toLowerCase().includes(term)
   );
   const tbody = document.getElementById('archiv-tbody');
   if (!tbody) return;
@@ -4088,14 +4086,27 @@ async function loadMitarbeiter() {
 }
 loadMitarbeiter();
 
-// Nach Laden der Mitarbeiter: Dashboard mit Mitarbeiterdaten befüllen falls passend
+// Nach Laden der Mitarbeiter: Dashboard mit Mitarbeiterdaten befüllen
+// Abgleich: pass in zugriffsanfragen (= ID auf Seite 8) mit id in mitarbeiter (= ID auf Seite 7)
 async function fillDashboardFromMitarbeiter() {
   if (!window._currentUserData) return;
   const userData = window._currentUserData;
-  // Suche Mitarbeiter anhand der Identifikationsnummer (gespeichert in users als identnr oder id)
-  const identnr = userData.identnr || userData.id || '';
-  if (!identnr || identnr === '-') return;
-  const ma = mitarbeiterData.find(m => m.identnr === identnr || m.id === identnr);
+
+  // Lade zugriffsanfragen um die ID (pass) des eingeloggten Nutzers zu finden
+  let userPassId = '';
+  try {
+    const zaSnap = await getDocs(collection(db, 'zugriffsanfragen'));
+    zaSnap.forEach(d => {
+      if ((d.data().email || '').toLowerCase() === (userData.email || '').toLowerCase()) {
+        userPassId = d.data().pass || '';
+      }
+    });
+  } catch(e) {}
+
+  if (!userPassId) return;
+
+  // Suche Mitarbeiter dessen ID mit der pass-ID übereinstimmt
+  const ma = mitarbeiterData.find(m => (m.id || '') === userPassId);
   if (!ma) return;
   const set = (elId, val) => { const el = document.getElementById(elId); if(el) el.textContent = val || '-'; };
   set('dash-name', ma.vorname || '-');
