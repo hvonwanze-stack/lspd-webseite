@@ -1196,48 +1196,55 @@ window.loadZugriffTable = async function() {
 window.updateZugriff = async function(docId, field, val) {
   try {
     const ref = doc(db, 'zugriffsanfragen', docId);
+    const zaSnap = await getDoc(ref);
+    const zaData = zaSnap.data();
     const update = {};
     update[field] = val;
 
     if (field === 'freigeben') {
-      if (val === 'Ja') {
-        update.status = 'FREIGEGEBEN';
+      const freischalten = (val === 'Ja');
+      update.status = freischalten ? 'FREIGEGEBEN' : 'VERWEIGERT';
 
-        // Nutzer in users Collection freischalten
-        const zaSnap = await getDoc(ref);
-        const zaData = zaSnap.data();
-        if (zaData && zaData.uid) {
-          // Nutzer hat sich selbst registriert - über UID updaten
-          await setDoc(doc(db, 'users', zaData.uid), { approved: true }, { merge: true });
-        } else if (zaData && zaData.email) {
-          // Manuell hinzugefügt - über Email suchen
+      if (zaData) {
+        if (zaData.uid) {
+          // Hat sich selbst registriert → direkt per UID updaten
+          await setDoc(doc(db, 'users', zaData.uid), { approved: freischalten }, { merge: true });
+
+        } else if (zaData.email) {
+          // Manuell hinzugefügt → per Email in users suchen
           const usersSnap = await getDocs(collection(db, 'users'));
-          usersSnap.forEach(async (ud) => {
+          let foundUser = null;
+          usersSnap.forEach(ud => {
             if ((ud.data().email || '').toLowerCase() === zaData.email.toLowerCase()) {
-              await setDoc(doc(db, 'users', ud.id), { approved: true }, { merge: true });
+              foundUser = ud;
             }
           });
-        }
-        showNotif('Zugriff freigegeben ✓');
 
-      } else {
-        update.status = 'VERWEIGERT';
-
-        // Zugriff wieder entziehen
-        const zaSnap = await getDoc(ref);
-        const zaData = zaSnap.data();
-        if (zaData && zaData.uid) {
-          await setDoc(doc(db, 'users', zaData.uid), { approved: false }, { merge: true });
-        } else if (zaData && zaData.email) {
-          const usersSnap = await getDocs(collection(db, 'users'));
-          usersSnap.forEach(async (ud) => {
-            if ((ud.data().email || '').toLowerCase() === zaData.email.toLowerCase()) {
-              await setDoc(doc(db, 'users', ud.id), { approved: false }, { merge: true });
-            }
-          });
+          if (foundUser) {
+            // User existiert bereits → nur approved updaten
+            await setDoc(doc(db, 'users', foundUser.id), { approved: freischalten }, { merge: true });
+          } else if (freischalten) {
+            // User existiert noch nicht → neu anlegen mit approved:true
+            const autoId = window.generateIdFromEmail(zaData.email);
+            const newUserRef = doc(db, 'users', autoId + '_manual');
+            await setDoc(newUserRef, {
+              email: zaData.email,
+              vorname: zaData.vorname || '',
+              nachname: zaData.nachname || '',
+              tel: zaData.tel || '',
+              id: autoId,
+              approved: true,
+              rolle: 'user',
+              manuallyAdded: true,
+              createdAt: new Date().toISOString()
+            });
+            // UID in zugriffsanfragen speichern für spätere Updates
+            update.uid = autoId + '_manual';
+          }
         }
-        showNotif('Zugriff entzogen.');
       }
+
+      showNotif(freischalten ? 'Zugriff freigegeben ✓' : 'Zugriff entzogen.');
     }
 
     await setDoc(ref, update, { merge: true });
