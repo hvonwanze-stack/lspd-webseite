@@ -152,7 +152,7 @@
   .page-content { padding: 20px; }
 
   /* ===== DASHBOARD (Bild 3) ===== */
-  .dashboard-grid { display: flex; gap: 20px; justify-content: center; align-items: flex-start; }
+  .dashboard-grid { display: flex; gap: 20px; justify-content: center; align-items: flex-start; flex-wrap: wrap; }
 
   .personal-panel {
     width: 320px; flex-shrink: 0;
@@ -513,7 +513,7 @@ window.generateIdFromEmail = generateIdFromEmail;
         </div>
 
         <!-- Trainings -->
-        <div class="training-panel" style="max-width:50%;">
+        <div class="training-panel" style="width:320px;flex-shrink:0;">
           <h3>AUSBILDUNGEN</h3>
           <div class="training-grid">
             <div class="training-category">
@@ -777,28 +777,28 @@ window.generateIdFromEmail = generateIdFromEmail;
 
 <!-- Add Mitarbeiter -->
 <div class="overlay" id="overlay-add-ma">
-  <div class="popup" style="max-width:560px;">
+  <div class="popup" style="max-width:620px;">
     <div class="popup-header">
       <h2>MITARBEITER HINZUFÜGEN</h2>
       <button class="popup-close" onclick="closePopup('add-ma')">✕</button>
     </div>
     <div class="popup-body" style="display:grid;grid-template-columns:1fr 1fr;gap:0 16px;">
-      <div class="form-group"><label>IDENTIFIKATIONSNUMMER (ID)</label><input type="text" id="ma-identnr" placeholder="z.B. 164895"></div>
-      <div class="form-group"><label>DIENSTNUMMER (DN)</label><input type="text" id="ma-new-id" placeholder="z.B. DN-001"></div>
-      <div class="form-group"><label>NAME (VORNAME)</label><input type="text" id="ma-vorname" placeholder="Vorname"></div>
-      <div class="form-group"><label>NACHNAME</label><input type="text" id="ma-nachname" placeholder="Nachname"></div>
+      <div class="form-group"><label>IDENTIFIKATIONSNUMMER</label><input type="text" id="ma-identnr" placeholder="z.B. 164895"></div>
+      <div class="form-group"><label>ID</label><input type="text" id="ma-new-id" placeholder="z.B. A-001"></div>
+      <div class="form-group"><label>DIENSTNUMMER (DN)</label><input type="text" id="ma-dn" placeholder="z.B. DN-001"></div>
+      <div class="form-group"><label>NAME</label><input type="text" id="ma-vorname" placeholder="Vorname Nachname"></div>
       <div class="form-group"><label>TELEFONNUMMER</label><input type="text" id="ma-new-tel" placeholder="z.B. 16-48-950"></div>
       <div class="form-group"><label>RANG</label><input type="text" id="ma-rang" placeholder="Rang"></div>
       <div class="form-group"><label>DIVISION</label><input type="text" id="ma-division" placeholder="Division"></div>
-      <div class="form-group"><label>URLAUB</label><input type="text" id="ma-urlaub" placeholder="0/3"></div>
-      <div class="form-group"><label>STRIKE</label><input type="text" id="ma-strike" placeholder="0/3"></div>
       <div class="form-group"><label>INVITE-DATUM</label><input type="text" id="ma-invite" placeholder="TT.MM.JJJJ"></div>
       <div class="form-group"><label>LETZTER RANKUP</label><input type="text" id="ma-rankup" placeholder="TT.MM.JJJJ"></div>
       <div class="form-group"><label>ABTEILUNG 1</label><input type="text" id="ma-abt1" placeholder="Abteilung 1"></div>
-      <div class="form-group" style="grid-column:1/-1;"><label>ABTEILUNG 2</label><input type="text" id="ma-abt2" placeholder="Abteilung 2"></div>
+      <div class="form-group"><label>ABTEILUNG 2</label><input type="text" id="ma-abt2" placeholder="Abteilung 2"></div>
+      <div class="form-group"><label>URLAUB</label><input type="text" id="ma-urlaub" placeholder="0/3"></div>
+      <div class="form-group"><label>STRIKE</label><input type="text" id="ma-strike" placeholder="0/3"></div>
     </div>
-    <div class="popup-footer">
-      <button class="btn btn-success" onclick="saveMitarbeiter()">Speichern</button>
+    <div class="popup-footer" style="justify-content:space-between;">
+      <button class="btn btn-success" onclick="saveMitarbeiter()">Hinzufügen</button>
       <button class="btn btn-primary" onclick="closePopup('add-ma')">Abbrechen</button>
     </div>
   </div>
@@ -1408,14 +1408,15 @@ let mitarbeiterData = [];
 
 window.saveMitarbeiter = async function() {
   const identnr = document.getElementById('ma-identnr').value.trim();
-  const vorname = document.getElementById('ma-vorname').value.trim();
+  const name = document.getElementById('ma-vorname').value.trim();
   if (!identnr) { showNotif('Bitte Identifikationsnummer eingeben!', true); return; }
-  if (!vorname) { showNotif('Bitte Name eingeben!', true); return; }
+  if (!name) { showNotif('Bitte Name eingeben!', true); return; }
   const ma = {
     identnr: identnr,
     id: document.getElementById('ma-new-id').value.trim() || '-',
-    vorname: vorname,
-    nachname: document.getElementById('ma-nachname').value.trim() || '-',
+    dn: document.getElementById('ma-dn') ? document.getElementById('ma-dn').value.trim() || '-' : '-',
+    vorname: name,
+    nachname: '',
     tel: document.getElementById('ma-new-tel').value.trim() || '-',
     rang: document.getElementById('ma-rang').value.trim() || '-',
     division: document.getElementById('ma-division').value.trim() || '-',
@@ -1431,10 +1432,9 @@ window.saveMitarbeiter = async function() {
     const ref = await addDoc(collection(db, 'mitarbeiter'), ma);
     mitarbeiterData.push({ ...ma, _id: ref.id });
     renderMitarbeiter();
-    // Reset form
-    ['ma-identnr','ma-new-id','ma-vorname','ma-nachname','ma-new-tel','ma-rang',
+    ['ma-identnr','ma-new-id','ma-dn','ma-vorname','ma-new-tel','ma-rang',
      'ma-division','ma-urlaub','ma-strike','ma-invite','ma-rankup','ma-abt1','ma-abt2']
-    .forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
+    .forEach(fid => { const el = document.getElementById(fid); if(el) el.value = ''; });
     closePopup('add-ma');
     showNotif('Mitarbeiter hinzugefügt!');
   } catch(e) { showNotif('Fehler: '+e.message, true); }
