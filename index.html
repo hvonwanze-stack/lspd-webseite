@@ -920,26 +920,6 @@
       color: #fff;
     }
 
-    .access-rank-note {
-      margin-top: 18px;
-      background: linear-gradient(180deg, rgba(17,17,17,0.98), rgba(28,28,28,0.98));
-      border: 1px solid #2a4d7e;
-      padding: 16px;
-      color: #ddd;
-    }
-
-    .access-rank-note h3 {
-      margin: 0 0 10px;
-      font-size: 18px;
-      color: #7fb1f0;
-    }
-
-    .access-rank-note ul {
-      margin: 0;
-      padding-left: 20px;
-      line-height: 1.5;
-    }
-
     @media (max-width: 1200px) {
       .rule-grid,
       .policy-grid {
@@ -1172,7 +1152,7 @@
           </div>
         </div>
 
-        <div class="page-tools" id="vehicleToolsRow">
+        <div class="page-tools">
           <button class="left-btn" id="addVehicleBtn">Fahrzeug Hinzufügen</button>
         </div>
 
@@ -1210,7 +1190,7 @@
           </div>
         </div>
 
-        <div class="page-tools" id="sanctionToolsRow">
+        <div class="page-tools">
           <button class="left-btn" id="addSanctionBtn">Sanktion +</button>
         </div>
 
@@ -1310,54 +1290,32 @@
 
   <!-- Seite 8 -->
   <section id="page8" class="page hidden app-page">
-    <div class="content-wrap panel-card">
+    <div class="content-wrap">
       <h1 class="top-title">Los Santos Police Department</h1>
       <div id="navMount8"></div>
 
-      <div class="lspd-panel">
-        <div class="lspd-section-title">Zugriffsverwaltung</div>
-
-        <div class="page8-top-row" id="accessToolsRow">
-          <button class="add-access-btn" id="addAccessBtn">Zugriff Hinzufügen</button>
-        </div>
-
-        <table class="lspd-data-table">
-          <thead>
-            <tr>
-              <th>✎</th>
-              <th>Identifikationsnummer</th>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Nachname</th>
-              <th>Email</th>
-              <th>Telefonnummer</th>
-              <th>Freigeben</th>
-              <th>Zugriffsrang</th>
-              <th>Status</th>
-              <th>Löschen</th>
-            </tr>
-          </thead>
-          <tbody id="accessRequestBody"></tbody>
-        </table>
-
-        <div class="access-rank-note">
-          <h3>Erklärung der 12 Website-Ränge</h3>
-          <ul>
-            <li><strong>Rang 12 – Admin:</strong> Kann alles sehen und bearbeiten.</li>
-            <li><strong>Rang 11 – Admin 2:</strong> Kann alles sehen, aber nichts bearbeiten.</li>
-            <li><strong>Rang 10 – Leader:</strong> Kann alles sehen und bearbeiten.</li>
-            <li><strong>Rang 9 – Leaderschaft:</strong> Kann alles sehen, aber nichts bearbeiten.</li>
-            <li><strong>Rang 8 – HR Leitung:</strong> Momentan ohne zusätzliche Sonderrechte.</li>
-            <li><strong>Rang 7 – HR:</strong> Momentan ohne zusätzliche Sonderrechte.</li>
-            <li><strong>Rang 6 – IU Leitung:</strong> Momentan ohne zusätzliche Sonderrechte.</li>
-            <li><strong>Rang 5 – IU:</strong> Momentan ohne zusätzliche Sonderrechte.</li>
-            <li><strong>Rang 4 – PA Leitung:</strong> Momentan ohne zusätzliche Sonderrechte.</li>
-            <li><strong>Rang 3 – PA:</strong> Momentan ohne zusätzliche Sonderrechte.</li>
-            <li><strong>Rang 2 – Mitarbeiter 2:</strong> Gleich wie Rang 1.</li>
-            <li><strong>Rang 1 – Mitarbeiter:</strong> Darf nur LSPD Dashboard, Kleiderordnung, Rangbefugnisse, Fahrzeugordnung und Sanktionskatalog sehen. Keine Bearbeitung, keine Stift-Buttons und keine Hinzufügen-Buttons.</li>
-          </ul>
-        </div>
+      <div class="page8-top-row">
+        <button class="add-access-btn" id="addAccessBtn">Zugriff Hinzufügen</button>
       </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Bearbeiten</th>
+            <th>Identifikationsnummer</th>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Nachname</th>
+            <th>Email</th>
+            <th>Telefonnummer</th>
+            <th>Freigeben</th>
+            <th>Zugriffsrang</th>
+            <th>Status</th>
+            <th>Aktionen</th>
+          </tr>
+        </thead>
+        <tbody id="accessRequestBody"></tbody>
+      </table>
     </div>
   </section>
 
@@ -1622,7 +1580,7 @@
         fullName: 'H vonwanze',
         email: 'H.vonwanze@gmail.com',
         approved: true,
-        websiteAccessRank: 12,
+        websiteAccessRank: 30,
         role: 'admin',
         requestId: '164895',
         stableId: '164895001',
@@ -1644,21 +1602,6 @@
     const TRAINING_KEYS = [
       'GA', 'EHK', 'ES', 'Officer', 'OK', 'FULA', 'TST', 'KS',
       'OKPLUS', 'FT', 'COP', 'JP', 'ZP', 'VHP', 'TOWBL', 'AKS'
-    ];
-
-    const WEBSITE_ACCESS_RANKS = [
-      { value: 12, label: '12 | Admin', viewAll: true, editAll: true },
-      { value: 11, label: '11 | Admin 2', viewAll: true, editAll: false },
-      { value: 10, label: '10 | Leader', viewAll: true, editAll: true },
-      { value: 9, label: '9 | Leaderschaft', viewAll: true, editAll: false },
-      { value: 8, label: '8 | HR Leitung', viewAll: false, editAll: false },
-      { value: 7, label: '7 | HR', viewAll: false, editAll: false },
-      { value: 6, label: '6 | IU Leitung', viewAll: false, editAll: false },
-      { value: 5, label: '5 | IU', viewAll: false, editAll: false },
-      { value: 4, label: '4 | PA Leitung', viewAll: false, editAll: false },
-      { value: 3, label: '3 | PA', viewAll: false, editAll: false },
-      { value: 2, label: '2 | Mitarbeiter 2', viewAll: false, editAll: false },
-      { value: 1, label: '1 | Mitarbeiter', viewAll: false, editAll: false }
     ];
 
     const RANK_OPTIONS = [
@@ -1703,8 +1646,6 @@
     const RANKUP_OPTIONS = ['X', '1 Tag', '2 Tage', '3 Tage', '4 Tage', '5 Tage', '6 Tage', '7 Tage', '8 Tage', '9 Tage', '10 Tage', '11 Tage', '12 Tage', '13 Tage', '14 Tage'];
     const SUSPEND_OPTIONS = ['X', '1 Tag', '2 Tage', '3 Tage', '4 Tage', '5 Tage', '6 Tage', '7 Tage', '8 Tage', '9 Tage', '10 Tage', '11 Tage', '12 Tage', '13 Tage', '14 Tage'];
     const CHECK_OR_X_OPTIONS = ['X', '✓'];
-
-    const LIMITED_PAGES = ['page2', 'page3', 'page4', 'page5', 'page6'];
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
@@ -1779,66 +1720,26 @@
       return String(data?.stableId || buildStableIdFromEmail(data?.email || '') || '').trim();
     }
 
-    function getWebsiteAccessRank(data) {
-      const value = Number(data?.websiteAccessRank ?? 1);
-      if (Number.isNaN(value)) return 1;
-      return Math.max(1, Math.min(12, value));
-    }
-
-    function getWebsiteRankDefinition(rank) {
-      return WEBSITE_ACCESS_RANKS.find(item => item.value === Number(rank)) || WEBSITE_ACCESS_RANKS[WEBSITE_ACCESS_RANKS.length - 1];
-    }
-
-    function getWebsiteRankLabel(rank) {
-      return getWebsiteRankDefinition(rank).label;
-    }
-
-    function canViewAllWebsite(data = currentUserData) {
-      const rank = getWebsiteAccessRank(data || {});
-      return [12, 11, 10, 9].includes(rank);
-    }
-
-    function canEditWebsite(data = currentUserData) {
-      const rank = getWebsiteAccessRank(data || {});
-      return [12, 10].includes(rank);
-    }
-
-    function canSeePage(pageId, data = currentUserData) {
-      if (pageId === 'page1') return true;
-      if (!data) return false;
-      if (canViewAllWebsite(data)) return true;
-      return LIMITED_PAGES.includes(pageId);
-    }
-
-    function canAccessPage(pageId) {
-      return canSeePage(pageId, currentUserData);
-    }
-
-    function getDefaultAllowedPage(data = currentUserData) {
-      if (canSeePage('page2', data)) return 'page2';
-      return 'page1';
-    }
-
     function mountNav(targetId) {
       const target = document.getElementById(targetId);
       if (!target) return;
-
-      const visibleItems = navItems.filter(item => canSeePage(item.id, currentUserData));
-
       target.innerHTML = `
         <div class="nav">
-          ${visibleItems.map(item => `<button data-page="${item.id}">${item.label}</button>`).join('')}
+          ${navItems.map(item => `<button data-page="${item.id}">${item.label}</button>`).join('')}
         </div>
         <div class="nav-separator"></div>
       `;
-
       target.querySelectorAll('button').forEach(btn => {
         btn.addEventListener('click', () => showPage(btn.dataset.page));
       });
     }
 
-    function rerenderAllNavs() {
-      ['navMount', 'navMount3', 'navMount4', 'navMount5', 'navMount6', 'navMount7', 'navMount8'].forEach(mountNav);
+    ['navMount', 'navMount3', 'navMount4', 'navMount5', 'navMount6', 'navMount7', 'navMount8'].forEach(mountNav);
+
+    function canAccessPage(pageId) {
+      const adminOnlyPages = ['page7', 'page8', 'page9'];
+      if (!adminOnlyPages.includes(pageId)) return true;
+      return !!currentUser && isAdmin(currentUser.email, currentUserData);
     }
 
     function saveLastPage(pageId) {
@@ -1859,13 +1760,8 @@
 
     window.showPage = function(pageId, options = {}) {
       const { save = true } = options;
-
-      let targetPage = pageId;
-      if (!currentUser) {
-        targetPage = 'page1';
-      } else if (!canAccessPage(pageId)) {
-        targetPage = getDefaultAllowedPage(currentUserData);
-      }
+      const fallbackPage = currentUser ? 'page2' : 'page1';
+      const targetPage = canAccessPage(pageId) ? pageId : fallbackPage;
 
       document.querySelectorAll('.page').forEach(page => page.classList.add('hidden'));
       document.getElementById(targetPage).classList.remove('hidden');
@@ -1879,8 +1775,16 @@
       document.getElementById('loginMessage').textContent = text || '';
     }
 
+    function getWebsiteAccessRank(data) {
+      return Number(data?.websiteAccessRank ?? 0);
+    }
+
     function getPersonalRank(data) {
       return Number(data?.rank ?? 0);
+    }
+
+    function isAdmin(email, data = null) {
+      return getWebsiteAccessRank(data || currentUserData) >= 30;
     }
 
     function normalizeTrainings(trainings = {}) {
@@ -1912,27 +1816,6 @@
       }).join('');
     }
 
-    function applyUiPermissions() {
-      const editAllowed = canEditWebsite(currentUserData);
-      const viewAll = canViewAllWebsite(currentUserData);
-
-      const addEmployeeBtn = document.getElementById('addEmployeeBtn');
-      const addAccessBtn = document.getElementById('addAccessBtn');
-      const addVehicleBtn = document.getElementById('addVehicleBtn');
-      const addSanctionBtn = document.getElementById('addSanctionBtn');
-      const moveEmployeeBtn = document.getElementById('moveEmployeeBtn');
-      const openArchiveBtn = document.getElementById('openArchiveBtn');
-      const moveEmployeeIdInput = document.getElementById('moveEmployeeIdInput');
-
-      if (addEmployeeBtn) addEmployeeBtn.classList.toggle('hidden', !editAllowed || !viewAll);
-      if (addAccessBtn) addAccessBtn.classList.toggle('hidden', !editAllowed || !viewAll);
-      if (addVehicleBtn) addVehicleBtn.classList.toggle('hidden', !editAllowed);
-      if (addSanctionBtn) addSanctionBtn.classList.toggle('hidden', !editAllowed);
-      if (moveEmployeeBtn) moveEmployeeBtn.classList.toggle('hidden', !editAllowed || !viewAll);
-      if (openArchiveBtn) openArchiveBtn.classList.toggle('hidden', !viewAll);
-      if (moveEmployeeIdInput) moveEmployeeIdInput.classList.toggle('hidden', !editAllowed || !viewAll);
-    }
-
     async function ensurePreapprovedUsers() {
       for (const user of PREAPPROVED_USERS) {
         const accessRef = doc(db, ACCESS_COLLECTION, getAccessDocIdByEmail(user.email));
@@ -1943,13 +1826,13 @@
           lastName: user.lastName,
           fullName: user.fullName,
           email: user.email,
-          approved: true,
-          websiteAccessRank: 12,
-          role: 'admin',
           requestId: user.requestId || '',
           stableId: user.stableId || buildStableIdFromEmail(user.email),
           employeeId: user.requestId || '',
           phone: user.phone,
+          approved: true,
+          websiteAccessRank: user.websiteAccessRank,
+          role: user.role,
           createdAt: user.createdAt
         }, { merge: true });
       }
@@ -2085,8 +1968,7 @@
         lastRankUp: '',
         vacation: '',
         strike: '',
-        trainings: {},
-        websiteAccessRank: 1
+        trainings: {}
       };
     }
 
@@ -2106,8 +1988,7 @@
         ['Invite:', hasEmployeeData ? (data?.invite || '') : ''],
         ['Letzter RankUp:', hasEmployeeData ? (data?.lastRankUp || '') : ''],
         ['Urlaub:', hasEmployeeData ? (data?.vacation || '') : ''],
-        ['Strike:', hasEmployeeData ? (data?.strike || '') : ''],
-        ['Webseitenzugriff:', getWebsiteRankLabel(getWebsiteAccessRank(data))]
+        ['Strike:', hasEmployeeData ? (data?.strike || '') : '']
       ];
 
       const grid = document.getElementById('personalDataGrid');
@@ -2159,8 +2040,6 @@
 
       currentUserData = merged;
       renderPersonalData(merged, user);
-      rerenderAllNavs();
-      applyUiPermissions();
       return merged;
     }
 
@@ -2184,7 +2063,7 @@
         stableId,
         phone: extraData.phone || existingAccess?.data?.phone || '',
         approved: existingAccess?.data?.approved ?? false,
-        websiteAccessRank: getWebsiteAccessRank(existingAccess?.data || { websiteAccessRank: 1 }),
+        websiteAccessRank: existingAccess?.data?.websiteAccessRank ?? 0,
         role: existingAccess?.data?.role || 'user',
         createdAt: existingAccess?.data?.createdAt || new Date().toISOString()
       };
@@ -2255,7 +2134,7 @@
         });
 
         closeRequestModal();
-        showMessage('Anfrage gespeichert. Ein Admin oder Leader muss dich freigeben.');
+        showMessage('Anfrage gespeichert. Ein Admin muss dich freigeben.');
         await signOut(auth);
       } catch (error) {
         console.error(error);
@@ -2289,7 +2168,7 @@
           email: user.email
         });
 
-        if (!accessEntry.data.approved && !canEditWebsite(merged)) {
+        if (!accessEntry.data.approved && !isAdmin(user.email, merged)) {
           showMessage('Dein Zugriff wurde noch nicht freigegeben.');
           await signOut(auth);
           return;
@@ -2300,16 +2179,18 @@
         }
 
         const lastPage = getLastPage();
-        showPage(canSeePage(lastPage, merged) ? lastPage : getDefaultAllowedPage(merged));
+        showPage(lastPage);
       } catch (error) {
         console.error(error);
         showMessage('Google Anmeldung fehlgeschlagen. Nutze localhost und prüfe die freigegebene Domain in Firebase.');
       }
     };
 
-    function populateAccessRankSelect(selectElement, selectedValue = 1) {
+    function populateAccessRankSelect(selectElement, selectedValue = 0) {
       if (!selectElement) return;
-      fillSelectOptions(selectElement, WEBSITE_ACCESS_RANKS, selectedValue);
+      selectElement.innerHTML = Array.from({ length: 31 }, (_, i) => `
+        <option value="${i}" ${Number(selectedValue) === i ? 'selected' : ''}>${i}</option>
+      `).join('');
     }
 
     function populateRankDropdown(selectElement, selectedValue = 1) {
@@ -2340,7 +2221,6 @@
     };
 
     function openEmployeeModal(item = null, docId = null) {
-      if (!canEditWebsite(currentUserData)) return;
       resetEmployeeModal();
       if (item && docId) {
         editingEmployeeId = docId;
@@ -2364,7 +2244,7 @@
     }
 
     window.saveEmployee = async function () {
-      if (!currentUser || !canEditWebsite(currentUserData)) return;
+      if (!currentUser || !isAdmin(currentUser.email)) return;
 
       const employeeId = document.getElementById('empId').value.trim();
       if (!employeeId) {
@@ -2462,7 +2342,6 @@
     };
 
     function openTrainingModal(item = null, docId = null) {
-      if (!canEditWebsite(currentUserData)) return;
       resetTrainingModal();
       editingTrainingId = docId || null;
       const trainings = normalizeTrainings(item?.trainings || {});
@@ -2476,7 +2355,7 @@
     }
 
     window.saveTrainingModal = async function () {
-      if (!currentUser || !canEditWebsite(currentUserData)) return;
+      if (!currentUser || !isAdmin(currentUser.email)) return;
       if (!editingTrainingId) return;
 
       const payload = {};
@@ -2503,8 +2382,6 @@
     };
 
     function openAccessModal(item = null, docId = null) {
-      if (!canEditWebsite(currentUserData)) return;
-
       const title = document.getElementById('accessModalTitle');
       const emailValue = item?.email || '';
       const stableId = getStableAccessId(item || {});
@@ -2525,7 +2402,7 @@
     }
 
     window.saveAccessEntry = async function () {
-      if (!currentUser || !canEditWebsite(currentUserData)) return;
+      if (!currentUser || !isAdmin(currentUser.email)) return;
 
       const email = document.getElementById('accessEmail').value.trim();
       if (!email) {
@@ -2538,7 +2415,7 @@
       const existingByEmail = await findAccessByEmail(email);
       const existingData = existingByEmail?.data || {};
       const targetId = modalEditId || existingByEmail?.id || getAccessDocIdByEmail(email);
-      const accessRankValue = Math.max(1, Math.min(12, Number(document.getElementById('accessRank').value || 1)));
+      const accessRankValue = Math.max(0, Math.min(30, Number(document.getElementById('accessRank').value || 0)));
       const firstName = document.getElementById('accessName').value.trim();
       const lastName = document.getElementById('accessLastName').value.trim();
       const requestId = document.getElementById('accessRequestId').value.trim();
@@ -2562,7 +2439,7 @@
         phone: phone || existingData.phone || '',
         approved: document.getElementById('accessApproved').value === 'true',
         websiteAccessRank: accessRankValue,
-        role: accessRankValue >= 10 ? 'admin' : 'user',
+        role: accessRankValue >= 30 ? 'admin' : 'user',
         createdAt: existingData.createdAt || new Date().toISOString()
       };
 
@@ -2575,14 +2452,14 @@
     };
 
     async function deleteAccessEntry(id) {
-      if (!currentUser || !canEditWebsite(currentUserData)) return;
-      const confirmed = confirm('Diesen Zugriff wirklich löschen und der E-Mail die Rechte entziehen?');
+      if (!currentUser || !isAdmin(currentUser.email)) return;
+      const confirmed = confirm('Diesen Zugriff und die Anfrage wirklich löschen?');
       if (!confirmed) return;
       await deleteDoc(doc(db, ACCESS_COLLECTION, id));
     }
 
     async function archiveEmployeeByEmployeeId(employeeId) {
-      if (!currentUser || !canEditWebsite(currentUserData)) return false;
+      if (!currentUser || !isAdmin(currentUser.email)) return false;
       const normalizedId = String(employeeId || '').trim();
       if (!normalizedId) return false;
 
@@ -2603,9 +2480,7 @@
       onSnapshot(q, (snapshot) => {
         const body = document.getElementById('accessRequestBody');
         body.innerHTML = '';
-
         const seenEmails = new Set();
-        const canEdit = canEditWebsite(currentUserData);
 
         snapshot.forEach((docSnap) => {
           const item = docSnap.data();
@@ -2613,55 +2488,45 @@
           if (seenEmails.has(emailKey)) return;
           seenEmails.add(emailKey);
 
-          const approved = !!item.approved;
-          const status = approved ? 'Freigegeben' : 'Nicht freigegeben';
+          const tr = document.createElement('tr');
+          const disabled = currentUser && isAdmin(currentUser.email) ? '' : 'disabled';
+          const status = item.approved ? 'Freigegeben' : 'Wartet';
           const accessRank = getWebsiteAccessRank(item);
 
-          const editCell = canEdit
-            ? `<button class="icon-btn" data-access-edit-id="${docSnap.id}">✎</button>`
-            : '';
-
-          const freeCell = canEdit
-            ? `
-              <select data-type="approved" data-id="${docSnap.id}">
-                <option value="false" ${!approved ? 'selected' : ''}>nein</option>
-                <option value="true" ${approved ? 'selected' : ''}>ja</option>
-              </select>
-            `
-            : `<span>${approved ? 'ja' : 'nein'}</span>`;
-
-          const rankCell = canEdit
-            ? `
-              <select data-type="websiteAccessRank" data-id="${docSnap.id}">
-                ${WEBSITE_ACCESS_RANKS.map(opt => `<option value="${opt.value}" ${accessRank === opt.value ? 'selected' : ''}>${opt.label}</option>`).join('')}
-              </select>
-            `
-            : `<span>${getWebsiteRankLabel(accessRank)}</span>`;
-
-          const deleteCell = canEdit
-            ? `<button class="danger-btn" data-delete-id="${docSnap.id}">Löschen</button>`
-            : '';
-
-          const tr = document.createElement('tr');
           tr.innerHTML = `
-            <td>${editCell}</td>
+            <td>
+              <button class="icon-btn" data-access-edit-id="${docSnap.id}" ${disabled}>✎</button>
+            </td>
             <td>${getStableAccessId(item) || '-'}</td>
             <td>${getRequestId(item) || '-'}</td>
             <td>${item.name || '-'}</td>
             <td>${item.lastName || '-'}</td>
             <td>${item.email || '-'}</td>
             <td>${item.phone || '-'}</td>
-            <td class="request-controls">${freeCell}</td>
-            <td class="request-controls">${rankCell}</td>
-            <td><span class="status-pill ${approved ? 'yes' : 'no'}">${status}</span></td>
-            <td>${deleteCell}</td>
+            <td class="request-controls">
+              <select data-type="approved" data-id="${docSnap.id}" ${disabled}>
+                <option value="false" ${!item.approved ? 'selected' : ''}>nein</option>
+                <option value="true" ${item.approved ? 'selected' : ''}>ja</option>
+              </select>
+            </td>
+            <td class="request-controls">
+              <select data-type="websiteAccessRank" data-id="${docSnap.id}" ${disabled}>
+                ${Array.from({ length: 31 }, (_, i) => `<option value="${i}" ${accessRank === i ? 'selected' : ''}>${i}</option>`).join('')}
+              </select>
+            </td>
+            <td><span class="status-pill ${item.approved ? 'yes' : 'pending'}">${status}</span></td>
+            <td>
+              <div class="request-actions">
+                <button class="danger-btn" data-delete-id="${docSnap.id}" ${disabled}>Löschen</button>
+              </div>
+            </td>
           `;
           body.appendChild(tr);
         });
 
         body.querySelectorAll('select').forEach(control => {
           control.addEventListener('change', async (e) => {
-            if (!currentUser || !canEditWebsite(currentUserData)) return;
+            if (!currentUser || !isAdmin(currentUser.email)) return;
             const id = e.target.dataset.id;
             const type = e.target.dataset.type;
             if (!id || !type) return;
@@ -2670,13 +2535,9 @@
             if (type === 'approved') {
               await updateDoc(ref, { approved: e.target.value === 'true' });
             }
-
             if (type === 'websiteAccessRank') {
-              const value = Math.max(1, Math.min(12, Number(e.target.value || 1)));
-              await updateDoc(ref, {
-                websiteAccessRank: value,
-                role: value >= 10 ? 'admin' : 'user'
-              });
+              const value = Math.max(0, Math.min(30, Number(e.target.value || 0)));
+              await updateDoc(ref, { websiteAccessRank: value, role: value >= 30 ? 'admin' : 'user' });
             }
           });
         });
@@ -2744,23 +2605,15 @@
       `;
     }
 
-    function createEmployeeRankRow(item, docId, canEdit) {
+    function createEmployeeRankRow(item, docId, disabledAttr) {
       const personalRank = Math.max(1, Math.min(30, Number(getPersonalRank(item) || 1)));
       const nameValue = item.fullName || buildFullName(item.name, item.lastName) || '';
-
-      const editButton = canEdit
-        ? `<button class="data-edit-btn" data-employee-edit-id="${docId}">✎</button>`
-        : '';
-
-      const trainingButton = canEdit
-        ? `<button class="rank-edit-btn" data-training-edit-id="${docId}">✎</button>`
-        : '';
 
       return `
         <tr>
           <td>
             <div class="table-action-stack">
-              ${editButton}
+              <button class="data-edit-btn" data-employee-edit-id="${docId}" ${disabledAttr}>✎</button>
             </div>
           </td>
           <td class="left-dark">${item.employeeId || ''}</td>
@@ -2794,7 +2647,9 @@
           ${createTrainingCell(item, 'VHP')}
           ${createTrainingCell(item, 'TOWBL')}
           ${createTrainingCell(item, 'AKS')}
-          <td>${trainingButton}</td>
+          <td>
+            <button class="rank-edit-btn" data-training-edit-id="${docId}" ${disabledAttr}>✎</button>
+          </td>
         </tr>
       `;
     }
@@ -2805,7 +2660,11 @@
 
       return `
         <tr>
-          <td></td>
+          <td>
+            <div class="table-action-stack">
+              <button class="data-edit-btn" data-employee-edit-id="${docId}" disabled>✎</button>
+            </div>
+          </td>
           <td>${item.employeeId || ''}</td>
           <td>${item.serviceNumber || ''}</td>
           <td>${nameValue}</td>
@@ -2837,7 +2696,9 @@
           ${createTrainingCell(item, 'VHP')}
           ${createTrainingCell(item, 'TOWBL')}
           ${createTrainingCell(item, 'AKS')}
-          <td></td>
+          <td>
+            <button class="rank-edit-btn" disabled>✎</button>
+          </td>
         </tr>
       `;
     }
@@ -2898,20 +2759,17 @@
       }
 
       let lastRank = null;
-      const canEdit = canEditWebsite(currentUserData);
-
       activeEntries.forEach((entry, index) => {
+        const disabledAttr = currentUser && isAdmin(currentUser.email) ? '' : 'disabled';
         const rank = Math.max(1, Math.min(30, Number(getPersonalRank(entry.data) || 1)));
 
         if (index > 0 && rank !== lastRank) {
           tbody.innerHTML += createSeparatorRow();
         }
 
-        tbody.innerHTML += createEmployeeRankRow(entry.data, entry.id, canEdit);
+        tbody.innerHTML += createEmployeeRankRow(entry.data, entry.id, disabledAttr);
         lastRank = rank;
       });
-
-      if (!canEdit) return;
 
       tbody.querySelectorAll('[data-employee-edit-id]').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -3001,7 +2859,6 @@
     }
 
     function openVehicleModal(item = null, docId = null) {
-      if (!canEditWebsite(currentUserData)) return;
       resetVehicleModal();
       if (item && docId) {
         editingVehicleId = docId;
@@ -3018,7 +2875,7 @@
     };
 
     window.saveVehicle = async function () {
-      if (!currentUser || !canEditWebsite(currentUserData)) return;
+      if (!currentUser || !isAdmin(currentUser.email)) return;
 
       const name = document.getElementById('vehicleName').value.trim();
       const requiredRank = Number(document.getElementById('vehicleRank').value || 1);
@@ -3045,7 +2902,7 @@
       if (!body) return;
       body.innerHTML = '';
 
-      const canEdit = canEditWebsite(currentUserData);
+      const disabled = currentUser && isAdmin(currentUser.email) ? '' : 'disabled';
       const sorted = [...vehiclesCache].sort((a, b) => Number(b.data.requiredRank || 0) - Number(a.data.requiredRank || 0));
 
       if (sorted.length === 0) {
@@ -3059,12 +2916,10 @@
           <td>${item.data.name || '-'}</td>
           <td>${item.data.requiredRank ? `${item.data.requiredRank} | ${rankLabel(item.data.requiredRank)}` : '-'}</td>
           <td>${item.data.department || '-'}</td>
-          <td>${canEdit ? `<button class="vehicle-edit-btn" data-vehicle-edit-id="${item.id}">✎</button>` : ''}</td>
+          <td><button class="vehicle-edit-btn" data-vehicle-edit-id="${item.id}" ${disabled}>✎</button></td>
         `;
         body.appendChild(tr);
       });
-
-      if (!canEdit) return;
 
       body.querySelectorAll('[data-vehicle-edit-id]').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -3106,7 +2961,6 @@
     }
 
     function openSanctionModal(item = null, docId = null) {
-      if (!canEditWebsite(currentUserData)) return;
       resetSanctionModal();
       if (item && docId) {
         editingSanctionId = docId;
@@ -3130,7 +2984,7 @@
     };
 
     window.saveSanction = async function () {
-      if (!currentUser || !canEditWebsite(currentUserData)) return;
+      if (!currentUser || !isAdmin(currentUser.email)) return;
 
       const paragraph = document.getElementById('sanctionParagraph').value.trim();
       const definition = document.getElementById('sanctionDefinition').value.trim();
@@ -3163,7 +3017,7 @@
       if (!body) return;
       body.innerHTML = '';
 
-      const canEdit = canEditWebsite(currentUserData);
+      const disabled = currentUser && isAdmin(currentUser.email) ? '' : 'disabled';
       const sorted = [...sanctionsCache].sort((a, b) => {
         return String(a.data.paragraph || '').localeCompare(String(b.data.paragraph || ''), 'de', { numeric: true });
       });
@@ -3176,7 +3030,7 @@
       sorted.forEach(item => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
-          <td>${canEdit ? `<button class="sanction-edit-btn" data-sanction-edit-id="${item.id}">✎</button>` : ''}</td>
+          <td><button class="sanction-edit-btn" data-sanction-edit-id="${item.id}" ${disabled}>✎</button></td>
           <td>${item.data.paragraph || '-'}</td>
           <td>${item.data.definition || '-'}</td>
           <td>${item.data.fine || 'X'}</td>
@@ -3190,8 +3044,6 @@
         `;
         body.appendChild(tr);
       });
-
-      if (!canEdit) return;
 
       body.querySelectorAll('[data-sanction-edit-id]').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -3224,14 +3076,12 @@
       showMessage('');
       clearLastPage();
       renderPersonalData({ ...getEmptyPersonalData(), hasEmployeeData: false }, { email: '' });
-      rerenderAllNavs();
-      applyUiPermissions();
       showPage('page1', { save: false });
       finishAuthCheck();
     };
 
     document.getElementById('addEmployeeBtn').addEventListener('click', () => {
-      if (!currentUser || !canEditWebsite(currentUserData)) return;
+      if (!currentUser || !isAdmin(currentUser.email)) return;
       openEmployeeModal();
     });
 
@@ -3240,7 +3090,7 @@
     });
 
     document.getElementById('addAccessBtn').addEventListener('click', () => {
-      if (!currentUser || !canEditWebsite(currentUserData)) return;
+      if (!currentUser || !isAdmin(currentUser.email)) return;
       openAccessModal();
     });
 
@@ -3252,12 +3102,12 @@
     });
 
     document.getElementById('openArchiveBtn').addEventListener('click', () => {
-      if (!currentUser || !canViewAllWebsite(currentUserData)) return;
+      if (!currentUser || !isAdmin(currentUser.email)) return;
       showPage('page9');
     });
 
     document.getElementById('moveEmployeeBtn').addEventListener('click', async () => {
-      if (!currentUser || !canEditWebsite(currentUserData)) return;
+      if (!currentUser || !isAdmin(currentUser.email)) return;
 
       const employeeId = document.getElementById('moveEmployeeIdInput').value.trim();
       if (!employeeId) {
@@ -3285,16 +3135,16 @@
     });
 
     document.getElementById('addVehicleBtn').addEventListener('click', () => {
-      if (!currentUser || !canEditWebsite(currentUserData)) return;
+      if (!currentUser || !isAdmin(currentUser.email)) return;
       openVehicleModal();
     });
 
     document.getElementById('addSanctionBtn').addEventListener('click', () => {
-      if (!currentUser || !canEditWebsite(currentUserData)) return;
+      if (!currentUser || !isAdmin(currentUser.email)) return;
       openSanctionModal();
     });
 
-    populateAccessRankSelect(document.getElementById('accessRank'), 1);
+    populateAccessRankSelect(document.getElementById('accessRank'), 0);
     populateRankDropdown(document.getElementById('vehicleRank'), 1);
     fillSelectOptions(document.getElementById('vehicleDepartment'), VEHICLE_DEPARTMENTS, 'X');
     fillSelectOptions(document.getElementById('sanctionFine'), FINE_OPTIONS, 'X');
@@ -3306,17 +3156,11 @@
     fillSelectOptions(document.getElementById('sanctionSuspend'), SUSPEND_OPTIONS, 'X');
     fillSelectOptions(document.getElementById('sanctionDismissal'), CHECK_OR_X_OPTIONS, 'X');
 
-    rerenderAllNavs();
-    applyUiPermissions();
-
     onAuthStateChanged(auth, async (user) => {
       try {
         currentUser = user || null;
 
         if (!user) {
-          currentUserData = null;
-          rerenderAllNavs();
-          applyUiPermissions();
           showPage('page1', { save: false });
           finishAuthCheck();
           return;
@@ -3325,9 +3169,6 @@
         const accessEntry = await findAccessByEmail(user.email);
 
         if (!accessEntry) {
-          currentUserData = null;
-          rerenderAllNavs();
-          applyUiPermissions();
           showPage('page1', { save: false });
           finishAuthCheck();
           return;
@@ -3344,20 +3185,17 @@
           email: user.email
         });
 
-        if (!accessEntry.data.approved && !canEditWebsite(merged)) {
+        if (!accessEntry.data.approved && !isAdmin(user.email, merged)) {
           showPage('page1', { save: false });
           finishAuthCheck();
           return;
         }
 
         const lastPage = getLastPage();
-        showPage(canSeePage(lastPage, merged) ? lastPage : getDefaultAllowedPage(merged), { save: false });
+        showPage(lastPage, { save: false });
         finishAuthCheck();
       } catch (error) {
         console.error('Fehler beim Wiederherstellen der Sitzung:', error);
-        currentUserData = null;
-        rerenderAllNavs();
-        applyUiPermissions();
         showPage('page1', { save: false });
         finishAuthCheck();
       }
