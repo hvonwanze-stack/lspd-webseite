@@ -550,6 +550,20 @@ window.generateIdFromEmail = generateIdFromEmail;
           </div>
         </div>
       </div>
+
+      <!-- Abmelden Button nur auf Dashboard -->
+      <div style="display:flex; justify-content:flex-end; margin-top:20px;">
+        <button onclick="doAbmelden()" style="
+          background: var(--red2); border: 1px solid #e74c3c; color: #fff;
+          padding: 10px 24px; border-radius: 6px; cursor: pointer;
+          font-family: 'Rajdhani', sans-serif; font-size: 0.85rem;
+          font-weight: 700; letter-spacing: 2px;
+          box-shadow: 0 4px 15px rgba(192,57,43,0.3);
+          transition: background 0.2s;
+        " onmouseover="this.style.background='#e74c3c'" onmouseout="this.style.background='var(--red2)'">
+          ABMELDEN
+        </button>
+      </div>
     </div>
 
     <!-- KLEIDERORDNUNG -->
@@ -944,6 +958,18 @@ window._deleteDoc = deleteDoc;
 window._query = query;
 window._where = where;
 window._signOut = signOut;
+
+window.doAbmelden = async function() {
+  try {
+    await signOut(auth);
+    try { localStorage.removeItem('lspd_last_page'); } catch(e) {}
+    window._loaderDone = false;
+    showPage('login');
+    showNotif('Erfolgreich abgemeldet.');
+  } catch(e) {
+    showNotif('Fehler beim Abmelden: ' + e.message, true);
+  }
+};
 
 // Temp IC data storage
 window._icData = {};
