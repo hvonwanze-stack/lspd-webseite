@@ -3759,9 +3759,20 @@ window.saveMitarbeiter = async function() {
   const name = document.getElementById('ma-vorname').value.trim();
   if (!newId) { showNotif('Bitte ID eingeben!', true); return; }
   if (!name) { showNotif('Bitte Name eingeben!', true); return; }
-  // Prüfen ob ID bereits vergeben
-  const duplicate = mitarbeiterData.find(m => m.id === newId);
-  if (duplicate) { showNotif('ID bereits vergeben!', true); return; }
+  // Prüfen ob ID bereits vergeben — direkt in Firestore prüfen (nicht nur lokaler Cache)
+  try {
+    const checkSnap = await getDocs(collection(db, 'mitarbeiter'));
+    let dupFound = false;
+    checkSnap.forEach(d => { if ((d.data().id || '') === newId) dupFound = true; });
+    if (dupFound) { showNotif('ID bereits vergeben!', true); return; }
+    // Lokalen Cache auch aktualisieren
+    mitarbeiterData = [];
+    checkSnap.forEach(d => mitarbeiterData.push({ ...d.data(), _id: d.id }));
+  } catch(e) {
+    // Fallback: lokaler Cache
+    const duplicate = mitarbeiterData.find(m => m.id === newId);
+    if (duplicate) { showNotif('ID bereits vergeben!', true); return; }
+  }
   const ma = {
     id: newId,
     dn: document.getElementById('ma-dn') ? document.getElementById('ma-dn').value.trim() || '-' : '-',
