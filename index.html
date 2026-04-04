@@ -1511,13 +1511,18 @@ loadMitarbeiter();
 <script>
 // ===== PAGE NAVIGATION =====
 function showPage(name) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  if (name === 'login') {
-    document.getElementById('page-login').classList.add('active');
-  } else if (name === 'main') {
-    document.getElementById('page-main').classList.add('active');
-    document.getElementById('header-badge').style.display = 'flex';
-  }
+  try {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    if (name === 'login') {
+      const pl = document.getElementById('page-login');
+      if (pl) pl.classList.add('active');
+    } else if (name === 'main') {
+      const pm = document.getElementById('page-main');
+      if (pm) pm.classList.add('active');
+      const hb = document.getElementById('header-badge');
+      if (hb) hb.style.display = 'flex';
+    }
+  } catch(e) { console.error('showPage error:', e); }
 }
 
 function showSubPage(name) {
