@@ -367,9 +367,41 @@
   }
   .notification.show { transform: translateX(0); }
   .notification.error { border-color: var(--red2); background: #1a0808; }
+
+  /* ===== LOADING SCREEN ===== */
+  #loading-screen {
+    position: fixed; inset: 0; z-index: 9999;
+    background: #0a0f1e;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 24px; transition: opacity 0.5s;
+  }
+  #loading-screen.fade-out { opacity: 0; pointer-events: none; }
+  .load-badge {
+    width: 90px; height: 90px; border-radius: 50%;
+    border: 3px solid #c9a227;
+    background: radial-gradient(circle, #0a1a3a 60%, #0d2a5a);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-family: 'Rajdhani', sans-serif; font-size: 9px; font-weight: 700;
+    color: #c9a227; text-align: center; line-height: 1.4;
+    animation: pulse 1.5s infinite;
+  }
+  @keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(201,162,39,0.4)} 50%{box-shadow:0 0 0 12px rgba(201,162,39,0)} }
+  .load-title { font-family: 'Orbitron', sans-serif; font-size: 1.4rem; font-weight: 700; color: #fff; }
+  .load-bar-wrap { width: 220px; height: 3px; background: #1e3a5f; border-radius: 2px; overflow: hidden; }
+  .load-bar { height: 100%; background: #c9a227; border-radius: 2px; animation: loadbar 1.8s ease-in-out infinite; }
+  @keyframes loadbar { 0%{width:0%} 60%{width:80%} 100%{width:100%} }
+  .load-status { font-family: 'Rajdhani', sans-serif; font-size: 0.7rem; letter-spacing: 3px; color: #6a8ab0; }
 </style>
 </head>
 <body>
+
+
+<div id="loading-screen">
+  <div class="load-badge">LOS<br>SANTOS<br>POLICE<br>DEPT</div>
+  <div class="load-title">Los Santos Police Department</div>
+  <div class="load-bar-wrap"><div class="load-bar"></div></div>
+  <div class="load-status" id="load-status">VERBINDUNG WIRD HERGESTELLT ...</div>
+</div>
 
 <div class="notification" id="notif"></div>
 
@@ -792,7 +824,7 @@
 <!-- Firebase SDKs -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut }
+import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { getFirestore, doc, setDoc, getDoc, collection, getDocs, addDoc, deleteDoc, query, where }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
@@ -811,6 +843,9 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
+
+// Sitzung dauerhaft speichern (bleibt eingeloggt bis manuell abgemeldet)
+await setPersistence(auth, browserLocalPersistence);
 
 // Expose to window
 window._auth = auth;
@@ -862,8 +897,8 @@ onAuthStateChanged(auth, async (user) => {
       document.getElementById('dash-name').textContent = user.displayName || 'Admin';
       document.getElementById('dash-id').textContent = 'ADMIN';
       document.getElementById('dash-tel').textContent = '-';
-      showPage('main');
       loadZugriffTable();
+      window._finishLoader && window._finishLoader(true);
       return;
     }
     // Normale Nutzer: approved prüfen
@@ -873,18 +908,23 @@ onAuthStateChanged(auth, async (user) => {
       document.getElementById('dash-name').textContent = data.vorname || '-';
       document.getElementById('dash-id').textContent = data.id || '-';
       document.getElementById('dash-tel').textContent = data.tel || '-';
-      showPage('main');
       loadZugriffTable();
+      window._finishLoader && window._finishLoader(true);
     } else {
       showNotif('Dein Konto wurde noch nicht freigeschalten. Bitte warte auf Admin-Bestätigung.', true);
       await signOut(auth);
+      window._finishLoader && window._finishLoader(false);
     }
+  } else {
+    // Nicht eingeloggt
+    window._finishLoader && window._finishLoader(false);
   }
 });
 
-// Login function
+// Login function — immer Konto-Auswahl erzwingen
 window.doGoogleLogin = async function() {
   try {
+    provider.setCustomParameters({ prompt: 'select_account' });
     const result = await signInWithPopup(auth, provider);
     const user = result.user;
     if (isAdmin(user.email)) return; // onAuthStateChanged übernimmt
@@ -894,7 +934,9 @@ window.doGoogleLogin = async function() {
       await signOut(auth);
     }
   } catch(e) {
-    showNotif('Anmeldung fehlgeschlagen: ' + e.message, true);
+    if (e.code !== 'auth/popup-closed-by-user') {
+      showNotif('Anmeldung fehlgeschlagen: ' + e.message, true);
+    }
   }
 };
 
@@ -1112,6 +1154,9 @@ function showSubPage(name) {
   document.getElementById('topbar').style.display = name === 'dashboard' ? 'flex' : 'none';
 
   if (name === 'zugriff') { window.loadZugriffTable && window.loadZugriffTable(); }
+
+  // Letzte Seite merken
+  try { localStorage.setItem('lspd_last_page', name); } catch(e) {}
 }
 
 // ===== POPUP =====
@@ -1174,7 +1219,46 @@ document.querySelectorAll('.overlay').forEach(o => {
   o.addEventListener('click', function(e) { if(e.target === this) this.classList.remove('open'); });
 });
 
-// Init
+// ===== LOADING SCREEN AUSBLENDEN =====
+function hideLoader() {
+  const ls = document.getElementById('loading-screen');
+  ls.classList.add('fade-out');
+  setTimeout(() => ls.style.display = 'none', 500);
+}
+
+function setLoadStatus(msg) {
+  const el = document.getElementById('load-status');
+  if (el) el.textContent = msg;
+}
+
+// Init — warte auf Firebase Auth
+// (onAuthStateChanged in firebase module übernimmt die Weiterleitung)
+// Fallback: nach 4s Ladescreen ausblenden und Login zeigen
+window._loaderDone = false;
+window._finishLoader = function(goToMain, lastPage) {
+  if (window._loaderDone) return;
+  window._loaderDone = true;
+  if (goToMain) {
+    setLoadStatus('ZUGRIFF GEWÄHRT');
+    setTimeout(() => {
+      hideLoader();
+      showPage('main');
+      const lp = lastPage || (function(){ try{ return localStorage.getItem('lspd_last_page'); }catch(e){return null;} })() || 'dashboard';
+      showSubPage(lp);
+    }, 600);
+  } else {
+    setLoadStatus('BITTE ANMELDEN');
+    setTimeout(() => {
+      hideLoader();
+      showPage('login');
+    }, 400);
+  }
+};
+
+// Timeout-Fallback falls Firebase nicht antwortet
+setTimeout(() => { window._finishLoader(false); }, 4000);
+
+// Init subpage default (wird später überschrieben)
 showSubPage('dashboard');
 </script>
 
