@@ -433,6 +433,12 @@
       padding: 10px;
     }
 
+    .modal-grid input[readonly] {
+      background: #141414;
+      color: #cfcfcf;
+      cursor: not-allowed;
+    }
+
     .modal-actions {
       display: flex;
       justify-content: flex-end;
@@ -479,7 +485,8 @@
     }
 
     .rank-search-input,
-    .move-id-input {
+    .move-id-input,
+    .archive-delete-input {
       width: 100%;
       max-width: 420px;
       background: #111;
@@ -491,12 +498,14 @@
       height: 46px;
     }
 
-    .move-id-input {
+    .move-id-input,
+    .archive-delete-input {
       max-width: 180px;
     }
 
     .rank-search-input:focus,
-    .move-id-input:focus {
+    .move-id-input:focus,
+    .archive-delete-input:focus {
       border-color: #0b4c84;
       box-shadow: 0 0 0 1px #0b4c84 inset;
     }
@@ -577,6 +586,14 @@
       color: #bbb;
       padding: 30px 0;
       font-size: 18px;
+    }
+
+    .archive-top-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
     }
 
     .rank-30 { background: #000000; color: #fff; }
@@ -697,6 +714,7 @@
       .rank-search-right { width: 100%; }
       .rank-search-input { max-width: 100%; }
       .move-id-input { max-width: 100%; }
+      .archive-delete-input { max-width: 100%; }
     }
   </style>
 </head>
@@ -740,7 +758,7 @@
               <div class="mini-row"><div class="bg-gold"><input class="dashboard-training-checkbox" data-training="Officer" type="checkbox" disabled></div><div class="bg-gold">OP</div></div>
             </div>
             <div class="training-card">
-              <h4 class="bg-blue">Für Officer 2</h4>
+              <h4 class="bg-blue">Für Officer II</h4>
               <div class="mini-row"><div class="bg-blue"><input class="dashboard-training-checkbox" data-training="OK" type="checkbox" disabled></div><div class="bg-blue">OK</div></div>
               <div class="mini-row"><div class="bg-blue"><input class="dashboard-training-checkbox" data-training="FULA" type="checkbox" disabled></div><div class="bg-blue">FULA</div></div>
             </div>
@@ -843,7 +861,7 @@
       <table>
         <thead>
           <tr>
-            <th>§</th><th>Regeldefinition</th><th class="action-cell">&gt;</th><th>Geldstrafe</th><th>TOW Fahrt</th><th>Human Labs</th><th>NG Runde</th><th>UpRank Sperre</th><th>Strike</th><th>Suspendierung</th><th>Kündigung</th>
+            <th>§</th><th>Regeldefinition</th><th class="action-cell">&gt;</th><th>Geldstrafe</th><th>TOW Fahrt</th><th>Human Labs</th><th>NG Runde</th><th>RankUp-Sperre</th><th>Strike</th><th>Suspendierung</th><th>Kündigung</th>
           </tr>
         </thead>
         <tbody>
@@ -880,7 +898,7 @@
             type="text"
             placeholder="ID eingeben"
           />
-          <button class="move-btn" id="moveEmployeeBtn">Verschieben</button>
+          <button class="move-btn" id="moveEmployeeBtn">Archivieren</button>
           <button class="archive-open-btn" id="openArchiveBtn">Mitarbeiter Archiv</button>
         </div>
       </div>
@@ -899,7 +917,7 @@
             <th class="vertical-sep"></th>
             <th>Urlaub</th>
             <th>Strike</th>
-            <th>Einladungsdatum</th>
+            <th>Invite-Datum</th>
             <th>Letzter RankUp</th>
             <th>Abteilung 1</th>
             <th>Abteilung 2</th>
@@ -938,9 +956,9 @@
           <tr>
             <th>Bearbeiten</th>
             <th>Name</th>
+            <th>Identifikationsnummer</th>
             <th>Nachname</th>
             <th>Email</th>
-            <th>ID</th>
             <th>Telefonnummer</th>
             <th>Freigeben</th>
             <th>Zugriffsrang</th>
@@ -963,6 +981,16 @@
       <button class="back-btn" onclick="showPage('page7')">&lt;- Zurück</button>
       <h1 class="top-title">Mitarbeiter Archiv</h1>
 
+      <div class="archive-top-actions">
+        <input
+          id="archiveDeleteEmployeeIdInput"
+          class="archive-delete-input"
+          type="text"
+          placeholder="ID eingeben"
+        />
+        <button class="danger-btn" id="deleteArchivedEmployeeBtn">Löschen</button>
+      </div>
+
       <table class="rank-list-table">
         <thead>
           <tr>
@@ -974,7 +1002,7 @@
             <th>Rang</th>
             <th>Abteilung 1</th>
             <th>Abteilung 2</th>
-            <th>Einladung</th>
+            <th>Invite</th>
             <th>Letzter RankUp</th>
             <th>Urlaub</th>
             <th>Strike</th>
@@ -992,15 +1020,15 @@
     <div class="modal-content">
       <h2 class="modal-title" id="employeeModalTitle">Mitarbeiter hinzufügen</h2>
       <div class="modal-grid">
-        <label>Email<input id="empEmail" type="email" /></label>
+        <label>Identifikationsnummer<input id="empId" type="text" /></label>
+        <label>Email<input id="empEmail" type="email" readonly /></label>
         <label>Name<input id="empName" type="text" /></label>
-        <label>ID<input id="empId" type="text" /></label>
         <label>Telefonnummer<input id="empPhone" type="text" /></label>
         <label>Dienstnummer<input id="empServiceNumber" type="text" /></label>
         <label>Rang<input id="empRank" type="number" min="1" max="30" /></label>
         <label>Abteilung 1<input id="empDepartment1" type="text" /></label>
         <label>Abteilung 2<input id="empDepartment2" type="text" /></label>
-        <label>Einladung<input id="empInvite" type="text" /></label>
+        <label>Invite<input id="empInvite" type="text" /></label>
         <label>Letzter RankUp<input id="empLastRankUp" type="text" /></label>
         <label>Urlaub<input id="empVacation" type="text" /></label>
         <label>Strike<input id="empStrike" type="text" /></label>
@@ -1047,9 +1075,9 @@
       <h2 class="modal-title" id="accessModalTitle">Zugriff hinzufügen</h2>
       <div class="modal-grid">
         <label>Name<input id="accessName" type="text" /></label>
+        <label>Identifikationsnummer<input id="accessId" type="text" readonly /></label>
         <label>Nachname<input id="accessLastName" type="text" /></label>
         <label>Email<input id="accessEmail" type="email" /></label>
-        <label>ID<input id="accessId" type="text" /></label>
         <label>Telefonnummer<input id="accessPhone" type="text" /></label>
         <label>Freigeben
           <select id="accessApproved">
@@ -1169,7 +1197,7 @@
 
     const navItems = [
       { id: 'page2', label: 'LSPD Dashboard' },
-      { id: 'page3', label: 'Kleider Ordnung' },
+      { id: 'page3', label: 'Kleiderordnung' },
       { id: 'page4', label: 'Rangbefugnisse' },
       { id: 'page5', label: 'Fahrzeugordnung' },
       { id: 'page6', label: 'Sanktionskatalog' },
@@ -1191,6 +1219,17 @@
 
     function getEmployeeDocIdByEmail(email = '') {
       return `employee_${emailToSafeId(email)}`;
+    }
+
+    function buildStableIdFromEmail(email = '') {
+      const normalized = normalizeEmail(email);
+      if (!normalized) return '';
+      let hash = 0;
+      for (let i = 0; i < normalized.length; i++) {
+        hash = ((hash << 5) - hash) + normalized.charCodeAt(i);
+        hash |= 0;
+      }
+      return String(Math.abs(hash)).padStart(6, '0').slice(0, 8);
     }
 
     function mountNav(targetId) {
@@ -1283,7 +1322,6 @@
     async function ensurePreapprovedUsers() {
       for (const user of PREAPPROVED_USERS) {
         const accessRef = doc(db, ACCESS_COLLECTION, getAccessDocIdByEmail(user.email));
-        const employeeRef = doc(db, EMPLOYEE_COLLECTION, getEmployeeDocIdByEmail(user.email));
 
         await setDoc(accessRef, {
           uid: user.uid,
@@ -1291,33 +1329,12 @@
           lastName: user.lastName,
           fullName: user.fullName,
           email: user.email,
-          employeeId: user.employeeId,
+          employeeId: user.employeeId || buildStableIdFromEmail(user.email),
           phone: user.phone,
           approved: true,
           websiteAccessRank: user.websiteAccessRank,
           role: user.role,
           createdAt: user.createdAt
-        }, { merge: true });
-
-        await setDoc(employeeRef, {
-          uid: user.uid,
-          name: user.name,
-          lastName: user.lastName,
-          fullName: user.fullName,
-          email: user.email,
-          employeeId: user.employeeId,
-          phone: user.phone,
-          serviceNumber: user.serviceNumber,
-          rank: user.rank,
-          department1: user.department1,
-          department2: user.department2,
-          invite: user.invite,
-          lastRankUp: user.lastRankUp,
-          vacation: user.vacation,
-          strike: user.strike,
-          trainings: normalizeTrainings(user.trainings || {}),
-          createdAt: user.createdAt,
-          archived: false
         }, { merge: true });
       }
     }
@@ -1340,6 +1357,20 @@
       return null;
     }
 
+    async function findAccessByEmployeeId(employeeId) {
+      const normalizedId = String(employeeId || '').trim();
+      if (!normalizedId) return null;
+
+      const snap = await getDocs(collection(db, ACCESS_COLLECTION));
+      for (const docSnap of snap.docs) {
+        const data = docSnap.data();
+        if (String(data.employeeId || '').trim() === normalizedId) {
+          return { id: docSnap.id, data };
+        }
+      }
+      return null;
+    }
+
     async function findEmployeeByEmail(email) {
       const targetId = getEmployeeDocIdByEmail(email);
       const directSnap = await getDoc(doc(db, EMPLOYEE_COLLECTION, targetId));
@@ -1352,6 +1383,20 @@
       for (const docSnap of snap.docs) {
         const data = docSnap.data();
         if (normalizeEmail(data.email) === targetEmail) {
+          return { id: docSnap.id, data };
+        }
+      }
+      return null;
+    }
+
+    async function findEmployeeByEmployeeId(employeeId) {
+      const normalizedId = String(employeeId || '').trim();
+      if (!normalizedId) return null;
+
+      const snap = await getDocs(collection(db, EMPLOYEE_COLLECTION));
+      for (const docSnap of snap.docs) {
+        const data = docSnap.data();
+        if (String(data.employeeId || '').trim() === normalizedId) {
           return { id: docSnap.id, data };
         }
       }
@@ -1402,14 +1447,14 @@
         ['Name:', nameValue],
         ['ID:', data?.employeeId || '-'],
         ['Telefonnummer:', data?.phone || '-'],
-        ['Dienstnummer', data?.serviceNumber || '-'],
+        ['Dienstnummer:', data?.serviceNumber || '-'],
         ['Rang:', personalRank ? `${personalRank} | ${rankLabel(personalRank)}` : '-'],
         ['Abteilung 1:', data?.department1 || '-'],
         ['Abteilung 2:', data?.department2 || '-'],
-        ['Einladung', data?.invite || '-'],
-        ['Letzter RankUp', data?.lastRankUp || '-'],
-        ['Urlaub', data?.vacation || '0/3'],
-        ['Strike', data?.strike || '0/3']
+        ['Invite:', data?.invite || '-'],
+        ['Letzter RankUp:', data?.lastRankUp || '-'],
+        ['Urlaub:', data?.vacation || '0/3'],
+        ['Strike:', data?.strike || '0/3']
       ];
 
       const grid = document.getElementById('personalDataGrid');
@@ -1434,8 +1479,8 @@
         approved: !!accessEntry?.data?.approved,
         websiteAccessRank: getWebsiteAccessRank(accessEntry?.data || {}),
         role: accessEntry?.data?.role || 'user',
-        employeeId: employeeEntry?.data?.employeeId || '-',
-        phone: employeeEntry?.data?.phone || '-',
+        employeeId: employeeEntry?.data?.employeeId || accessEntry?.data?.employeeId || '-',
+        phone: employeeEntry?.data?.phone || accessEntry?.data?.phone || '-',
         serviceNumber: employeeEntry?.data?.serviceNumber || '-',
         rank: getPersonalRank(employeeEntry?.data || {}),
         department1: employeeEntry?.data?.department1 || '-',
@@ -1455,6 +1500,7 @@
 
     async function createOrUpdateAccessFromGoogleUser(user, extraData = {}) {
       const existingAccess = await findAccessByEmail(user.email);
+      const stableEmployeeId = existingAccess?.data?.employeeId || extraData.employeeId || buildStableIdFromEmail(user.email);
       const targetId = existingAccess?.id || getAccessDocIdByEmail(user.email);
 
       const payload = {
@@ -1466,7 +1512,7 @@
           extraData.name || existingAccess?.data?.name || user.displayName || user.email.split('@')[0],
           extraData.lastName || existingAccess?.data?.lastName || ''
         ),
-        employeeId: extraData.employeeId || existingAccess?.data?.employeeId || '',
+        employeeId: stableEmployeeId,
         phone: extraData.phone || existingAccess?.data?.phone || '',
         approved: existingAccess?.data?.approved ?? false,
         websiteAccessRank: existingAccess?.data?.websiteAccessRank ?? 0,
@@ -1476,6 +1522,30 @@
 
       await setDoc(doc(db, ACCESS_COLLECTION, targetId), payload, { merge: true });
       return payload;
+    }
+
+    async function autofillEmployeeModalById() {
+      if (editingEmployeeId) return;
+
+      const employeeId = document.getElementById('empId').value.trim();
+      const emailInput = document.getElementById('empEmail');
+
+      emailInput.value = '';
+
+      if (!employeeId) return;
+
+      const accessEntry = await findAccessByEmployeeId(employeeId);
+      if (!accessEntry) return;
+
+      const accessData = accessEntry.data || {};
+      emailInput.value = accessData.email || '';
+
+      if (!document.getElementById('empName').value.trim()) {
+        document.getElementById('empName').value = accessData.fullName || buildFullName(accessData.name, accessData.lastName) || '';
+      }
+      if (!document.getElementById('empPhone').value.trim()) {
+        document.getElementById('empPhone').value = accessData.phone || '';
+      }
     }
 
     window.openRequestModal = function () {
@@ -1524,4 +1594,803 @@
       }
     };
 
-    window
+    window.loginWithGoogle = async function () {
+      try {
+        showMessage('');
+        await signOut(auth);
+        const result = await signInWithPopup(auth, provider);
+        const user = result.user;
+
+        const accessEntry = await findAccessByEmail(user.email);
+
+        if (!accessEntry) {
+          showMessage('Du hast noch keine Anfrage gesendet.');
+          await signOut(auth);
+          return;
+        }
+
+        await setDoc(doc(db, ACCESS_COLLECTION, accessEntry.id), {
+          uid: user.uid,
+          email: user.email
+        }, { merge: true });
+
+        const merged = await loadCurrentUserData(user, {
+          ...accessEntry.data,
+          uid: user.uid,
+          email: user.email
+        });
+
+        if (!accessEntry.data.approved && !isAdmin(user.email, merged)) {
+          showMessage('Dein Zugriff wurde noch nicht freigegeben.');
+          await signOut(auth);
+          return;
+        }
+
+        if (merged.archived) {
+          showMessage('Dein Mitarbeiterprofil ist archiviert.');
+        }
+
+        const lastPage = getLastPage();
+        showPage(lastPage);
+      } catch (error) {
+        console.error(error);
+        showMessage('Google Anmeldung fehlgeschlagen. Nutze localhost und prüfe die freigegebene Domain in Firebase.');
+      }
+    };
+
+    function populateAccessRankSelect(selectElement, selectedValue = 0) {
+      if (!selectElement) return;
+      selectElement.innerHTML = Array.from({ length: 31 }, (_, i) => `
+        <option value="${i}" ${Number(selectedValue) === i ? 'selected' : ''}>${i}</option>
+      `).join('');
+    }
+
+    function resetEmployeeModal() {
+      editingEmployeeId = null;
+      editingEmployeeTrainings = {};
+      document.getElementById('employeeModalTitle').textContent = 'Mitarbeiter hinzufügen';
+      document.getElementById('empEmail').value = '';
+      document.getElementById('empId').readOnly = false;
+      document.getElementById('empId').value = '';
+      document.getElementById('empName').value = '';
+      document.getElementById('empPhone').value = '';
+      document.getElementById('empServiceNumber').value = '';
+      document.getElementById('empRank').value = '1';
+      document.getElementById('empDepartment1').value = '';
+      document.getElementById('empDepartment2').value = '';
+      document.getElementById('empInvite').value = '';
+      document.getElementById('empLastRankUp').value = '';
+      document.getElementById('empVacation').value = '0/3';
+      document.getElementById('empStrike').value = '0/3';
+    }
+
+    window.closeEmployeeModal = function () {
+      document.getElementById('employeeModal').classList.add('hidden');
+    };
+
+    function openEmployeeModal(item = null, docId = null) {
+      resetEmployeeModal();
+      if (item && docId) {
+        editingEmployeeId = docId;
+        editingEmployeeTrainings = normalizeTrainings(item.trainings || {});
+        document.getElementById('employeeModalTitle').textContent = 'Mitarbeiter bearbeiten';
+        document.getElementById('empEmail').value = item.email || '';
+        document.getElementById('empId').value = item.employeeId || '';
+        document.getElementById('empId').readOnly = true;
+        document.getElementById('empName').value = item.fullName || buildFullName(item.name, item.lastName) || '';
+        document.getElementById('empPhone').value = item.phone || '';
+        document.getElementById('empServiceNumber').value = item.serviceNumber || '';
+        document.getElementById('empRank').value = getPersonalRank(item) || 1;
+        document.getElementById('empDepartment1').value = item.department1 || '';
+        document.getElementById('empDepartment2').value = item.department2 || '';
+        document.getElementById('empInvite').value = item.invite || '';
+        document.getElementById('empLastRankUp').value = item.lastRankUp || '';
+        document.getElementById('empVacation').value = item.vacation || '0/3';
+        document.getElementById('empStrike').value = item.strike || '0/3';
+      }
+      document.getElementById('employeeModal').classList.remove('hidden');
+    }
+
+    window.saveEmployee = async function () {
+      if (!currentUser || !isAdmin(currentUser.email)) return;
+
+      const employeeId = document.getElementById('empId').value.trim();
+      if (!employeeId) {
+        alert('Bitte eine Identifikationsnummer eintragen.');
+        return;
+      }
+
+      let matchedAccess = await findAccessByEmployeeId(employeeId);
+      let email = document.getElementById('empEmail').value.trim();
+
+      if (!editingEmployeeId) {
+        if (!matchedAccess) {
+          alert('Zu dieser Identifikationsnummer wurde kein Google-Konto gefunden.');
+          return;
+        }
+        email = matchedAccess.data?.email || '';
+        document.getElementById('empEmail').value = email;
+      }
+
+      if (!email) {
+        alert('Für diese Identifikationsnummer konnte keine E-Mail gefunden werden.');
+        return;
+      }
+
+      const existingEmployee = await findEmployeeByEmail(email);
+      const targetId = editingEmployeeId || existingEmployee?.id || getEmployeeDocIdByEmail(email);
+
+      let existingData = existingEmployee?.data || {};
+      if (editingEmployeeId) {
+        const currentDocSnap = await getDoc(doc(db, EMPLOYEE_COLLECTION, editingEmployeeId));
+        if (currentDocSnap.exists()) {
+          existingData = currentDocSnap.data();
+        }
+      }
+
+      const fullNameInput = document.getElementById('empName').value.trim();
+      const nameParts = fullNameInput.split(' ').filter(Boolean);
+      const firstName = nameParts.shift() || fullNameInput || '';
+      const lastName = nameParts.join(' ');
+
+      const payload = {
+        uid: existingData.uid || matchedAccess?.data?.uid || targetId,
+        email,
+        name: firstName,
+        lastName,
+        fullName: fullNameInput || buildFullName(existingData.name, existingData.lastName) || email.split('@')[0],
+        employeeId: employeeId || existingData.employeeId || '',
+        phone: document.getElementById('empPhone').value.trim() || existingData.phone || '',
+        serviceNumber: document.getElementById('empServiceNumber').value.trim() || existingData.serviceNumber || '',
+        rank: Math.max(1, Math.min(30, Number(document.getElementById('empRank').value || existingData.rank || 1))),
+        department1: document.getElementById('empDepartment1').value.trim() || existingData.department1 || '',
+        department2: document.getElementById('empDepartment2').value.trim() || existingData.department2 || '',
+        invite: document.getElementById('empInvite').value.trim() || existingData.invite || '',
+        lastRankUp: document.getElementById('empLastRankUp').value.trim() || existingData.lastRankUp || '',
+        vacation: document.getElementById('empVacation').value.trim() || existingData.vacation || '0/3',
+        strike: document.getElementById('empStrike').value.trim() || existingData.strike || '0/3',
+        createdAt: existingData.createdAt || new Date().toISOString(),
+        trainings: normalizeTrainings(existingData.trainings || editingEmployeeTrainings || {}),
+        archived: existingData.archived ?? false,
+        trainingsArchived: existingData.trainingsArchived ?? false
+      };
+
+      await setDoc(doc(db, EMPLOYEE_COLLECTION, targetId), payload, { merge: true });
+
+      const accessEntry = matchedAccess || await findAccessByEmail(email);
+      if (accessEntry) {
+        await setDoc(doc(db, ACCESS_COLLECTION, accessEntry.id), {
+          name: firstName,
+          lastName,
+          fullName: payload.fullName,
+          employeeId: payload.employeeId,
+          phone: payload.phone
+        }, { merge: true });
+      }
+
+      closeEmployeeModal();
+
+      if (normalizeEmail(currentUser?.email) === normalizeEmail(email)) {
+        const currentAccessEntry = await findAccessByEmail(email);
+        await loadCurrentUserData(currentUser, currentAccessEntry?.data || null);
+      }
+    };
+
+    function resetTrainingModal() {
+      editingTrainingId = null;
+      TRAINING_KEYS.forEach(key => {
+        const el = document.getElementById(`tr${key}`);
+        if (el) el.checked = false;
+      });
+    }
+
+    window.closeTrainingModal = function () {
+      document.getElementById('trainingModal').classList.add('hidden');
+    };
+
+    function openTrainingModal(item = null, docId = null) {
+      resetTrainingModal();
+      editingTrainingId = docId || null;
+      const trainings = normalizeTrainings(item?.trainings || {});
+
+      TRAINING_KEYS.forEach(key => {
+        const el = document.getElementById(`tr${key}`);
+        if (el) el.checked = !!trainings[key];
+      });
+
+      document.getElementById('trainingModal').classList.remove('hidden');
+    }
+
+    window.saveTrainingModal = async function () {
+      if (!currentUser || !isAdmin(currentUser.email)) return;
+      if (!editingTrainingId) return;
+
+      const payload = {};
+      TRAINING_KEYS.forEach(key => {
+        payload[key] = !!document.getElementById(`tr${key}`)?.checked;
+      });
+
+      await setDoc(doc(db, EMPLOYEE_COLLECTION, editingTrainingId), {
+        trainings: payload,
+        trainingsArchived: false
+      }, { merge: true });
+
+      const currentEmployeeEntry = currentUser ? await findEmployeeByEmail(currentUser.email) : null;
+      if (currentEmployeeEntry && currentEmployeeEntry.id === editingTrainingId) {
+        const accessEntry = await findAccessByEmail(currentUser.email);
+        await loadCurrentUserData(currentUser, accessEntry?.data || null);
+      }
+
+      closeTrainingModal();
+    };
+
+    window.closeAccessModal = function () {
+      document.getElementById('accessModal').classList.add('hidden');
+    };
+
+    function openAccessModal(item = null, docId = null) {
+      const title = document.getElementById('accessModalTitle');
+      const emailValue = item?.email || '';
+      const stableId = item?.employeeId || (emailValue ? buildStableIdFromEmail(emailValue) : '');
+
+      document.getElementById('accessName').value = item?.name || '';
+      document.getElementById('accessLastName').value = item?.lastName || '';
+      document.getElementById('accessEmail').value = emailValue;
+      document.getElementById('accessId').value = stableId;
+      document.getElementById('accessPhone').value = item?.phone || '';
+      document.getElementById('accessApproved').value = String(item?.approved ?? true);
+      populateAccessRankSelect(document.getElementById('accessRank'), getWebsiteAccessRank(item || {}));
+      title.textContent = item && docId ? 'Zugriff bearbeiten' : 'Zugriff hinzufügen';
+      document.getElementById('accessModal').dataset.editId = docId || '';
+      document.getElementById('accessEmail').readOnly = !!(item && docId);
+      document.getElementById('accessModal').classList.remove('hidden');
+    }
+
+    window.saveAccessEntry = async function () {
+      if (!currentUser || !isAdmin(currentUser.email)) return;
+
+      const email = document.getElementById('accessEmail').value.trim();
+      if (!email) {
+        alert('Bitte eine E-Mail eintragen.');
+        return;
+      }
+
+      const modal = document.getElementById('accessModal');
+      const modalEditId = modal.dataset.editId || '';
+      const existingByEmail = await findAccessByEmail(email);
+      const existingData = existingByEmail?.data || {};
+      const targetId = modalEditId || existingByEmail?.id || getAccessDocIdByEmail(email);
+      const accessRankValue = Math.max(0, Math.min(30, Number(document.getElementById('accessRank').value || 0)));
+      const firstName = document.getElementById('accessName').value.trim();
+      const lastName = document.getElementById('accessLastName').value.trim();
+      const stableEmployeeId = existingData.employeeId || buildStableIdFromEmail(email);
+      const phone = document.getElementById('accessPhone').value.trim();
+
+      document.getElementById('accessId').value = stableEmployeeId;
+
+      const payload = {
+        uid: existingData.uid || targetId,
+        email,
+        name: firstName || existingData.name || email.split('@')[0],
+        lastName: lastName || existingData.lastName || '',
+        fullName: buildFullName(
+          firstName || existingData.name || email.split('@')[0],
+          lastName || existingData.lastName || ''
+        ),
+        employeeId: stableEmployeeId,
+        phone: phone || existingData.phone || '',
+        approved: document.getElementById('accessApproved').value === 'true',
+        websiteAccessRank: accessRankValue,
+        role: accessRankValue >= 30 ? 'admin' : 'user',
+        createdAt: existingData.createdAt || new Date().toISOString()
+      };
+
+      await setDoc(doc(db, ACCESS_COLLECTION, targetId), payload, { merge: true });
+      closeAccessModal();
+
+      if (normalizeEmail(currentUser?.email) === normalizeEmail(email)) {
+        await loadCurrentUserData(currentUser, payload);
+      }
+    };
+
+    async function deleteAccessEntry(id) {
+      if (!currentUser || !isAdmin(currentUser.email)) return;
+      const confirmed = confirm('Diesen Zugriff und die Anfrage wirklich löschen?');
+      if (!confirmed) return;
+      await deleteDoc(doc(db, ACCESS_COLLECTION, id));
+    }
+
+    async function archiveEmployeeByEmployeeId(employeeId) {
+      if (!currentUser || !isAdmin(currentUser.email)) return false;
+      const normalizedId = String(employeeId || '').trim();
+      if (!normalizedId) return false;
+
+      const found = employeesCache.find(entry => String(entry.data.employeeId || '').trim() === normalizedId && !entry.data.archived);
+      if (!found) return false;
+
+      await updateDoc(doc(db, EMPLOYEE_COLLECTION, found.id), {
+        archived: true,
+        archivedAt: new Date().toISOString(),
+        archivedTrainings: normalizeTrainings(found.data.trainings || {}),
+        trainingsArchived: true
+      });
+      return true;
+    }
+
+    async function deleteArchivedEmployeeByEmployeeId(employeeId) {
+      if (!currentUser || !isAdmin(currentUser.email)) return false;
+      const normalizedId = String(employeeId || '').trim();
+      if (!normalizedId) return false;
+
+      const found = employeesCache.find(entry => String(entry.data.employeeId || '').trim() === normalizedId && !!entry.data.archived);
+      if (!found) return false;
+
+      await deleteDoc(doc(db, EMPLOYEE_COLLECTION, found.id));
+      return true;
+    }
+
+    function subscribeAccessRequests() {
+      const q = query(collection(db, ACCESS_COLLECTION), orderBy('createdAt', 'desc'));
+      onSnapshot(q, (snapshot) => {
+        const body = document.getElementById('accessRequestBody');
+        body.innerHTML = '';
+        const seenEmails = new Set();
+
+        snapshot.forEach((docSnap) => {
+          const item = docSnap.data();
+          const emailKey = normalizeEmail(item.email);
+          if (seenEmails.has(emailKey)) return;
+          seenEmails.add(emailKey);
+
+          const tr = document.createElement('tr');
+          const disabled = currentUser && isAdmin(currentUser.email) ? '' : 'disabled';
+          const status = item.approved ? 'Freigegeben' : 'Wartet';
+          const accessRank = getWebsiteAccessRank(item);
+
+          tr.innerHTML = `
+            <td>
+              <button class="icon-btn" data-access-edit-id="${docSnap.id}" ${disabled}>✎</button>
+            </td>
+            <td>${item.name || '-'}</td>
+            <td>${item.employeeId || buildStableIdFromEmail(item.email || '') || '-'}</td>
+            <td>${item.lastName || '-'}</td>
+            <td>${item.email || '-'}</td>
+            <td>${item.phone || '-'}</td>
+            <td class="request-controls">
+              <select data-type="approved" data-id="${docSnap.id}" ${disabled}>
+                <option value="false" ${!item.approved ? 'selected' : ''}>nein</option>
+                <option value="true" ${item.approved ? 'selected' : ''}>ja</option>
+              </select>
+            </td>
+            <td class="request-controls">
+              <select data-type="websiteAccessRank" data-id="${docSnap.id}" ${disabled}>
+                ${Array.from({ length: 31 }, (_, i) => `<option value="${i}" ${accessRank === i ? 'selected' : ''}>${i}</option>`).join('')}
+              </select>
+            </td>
+            <td><span class="status-pill ${item.approved ? 'yes' : 'pending'}">${status}</span></td>
+            <td>
+              <div class="request-actions">
+                <button class="danger-btn" data-delete-id="${docSnap.id}" ${disabled}>Löschen</button>
+              </div>
+            </td>
+          `;
+          body.appendChild(tr);
+        });
+
+        body.querySelectorAll('select').forEach(control => {
+          control.addEventListener('change', async (e) => {
+            if (!currentUser || !isAdmin(currentUser.email)) return;
+            const id = e.target.dataset.id;
+            const type = e.target.dataset.type;
+            if (!id || !type) return;
+            const ref = doc(db, ACCESS_COLLECTION, id);
+
+            if (type === 'approved') {
+              await updateDoc(ref, { approved: e.target.value === 'true' });
+            }
+            if (type === 'websiteAccessRank') {
+              const value = Math.max(0, Math.min(30, Number(e.target.value || 0)));
+              await updateDoc(ref, { websiteAccessRank: value, role: value >= 30 ? 'admin' : 'user' });
+            }
+          });
+        });
+
+        body.querySelectorAll('[data-delete-id]').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            await deleteAccessEntry(btn.dataset.deleteId);
+          });
+        });
+
+        body.querySelectorAll('[data-access-edit-id]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const rowId = btn.dataset.accessEditId;
+            const rowData = snapshot.docs.find(docItem => docItem.id === rowId)?.data();
+            if (!rowData) return;
+            openAccessModal(rowData, rowId);
+          });
+        });
+      });
+    }
+
+    function getDivisionLabel(rank) {
+      const r = Number(rank || 1);
+
+      if (r >= 28) return 'Leadership';
+      if (r >= 23 && r <= 27) return 'High Command';
+      if (r >= 18 && r <= 22) return 'Department';
+      if (r === 17) return 'Media';
+      if (r >= 11 && r <= 16) return 'Command';
+      if (r >= 5 && r <= 10) return 'Officer';
+      if (r === 4) return 'Rookie';
+      if (r === 3) return 'TOW Officer';
+      if (r === 2) return 'Cadet';
+      return 'Suspended';
+    }
+
+    function getDivisionClass(rank) {
+      const r = Number(rank || 1);
+
+      if (r >= 28) return 'division-leadership';
+      if (r >= 23 && r <= 27) return 'division-highcommand';
+      if (r >= 18 && r <= 22) return 'division-department';
+      if (r === 17) return 'division-media';
+      if (r >= 11 && r <= 16) return 'division-command';
+      if (r >= 5 && r <= 10) return 'division-officer';
+      if (r === 4) return 'division-rookie';
+      if (r === 3) return 'division-tow';
+      if (r === 2) return 'division-rookie';
+      return 'division-suspended';
+    }
+
+    function hasTraining(item, key) {
+      return !!normalizeTrainings(item?.trainings || {})[key];
+    }
+
+    function createTrainingCell(item, key) {
+      return `<td><input class="mini-checkbox" type="checkbox" ${hasTraining(item, key) ? 'checked' : ''} disabled></td>`;
+    }
+
+    function createSeparatorRow() {
+      return `
+        <tr class="sep-row">
+          <td colspan="33"></td>
+        </tr>
+      `;
+    }
+
+    function createEmployeeRankRow(item, docId, disabledAttr) {
+      const personalRank = Math.max(1, Math.min(30, Number(getPersonalRank(item) || 1)));
+      const nameValue = item.fullName || buildFullName(item.name, item.lastName) || '';
+
+      return `
+        <tr>
+          <td>
+            <div class="table-action-stack">
+              <button class="data-edit-btn" data-employee-edit-id="${docId}" ${disabledAttr}>✎</button>
+            </div>
+          </td>
+          <td class="left-dark">${item.employeeId || ''}</td>
+          <td class="left-dark">${item.serviceNumber || ''}</td>
+          <td class="left-dark">${nameValue}</td>
+          <td class="left-dark">${item.phone || ''}</td>
+          <td class="rank-main-cell rank-${personalRank}">${personalRank} | ${rankLabel(personalRank)}</td>
+          <td class="vertical-sep"></td>
+          <td class="division-cell ${getDivisionClass(personalRank)}">${getDivisionLabel(personalRank)}</td>
+          <td class="vertical-sep"></td>
+          <td>${item.vacation || '0/3'}</td>
+          <td>${item.strike || '0/3'}</td>
+          <td>${item.invite || '-'}</td>
+          <td>${item.lastRankUp || '-'}</td>
+          <td>${item.department1 || '-'}</td>
+          <td>${item.department2 || '-'}</td>
+          <td class="vertical-sep"></td>
+          ${createTrainingCell(item, 'GA')}
+          ${createTrainingCell(item, 'EHK')}
+          ${createTrainingCell(item, 'ES')}
+          ${createTrainingCell(item, 'Officer')}
+          ${createTrainingCell(item, 'OK')}
+          ${createTrainingCell(item, 'FULA')}
+          ${createTrainingCell(item, 'TST')}
+          ${createTrainingCell(item, 'KS')}
+          ${createTrainingCell(item, 'OKPLUS')}
+          ${createTrainingCell(item, 'FT')}
+          ${createTrainingCell(item, 'COP')}
+          ${createTrainingCell(item, 'JP')}
+          ${createTrainingCell(item, 'ZP')}
+          ${createTrainingCell(item, 'VHP')}
+          ${createTrainingCell(item, 'TOWBL')}
+          ${createTrainingCell(item, 'AKS')}
+          <td>
+            <button class="rank-edit-btn" data-training-edit-id="${docId}" ${disabledAttr}>✎</button>
+          </td>
+        </tr>
+      `;
+    }
+
+    function matchesSearch(item, term) {
+      if (!term) return true;
+
+      const searchText = [
+        item.name,
+        item.lastName,
+        item.fullName,
+        item.email,
+        item.employeeId,
+        item.phone,
+        item.serviceNumber,
+        item.department1,
+        item.department2,
+        rankLabel(getPersonalRank(item)),
+        getDivisionLabel(getPersonalRank(item))
+      ]
+        .join(' ')
+        .toLowerCase();
+
+      return searchText.includes(term.toLowerCase());
+    }
+
+    function renderEmployeesFromCache() {
+      const tbody = document.getElementById('employeesTableBody');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      const seenEmails = new Set();
+      const activeEntries = employeesCache
+        .filter(entry => !entry.data.archived)
+        .filter(entry => {
+          const emailKey = normalizeEmail(entry.data.email);
+          if (seenEmails.has(emailKey)) return false;
+          seenEmails.add(emailKey);
+          return true;
+        })
+        .filter(entry => matchesSearch(entry.data, employeeSearchTerm))
+        .sort((a, b) => {
+          const rankDiff = Number(getPersonalRank(b.data) || 0) - Number(getPersonalRank(a.data) || 0);
+          if (rankDiff !== 0) return rankDiff;
+          return String(a.data.fullName || buildFullName(a.data.name, a.data.lastName) || '').localeCompare(
+            String(b.data.fullName || buildFullName(b.data.name, b.data.lastName) || ''),
+            'de'
+          );
+        });
+
+      if (activeEntries.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="33" style="padding: 18px; text-align:center;">Keine eingetragenen Mitarbeiter vorhanden.</td>
+          </tr>
+        `;
+        return;
+      }
+
+      let lastRank = null;
+      activeEntries.forEach((entry, index) => {
+        const disabledAttr = currentUser && isAdmin(currentUser.email) ? '' : 'disabled';
+        const rank = Math.max(1, Math.min(30, Number(getPersonalRank(entry.data) || 1)));
+
+        if (index > 0 && rank !== lastRank) {
+          tbody.innerHTML += createSeparatorRow();
+        }
+
+        tbody.innerHTML += createEmployeeRankRow(entry.data, entry.id, disabledAttr);
+        lastRank = rank;
+      });
+
+      tbody.querySelectorAll('[data-employee-edit-id]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const rowId = btn.dataset.employeeEditId;
+          const found = employeesCache.find(item => item.id === rowId);
+          if (!found) return;
+          openEmployeeModal(found.data, rowId);
+        });
+      });
+
+      tbody.querySelectorAll('[data-training-edit-id]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const rowId = btn.dataset.trainingEditId;
+          const found = employeesCache.find(item => item.id === rowId);
+          if (!found) return;
+          openTrainingModal(found.data, rowId);
+        });
+      });
+    }
+
+    function renderArchivedEmployeesFromCache() {
+      const tbody = document.getElementById('archivedEmployeesTableBody');
+      const emptyState = document.getElementById('archiveEmptyState');
+      if (!tbody || !emptyState) return;
+
+      tbody.innerHTML = '';
+      const archivedEntries = employeesCache
+        .filter(entry => !!entry.data.archived)
+        .sort((a, b) => {
+          const rankDiff = Number(getPersonalRank(b.data) || 0) - Number(getPersonalRank(a.data) || 0);
+          if (rankDiff !== 0) return rankDiff;
+          return String(a.data.fullName || buildFullName(a.data.name, a.data.lastName) || '').localeCompare(
+            String(b.data.fullName || buildFullName(b.data.name, b.data.lastName) || ''),
+            'de'
+          );
+        });
+
+      if (archivedEntries.length === 0) {
+        emptyState.classList.remove('hidden');
+        return;
+      }
+
+      emptyState.classList.add('hidden');
+
+      archivedEntries.forEach((entry) => {
+        const item = entry.data;
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${item.email || '-'}</td>
+          <td>${item.fullName || buildFullName(item.name, item.lastName) || '-'}</td>
+          <td>${item.employeeId || '-'}</td>
+          <td>${item.serviceNumber || '-'}</td>
+          <td>${item.phone || '-'}</td>
+          <td>${getPersonalRank(item) ? `${getPersonalRank(item)} | ${rankLabel(getPersonalRank(item))}` : '-'}</td>
+          <td>${item.department1 || '-'}</td>
+          <td>${item.department2 || '-'}</td>
+          <td>${item.invite || '-'}</td>
+          <td>${item.lastRankUp || '-'}</td>
+          <td>${item.vacation || '0/3'}</td>
+          <td>${item.strike || '0/3'}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function subscribeEmployees() {
+      if (unsubscribeEmployeesSnapshot) {
+        unsubscribeEmployeesSnapshot();
+      }
+
+      const q = query(collection(db, EMPLOYEE_COLLECTION), orderBy('createdAt', 'desc'));
+      unsubscribeEmployeesSnapshot = onSnapshot(q, async (snapshot) => {
+        employeesCache = snapshot.docs.map(docSnap => ({
+          id: docSnap.id,
+          data: {
+            ...docSnap.data(),
+            trainings: normalizeTrainings(docSnap.data().trainings || {})
+          }
+        }));
+
+        if (currentUser) {
+          const accessEntry = await findAccessByEmail(currentUser.email);
+          await loadCurrentUserData(currentUser, accessEntry?.data || null);
+        }
+
+        renderEmployeesFromCache();
+        renderArchivedEmployeesFromCache();
+      });
+    }
+
+    window.logout = async function () {
+      await signOut(auth);
+      currentUser = null;
+      currentUserData = null;
+      showMessage('');
+      clearLastPage();
+      showPage('page1', { save: false });
+      finishAuthCheck();
+    };
+
+    document.getElementById('addEmployeeBtn').addEventListener('click', () => {
+      if (!currentUser || !isAdmin(currentUser.email)) return;
+      openEmployeeModal();
+    });
+
+    document.getElementById('empId').addEventListener('input', async () => {
+      await autofillEmployeeModalById();
+    });
+
+    document.getElementById('addAccessBtn').addEventListener('click', () => {
+      if (!currentUser || !isAdmin(currentUser.email)) return;
+      openAccessModal();
+    });
+
+    document.getElementById('accessEmail').addEventListener('input', (e) => {
+      const modal = document.getElementById('accessModal');
+      const isEdit = !!(modal.dataset.editId || '');
+      if (isEdit) return;
+      document.getElementById('accessId').value = buildStableIdFromEmail(e.target.value.trim());
+    });
+
+    document.getElementById('openArchiveBtn').addEventListener('click', () => {
+      if (!currentUser || !isAdmin(currentUser.email)) return;
+      showPage('page9');
+    });
+
+    document.getElementById('moveEmployeeBtn').addEventListener('click', async () => {
+      if (!currentUser || !isAdmin(currentUser.email)) return;
+
+      const employeeId = document.getElementById('moveEmployeeIdInput').value.trim();
+      if (!employeeId) {
+        alert('Bitte eine ID eingeben.');
+        return;
+      }
+
+      const success = await archiveEmployeeByEmployeeId(employeeId);
+      if (!success) {
+        alert('Kein aktiver Mitarbeiter mit dieser ID gefunden.');
+        return;
+      }
+
+      document.getElementById('moveEmployeeIdInput').value = '';
+    });
+
+    document.getElementById('deleteArchivedEmployeeBtn').addEventListener('click', async () => {
+      if (!currentUser || !isAdmin(currentUser.email)) return;
+
+      const employeeId = document.getElementById('archiveDeleteEmployeeIdInput').value.trim();
+      if (!employeeId) {
+        alert('Bitte eine ID eingeben.');
+        return;
+      }
+
+      const success = await deleteArchivedEmployeeByEmployeeId(employeeId);
+      if (!success) {
+        alert('Kein archivierter Mitarbeiter mit dieser ID gefunden.');
+        return;
+      }
+
+      document.getElementById('archiveDeleteEmployeeIdInput').value = '';
+    });
+
+    document.getElementById('employeeSearchInput').addEventListener('input', (e) => {
+      employeeSearchTerm = e.target.value.trim();
+      renderEmployeesFromCache();
+    });
+
+    populateAccessRankSelect(document.getElementById('accessRank'), 0);
+
+    onAuthStateChanged(auth, async (user) => {
+      try {
+        currentUser = user || null;
+
+        if (!user) {
+          showPage('page1', { save: false });
+          finishAuthCheck();
+          return;
+        }
+
+        const accessEntry = await findAccessByEmail(user.email);
+
+        if (!accessEntry) {
+          showPage('page1', { save: false });
+          finishAuthCheck();
+          return;
+        }
+
+        await setDoc(doc(db, ACCESS_COLLECTION, accessEntry.id), {
+          uid: user.uid,
+          email: user.email
+        }, { merge: true });
+
+        const merged = await loadCurrentUserData(user, {
+          ...accessEntry.data,
+          uid: user.uid,
+          email: user.email
+        });
+
+        if (!accessEntry.data.approved && !isAdmin(user.email, merged)) {
+          showPage('page1', { save: false });
+          finishAuthCheck();
+          return;
+        }
+
+        const lastPage = getLastPage();
+        showPage(lastPage, { save: false });
+        finishAuthCheck();
+      } catch (error) {
+        console.error('Fehler beim Wiederherstellen der Sitzung:', error);
+        showPage('page1', { save: false });
+        finishAuthCheck();
+      }
+    });
+
+    subscribeAccessRequests();
+    subscribeEmployees();
+    ensurePreapprovedUsers();
+  </script>
+</body>
+</html>
