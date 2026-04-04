@@ -155,29 +155,29 @@
   .dashboard-grid { display: flex; gap: 20px; }
 
   .personal-panel {
-    width: 220px; flex-shrink: 0;
+    width: 320px; flex-shrink: 0;
     background: linear-gradient(180deg, var(--purple) 0%, #2a0f5a 100%);
     border: 1px solid #5a2d9a;
-    border-radius: 6px; padding: 12px;
+    border-radius: 6px; padding: 18px;
   }
   .personal-panel h3 {
-    font-family: 'Rajdhani', sans-serif; font-size: 0.7rem; font-weight: 700; letter-spacing: 3px;
-    color: var(--gold); text-align: center; padding: 6px; margin-bottom: 10px;
+    font-family: 'Rajdhani', sans-serif; font-size: 0.85rem; font-weight: 700; letter-spacing: 3px;
+    color: var(--gold); text-align: center; padding: 8px; margin-bottom: 14px;
     border-bottom: 1px solid var(--purple2);
   }
-  .data-row { display: flex; margin-bottom: 6px; }
-  .data-label { font-size: 0.8rem; color: var(--text-dim); width: 110px; text-align: right; padding-right: 8px; font-family: 'Rajdhani', sans-serif; font-weight: 700; }
-  .data-val { flex: 1; background: rgba(255,255,255,0.05); border-radius: 3px; padding: 3px 8px; font-size: 0.8rem; font-family: 'Rajdhani', sans-serif; font-weight: 600; }
+  .data-row { display: flex; margin-bottom: 9px; }
+  .data-label { font-size: 0.9rem; color: var(--text-dim); width: 120px; text-align: right; padding-right: 10px; font-family: 'Rajdhani', sans-serif; font-weight: 700; }
+  .data-val { flex: 1; background: rgba(255,255,255,0.05); border-radius: 3px; padding: 5px 10px; font-size: 0.9rem; font-family: 'Rajdhani', sans-serif; font-weight: 700; }
 
   .training-panel {
     flex: 1;
     background: linear-gradient(180deg, #4a3a00 0%, #2a2000 100%);
     border: 1px solid var(--gold);
-    border-radius: 6px; padding: 12px;
+    border-radius: 6px; padding: 18px;
   }
   .training-panel h3 {
-    font-family: 'Rajdhani', sans-serif; font-size: 0.7rem; font-weight: 700; letter-spacing: 3px;
-    color: var(--gold); text-align: center; padding: 6px; margin-bottom: 10px;
+    font-family: 'Rajdhani', sans-serif; font-size: 0.85rem; font-weight: 700; letter-spacing: 3px;
+    color: var(--gold); text-align: center; padding: 8px; margin-bottom: 14px;
     border-bottom: 1px solid var(--gold);
   }
 
@@ -185,9 +185,9 @@
 
   .training-category { background: transparent; }
   .cat-header {
-    padding: 6px 10px; border-radius: 4px; text-align: center;
-    font-family: 'Rajdhani', sans-serif; font-size: 0.65rem; font-weight: 700; letter-spacing: 2px;
-    margin-bottom: 6px;
+    padding: 8px 10px; border-radius: 4px; text-align: center;
+    font-family: 'Rajdhani', sans-serif; font-size: 0.75rem; font-weight: 700; letter-spacing: 2px;
+    margin-bottom: 8px;
   }
   .cat-rookie { background: var(--green); border: 1px solid var(--green2); }
   .cat-officer { background: var(--orange); border: 1px solid #c87a00; }
@@ -203,8 +203,8 @@
   .training-item { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
   .training-item input[type=checkbox] { accent-color: var(--gold); }
   .training-label {
-    flex: 1; padding: 4px 8px; border-radius: 3px; text-align: center;
-    font-family: 'Rajdhani', sans-serif; font-size: 0.75rem; font-weight: 600;
+    flex: 1; padding: 6px 10px; border-radius: 3px; text-align: center;
+    font-family: 'Rajdhani', sans-serif; font-size: 0.85rem; font-weight: 700;
     background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1);
   }
 
@@ -350,6 +350,13 @@
 
   /* Kleiderordnung placeholder */
   .kleid-content { padding: 30px; text-align: center; color: var(--text-dim); font-family: 'Rajdhani', sans-serif; font-size: 1rem; letter-spacing: 2px; }
+
+  /* Trennwände Tabelle */
+  .th-sep, .td-sep {
+    background: #000 !important;
+    width: 4px !important; min-width: 4px !important; max-width: 4px !important;
+    padding: 0 !important; border: none !important;
+  }
 
   /* Responsive */
   @media (max-width: 768px) {
@@ -678,10 +685,13 @@ window.generateIdFromEmail = generateIdFromEmail;
     <!-- MITARBEITER REGISTER (Bild 7) -->
     <div id="sub-mitarbeiter" style="display:none;">
       <div class="search-area">
-        <input class="search-input" placeholder="Mitarbeiter suchen..." id="ma-search" oninput="filterMitarbeiter()">
+        <input class="search-input" placeholder="Mitarbeiter suchen..." id="ma-search" oninput="filterMitarbeiter()" style="max-width:130px;">
         <button class="btn btn-primary" onclick="openPopup('add-ma')">Mitarbeiter hinzufügen</button>
         <div style="flex:1"></div>
-        <input class="search-input" placeholder="ID eingeben" id="ma-id-input" style="max-width:160px;">
+        <div style="display:flex;align-items:stretch;gap:6px;">
+          <button class="btn btn-primary" onclick="editMitarbeiterById()" style="padding:0 10px;font-size:1rem;align-self:stretch;" title="Mitarbeiter bearbeiten">✏️</button>
+          <input class="search-input" placeholder="ID eingeben" id="ma-id-input" style="max-width:150px;border-radius:5px;">
+        </div>
         <button class="btn btn-primary" onclick="archivieren()">Archivieren</button>
         <button class="btn btn-primary" onclick="showSubPage('archiv')">Mitarbeiter Archiv</button>
       </div>
@@ -689,9 +699,10 @@ window.generateIdFromEmail = generateIdFromEmail;
         <table class="data-table register-table">
           <thead>
             <tr>
-              <th>DATEN</th><th>ID</th><th>DN</th><th>NAME</th><th>TEL. NR.</th>
-              <th>RANG</th><th>DIVISION</th><th>URLAUB</th><th>STRIKE</th>
+              <th>✏️</th><th>ID</th><th>DN</th><th>NAME</th><th>TEL. NR.</th>
+              <th>RANG</th><th class="th-sep"></th><th>DIVISION</th><th>URLAUB</th><th class="th-sep"></th><th>STRIKE</th>
               <th>INVITE-DATUM</th><th>LETZTER RANKUP</th><th>ABTEILUNG 1</th><th>ABTEILUNG 2</th>
+              <th class="th-sep"></th>
               <th>GA</th><th>EHK</th><th>ES</th><th>OP</th><th>OK</th><th>FULA</th>
               <th>TST</th><th>KS</th><th>OK+</th><th>FT</th><th>COP</th><th>JP</th>
               <th>ZP</th><th>VHP</th><th>TOW/BL</th>
@@ -1483,6 +1494,14 @@ window.saveMitarbeiter = async function() {
 
 window.archivieren = function() { showSubPage('archiv'); };
 
+window.editMitarbeiterById = function() {
+  const id = document.getElementById('ma-id-input').value.trim();
+  if (!id) { showNotif('Bitte zuerst eine ID eingeben.', true); return; }
+  const ma = mitarbeiterData.find(m => m.identnr === id || m.id === id);
+  if (!ma) { showNotif('Kein Mitarbeiter mit dieser ID gefunden.', true); return; }
+  openDashWithMA(ma._id);
+};
+
 window.filterMitarbeiter = function() {
   const term = document.getElementById('ma-search').value.toLowerCase();
   const filtered = mitarbeiterData.filter(m =>
@@ -1500,14 +1519,20 @@ function renderMitarbeiter(data) {
   }
   tbody.innerHTML = arr.map(m => `
     <tr>
-      <td><button class="btn btn-primary" style="padding:3px 8px;font-size:0.65rem;" onclick="openDashWithMA('${m._id}')">📋</button></td>
+      <td><button class="btn btn-primary" style="padding:3px 8px;font-size:0.75rem;" onclick="openDashWithMA('${m._id}')">✏️</button></td>
       <td>${m.identnr||'-'}</td>
       <td>${m.id||'-'}</td>
       <td>${m.vorname||''} ${m.nachname||''}</td>
-      <td>${m.tel||'-'}</td><td>${m.rang||'-'}</td>
-      <td>${m.division||'-'}</td><td>${m.urlaub||'0/3'}</td><td>${m.strike||'0/3'}</td>
+      <td>${m.tel||'-'}</td>
+      <td>${m.rang||'-'}</td>
+      <td class="td-sep"></td>
+      <td>${m.division||'-'}</td>
+      <td>${m.urlaub||'0/3'}</td>
+      <td class="td-sep"></td>
+      <td>${m.strike||'0/3'}</td>
       <td>${m.invite||'-'}</td><td>${m.rankup||'-'}</td>
       <td>${m.abt1||'-'}</td><td>${m.abt2||'-'}</td>
+      <td class="td-sep"></td>
       ${Array(15).fill('<td>☐</td>').join('')}
     </tr>
   `).join('');
