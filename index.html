@@ -152,13 +152,13 @@
   .page-content { padding: 20px; }
 
   /* ===== DASHBOARD (Bild 3) ===== */
-  .dashboard-grid { display: flex; gap: 4px; justify-content: center; align-items: flex-start; flex-wrap: wrap; }
+  .dashboard-grid { display: flex; gap: 0; justify-content: center; align-items: stretch; flex-wrap: nowrap; }
 
   .personal-panel {
     width: 320px; flex-shrink: 0;
     background: linear-gradient(180deg, var(--purple) 0%, #2a0f5a 100%);
     border: 1px solid #5a2d9a;
-    border-radius: 6px; padding: 18px;
+    border-radius: 6px 0 0 6px; padding: 18px;
   }
   .personal-panel h3 {
     font-family: 'Rajdhani', sans-serif; font-size: 0.85rem; font-weight: 700; letter-spacing: 3px;
@@ -170,10 +170,10 @@
   .data-val { flex: 1; background: rgba(180,190,210,0.10); border: 1px solid rgba(180,190,210,0.15); border-radius: 3px; padding: 5px 10px; font-size: 0.9rem; font-family: 'Rajdhani', sans-serif; font-weight: 700; min-height: 30px; display:flex; align-items:center; }
 
   .training-panel {
-    flex: 1;
     background: linear-gradient(180deg, #4a3a00 0%, #2a2000 100%);
     border: 1px solid var(--gold);
-    border-radius: 6px; padding: 10px;
+    border-left: none;
+    border-radius: 0 6px 6px 0; padding: 10px;
   }
   .training-panel h3 {
     font-family: 'Rajdhani', sans-serif; font-size: 0.75rem; font-weight: 700; letter-spacing: 2px;
@@ -360,6 +360,9 @@
   .kleid-content { padding: 30px; text-align: center; color: var(--text-dim); font-family: 'Rajdhani', sans-serif; font-size: 1rem; letter-spacing: 2px; }
 
   select.search-input option:disabled { color: #444; background: #111; }
+  .training-panel::-webkit-scrollbar, .personal-panel::-webkit-scrollbar { width: 4px; }
+  .training-panel::-webkit-scrollbar-track, .personal-panel::-webkit-scrollbar-track { background: transparent; }
+  .training-panel::-webkit-scrollbar-thumb, .personal-panel::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
   .num-spinner { display:flex; align-items:center; gap:0; border:1px solid var(--border); border-radius:5px; overflow:hidden; background:var(--bg3); }
   .num-spinner input { width:50px; text-align:center; border:none; background:transparent; color:var(--text); font-family:'Rajdhani',sans-serif; font-size:0.9rem; font-weight:700; padding:8px 2px; outline:none; }
   .num-spinner button { background:var(--bg2); border:none; border-left:1px solid var(--border); color:var(--text); cursor:pointer; padding:0 10px; font-size:1rem; height:100%; transition:background 0.15s; flex-shrink:0; }
@@ -499,8 +502,8 @@ window.generateIdFromEmail = generateIdFromEmail;
     <div id="sub-dashboard">
       <div class="dashboard-grid">
         <!-- Personal -->
-        <div style="display:flex;flex-direction:column;align-items:stretch;">
-        <div class="personal-panel" style="width:320px;">
+        <div style="display:flex;flex-direction:column;align-items:stretch;flex-shrink:0;">
+        <div class="personal-panel" style="width:320px;height:100%;">
           <h3>PERSÖNLICHE DATEN</h3>
           <div class="data-row"><span class="data-label">Name:</span><span class="data-val" id="dash-name" style="font-weight:700;font-size:0.85rem;">-</span></div>
           <div class="data-row"><span class="data-label">ID:</span><span class="data-val" id="dash-id" style="font-weight:700;font-size:0.85rem;">-</span></div>
@@ -529,7 +532,7 @@ window.generateIdFromEmail = generateIdFromEmail;
         </div>
 
         <!-- Trainings -->
-        <div class="training-panel" style="width:160px;flex-shrink:0;align-self:stretch;">
+        <div class="training-panel" style="width:320px;flex-shrink:0;">
           <h3>AUSBILDUNGEN</h3>
           <div class="training-grid">
             <div class="training-category">
@@ -3362,10 +3365,8 @@ window.doGoogleLogin = async function() {
 
     if (userDoc.data().approved === true) {
       const data = userDoc.data();
-      document.getElementById('dash-name').textContent = data.vorname || data.displayName || '-';
-      document.getElementById('dash-id').textContent = data.id || '-';
-      document.getElementById('dash-tel').textContent = data.tel || '-';
       window._currentRolle = data.rolle || 'user';
+      window._currentUserData = data;
       loadZugriffTable();
       setLoadStatus('ZUGRIFF GEWÄHRT');
       window._initialLoad = true;
@@ -4089,19 +4090,8 @@ function renderMitarbeiter(data) {
 window.openDashWithMA = function(id) {
   const ma = mitarbeiterData.find(m => m._id === id);
   if (ma) {
-    const set = (elId, val) => { const el = document.getElementById(elId); if(el) el.textContent = val || '-'; };
-    set('dash-name', (ma.vorname || '') + ' ' + (ma.nachname || ''));
-    set('dash-id', ma.identnr || '-');
-    set('dash-dn', ma.id || '-');
-    set('dash-tel', ma.tel || '-');
-    set('dash-rang', ma.rang || '-');
-    set('dash-abt1', ma.abt1 || '-');
-    set('dash-abt2', ma.abt2 || '-');
-    set('dash-invite', ma.invite || '-');
-    set('dash-rankup', ma.rankup || '-');
-    set('dash-urlaub', ma.urlaub || '0/3');
-    set('dash-strike', ma.strike || '0/3');
     window._cachedMaData = ma;
+    applyMaToDashboard(ma);
     window._dashFromMA = true;
     showSubPage('dashboard');
   }
