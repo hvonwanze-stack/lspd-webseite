@@ -641,7 +641,6 @@ window.generateIdFromEmail = generateIdFromEmail;
     <div id="sub-mitarbeiter" style="display:none;">
       <div class="search-area">
         <button class="btn btn-primary" onclick="openPopup('add-ma')">Mitarbeiter hinzufügen</button>
-        <input class="search-input" placeholder="Reisepass suchen..." id="ma-search" oninput="filterMitarbeiter()" style="max-width:150px;margin-left:16px;margin-right:16px;">
         <div style="flex:1"></div>
         <div style="display:flex;align-items:stretch;gap:6px;">
           <button class="btn btn-primary" onclick="openEditMaDaten()" style="padding:0 10px;font-size:1rem;align-self:stretch;" title="Daten bearbeiten">✏️</button>
@@ -657,7 +656,7 @@ window.generateIdFromEmail = generateIdFromEmail;
             <tr>
               <th>ID</th><th>DN</th><th>NAME</th><th>TEL. NR.</th>
               <th>RANG</th><th class="th-sep"></th><th>DIVISION</th><th class="th-sep"></th><th>URLAUB</th><th>STRIKE</th>
-              <th>INVITE-DATUM</th><th>LETZTER RANKUP</th><th>ABTEILUNG 1</th><th>ABTEILUNG 2</th>
+              <th>INVITE-DATUM</th><th>LETZTER RANKUP</th><th>ABTEILUNG 1</th><th>ZWEIT ABTEILUNG</th>
               <th class="th-sep"></th>
               <th>GA</th><th>EHK</th><th>ES</th><th>OP</th><th>OK</th><th>FULA</th>
               <th>TST</th><th>KS</th><th>OK+</th><th>FT</th><th>COP</th><th>JP</th>
@@ -674,16 +673,10 @@ window.generateIdFromEmail = generateIdFromEmail;
     <!-- ZUGRIFFSANFRAGE (Bild 1) -->
     <div id="sub-zugriff" style="display:none;">
       <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
-        <div style="display:flex;align-items:center;gap:8px;">
-          <!-- Reisepassnummer-Suche links -->
-          <input class="search-input" placeholder="Reisepassnummer suchen..." id="zugriff-pass-input" style="border-radius:5px;max-width:200px;">
-          <button class="btn btn-primary" onclick="searchByPass()" style="padding:7px 12px;" title="Suchen">🔍</button>
-          <!-- Zugriff hinzufügen etwas nach rechts -->
-          <button class="btn btn-primary" onclick="openPopup('add-zugriff')" style="margin-left:12px;">Zugriff hinzufügen</button>
-        </div>
+        <button class="btn btn-primary" onclick="openPopup('add-zugriff')">Zugriff hinzufügen</button>
         <div style="display:flex;align-items:stretch;gap:8px;">
           <button class="btn btn-danger" onclick="deleteZugriff()" style="padding:0 14px;font-size:0.8rem;white-space:nowrap;align-self:stretch;">X</button>
-          <input class="search-input" placeholder="Identifikationsnummer eingeben" id="zugriff-id-input" style="border-radius:5px;max-width:220px;">
+          <input class="search-input" placeholder="ID suchen..." id="zugriff-id-input" style="border-radius:5px;max-width:200px;">
           <button class="btn btn-primary" onclick="editZugriff()" style="padding:0 12px;font-size:1rem;align-self:stretch;" title="Bearbeiten">✏️</button>
         </div>
       </div>
@@ -691,7 +684,7 @@ window.generateIdFromEmail = generateIdFromEmail;
         <table class="data-table">
           <thead>
             <tr>
-              <th>IDENTIFIKATIONSNUMMER</th><th>REISEPASSNUMMER</th><th>NAME</th><th>NACHNAME</th>
+              <th>ID</th><th>NAME</th><th>NACHNAME</th>
               <th>EMAIL</th><th>TELEFONNUMMER</th><th>FREIGEBEN</th><th>ZUGRIFFSRANG</th><th>STATUS</th>
             </tr>
           </thead>
@@ -728,7 +721,7 @@ window.generateIdFromEmail = generateIdFromEmail;
             <tr>
               <th>ID</th><th>DN</th><th>NAME</th><th>TEL. NR.</th>
               <th>RANG</th><th class="th-sep"></th><th>DIVISION</th><th class="th-sep"></th><th>URLAUB</th><th>STRIKE</th>
-              <th>INVITE-DATUM</th><th>LETZTER RANKUP</th><th>ABTEILUNG 1</th><th>ABTEILUNG 2</th>
+              <th>INVITE-DATUM</th><th>LETZTER RANKUP</th><th>ABTEILUNG 1</th><th>ZWEIT ABTEILUNG</th>
               <th class="th-sep"></th>
               <th>GA</th><th>EHK</th><th>ES</th><th>OP</th><th>OK</th><th>FULA</th>
               <th>TST</th><th>KS</th><th>OK+</th><th>FT</th><th>COP</th><th>JP</th>
@@ -832,20 +825,17 @@ window.generateIdFromEmail = generateIdFromEmail;
       <button class="popup-close" onclick="closePopup('add-ma')">✕</button>
     </div>
     <div class="popup-body" style="display:grid;grid-template-columns:1fr 1fr;gap:0 16px;">
-      <div class="form-group"><label>IDENTIFIKATIONSNUMMER</label><input type="text" id="ma-identnr" placeholder="z.B. 164895"></div>
-      <div class="form-group"><label>REISEPASSNUMMER</label><input type="text" id="ma-reisepass" placeholder="Reisepassnummer"></div>
-      <div class="form-group"><label>ID</label><input type="text" id="ma-new-id" placeholder="z.B. A-001"></div>
+      <div class="form-group"><label>ID <span style="color:var(--red2);">*</span></label><input type="text" id="ma-new-id" placeholder="ID (Pflichtfeld)"></div>
       <div class="form-group"><label>DIENSTNUMMER (DN)</label><input type="text" id="ma-dn" placeholder="z.B. DN-001"></div>
-      <div class="form-group"><label>NAME</label><input type="text" id="ma-vorname" placeholder="Vorname Nachname"></div>
-      <div class="form-group"><label>TELEFONNUMMER</label><input type="text" id="ma-new-tel" placeholder="z.B. 16-48-950"></div>
-      <div class="form-group"><label>RANG</label><input type="text" id="ma-rang" placeholder="Rang"></div>
+      <div class="form-group"><label>NAME <span style="color:var(--red2);">*</span></label><input type="text" id="ma-vorname" placeholder="Name (Pflichtfeld)"></div>
+      <div class="form-group"><label>TELEFONNUMMER (TEL. NR.)</label><input type="text" id="ma-new-tel" placeholder="z.B. 16-48-950"></div>
       <div class="form-group"><label>DIVISION</label><input type="text" id="ma-division" placeholder="Division"></div>
-      <div class="form-group"><label>INVITE-DATUM</label><input type="text" id="ma-invite" placeholder="TT.MM.JJJJ"></div>
-      <div class="form-group"><label>LETZTER RANKUP</label><input type="text" id="ma-rankup" placeholder="TT.MM.JJJJ"></div>
-      <div class="form-group"><label>ABTEILUNG 1</label><input type="text" id="ma-abt1" placeholder="Abteilung 1"></div>
-      <div class="form-group"><label>ABTEILUNG 2</label><input type="text" id="ma-abt2" placeholder="Abteilung 2"></div>
       <div class="form-group"><label>URLAUB</label><input type="text" id="ma-urlaub" placeholder="0/3"></div>
       <div class="form-group"><label>STRIKE</label><input type="text" id="ma-strike" placeholder="0/3"></div>
+      <div class="form-group"><label>INVITE-DATUM</label><input type="text" id="ma-invite" placeholder="TT.MM.JJJJ"></div>
+      <div class="form-group"><label>LETZTER RANKUP</label><input type="text" id="ma-rankup" placeholder="TT.MM.JJJJ"></div>
+      <div class="form-group"><label>ABTEILUNG</label><input type="text" id="ma-abt1" placeholder="Abteilung 1"></div>
+      <div class="form-group"><label>ZWEIT ABTEILUNG</label><input type="text" id="ma-abt2" placeholder="Abteilung 2"></div>
     </div>
     <div class="popup-footer" style="justify-content:space-between;">
       <button class="btn btn-primary" onclick="closePopup('add-ma')">Abbrechen</button>
@@ -920,32 +910,31 @@ window.generateIdFromEmail = generateIdFromEmail;
   </div>
 </div>
 
-<!-- Edit Zugriffsrang -->
-<div class="overlay" id="overlay-edit-rang">
-  <div class="popup" style="max-width:380px;">
+<!-- Edit Zugriff Daten (Seite 8) -->
+<div class="overlay" id="overlay-edit-zugriff-daten">
+  <div class="popup" style="max-width:460px;">
     <div class="popup-header">
-      <h2>ZUGRIFFSRANG BEARBEITEN</h2>
-      <button class="popup-close" onclick="closePopup('edit-rang')">✕</button>
+      <h2>ZUGRIFF BEARBEITEN</h2>
+      <button class="popup-close" onclick="closePopup('edit-zugriff-daten')">✕</button>
     </div>
     <div class="popup-body">
-      <div class="form-group">
-        <label>NAME</label>
-        <input type="text" id="edit-rang-name" readonly style="opacity:0.5;cursor:not-allowed;">
-      </div>
-      <div class="form-group">
-        <label>ZUGRIFFSRANG</label>
-        <select id="edit-rang-select" class="search-input" style="border-radius:5px;">
+      <input type="hidden" id="ez-docid">
+      <div class="form-group"><label>ID</label><input type="text" id="ez-id" placeholder="ID"></div>
+      <div class="form-group"><label>VORNAME</label><input type="text" id="ez-vorname" placeholder="Vorname"></div>
+      <div class="form-group"><label>NACHNAME</label><input type="text" id="ez-nachname" placeholder="Nachname"></div>
+      <div class="form-group"><label>TELEFONNUMMER</label><input type="text" id="ez-tel" placeholder="Telefonnummer"></div>
+      <div class="form-group"><label>ZUGRIFFSRANG</label>
+        <select id="ez-rang" class="search-input" style="border-radius:5px;">
           <option>1 | Gast</option>
           <option>5 | Mitarbeiter</option>
           <option>10 | Admin</option>
           <option>11 | Web Admin XI</option>
         </select>
       </div>
-      <input type="hidden" id="edit-rang-docid">
     </div>
     <div class="popup-footer" style="justify-content:space-between;">
-      <button class="btn btn-success" onclick="saveRangEdit()">SPEICHERN</button>
-      <button class="btn btn-primary" onclick="closePopup('edit-rang')">ABBRECHEN</button>
+      <button class="btn btn-primary" onclick="closePopup('edit-zugriff-daten')">Abbrechen</button>
+      <button class="btn btn-success" onclick="saveZugriffDaten()">Speichern</button>
     </div>
   </div>
 </div>
@@ -998,25 +987,55 @@ window.generateIdFromEmail = generateIdFromEmail;
       <button class="popup-close" onclick="closePopup('add-zugriff')">✕</button>
     </div>
     <div class="popup-body">
+      <div class="form-group"><label>ID</label><input type="text" id="z-id" placeholder="ID eingeben"></div>
       <div class="form-group"><label>VORNAME</label><input type="text" id="z-vorname" placeholder="Vorname"></div>
       <div class="form-group"><label>NACHNAME</label><input type="text" id="z-nachname" placeholder="Nachname"></div>
-      <div class="form-group"><label>REISEPASSNUMMER</label><input type="text" id="z-id" placeholder="Reisepassnummer"></div>
       <div class="form-group"><label>EMAIL</label><input type="email" id="z-email" placeholder="email@beispiel.com"></div>
-      <div class="form-group"><label>IDENTIFIKATIONSNUMMER</label><input type="text" id="z-auto-id" placeholder="Wird automatisch generiert" readonly style="opacity:0.5;cursor:not-allowed;"></div>
       <div class="form-group"><label>TELEFONNUMMER</label><input type="text" id="z-tel" placeholder="Telefonnummer"></div>
+      <div class="form-group"><label>ZUGRIFFSRANG</label>
+        <select id="z-rang" class="search-input" style="border-radius:5px;">
+          <option>1 | Gast</option>
+          <option>5 | Mitarbeiter</option>
+          <option>10 | Admin</option>
+          <option>11 | Web Admin XI</option>
+        </select>
+      </div>
     </div>
-    <div class="popup-footer">
+    <div class="popup-footer" style="justify-content:space-between;">
+      <button class="btn btn-primary" onclick="closePopup('add-zugriff')">Abbrechen</button>
       <button class="btn btn-success" onclick="saveZugriff()">Hinzufügen</button>
     </div>
   </div>
 </div>
-<script>
-document.getElementById('z-email').addEventListener('input', function() {
-  const autoId = window.generateIdFromEmail && window.generateIdFromEmail(this.value);
-  const field = document.getElementById('z-auto-id');
-  if (field && autoId) field.value = autoId;
-});
-</script>
+
+<!-- Edit Zugriff Popup -->
+<div class="overlay" id="overlay-edit-zugriff">
+  <div class="popup">
+    <div class="popup-header">
+      <h2>ZUGRIFF BEARBEITEN</h2>
+      <button class="popup-close" onclick="closePopup('edit-zugriff')">✕</button>
+    </div>
+    <div class="popup-body">
+      <input type="hidden" id="edit-zugriff-docid">
+      <div class="form-group"><label>ID</label><input type="text" id="edit-z-id" placeholder="ID"></div>
+      <div class="form-group"><label>VORNAME</label><input type="text" id="edit-z-vorname" placeholder="Vorname"></div>
+      <div class="form-group"><label>NACHNAME</label><input type="text" id="edit-z-nachname" placeholder="Nachname"></div>
+      <div class="form-group"><label>TELEFONNUMMER</label><input type="text" id="edit-z-tel" placeholder="Telefonnummer"></div>
+      <div class="form-group"><label>ZUGRIFFSRANG</label>
+        <select id="edit-z-rang" class="search-input" style="border-radius:5px;">
+          <option>1 | Gast</option>
+          <option>5 | Mitarbeiter</option>
+          <option>10 | Admin</option>
+          <option>11 | Web Admin XI</option>
+        </select>
+      </div>
+    </div>
+    <div class="popup-footer" style="justify-content:space-between;">
+      <button class="btn btn-primary" onclick="closePopup('edit-zugriff')">Abbrechen</button>
+      <button class="btn btn-success" onclick="saveZugriffEdit()">Speichern</button>
+    </div>
+  </div>
+</div>
 
 <!-- Firebase SDKs -->
 <script type="module">
@@ -1218,8 +1237,7 @@ window.doGoogleRegister = async function() {
     const result = await signInWithPopup(auth, provider);
     const user = result.user;
 
-    // Auto-generate stable ID from email
-    const autoId = window.generateIdFromEmail(user.email);
+
 
     // Prüfen ob Nutzer bereits in users existiert (noch nicht gelöscht)
     const existingUser = await getDoc(doc(db, 'users', user.uid));
@@ -1251,7 +1269,6 @@ window.doGoogleRegister = async function() {
       nachname: window._icData.nachname || '',
       tel: window._icData.tel || '',
       pass: window._icData.pass || '',
-      id: autoId,
       approved: false,
       requestedAt: new Date().toISOString()
     });
@@ -1270,7 +1287,6 @@ window.doGoogleRegister = async function() {
         nachname: window._icData.nachname || '',
         email: user.email,
         tel: window._icData.tel || '',
-        id: autoId,
         pass: window._icData.pass || '',
         status: 'VERWEIGERT',
         zugriffsrang: '1 | Gast',
@@ -1303,14 +1319,13 @@ window.loadZugriffTable = async function() {
     const snap = await getDocs(collection(db, 'zugriffsanfragen'));
     tbody.innerHTML = '';
     if (snap.empty) {
-      tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;color:var(--text-dim);padding:16px;">Keine Anfragen vorhanden.</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:var(--text-dim);padding:16px;">Keine Anfragen vorhanden.</td></tr>';
       return;
     }
     snap.forEach(d => {
       const row = d.data();
       const tr = document.createElement('tr');
       tr.innerHTML = `
-        <td>${row.id || '-'}</td>
         <td>${row.pass || '-'}</td>
         <td>${row.vorname || '-'}</td>
         <td>${row.nachname || '-'}</td>
@@ -1328,7 +1343,7 @@ window.loadZugriffTable = async function() {
       tbody.appendChild(tr);
     });
   } catch(e) {
-    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;color:var(--text-dim);padding:16px;">Keine Anfragen vorhanden.</td></tr>'; console.warn('Zugriff load error:', e);
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:var(--text-dim);padding:16px;">Keine Anfragen vorhanden.</td></tr>'; console.warn('Zugriff load error:', e);
   }
 };
 
@@ -1395,45 +1410,32 @@ window.updateZugriff = async function(docId, field, val) {
 };
 
 window.saveZugriff = async function() {
-  const email = document.getElementById('z-email').value.trim();
-  if (!email) { showNotif('Bitte E-Mail eingeben.', true); return; }
   const vorname = document.getElementById('z-vorname').value.trim();
   const nachname = document.getElementById('z-nachname').value.trim();
   const passNr = document.getElementById('z-id').value.trim();
+  const email = document.getElementById('z-email').value.trim();
   const tel = document.getElementById('z-tel').value.trim();
   if (!vorname) { showNotif('Bitte Vorname eingeben.', true); return; }
-
-  // Auto-generate stable ID from email (same email = always same ID)
-  const autoId = generateIdFromEmail(email);
-
-  // Check if entry with this email already exists
+  if (!passNr) { showNotif('Bitte ID eingeben.', true); return; }
   try {
+    // Prüfen ob ID (pass) bereits vergeben
     const snap = await getDocs(collection(db, 'zugriffsanfragen'));
     let existingDoc = null;
-    snap.forEach(d => { if ((d.data().email||'').toLowerCase() === email.toLowerCase()) existingDoc = d; });
-    if (existingDoc) {
-      showNotif('Ein Eintrag mit dieser E-Mail existiert bereits (ID: ' + existingDoc.data().id + ').', true);
-      return;
-    }
+    snap.forEach(d => { if ((d.data().pass||'') === passNr) existingDoc = d; });
+    if (existingDoc) { showNotif('Ein Eintrag mit dieser ID existiert bereits.', true); return; }
 
     await addDoc(collection(db, 'zugriffsanfragen'), {
-      vorname, nachname, id: autoId, pass: passNr, email, tel,
+      vorname, nachname, pass: passNr, email, tel,
       status: 'VERWEIGERT', freigeben: 'Nein', zugriffsrang: '1 | Gast',
-      createdAt: new Date().toISOString(),
-      manuallyAdded: true
+      createdAt: new Date().toISOString(), manuallyAdded: true
     });
-
-    // Reset form
-    ['z-vorname','z-nachname','z-id','z-email','z-tel','z-auto-id'].forEach(fid => {
+    ['z-vorname','z-nachname','z-id','z-email','z-tel'].forEach(fid => {
       const el = document.getElementById(fid); if (el) el.value = '';
     });
     closePopup('add-zugriff');
-    showNotif('Zugriff hinzugefügt! ID: ' + autoId);
+    showNotif('Zugriff hinzugefügt!');
     loadZugriffTable();
-  } catch(e) {
-    console.error('saveZugriff error:', e);
-    showNotif('Fehler: ' + e.message, true);
-  }
+  } catch(e) { showNotif('Fehler: ' + e.message, true); }
 };
 
 // generateIdFromEmail moved to global script above
@@ -1444,12 +1446,15 @@ window._deleteDocName = null;
 
 window.deleteZugriff = async function() {
   const searchId = document.getElementById('zugriff-id-input').value.trim();
-  if (!searchId) { showNotif('Bitte Identifikationsnummer eingeben.', true); return; }
-
+  if (!searchId) { showNotif('Bitte ID eingeben.', true); return; }
   try {
     const snap = await getDocs(collection(db, 'zugriffsanfragen'));
     let found = null;
-    snap.forEach(d => { if (String(d.data().id) === String(searchId)) found = { docId: d.id, data: d.data() }; });
+    // Suche nach pass (= ID auf Seite 8)
+    snap.forEach(d => {
+      const d2 = d.data();
+      if ((d2.pass||'').toLowerCase() === searchId.toLowerCase()) found = { docId: d.id, data: d2 };
+    });
     if (!found) { showNotif('Kein Eintrag mit dieser ID gefunden.', true); return; }
     window._deleteDocId = found.docId;
     window._deleteDocName = (found.data.vorname || '') + ' ' + (found.data.nachname || '');
@@ -1515,16 +1520,39 @@ window.searchByPass = async function() {
 
 window.editZugriff = async function() {
   const searchId = document.getElementById('zugriff-id-input').value.trim();
-  if (!searchId) { showNotif('Bitte zuerst eine Identifikationsnummer eingeben.', true); return; }
+  if (!searchId) { showNotif('Bitte zuerst eine ID eingeben.', true); return; }
   try {
     const snap = await getDocs(collection(db, 'zugriffsanfragen'));
     let found = null;
-    snap.forEach(d => { if (String(d.data().id) === String(searchId)) found = { docId: d.id, data: d.data() }; });
+    snap.forEach(d => {
+      const d2 = d.data();
+      if ((d2.pass||'').toLowerCase() === searchId.toLowerCase()) found = { docId: d.id, data: d2 };
+    });
     if (!found) { showNotif('Kein Eintrag mit dieser ID gefunden.', true); return; }
-    document.getElementById('edit-rang-docid').value = found.docId;
-    document.getElementById('edit-rang-name').value = (found.data.vorname||'') + ' ' + (found.data.nachname||'');
-    document.getElementById('edit-rang-select').value = found.data.zugriffsrang || '1 | Gast';
-    openPopup('edit-rang');
+    document.getElementById('ez-docid').value = found.docId;
+    document.getElementById('ez-id').value = found.data.pass || '';
+    document.getElementById('ez-vorname').value = found.data.vorname || '';
+    document.getElementById('ez-nachname').value = found.data.nachname || '';
+    document.getElementById('ez-tel').value = found.data.tel || '';
+    document.getElementById('ez-rang').value = found.data.zugriffsrang || '1 | Gast';
+    openPopup('edit-zugriff-daten');
+  } catch(e) { showNotif('Fehler: ' + e.message, true); }
+};
+
+window.saveZugriffDaten = async function() {
+  const docId = document.getElementById('ez-docid').value;
+  const update = {
+    pass: document.getElementById('ez-id').value.trim(),
+    vorname: document.getElementById('ez-vorname').value.trim(),
+    nachname: document.getElementById('ez-nachname').value.trim(),
+    tel: document.getElementById('ez-tel').value.trim(),
+    zugriffsrang: document.getElementById('ez-rang').value,
+  };
+  try {
+    await setDoc(doc(db, 'zugriffsanfragen', docId), update, { merge: true });
+    closePopup('edit-zugriff-daten');
+    showNotif('Gespeichert!');
+    loadZugriffTable();
   } catch(e) { showNotif('Fehler: ' + e.message, true); }
 };
 
@@ -1544,22 +1572,18 @@ window.saveRangEdit = async function() {
 let mitarbeiterData = [];
 
 window.saveMitarbeiter = async function() {
-  const identnr = document.getElementById('ma-identnr').value.trim();
+  const newId = document.getElementById('ma-new-id').value.trim();
   const name = document.getElementById('ma-vorname').value.trim();
-  if (!identnr) { showNotif('Bitte Identifikationsnummer eingeben!', true); return; }
+  if (!newId) { showNotif('Bitte ID eingeben!', true); return; }
   if (!name) { showNotif('Bitte Name eingeben!', true); return; }
-  // Prüfen ob Identifikationsnummer bereits vergeben
-  const duplicate = mitarbeiterData.find(m => m.identnr === identnr);
-  if (duplicate) { showNotif('Identifikationsnummer bereits vergeben!', true); return; }
+  // Prüfen ob ID bereits vergeben
+  const duplicate = mitarbeiterData.find(m => m.id === newId);
+  if (duplicate) { showNotif('ID bereits vergeben!', true); return; }
   const ma = {
-    identnr: identnr,
-    reisepass: document.getElementById('ma-reisepass') ? document.getElementById('ma-reisepass').value.trim() || '-' : '-',
-    id: document.getElementById('ma-new-id').value.trim() || '-',
+    id: newId,
     dn: document.getElementById('ma-dn') ? document.getElementById('ma-dn').value.trim() || '-' : '-',
     vorname: name,
-    nachname: '',
     tel: document.getElementById('ma-new-tel').value.trim() || '-',
-    rang: document.getElementById('ma-rang').value.trim() || '-',
     division: document.getElementById('ma-division').value.trim() || '-',
     urlaub: document.getElementById('ma-urlaub').value.trim() || '0/3',
     strike: document.getElementById('ma-strike').value.trim() || '0/3',
@@ -1576,7 +1600,7 @@ window.saveMitarbeiter = async function() {
     const ref = await addDoc(collection(db, 'mitarbeiter'), ma);
     mitarbeiterData.push({ ...ma, _id: ref.id });
     renderMitarbeiter();
-    ['ma-identnr','ma-reisepass','ma-new-id','ma-dn','ma-vorname','ma-new-tel','ma-rang',
+    ['ma-new-id','ma-dn','ma-vorname','ma-new-tel',
      'ma-division','ma-urlaub','ma-strike','ma-invite','ma-rankup','ma-abt1','ma-abt2']
     .forEach(fid => { const el = document.getElementById(fid); if(el) el.value = ''; });
     closePopup('add-ma');
