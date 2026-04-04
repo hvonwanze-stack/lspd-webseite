@@ -350,6 +350,10 @@
   /* Kleiderordnung placeholder */
   .kleid-content { padding: 30px; text-align: center; color: var(--text-dim); font-family: 'Rajdhani', sans-serif; font-size: 1rem; letter-spacing: 2px; }
 
+  /* Table separators */
+  .th-sep { background: #000 !important; width: 3px !important; min-width: 3px !important; max-width: 3px !important; padding: 0 !important; border: none !important; }
+  .td-sep { background: #000 !important; width: 3px !important; min-width: 3px !important; max-width: 3px !important; padding: 0 !important; border: none !important; }
+
   /* Responsive */
   @media (max-width: 768px) {
     .dashboard-grid { flex-direction: column; }
@@ -663,20 +667,24 @@ window.generateIdFromEmail = generateIdFromEmail;
     <!-- MITARBEITER REGISTER (Bild 7) -->
     <div id="sub-mitarbeiter" style="display:none;">
       <div class="search-area">
-        <input class="search-input" placeholder="Mitarbeiter suchen..." id="ma-search" oninput="filterMitarbeiter()">
+        <input class="search-input" placeholder="Mitarbeiter suchen..." id="ma-search" oninput="filterMitarbeiter()" style="max-width:180px;font-size:0.75rem;">
         <button class="btn btn-primary" onclick="openPopup('add-ma')">Mitarbeiter hinzufügen</button>
         <div style="flex:1"></div>
-        <input class="search-input" placeholder="ID eingeben" id="ma-id-input" style="max-width:160px;">
+        <div style="display:flex;align-items:stretch;gap:6px;">
+          <button class="btn btn-primary" onclick="editMitarbeiter()" style="padding:0 10px;font-size:1rem;align-self:stretch;" title="Mitarbeiter bearbeiten">✏️</button>
+          <input class="search-input" placeholder="ID eingeben" id="ma-id-input" style="max-width:150px;border-radius:5px;">
+        </div>
         <button class="btn btn-primary" onclick="archivieren()">Archivieren</button>
-        <button class="btn btn-primary" onclick="showNotif('Mitarbeiter Archiv wird geladen...')">Mitarbeiter Archiv</button>
+        <button class="btn btn-primary" onclick="showSubPage('archiv')">Mitarbeiter Archiv</button>
       </div>
       <div class="table-wrap register-table-wrap">
         <table class="data-table register-table">
           <thead>
             <tr>
-              <th>DATEN</th><th>ID</th><th>DN</th><th>NAME</th><th>TEL. NR.</th>
-              <th>RANG</th><th>DIVISION</th><th>URLAUB</th><th>STRIKE</th>
+              <th>✏️</th><th>ID</th><th>DN</th><th>NAME</th><th>TEL. NR.</th>
+              <th>RANG</th><th class="th-sep"></th><th>DIVISION</th><th>URLAUB</th><th class="th-sep"></th><th>STRIKE</th>
               <th>INVITE-DATUM</th><th>LETZTER RANKUP</th><th>ABTEILUNG 1</th><th>ABTEILUNG 2</th>
+              <th class="th-sep"></th>
               <th>GA</th><th>EHK</th><th>ES</th><th>OP</th><th>OK</th><th>FULA</th>
               <th>TST</th><th>KS</th><th>OK+</th><th>FT</th><th>COP</th><th>JP</th>
               <th>ZP</th><th>VHP</th><th>TOW/BL</th>
@@ -974,44 +982,46 @@ window.ensureAdminInFirestore = async function(user) {
   } catch(e) { console.warn('ensureAdmin error:', e); }
 }
 
-// Auth state
+// Auth state — wird beim Seitenlade einmal aufgerufen
 onAuthStateChanged(auth, async (user) => {
-  if (user) {
-    let userDoc = await getDoc(doc(db, 'users', user.uid));
+  try {
+    if (user) {
+      let userDoc = await getDoc(doc(db, 'users', user.uid));
 
-    // Wenn kein Eintrag existiert: automatisch anlegen mit approved:false
-    if (!userDoc.exists()) {
-      const autoId = window.generateIdFromEmail(user.email);
-      await setDoc(doc(db, 'users', user.uid), {
-        uid: user.uid,
-        email: user.email,
-        displayName: user.displayName || '',
-        vorname: user.displayName || '',
-        nachname: '',
-        tel: '-',
-        id: autoId,
-        approved: false,
-        rolle: 'user',
-        createdAt: new Date().toISOString()
-      });
-      userDoc = await getDoc(doc(db, 'users', user.uid));
-    }
+      if (!userDoc.exists()) {
+        // Neuer Nutzer: anlegen und direkt auf Login schicken
+        const autoId = window.generateIdFromEmail(user.email);
+        await setDoc(doc(db, 'users', user.uid), {
+          uid: user.uid, email: user.email,
+          displayName: user.displayName || '',
+          vorname: user.displayName || '',
+          nachname: '', tel: '-', id: autoId,
+          approved: false, rolle: 'user',
+          createdAt: new Date().toISOString()
+        });
+        await signOut(auth);
+        window._finishLoader(false);
+        return;
+      }
 
-    const data = userDoc.data();
-    if (data.approved === true) {
-      document.getElementById('dash-name').textContent = data.vorname || data.displayName || '-';
-      document.getElementById('dash-id').textContent = data.id || '-';
-      document.getElementById('dash-tel').textContent = data.tel || '-';
-      window._currentRolle = data.rolle || 'user';
-      loadZugriffTable();
-      window._finishLoader && window._finishLoader(true);
+      const data = userDoc.data();
+      if (data.approved === true) {
+        document.getElementById('dash-name').textContent = data.vorname || data.displayName || '-';
+        document.getElementById('dash-id').textContent = data.identnr || data.id || '-';
+        document.getElementById('dash-tel').textContent = data.tel || '-';
+        window._currentRolle = data.rolle || 'user';
+        loadZugriffTable();
+        window._finishLoader(true);
+      } else {
+        await signOut(auth);
+        window._finishLoader(false);
+      }
     } else {
-      showNotif('Dein Konto wurde noch nicht freigeschalten. Bitte warte auf Admin-Bestätigung.', true);
-      await signOut(auth);
-      window._finishLoader && window._finishLoader(false);
+      window._finishLoader(false);
     }
-  } else {
-    window._finishLoader && window._finishLoader(false);
+  } catch(e) {
+    console.error('Auth error:', e);
+    window._finishLoader(false);
   }
 });
 
@@ -1022,12 +1032,8 @@ window.doGoogleLogin = async function() {
     const result = await signInWithPopup(auth, provider);
     const user = result.user;
 
-    // Ladescreen anzeigen
-    window._loaderDone = false;
-    const ls = document.getElementById('loading-screen');
-    ls.style.display = 'flex';
-    ls.style.opacity = '1';
-    ls.classList.remove('fade-out');
+    // Ladescreen anzeigen (nur visuell - kein _startupDone touch)
+    showLoaderScreen();
     setLoadStatus('ZUGRIFF WIRD GEPRÜFT ...');
 
     // Nutzer in Firestore prüfen
@@ -1059,24 +1065,24 @@ window.doGoogleLogin = async function() {
       window._currentRolle = data.rolle || 'user';
       loadZugriffTable();
       setLoadStatus('ZUGRIFF GEWÄHRT');
-      setTimeout(() => {
-        showPage('main');
-        window._initialLoad = true;
-        showSubPage('dashboard');
-        window._initialLoad = false;
-        try { localStorage.setItem('lspd_last_page', 'dashboard'); } catch(e) {}
-        hideLoader();
-      }, 400);
+      window._initialLoad = true;
+      showPage('main');
+      showSubPage('dashboard');
+      window._initialLoad = false;
+      try { localStorage.setItem('lspd_last_page', 'dashboard'); } catch(e) {}
+      setTimeout(hideLoader, 500);
     } else {
       showNotif('Konto noch nicht freigeschalten. Bitte warte auf Admin.', true);
       await signOut(auth);
       setLoadStatus('BITTE ANMELDEN');
-      setTimeout(() => { hideLoader(); showPage('login'); }, 300);
+      showPage('login');
+      setTimeout(hideLoader, 300);
     }
   } catch(e) {
     console.error('Login error:', e.code, e.message);
     setLoadStatus('BITTE ANMELDEN');
-    setTimeout(() => { hideLoader(); showPage('login'); }, 300);
+    showPage('login');
+    setTimeout(hideLoader, 300);
     if (e.code !== 'auth/popup-closed-by-user' && e.code !== 'auth/cancelled-popup-request') {
       showNotif('Anmeldung fehlgeschlagen: ' + e.message, true);
     }
@@ -1432,7 +1438,17 @@ window.saveMitarbeiter = async function() {
   } catch(e) { showNotif('Fehler: '+e.message, true); }
 };
 
-window.archivieren = function() { showSubPage('archiv'); };
+window.archivieren = function() {
+  const id = document.getElementById('ma-id-input').value.trim();
+  if (!id) { showNotif('Bitte ID eingeben.', true); return; }
+  showNotif('Mitarbeiter archiviert.');
+};
+
+window.editMitarbeiter = function() {
+  const id = document.getElementById('ma-id-input').value.trim();
+  if (!id) { showNotif('Bitte zuerst eine ID eingeben.', true); return; }
+  showNotif('Bearbeitung von ID: ' + id + ' (coming soon)');
+};
 
 window.filterMitarbeiter = function() {
   const term = document.getElementById('ma-search').value.toLowerCase();
@@ -1451,14 +1467,20 @@ function renderMitarbeiter(data) {
   }
   tbody.innerHTML = arr.map(m => `
     <tr>
-      <td><button class="btn btn-primary" style="padding:3px 8px;font-size:0.65rem;" onclick="openDashWithMA('${m._id}')">📋</button></td>
-      <td>${m.identnr||m.id||'-'}</td>
+      <td><button class="btn btn-primary" style="padding:3px 8px;font-size:0.75rem;" onclick="openDashWithMA('${m._id}')">✏️</button></td>
+      <td>${m.identnr||'-'}</td>
       <td>${m.id||'-'}</td>
-      <td>${m.vorname||''} ${m.nachname||''}</td>
-      <td>${m.tel||'-'}</td><td>${m.rang||'-'}</td>
-      <td>${m.division||'-'}</td><td>${m.urlaub||'0/3'}</td><td>${m.strike||'0/3'}</td>
+      <td>${(m.vorname||'')} ${(m.nachname||'')}</td>
+      <td>${m.tel||'-'}</td>
+      <td>${m.rang||'-'}</td>
+      <td class="td-sep"></td>
+      <td>${m.division||'-'}</td>
+      <td>${m.urlaub||'0/3'}</td>
+      <td class="td-sep"></td>
+      <td>${m.strike||'0/3'}</td>
       <td>${m.invite||'-'}</td><td>${m.rankup||'-'}</td>
       <td>${m.abt1||'-'}</td><td>${m.abt2||'-'}</td>
+      <td class="td-sep"></td>
       ${Array(15).fill('<td>☐</td>').join('')}
     </tr>
   `).join('');
@@ -1579,11 +1601,20 @@ document.querySelectorAll('.overlay').forEach(o => {
   o.addEventListener('click', function(e) { if(e.target === this) this.classList.remove('open'); });
 });
 
-// ===== LOADING SCREEN AUSBLENDEN =====
+// ===== LOADING SCREEN =====
 function hideLoader() {
   const ls = document.getElementById('loading-screen');
+  if (!ls) return;
   ls.classList.add('fade-out');
-  setTimeout(() => ls.style.display = 'none', 500);
+  setTimeout(() => { ls.style.display = 'none'; }, 300);
+}
+
+function showLoaderScreen() {
+  const ls = document.getElementById('loading-screen');
+  if (!ls) return;
+  ls.style.display = 'flex';
+  ls.style.opacity = '1';
+  ls.classList.remove('fade-out');
 }
 
 function setLoadStatus(msg) {
@@ -1591,37 +1622,37 @@ function setLoadStatus(msg) {
   if (el) el.textContent = msg;
 }
 
-// Init — warte auf Firebase Auth
-// (onAuthStateChanged in firebase module übernimmt die Weiterleitung)
-// Fallback: nach 4s Ladescreen ausblenden und Login zeigen
-window._finishLoader = function(goToMain, lastPage) {
-  if (window._loaderDone) return;
-  window._loaderDone = true;
+// _finishLoader: NUR vom onAuthStateChanged beim Seitenstart aufgerufen
+// doGoogleLogin navigiert selbst direkt
+window._startupDone = false;
+window._finishStartup = function(goToMain) {
+  if (window._startupDone) return;
+  window._startupDone = true;
   if (goToMain) {
     setLoadStatus('ZUGRIFF GEWÄHRT');
-    setTimeout(() => {
-      showPage('main');
-      let lp = 'dashboard';
-      try { lp = localStorage.getItem('lspd_last_page') || 'dashboard'; } catch(e) {}
-      if (lastPage) lp = lastPage;
-      window._initialLoad = true;
-      showSubPage(lp);
-      window._initialLoad = false;
-      hideLoader();
-    }, 400);
+    let lp = 'dashboard';
+    try { lp = localStorage.getItem('lspd_last_page') || 'dashboard'; } catch(e) {}
+    window._initialLoad = true;
+    showPage('main');
+    showSubPage(lp);
+    window._initialLoad = false;
+    setTimeout(hideLoader, 300);
   } else {
     setLoadStatus('BITTE ANMELDEN');
-    setTimeout(() => {
-      showPage('login');
-      hideLoader();
-    }, 300);
+    showPage('login');
+    setTimeout(hideLoader, 200);
   }
 };
 
-// Timeout-Fallback falls Firebase nicht antwortet
-setTimeout(() => { window._finishLoader(false); }, 3000);
+// Harter Fallback: nach 3s → Login zeigen
+setTimeout(() => {
+  if (!window._startupDone) {
+    console.warn('Startup timeout');
+    window._finishStartup(false);
+  }
+}, 3000);
 
-// Init — setze initialLoad flag damit showSubPage jetzt nicht in localStorage schreibt
+// Init subpage (ohne localStorage zu überschreiben)
 window._initialLoad = true;
 showSubPage('dashboard');
 window._initialLoad = false;
