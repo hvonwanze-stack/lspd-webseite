@@ -9,12 +9,17 @@
       --bg: #000;
       --text: #fff;
       --blue: #0e4d86;
+      --blue-dark: #0a2a52;
+      --blue-mid: #12305c;
       --gray: #6a6a6a;
       --line: #5e5e5e;
       --purple: #b300ff;
       --orange: #c77711;
       --red: #ff1a1a;
       --green: #1d6b32;
+      --panel: rgba(22, 22, 22, 0.96);
+      --panel-2: rgba(34, 34, 34, 0.96);
+      --panel-3: rgba(55, 55, 55, 0.9);
       --check-green: #22c55e;
       --check-border: #8a8a8a;
       --check-bg: #111;
@@ -161,10 +166,10 @@
 
     .dashboard-grid {
       display: grid;
-      grid-template-columns: 330px 1fr;
+      grid-template-columns: 380px 1fr;
       gap: 34px;
       align-items: start;
-      max-width: 1200px;
+      max-width: 1300px;
       margin: 0 auto;
     }
 
@@ -180,15 +185,38 @@
 
     .info-grid {
       display: grid;
-      grid-template-columns: 110px 1fr;
+      grid-template-columns: 145px minmax(0, 1fr);
       gap: 10px 16px;
     }
 
-    .info-grid div {
-      background: var(--purple);
-      padding: 10px;
+    .info-label,
+    .info-value {
+      padding: 10px 12px;
       text-align: center;
-      min-height: 38px;
+      min-height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    .info-label {
+      background: var(--purple);
+      font-weight: bold;
+    }
+
+    .info-value {
+      background: #8a00c8;
+      min-width: 0;
+    }
+
+    .info-value.phone-box,
+    .info-value.service-box {
+      min-height: 52px;
+      padding: 12px 14px;
+      font-size: 15px;
+      line-height: 1.25;
     }
 
     .training-grid {
@@ -235,7 +263,7 @@
     .bg-wine { background: #6f184f; }
 
     .content-wrap {
-      max-width: 1400px;
+      max-width: 1450px;
       margin: 0 auto;
     }
 
@@ -278,8 +306,26 @@
     }
 
     .panel-card {
-      max-width: 1100px;
+      max-width: 1200px;
       margin: 0 auto;
+    }
+
+    .lspd-panel {
+      background: linear-gradient(180deg, rgba(20,20,20,0.98), rgba(10,10,10,0.98));
+      border: 1px solid #24466e;
+      box-shadow: 0 0 0 1px rgba(17,59,109,0.35) inset;
+      padding: 18px;
+    }
+
+    .lspd-section-title {
+      background: linear-gradient(90deg, #0f2f5d, #184b87);
+      border: 1px solid #2b5b97;
+      padding: 12px 16px;
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
     .request-controls select,
@@ -347,20 +393,21 @@
     }
 
     .archive-open-btn {
-      background: #2a2a2a;
+      background: #1f3658;
       min-width: 180px;
       height: 46px;
+      border: 1px solid #335d95;
     }
 
     .move-btn {
-      background: #444;
+      background: #3f3f3f;
       min-width: 140px;
       height: 46px;
     }
 
     .back-btn {
-      background: #1f1f1f;
-      border: 1px solid #555;
+      background: #1f3658;
+      border: 1px solid #4b74aa;
       padding: 12px 18px;
       margin-bottom: 24px;
     }
@@ -486,7 +533,7 @@
 
     .rank-search-input,
     .move-id-input,
-    .archive-delete-input {
+    .archive-search-input {
       width: 100%;
       max-width: 420px;
       background: #111;
@@ -498,14 +545,19 @@
       height: 46px;
     }
 
-    .move-id-input,
-    .archive-delete-input {
+    .move-id-input {
       max-width: 180px;
+    }
+
+    .archive-search-input {
+      max-width: 340px;
+      background: #0c0c0c;
+      border: 1px solid #224a80;
     }
 
     .rank-search-input:focus,
     .move-id-input:focus,
-    .archive-delete-input:focus {
+    .archive-search-input:focus {
       border-color: #0b4c84;
       box-shadow: 0 0 0 1px #0b4c84 inset;
     }
@@ -577,7 +629,7 @@
     }
 
     .archive-page-wrap {
-      max-width: 1500px;
+      max-width: 1920px;
       margin: 0 auto;
     }
 
@@ -594,6 +646,121 @@
       gap: 12px;
       margin-bottom: 16px;
       flex-wrap: wrap;
+      justify-content: space-between;
+    }
+
+    .archive-search-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      width: 100%;
+    }
+
+    .archive-style-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #2c2c2c;
+      font-size: 11px;
+    }
+
+    .archive-style-table th,
+    .archive-style-table td {
+      border: 1px solid #111;
+      text-align: center;
+      padding: 4px 6px;
+      white-space: nowrap;
+      height: 28px;
+    }
+
+    .archive-style-table th {
+      background: #0f2f5d;
+      color: #fff;
+      font-weight: bold;
+    }
+
+    .archive-style-table tbody tr td {
+      background: #3d3d3d;
+    }
+
+    .archive-style-table tbody tr:hover td {
+      background: #474747;
+    }
+
+    .archive-empty-row td {
+      background: #3d3d3d !important;
+      color: #fff;
+      height: 48px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .rule-grid,
+    .policy-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .info-card {
+      background: linear-gradient(180deg, rgba(17,17,17,0.98), rgba(28,28,28,0.98));
+      border: 1px solid #2a4d7e;
+      padding: 16px;
+    }
+
+    .info-card h3 {
+      margin: 0 0 10px;
+      font-size: 18px;
+      color: #7fb1f0;
+    }
+
+    .info-card p,
+    .info-card li {
+      color: #ddd;
+      line-height: 1.45;
+      font-size: 14px;
+    }
+
+    .info-card ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .lspd-data-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: rgba(24,24,24,0.98);
+    }
+
+    .lspd-data-table th,
+    .lspd-data-table td {
+      border: 1px solid #1c3454;
+      padding: 10px 12px;
+      text-align: center;
+      white-space: normal;
+      vertical-align: middle;
+    }
+
+    .lspd-data-table th {
+      background: linear-gradient(180deg, #103663, #0b2746);
+      color: #fff;
+      font-size: 14px;
+    }
+
+    .lspd-data-table td {
+      background: rgba(47,47,47,0.96);
+    }
+
+    .page-tools {
+      display: flex;
+      gap: 12px;
+      margin-top: 18px;
+      flex-wrap: wrap;
+    }
+
+    .page-tools button {
+      background: #173e70;
+      border: 1px solid #335d95;
     }
 
     .rank-30 { background: #000000; color: #fff; }
@@ -701,6 +868,13 @@
       color: #fff;
     }
 
+    @media (max-width: 1200px) {
+      .rule-grid,
+      .policy-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
     @media (max-width: 1000px) {
       .logo-wrap { flex-direction: column; }
       .logo-line { font-size: 40px; text-align: center; }
@@ -712,9 +886,12 @@
       .rank-search-wrap { flex-direction: column; align-items: stretch; }
       .rank-search-left,
       .rank-search-right { width: 100%; }
-      .rank-search-input { max-width: 100%; }
-      .move-id-input { max-width: 100%; }
-      .archive-delete-input { max-width: 100%; }
+      .rank-search-input,
+      .move-id-input,
+      .archive-search-input { max-width: 100%; }
+      .rule-grid,
+      .policy-grid { grid-template-columns: 1fr; }
+      .info-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -808,9 +985,68 @@
 
   <!-- Seite 3 -->
   <section id="page3" class="page hidden app-page">
-    <div class="content-wrap">
+    <div class="content-wrap panel-card">
       <h1 class="top-title">Los Santos Police Department</h1>
       <div id="navMount3"></div>
+
+      <div class="lspd-panel">
+        <div class="lspd-section-title">Kleiderordnung</div>
+        <div class="rule-grid">
+          <div class="info-card">
+            <h3>Allgemein</h3>
+            <ul>
+              <li>Dienstkleidung muss sauber, ordentlich und vollständig getragen werden.</li>
+              <li>Farben und Kombinationen müssen zum offiziellen LSPD-Auftritt passen.</li>
+              <li>Privatkleidung ist im aktiven Dienst nicht erlaubt.</li>
+            </ul>
+          </div>
+          <div class="info-card">
+            <h3>Pflichtausrüstung</h3>
+            <ul>
+              <li>Je nach Rang und Einheit passende Uniform auswählen.</li>
+              <li>Schutzweste nur passend zum Einsatz oder Dienstbereich.</li>
+              <li>Kopfbedeckungen nur, wenn sie zur Einheit gehören.</li>
+            </ul>
+          </div>
+          <div class="info-card">
+            <h3>Nicht erlaubt</h3>
+            <ul>
+              <li>Auffällige unpassende Farben oder zivile Mischkleidung.</li>
+              <li>Unrealistische Accessoires im regulären Streifendienst.</li>
+              <li>Kleidung, die Rang oder Einheit falsch darstellt.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div style="margin-top:18px;">
+          <table class="lspd-data-table">
+            <thead>
+              <tr>
+                <th>Bereich</th>
+                <th>Erlaubt</th>
+                <th>Nicht erlaubt</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Streifendienst</td>
+                <td>Offizielle Patrol-Uniform, Standardgürtel, passende Schuhe</td>
+                <td>Zivile Kleidung, bunte Einzelteile, falsche Abzeichen</td>
+              </tr>
+              <tr>
+                <td>Spezialeinheiten</td>
+                <td>Einheitskleidung laut interner Vorgabe</td>
+                <td>Normale Streifenuniform bei Spezialeinsatz ohne Freigabe</td>
+              </tr>
+              <tr>
+                <td>Führungsebene</td>
+                <td>Freigegebene Command-/Dress-Uniform</td>
+                <td>Nicht freigegebene Kombinationen</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -841,15 +1077,38 @@
     <div class="content-wrap panel-card">
       <h1 class="top-title">Los Santos Police Department</h1>
       <div id="navMount5"></div>
-      <table>
-        <thead>
-          <tr><th>Fahrzeug</th><th class="action-cell">&gt;</th><th>Rang</th><th class="action-cell">&gt;</th><th>Abteilung</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>AMG GT 20</td><td>&gt;</td><td>29 | Deputy Chief of Police</td><td>&gt;</td><td>HR</td></tr>
-        </tbody>
-      </table>
-      <button class="left-btn">Fahrzeug +</button>
+
+      <div class="lspd-panel">
+        <div class="lspd-section-title">Fahrzeugordnung</div>
+
+        <div class="policy-grid" style="margin-bottom:18px;">
+          <div class="info-card">
+            <h3>Fahrzeugnutzung</h3>
+            <p>Dienstfahrzeuge dürfen nur entsprechend Rang, Aufgabe und Abteilung genutzt werden.</p>
+          </div>
+          <div class="info-card">
+            <h3>Pflege</h3>
+            <p>Beschädigte oder unpassend abgestellte Fahrzeuge sind unverzüglich zu sichern oder zu melden.</p>
+          </div>
+          <div class="info-card">
+            <h3>Freigabe</h3>
+            <p>Sonderfahrzeuge und Abteilungsfahrzeuge nur mit passender interner Freigabe verwenden.</p>
+          </div>
+        </div>
+
+        <table class="lspd-data-table">
+          <thead>
+            <tr><th>Fahrzeug</th><th>Erforderlicher Rang</th><th>Abteilung</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>AMG GT 20</td><td>29 | Deputy Chief of Police</td><td>HR</td></tr>
+          </tbody>
+        </table>
+
+        <div class="page-tools">
+          <button class="left-btn">Fahrzeug +</button>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -858,19 +1117,60 @@
     <div class="content-wrap panel-card">
       <h1 class="top-title">Los Santos Police Department</h1>
       <div id="navMount6"></div>
-      <table>
-        <thead>
-          <tr>
-            <th>§</th><th>Regeldefinition</th><th class="action-cell">&gt;</th><th>Geldstrafe</th><th>TOW Fahrt</th><th>Human Labs</th><th>NG Runde</th><th>RankUp-Sperre</th><th>Strike</th><th>Suspendierung</th><th>Kündigung</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>§1</td><td>Beleidigungen, Respektlosigkeit und sonstiges niederes Verhalten</td><td>&gt;</td><td>150</td><td>10 Autos</td><td>30 min</td><td>2</td><td>2 Wochen</td><td>1</td><td>3 Tage</td><td>✓</td>
-          </tr>
-        </tbody>
-      </table>
-      <button class="left-btn">Sanktion +</button>
+
+      <div class="lspd-panel">
+        <div class="lspd-section-title">Sanktionskatalog</div>
+
+        <div class="policy-grid" style="margin-bottom:18px;">
+          <div class="info-card">
+            <h3>Grundsatz</h3>
+            <p>Verstöße werden je nach Schwere, Wiederholung und Verhalten des Mitarbeiters bewertet.</p>
+          </div>
+          <div class="info-card">
+            <h3>Führungsebene</h3>
+            <p>Endgültige Entscheidungen können durch die zuständige Command- oder HR-Ebene angepasst werden.</p>
+          </div>
+          <div class="info-card">
+            <h3>Dokumentation</h3>
+            <p>Jede Sanktion ist nachvollziehbar und sauber im System zu dokumentieren.</p>
+          </div>
+        </div>
+
+        <table class="lspd-data-table">
+          <thead>
+            <tr>
+              <th>§</th>
+              <th>Regeldefinition</th>
+              <th>Geldstrafe</th>
+              <th>TOW Fahrt</th>
+              <th>Human Labs</th>
+              <th>NG Runde</th>
+              <th>RankUp-Sperre</th>
+              <th>Strike</th>
+              <th>Suspendierung</th>
+              <th>Kündigung</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>§1</td>
+              <td>Beleidigungen, Respektlosigkeit und sonstiges niederes Verhalten</td>
+              <td>150</td>
+              <td>10 Autos</td>
+              <td>30 min</td>
+              <td>2</td>
+              <td>2 Wochen</td>
+              <td>1</td>
+              <td>3 Tage</td>
+              <td>✓</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="page-tools">
+          <button class="left-btn">Sanktion +</button>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -955,8 +1255,8 @@
         <thead>
           <tr>
             <th>Bearbeiten</th>
-            <th>Name</th>
             <th>Identifikationsnummer</th>
+            <th>Name</th>
             <th>Nachname</th>
             <th>Email</th>
             <th>Telefonnummer</th>
@@ -982,30 +1282,49 @@
       <h1 class="top-title">Mitarbeiter Archiv</h1>
 
       <div class="archive-top-actions">
-        <input
-          id="archiveDeleteEmployeeIdInput"
-          class="archive-delete-input"
-          type="text"
-          placeholder="ID eingeben"
-        />
-        <button class="danger-btn" id="deleteArchivedEmployeeBtn">Löschen</button>
+        <div class="archive-search-left">
+          <input
+            id="archiveSearchInput"
+            class="archive-search-input"
+            type="text"
+            placeholder="Mitarbeiter im Archiv suchen..."
+          />
+        </div>
       </div>
 
-      <table class="rank-list-table">
+      <table class="archive-style-table">
         <thead>
           <tr>
-            <th>Email</th>
-            <th>Name</th>
+            <th>Daten</th>
             <th>ID</th>
-            <th>Dienstnummer</th>
-            <th>Telefonnummer</th>
+            <th>DN</th>
+            <th>Name</th>
+            <th>Tel. Nr.</th>
             <th>Rang</th>
-            <th>Abteilung 1</th>
-            <th>Abteilung 2</th>
-            <th>Invite</th>
-            <th>Letzter RankUp</th>
+            <th>Division</th>
             <th>Urlaub</th>
             <th>Strike</th>
+            <th>Invite-Datum</th>
+            <th>Letzter RankUp</th>
+            <th>Abteilung 1</th>
+            <th>Abteilung 2</th>
+            <th>GA</th>
+            <th>EHK</th>
+            <th>ES</th>
+            <th>OP</th>
+            <th>OK</th>
+            <th>FULA</th>
+            <th>TST</th>
+            <th>KS</th>
+            <th>OK+</th>
+            <th>FT</th>
+            <th>COP</th>
+            <th>JP</th>
+            <th>ZP</th>
+            <th>VHP</th>
+            <th>TOW/BL</th>
+            <th>AKS</th>
+            <th>Ausbildung</th>
           </tr>
         </thead>
         <tbody id="archivedEmployeesTableBody"></tbody>
@@ -1191,6 +1510,7 @@
     let editingEmployeeTrainings = {};
     let editingTrainingId = null;
     let employeeSearchTerm = '';
+    let archiveSearchTerm = '';
     let employeesCache = [];
     let unsubscribeEmployeesSnapshot = null;
     const LAST_PAGE_KEY = 'lspd_last_page';
@@ -1389,20 +1709,6 @@
       return null;
     }
 
-    async function findEmployeeByEmployeeId(employeeId) {
-      const normalizedId = String(employeeId || '').trim();
-      if (!normalizedId) return null;
-
-      const snap = await getDocs(collection(db, EMPLOYEE_COLLECTION));
-      for (const docSnap of snap.docs) {
-        const data = docSnap.data();
-        if (String(data.employeeId || '').trim() === normalizedId) {
-          return { id: docSnap.id, data };
-        }
-      }
-      return null;
-    }
-
     function rankLabel(rank) {
       const labels = {
         1: 'Suspended',
@@ -1439,58 +1745,87 @@
       return labels[rank] || `Rang ${rank}`;
     }
 
+    function getEmptyPersonalData() {
+      return {
+        fullName: '',
+        employeeId: '',
+        phone: '',
+        serviceNumber: '',
+        rank: '',
+        department1: '',
+        department2: '',
+        invite: '',
+        lastRankUp: '',
+        vacation: '',
+        strike: '',
+        trainings: {}
+      };
+    }
+
     function renderPersonalData(data, user) {
-      const personalRank = getPersonalRank(data);
-      const nameValue = data?.fullName || buildFullName(data?.name, data?.lastName) || '-';
+      const hasEmployeeData = !!data?.hasEmployeeData;
+      const personalRank = hasEmployeeData ? getPersonalRank(data) : 0;
+      const nameValue = hasEmployeeData ? (data?.fullName || buildFullName(data?.name, data?.lastName) || '') : '';
 
       const personalData = [
         ['Name:', nameValue],
-        ['ID:', data?.employeeId || '-'],
-        ['Telefonnummer:', data?.phone || '-'],
-        ['Dienstnummer:', data?.serviceNumber || '-'],
-        ['Rang:', personalRank ? `${personalRank} | ${rankLabel(personalRank)}` : '-'],
-        ['Abteilung 1:', data?.department1 || '-'],
-        ['Abteilung 2:', data?.department2 || '-'],
-        ['Invite:', data?.invite || '-'],
-        ['Letzter RankUp:', data?.lastRankUp || '-'],
-        ['Urlaub:', data?.vacation || '0/3'],
-        ['Strike:', data?.strike || '0/3']
+        ['ID:', hasEmployeeData ? (data?.employeeId || '') : ''],
+        ['Telefonnummer:', hasEmployeeData ? (data?.phone || '') : ''],
+        ['Dienstnummer:', hasEmployeeData ? (data?.serviceNumber || '') : ''],
+        ['Rang:', hasEmployeeData ? (personalRank ? `${personalRank} | ${rankLabel(personalRank)}` : '') : ''],
+        ['Abteilung 1:', hasEmployeeData ? (data?.department1 || '') : ''],
+        ['Abteilung 2:', hasEmployeeData ? (data?.department2 || '') : ''],
+        ['Invite:', hasEmployeeData ? (data?.invite || '') : ''],
+        ['Letzter RankUp:', hasEmployeeData ? (data?.lastRankUp || '') : ''],
+        ['Urlaub:', hasEmployeeData ? (data?.vacation || '') : ''],
+        ['Strike:', hasEmployeeData ? (data?.strike || '') : '']
       ];
 
       const grid = document.getElementById('personalDataGrid');
-      grid.innerHTML = personalData.map(([k, v]) => `<div>${k}</div><div>${v}</div>`).join('');
+      grid.innerHTML = personalData.map(([k, v]) => {
+        const valueClass = k === 'Telefonnummer:' ? 'info-value phone-box'
+          : k === 'Dienstnummer:' ? 'info-value service-box'
+          : 'info-value';
+
+        return `
+          <div class="info-label">${k}</div>
+          <div class="${valueClass}">${v || ''}</div>
+        `;
+      }).join('');
+
       document.getElementById('welcomeBox').textContent = `Angemeldet als ${user.email}`;
-      renderDashboardTrainings(data || {});
+      renderDashboardTrainings(hasEmployeeData ? data : { trainings: {} });
     }
 
     async function loadCurrentUserData(user, accessData = null) {
       const accessEntry = accessData ? { data: accessData } : await findAccessByEmail(user.email);
       const employeeEntry = await findEmployeeByEmail(user.email);
+      const employeeData = employeeEntry?.data || null;
+      const hasEmployeeData = !!employeeData && !employeeData.archived;
 
       const merged = {
         uid: user.uid,
         email: user.email,
-        name: employeeEntry?.data?.name || accessEntry?.data?.name || user.displayName || user.email.split('@')[0],
-        lastName: employeeEntry?.data?.lastName || accessEntry?.data?.lastName || '',
-        fullName: employeeEntry?.data?.fullName || accessEntry?.data?.fullName || buildFullName(
-          employeeEntry?.data?.name || accessEntry?.data?.name || user.displayName || user.email.split('@')[0],
-          employeeEntry?.data?.lastName || accessEntry?.data?.lastName || ''
-        ),
         approved: !!accessEntry?.data?.approved,
         websiteAccessRank: getWebsiteAccessRank(accessEntry?.data || {}),
         role: accessEntry?.data?.role || 'user',
-        employeeId: employeeEntry?.data?.employeeId || accessEntry?.data?.employeeId || '-',
-        phone: employeeEntry?.data?.phone || accessEntry?.data?.phone || '-',
-        serviceNumber: employeeEntry?.data?.serviceNumber || '-',
-        rank: getPersonalRank(employeeEntry?.data || {}),
-        department1: employeeEntry?.data?.department1 || '-',
-        department2: employeeEntry?.data?.department2 || '-',
-        invite: employeeEntry?.data?.invite || '-',
-        lastRankUp: employeeEntry?.data?.lastRankUp || '-',
-        vacation: employeeEntry?.data?.vacation || '0/3',
-        strike: employeeEntry?.data?.strike || '0/3',
-        trainings: normalizeTrainings(employeeEntry?.data?.trainings || {}),
-        archived: !!employeeEntry?.data?.archived
+        hasEmployeeData,
+        archived: !!employeeData?.archived,
+
+        name: hasEmployeeData ? (employeeData?.name || '') : '',
+        lastName: hasEmployeeData ? (employeeData?.lastName || '') : '',
+        fullName: hasEmployeeData ? (employeeData?.fullName || buildFullName(employeeData?.name, employeeData?.lastName)) : '',
+        employeeId: hasEmployeeData ? (employeeData?.employeeId || '') : '',
+        phone: hasEmployeeData ? (employeeData?.phone || '') : '',
+        serviceNumber: hasEmployeeData ? (employeeData?.serviceNumber || '') : '',
+        rank: hasEmployeeData ? getPersonalRank(employeeData || {}) : '',
+        department1: hasEmployeeData ? (employeeData?.department1 || '') : '',
+        department2: hasEmployeeData ? (employeeData?.department2 || '') : '',
+        invite: hasEmployeeData ? (employeeData?.invite || '') : '',
+        lastRankUp: hasEmployeeData ? (employeeData?.lastRankUp || '') : '',
+        vacation: hasEmployeeData ? (employeeData?.vacation || '') : '',
+        strike: hasEmployeeData ? (employeeData?.strike || '') : '',
+        trainings: hasEmployeeData ? normalizeTrainings(employeeData?.trainings || {}) : normalizeTrainings({})
       };
 
       currentUserData = merged;
@@ -1917,18 +2252,6 @@
       return true;
     }
 
-    async function deleteArchivedEmployeeByEmployeeId(employeeId) {
-      if (!currentUser || !isAdmin(currentUser.email)) return false;
-      const normalizedId = String(employeeId || '').trim();
-      if (!normalizedId) return false;
-
-      const found = employeesCache.find(entry => String(entry.data.employeeId || '').trim() === normalizedId && !!entry.data.archived);
-      if (!found) return false;
-
-      await deleteDoc(doc(db, EMPLOYEE_COLLECTION, found.id));
-      return true;
-    }
-
     function subscribeAccessRequests() {
       const q = query(collection(db, ACCESS_COLLECTION), orderBy('createdAt', 'desc'));
       onSnapshot(q, (snapshot) => {
@@ -1951,8 +2274,8 @@
             <td>
               <button class="icon-btn" data-access-edit-id="${docSnap.id}" ${disabled}>✎</button>
             </td>
-            <td>${item.name || '-'}</td>
             <td>${item.employeeId || buildStableIdFromEmail(item.email || '') || '-'}</td>
+            <td>${item.name || '-'}</td>
             <td>${item.lastName || '-'}</td>
             <td>${item.email || '-'}</td>
             <td>${item.phone || '-'}</td>
@@ -2107,6 +2430,52 @@
       `;
     }
 
+    function createArchivedEmployeeRow(item, docId) {
+      const personalRank = Math.max(1, Math.min(30, Number(getPersonalRank(item) || 1)));
+      const nameValue = item.fullName || buildFullName(item.name, item.lastName) || '';
+
+      return `
+        <tr>
+          <td>
+            <div class="table-action-stack">
+              <button class="data-edit-btn" data-employee-edit-id="${docId}" disabled>✎</button>
+            </div>
+          </td>
+          <td>${item.employeeId || ''}</td>
+          <td>${item.serviceNumber || ''}</td>
+          <td>${nameValue}</td>
+          <td>${item.phone || ''}</td>
+          <td class="rank-${personalRank}">${personalRank} | ${rankLabel(personalRank)}</td>
+          <td class="${getDivisionClass(personalRank)}">${getDivisionLabel(personalRank)}</td>
+          <td>${item.vacation || '0/3'}</td>
+          <td>${item.strike || '0/3'}</td>
+          <td>${item.invite || '-'}</td>
+          <td>${item.lastRankUp || '-'}</td>
+          <td>${item.department1 || '-'}</td>
+          <td>${item.department2 || '-'}</td>
+          ${createTrainingCell(item, 'GA')}
+          ${createTrainingCell(item, 'EHK')}
+          ${createTrainingCell(item, 'ES')}
+          ${createTrainingCell(item, 'Officer')}
+          ${createTrainingCell(item, 'OK')}
+          ${createTrainingCell(item, 'FULA')}
+          ${createTrainingCell(item, 'TST')}
+          ${createTrainingCell(item, 'KS')}
+          ${createTrainingCell(item, 'OKPLUS')}
+          ${createTrainingCell(item, 'FT')}
+          ${createTrainingCell(item, 'COP')}
+          ${createTrainingCell(item, 'JP')}
+          ${createTrainingCell(item, 'ZP')}
+          ${createTrainingCell(item, 'VHP')}
+          ${createTrainingCell(item, 'TOWBL')}
+          ${createTrainingCell(item, 'AKS')}
+          <td>
+            <button class="rank-edit-btn" disabled>✎</button>
+          </td>
+        </tr>
+      `;
+    }
+
     function matchesSearch(item, term) {
       if (!term) return true;
 
@@ -2202,6 +2571,7 @@
       tbody.innerHTML = '';
       const archivedEntries = employeesCache
         .filter(entry => !!entry.data.archived)
+        .filter(entry => matchesSearch(entry.data, archiveSearchTerm))
         .sort((a, b) => {
           const rankDiff = Number(getPersonalRank(b.data) || 0) - Number(getPersonalRank(a.data) || 0);
           if (rankDiff !== 0) return rankDiff;
@@ -2213,29 +2583,18 @@
 
       if (archivedEntries.length === 0) {
         emptyState.classList.remove('hidden');
+        tbody.innerHTML = `
+          <tr class="archive-empty-row">
+            <td colspan="30">Keine eingetragenen Mitarbeiter vorhanden.</td>
+          </tr>
+        `;
         return;
       }
 
       emptyState.classList.add('hidden');
 
       archivedEntries.forEach((entry) => {
-        const item = entry.data;
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${item.email || '-'}</td>
-          <td>${item.fullName || buildFullName(item.name, item.lastName) || '-'}</td>
-          <td>${item.employeeId || '-'}</td>
-          <td>${item.serviceNumber || '-'}</td>
-          <td>${item.phone || '-'}</td>
-          <td>${getPersonalRank(item) ? `${getPersonalRank(item)} | ${rankLabel(getPersonalRank(item))}` : '-'}</td>
-          <td>${item.department1 || '-'}</td>
-          <td>${item.department2 || '-'}</td>
-          <td>${item.invite || '-'}</td>
-          <td>${item.lastRankUp || '-'}</td>
-          <td>${item.vacation || '0/3'}</td>
-          <td>${item.strike || '0/3'}</td>
-        `;
-        tbody.appendChild(tr);
+        tbody.innerHTML += createArchivedEmployeeRow(entry.data, entry.id);
       });
     }
 
@@ -2270,6 +2629,7 @@
       currentUserData = null;
       showMessage('');
       clearLastPage();
+      renderPersonalData({ ...getEmptyPersonalData(), hasEmployeeData: false }, { email: '' });
       showPage('page1', { save: false });
       finishAuthCheck();
     };
@@ -2318,27 +2678,14 @@
       document.getElementById('moveEmployeeIdInput').value = '';
     });
 
-    document.getElementById('deleteArchivedEmployeeBtn').addEventListener('click', async () => {
-      if (!currentUser || !isAdmin(currentUser.email)) return;
-
-      const employeeId = document.getElementById('archiveDeleteEmployeeIdInput').value.trim();
-      if (!employeeId) {
-        alert('Bitte eine ID eingeben.');
-        return;
-      }
-
-      const success = await deleteArchivedEmployeeByEmployeeId(employeeId);
-      if (!success) {
-        alert('Kein archivierter Mitarbeiter mit dieser ID gefunden.');
-        return;
-      }
-
-      document.getElementById('archiveDeleteEmployeeIdInput').value = '';
-    });
-
     document.getElementById('employeeSearchInput').addEventListener('input', (e) => {
       employeeSearchTerm = e.target.value.trim();
       renderEmployeesFromCache();
+    });
+
+    document.getElementById('archiveSearchInput').addEventListener('input', (e) => {
+      archiveSearchTerm = e.target.value.trim();
+      renderArchivedEmployeesFromCache();
     });
 
     populateAccessRankSelect(document.getElementById('accessRank'), 0);
