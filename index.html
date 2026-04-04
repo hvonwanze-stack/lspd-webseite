@@ -360,6 +360,11 @@
   .kleid-content { padding: 30px; text-align: center; color: var(--text-dim); font-family: 'Rajdhani', sans-serif; font-size: 1rem; letter-spacing: 2px; }
 
   select.search-input option:disabled { color: #444; background: #111; }
+  .num-spinner { display:flex; align-items:center; gap:0; border:1px solid var(--border); border-radius:5px; overflow:hidden; background:var(--bg3); }
+  .num-spinner input { width:50px; text-align:center; border:none; background:transparent; color:var(--text); font-family:'Rajdhani',sans-serif; font-size:0.9rem; font-weight:700; padding:8px 2px; outline:none; }
+  .num-spinner button { background:var(--bg2); border:none; border-left:1px solid var(--border); color:var(--text); cursor:pointer; padding:0 10px; font-size:1rem; height:100%; transition:background 0.15s; flex-shrink:0; }
+  .num-spinner button:first-child { border-left:none; border-right:1px solid var(--border); }
+  .num-spinner button:hover { background:var(--blue-accent); }
   select.td-select, select.search-input { background: var(--bg3); color: var(--text); }
 
   /* Trennwände Tabelle */
@@ -649,8 +654,8 @@ window.generateIdFromEmail = generateIdFromEmail;
           <button class="btn btn-danger" onclick="deleteMitarbeiterById()" style="padding:0 12px;font-size:0.85rem;align-self:stretch;white-space:nowrap;" title="Mitarbeiter löschen">✕</button>
           <button class="btn btn-primary" onclick="openEditMaDaten()" style="padding:0 10px;font-size:1rem;align-self:stretch;" title="Daten bearbeiten">✏️</button>
           <input class="search-input" placeholder="ID eingeben" id="ma-id-input" style="max-width:140px;border-radius:5px;">
-          <button class="btn btn-primary" onclick="archivieren()" style="padding:0 10px;align-self:stretch;font-size:0.8rem;" title="Archivieren">Archivieren</button>
           <button class="btn btn-primary" onclick="openEditAusbildungen()" style="padding:0 10px;font-size:1rem;align-self:stretch;" title="Ausbildungen bearbeiten">📋</button>
+          <button class="btn btn-primary" onclick="archivieren()" style="padding:0 10px;align-self:stretch;font-size:0.8rem;" title="Archivieren">Archivieren</button>
         </div>
         <button class="btn btn-primary" onclick="showSubPage('archiv')">Mitarbeiter Archiv</button>
       </div>
@@ -1837,9 +1842,28 @@ window.generateIdFromEmail = generateIdFromEmail;
       </div>
       <div class="form-group"><label>NAME <span style="color:var(--red2);">*</span></label><input type="text" id="ma-vorname" placeholder="Name (Pflichtfeld)"></div>
       <div class="form-group"><label>TELEFONNUMMER (TEL. NR.)</label><input type="text" id="ma-new-tel" placeholder="z.B. 16-48-950"></div>
+      <div class="form-group"><label>RANG (1-30)</label>
+        <div class="num-spinner">
+          <button type="button" onclick="spinNum('ma-rang-val',1,30,-1)">−</button>
+          <input type="number" id="ma-rang-val" value="0" min="1" max="30">
+          <button type="button" onclick="spinNum('ma-rang-val',1,30,1)">+</button>
+        </div>
+      </div>
       <div class="form-group"><label>DIVISION</label><input type="text" id="ma-division" placeholder="Division"></div>
-      <div class="form-group"><label>URLAUB</label><input type="text" id="ma-urlaub" placeholder="0/3"></div>
-      <div class="form-group"><label>STRIKE</label><input type="text" id="ma-strike" placeholder="0/3"></div>
+      <div class="form-group"><label>URLAUB</label>
+        <div class="num-spinner">
+          <button type="button" onclick="spinNum('ma-urlaub-val',0,99,-1)">−</button>
+          <input type="number" id="ma-urlaub-val" value="0" min="0" max="99">
+          <button type="button" onclick="spinNum('ma-urlaub-val',0,99,1)">+</button>
+        </div>
+      </div>
+      <div class="form-group"><label>STRIKE</label>
+        <div class="num-spinner">
+          <button type="button" onclick="spinNum('ma-strike-val',0,99,-1)">−</button>
+          <input type="number" id="ma-strike-val" value="0" min="0" max="99">
+          <button type="button" onclick="spinNum('ma-strike-val',0,99,1)">+</button>
+        </div>
+      </div>
       <div class="form-group"><label>INVITE-DATUM</label><input type="text" id="ma-invite" placeholder="TT.MM.JJJJ"></div>
       <div class="form-group"><label>LETZTER RANKUP</label><input type="text" id="ma-rankup" placeholder="TT.MM.JJJJ"></div>
       <div class="form-group"><label>ABTEILUNG</label>
@@ -2907,9 +2931,28 @@ window.generateIdFromEmail = generateIdFromEmail;
       </div>
       <div class="form-group"><label>NAME</label><input type="text" id="edit-ma-vorname" placeholder="Name"></div>
       <div class="form-group"><label>TELEFONNUMMER (TEL. NR.)</label><input type="text" id="edit-ma-tel" placeholder="Telefon"></div>
+      <div class="form-group"><label>RANG (1-30)</label>
+        <div class="num-spinner">
+          <button type="button" onclick="spinNum('edit-ma-rang-val',1,30,-1)">−</button>
+          <input type="number" id="edit-ma-rang-val" value="0" min="1" max="30">
+          <button type="button" onclick="spinNum('edit-ma-rang-val',1,30,1)">+</button>
+        </div>
+      </div>
       <div class="form-group"><label>DIVISION</label><input type="text" id="edit-ma-division" placeholder="Division"></div>
-      <div class="form-group"><label>URLAUB</label><input type="text" id="edit-ma-urlaub" placeholder="0/3"></div>
-      <div class="form-group"><label>STRIKE</label><input type="text" id="edit-ma-strike" placeholder="0/3"></div>
+      <div class="form-group"><label>URLAUB</label>
+        <div class="num-spinner">
+          <button type="button" onclick="spinNum('edit-ma-urlaub-val',0,99,-1)">−</button>
+          <input type="number" id="edit-ma-urlaub-val" value="0" min="0" max="99">
+          <button type="button" onclick="spinNum('edit-ma-urlaub-val',0,99,1)">+</button>
+        </div>
+      </div>
+      <div class="form-group"><label>STRIKE</label>
+        <div class="num-spinner">
+          <button type="button" onclick="spinNum('edit-ma-strike-val',0,99,-1)">−</button>
+          <input type="number" id="edit-ma-strike-val" value="0" min="0" max="99">
+          <button type="button" onclick="spinNum('edit-ma-strike-val',0,99,1)">+</button>
+        </div>
+      </div>
       <div class="form-group"><label>INVITE-DATUM</label><input type="text" id="edit-ma-invite" placeholder="TT.MM.JJJJ"></div>
       <div class="form-group"><label>LETZTER RANKUP</label><input type="text" id="edit-ma-rankup" placeholder="TT.MM.JJJJ"></div>
       <div class="form-group"><label>ABTEILUNG</label>
@@ -3691,9 +3734,10 @@ window.saveMitarbeiter = async function() {
     dn: document.getElementById('ma-dn') ? document.getElementById('ma-dn').value.trim() || '-' : '-',
     vorname: name,
     tel: document.getElementById('ma-new-tel').value.trim() || '-',
+    rang: parseInt(document.getElementById('ma-rang-val').value) || 0,
     division: document.getElementById('ma-division').value.trim() || '-',
-    urlaub: document.getElementById('ma-urlaub').value.trim() || '0/3',
-    strike: document.getElementById('ma-strike').value.trim() || '0/3',
+    urlaub: parseInt(document.getElementById('ma-urlaub-val').value) || 0,
+    strike: parseInt(document.getElementById('ma-strike-val').value) || 0,
     invite: document.getElementById('ma-invite').value.trim() || '-',
     rankup: document.getElementById('ma-rankup').value.trim() || '-',
     abt1: document.getElementById('ma-abt1').value.trim() || '-',
@@ -3707,9 +3751,12 @@ window.saveMitarbeiter = async function() {
     const ref = await addDoc(collection(db, 'mitarbeiter'), ma);
     mitarbeiterData.push({ ...ma, _id: ref.id });
     renderMitarbeiter();
-    ['ma-new-id','ma-dn','ma-vorname','ma-new-tel',
-     'ma-division','ma-urlaub','ma-strike','ma-invite','ma-rankup','ma-abt1','ma-abt2']
+    ['ma-new-id','ma-vorname','ma-new-tel','ma-division','ma-invite','ma-rankup']
     .forEach(fid => { const el = document.getElementById(fid); if(el) el.value = ''; });
+    ['ma-rang-val','ma-urlaub-val','ma-strike-val'].forEach(fid => { const el = document.getElementById(fid); if(el) el.value = '0'; });
+    const dnSel = document.getElementById('ma-dn'); if(dnSel) dnSel.value = '';
+    const a1 = document.getElementById('ma-abt1'); if(a1) a1.value = '';
+    const a2 = document.getElementById('ma-abt2'); if(a2) a2.value = '';
     closePopup('add-ma');
     showNotif('Mitarbeiter hinzugefügt!');
   } catch(e) { showNotif('Fehler: '+e.message, true); }
@@ -3881,8 +3928,9 @@ window.openEditMaDaten = function() {
     if (s1) s1.value = ma.abt1 || '';
     if (s2) s2.value = ma.abt2 || '';
   }, 50);
-  document.getElementById('edit-ma-urlaub').value = ma.urlaub || '';
-  document.getElementById('edit-ma-strike').value = ma.strike || '';
+  document.getElementById('edit-ma-rang-val').value = ma.rang || 0;
+  document.getElementById('edit-ma-urlaub-val').value = ma.urlaub || 0;
+  document.getElementById('edit-ma-strike-val').value = ma.strike || 0;
   openPopup('edit-ma-daten');
   populateDnDropdownEdit(ma.dn || '');
 };
@@ -3899,8 +3947,9 @@ window.saveMaDaten = async function() {
     rankup: document.getElementById('edit-ma-rankup').value.trim(),
     abt1: document.getElementById('edit-ma-abt1').value.trim(),
     abt2: document.getElementById('edit-ma-abt2').value.trim(),
-    urlaub: document.getElementById('edit-ma-urlaub').value.trim(),
-    strike: document.getElementById('edit-ma-strike').value.trim(),
+    rang: parseInt(document.getElementById('edit-ma-rang-val').value) || 0,
+    urlaub: parseInt(document.getElementById('edit-ma-urlaub-val').value) || 0,
+    strike: parseInt(document.getElementById('edit-ma-strike-val').value) || 0,
   };
   try {
     await setDoc(doc(db, 'mitarbeiter', docId), update, { merge: true });
@@ -4160,6 +4209,15 @@ window.showNotif = showNotif;
 function clearDashboard() {
   const fields = ['dash-name','dash-id','dash-dn','dash-tel','dash-rang','dash-abt1','dash-abt2','dash-invite','dash-rankup','dash-urlaub','dash-strike'];
   fields.forEach(function(id) { var el = document.getElementById(id); if(el) el.textContent = '-'; });
+}
+
+// Spinner helper
+function spinNum(id, min, max, delta) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  let val = parseInt(el.value) || 0;
+  val = Math.min(max, Math.max(min, val + delta));
+  el.value = val;
 }
 
 // Close overlays on background click
