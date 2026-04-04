@@ -181,13 +181,13 @@
     border-bottom: 1px solid var(--gold);
   }
 
-  .training-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .training-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
 
   .training-category { background: transparent; }
   .cat-header {
-    padding: 8px 10px; border-radius: 4px; text-align: center;
-    font-family: 'Rajdhani', sans-serif; font-size: 0.75rem; font-weight: 700; letter-spacing: 2px;
-    margin-bottom: 8px;
+    padding: 5px 8px; border-radius: 4px; text-align: center;
+    font-family: 'Rajdhani', sans-serif; font-size: 0.68rem; font-weight: 700; letter-spacing: 1px;
+    margin-bottom: 5px;
   }
   .cat-rookie { background: var(--green); border: 1px solid var(--green2); }
   .cat-officer { background: var(--orange); border: 1px solid #c87a00; }
@@ -200,12 +200,12 @@
   .cat-det { background: var(--orange); border: 1px solid #c87a00; }
   .cat-aks { background: #3a1a3a; border: 1px solid #7a3a7a; }
 
-  .training-item { display: flex; align-items: center; gap: 0; margin-bottom: 5px; }
-  .training-item input[type=checkbox] { flex: 1; height: 28px; cursor: not-allowed; }
+  .training-item { display: flex; align-items: center; gap: 4px; margin-bottom: 4px; justify-content: center; }
+  .training-item input[type=checkbox] { width: 16px; height: 16px; flex-shrink: 0; cursor: not-allowed; }
   .training-item input[type=checkbox] { accent-color: var(--gold); }
   .training-label {
-    flex: 1; padding: 6px 10px; border-radius: 3px; text-align: center;
-    font-family: 'Rajdhani', sans-serif; font-size: 0.85rem; font-weight: 700;
+    flex: 1; padding: 3px 6px; border-radius: 3px; text-align: center;
+    font-family: 'Rajdhani', sans-serif; font-size: 0.72rem; font-weight: 700;
     background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1);
   }
 
@@ -497,6 +497,17 @@ window.generateIdFromEmail = generateIdFromEmail;
           <div class="data-row"><span class="data-label">Letzter RankUp:</span><span class="data-val" id="dash-rankup" style="font-weight:700;font-size:0.85rem;">-</span></div>
           <div class="data-row"><span class="data-label">Urlaub:</span><span class="data-val" id="dash-urlaub" style="font-weight:700;font-size:0.85rem;">-</span></div>
           <div class="data-row"><span class="data-label">Strike:</span><span class="data-val" id="dash-strike" style="font-weight:700;font-size:0.85rem;">-</span></div>
+          <div style="margin-top:16px;">
+            <button onclick="doAbmelden()" style="
+              background:var(--red2);border:1px solid #e74c3c;color:#fff;
+              padding:9px 0;border-radius:6px;cursor:pointer;
+              font-family:'Rajdhani',sans-serif;font-size:0.85rem;
+              font-weight:700;letter-spacing:2px;width:100%;
+              box-shadow:0 4px 12px rgba(192,57,43,0.3);transition:background 0.2s;
+            " onmouseover="this.style.background='#e74c3c'" onmouseout="this.style.background='var(--red2)'">
+              ABMELDEN
+            </button>
+          </div>
         </div>
 
         <!-- Trainings -->
@@ -505,74 +516,62 @@ window.generateIdFromEmail = generateIdFromEmail;
           <div class="training-grid">
             <div class="training-category">
               <div class="cat-header cat-rookie">FÜR ROOKIE</div>
-              <div class="training-item"><input type="checkbox" disabled style="width:100%;accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">GA</span></div>
-              <div class="training-item"><input type="checkbox" disabled style="width:100%;accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">EHK</span></div>
+              <div class="training-item"><input type="checkbox" disabled style="accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">GA</span></div>
+              <div class="training-item"><input type="checkbox" disabled style="accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">EHK</span></div>
             </div>
             <div class="training-category">
               <div class="cat-header cat-officer">FÜR OFFICER</div>
-              <div class="training-item"><input type="checkbox" disabled style="width:100%;accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">ES</span></div>
-              <div class="training-item"><input type="checkbox" disabled style="width:100%;accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">OP</span></div>
+              <div class="training-item"><input type="checkbox" disabled style="accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">ES</span></div>
+              <div class="training-item"><input type="checkbox" disabled style="accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">OP</span></div>
             </div>
             <div class="training-category">
               <div class="cat-header cat-officer2">FÜR OFFICER II</div>
-              <div class="training-item"><input type="checkbox" disabled style="width:100%;accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">OK</span></div>
-              <div class="training-item"><input type="checkbox" disabled style="width:100%;accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">FULA</span></div>
+              <div class="training-item"><input type="checkbox" disabled style="accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">OK</span></div>
+              <div class="training-item"><input type="checkbox" disabled style="accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">FULA</span></div>
             </div>
             <div class="training-category">
               <div class="cat-header cat-ofc">FÜR OFFICER FIRST CLASS</div>
-              <div class="training-item"><input type="checkbox" checked disabled style="width:100%;accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">TST</span></div>
+              <div class="training-item"><input type="checkbox" checked disabled style="accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">TST</span></div>
             </div>
             <div class="training-category">
               <div class="cat-header cat-sup">FÜR SUPERVISING OFFICER</div>
-              <div class="training-item"><input type="checkbox" disabled style="width:100%;accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">KS</span></div>
+              <div class="training-item"><input type="checkbox" disabled style="accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">KS</span></div>
             </div>
             <div class="training-category">
               <div class="cat-header cat-senior">FÜR SENIOR SUPERVISOR</div>
-              <div class="training-item"><input type="checkbox" disabled style="width:100%;accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">OK+</span></div>
+              <div class="training-item"><input type="checkbox" disabled style="accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">OK+</span></div>
             </div>
             <div class="training-category">
               <div class="cat-header cat-corp">FÜR CORPORAL</div>
-              <div class="training-item"><input type="checkbox" disabled style="width:100%;accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">COP</span></div>
+              <div class="training-item"><input type="checkbox" disabled style="accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">COP</span></div>
             </div>
             <div class="training-category">
               <div class="cat-header cat-lead">FÜR LEAD SUPERVISOR</div>
-              <div class="training-item"><input type="checkbox" disabled style="width:100%;accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">FT</span></div>
+              <div class="training-item"><input type="checkbox" disabled style="accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">FT</span></div>
             </div>
             <div class="training-category">
               <div class="cat-header cat-det">FÜR DETECTIVE</div>
-              <div class="training-item"><input type="checkbox" disabled style="width:100%;accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">JP</span></div>
+              <div class="training-item"><input type="checkbox" disabled style="accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">JP</span></div>
             </div>
           </div>
           <div class="free-training">
             <div style="display:flex;gap:10px;align-items:center;margin-bottom:6px;">
               <div class="cat-header cat-aks" style="flex:1;margin:0;">AKS</div>
             </div>
-            <div class="training-item"><input type="checkbox" disabled style="width:100%;accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">AKS</span></div>
+            <div class="training-item"><input type="checkbox" disabled style="accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">AKS</span></div>
           </div>
           <div class="free-training">
             <div class="cat-header" style="background:var(--purple);border:1px solid var(--purple2);">FREIWILLIGE AUSBILDUNGEN</div>
             <div class="free-grid" style="margin-top:8px;">
-              <div class="training-item"><input type="checkbox" disabled style="width:100%;accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">ZP</span></div>
-              <div class="training-item"><input type="checkbox" disabled style="width:100%;accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">VHP</span></div>
-              <div class="training-item"><input type="checkbox" disabled style="width:100%;accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">TOW / BL</span></div>
+              <div class="training-item"><input type="checkbox" disabled style="accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">ZP</span></div>
+              <div class="training-item"><input type="checkbox" disabled style="accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">VHP</span></div>
+              <div class="training-item"><input type="checkbox" disabled style="accent-color:var(--gold);cursor:not-allowed;"><span class="training-label">TOW / BL</span></div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Abmelden Button nur auf Dashboard -->
-      <div style="display:flex; justify-content:flex-end; margin-top:20px;">
-        <button onclick="doAbmelden()" style="
-          background: var(--red2); border: 1px solid #e74c3c; color: #fff;
-          padding: 10px 24px; border-radius: 6px; cursor: pointer;
-          font-family: 'Rajdhani', sans-serif; font-size: 0.85rem;
-          font-weight: 700; letter-spacing: 2px;
-          box-shadow: 0 4px 15px rgba(192,57,43,0.3);
-          transition: background 0.2s;
-        " onmouseover="this.style.background='#e74c3c'" onmouseout="this.style.background='var(--red2)'">
-          ABMELDEN
-        </button>
-      </div>
+
     </div>
 
     <!-- KLEIDERORDNUNG -->
@@ -647,7 +646,7 @@ window.generateIdFromEmail = generateIdFromEmail;
           <thead>
             <tr>
               <th>ID</th><th>DN</th><th>NAME</th><th>TEL. NR.</th>
-              <th>RANG</th><th class="th-sep"></th><th>DIVISION</th><th>URLAUB</th><th class="th-sep"></th><th>STRIKE</th>
+              <th>RANG</th><th>DIVISION</th><th class="th-sep"></th><th>URLAUB</th><th>STRIKE</th>
               <th>INVITE-DATUM</th><th>LETZTER RANKUP</th><th>ABTEILUNG 1</th><th>ABTEILUNG 2</th>
               <th class="th-sep"></th>
               <th>GA</th><th>EHK</th><th>ES</th><th>OP</th><th>OK</th><th>FULA</th>
@@ -1471,10 +1470,9 @@ function renderMitarbeiter(data) {
       <td>${m.vorname||''} ${m.nachname||''}</td>
       <td>${m.tel||'-'}</td>
       <td>${m.rang||'-'}</td>
-      <td class="td-sep"></td>
       <td>${m.division||'-'}</td>
-      <td>${m.urlaub||'0/3'}</td>
       <td class="td-sep"></td>
+      <td>${m.urlaub||'0/3'}</td>
       <td>${m.strike||'0/3'}</td>
       <td>${m.invite||'-'}</td><td>${m.rankup||'-'}</td>
       <td>${m.abt1||'-'}</td><td>${m.abt2||'-'}</td>
