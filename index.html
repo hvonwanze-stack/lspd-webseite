@@ -1304,12 +1304,40 @@ window.deleteZugriff = async function() {
 window.confirmDeleteZugriff = async function() {
   if (!window._deleteDocId) return;
   try {
-    await deleteDoc(doc(db, 'zugriffsanfragen', window._deleteDocId));
+    // Zuerst den zugriffsanfragen Eintrag lesen um UID/Email zu bekommen
+    const zaRef = doc(db, 'zugriffsanfragen', window._deleteDocId);
+    const zaSnap = await getDoc(zaRef);
+    const zaData = zaSnap.data();
+
+    // Nutzer in users Collection komplett zurücksetzen (nicht löschen)
+    // so dass er eine neue Anfrage stellen kann
+    if (zaData) {
+      if (zaData.uid) {
+        try {
+          await deleteDoc(doc(db, 'users', zaData.uid));
+        } catch(e) { console.warn('users reset by uid failed:', e); }
+      } else if (zaData.email) {
+        const usersSnap = await getDocs(collection(db, 'users'));
+        for (const ud of usersSnap.docs) {
+          if ((ud.data().email || '').toLowerCase() === zaData.email.toLowerCase()) {
+            try {
+              await deleteDoc(doc(db, 'users', ud.id));
+            } catch(e) { console.warn('users reset by email failed:', e); }
+          }
+        }
+      }
+    }
+
+    // zugriffsanfragen Eintrag löschen
+    await deleteDoc(zaRef);
+
     closePopup('confirm-delete');
-    showNotif('Zugriff erfolgreich entfernt!');
+    showNotif('Eintrag gelöscht. Die Person kann eine neue Anfrage stellen.');
     loadZugriffTable();
     window._deleteDocId = null;
-  } catch(e) { showNotif('Fehler beim Löschen: ' + e.message, true); }
+  } catch(e) {
+    showNotif('Fehler beim Löschen: ' + e.message, true);
+  }
 };
 
 window.editZugriff = async function() {
