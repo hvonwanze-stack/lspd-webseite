@@ -980,7 +980,10 @@ window.doGoogleLogin = async function() {
       setLoadStatus('ZUGRIFF GEWÄHRT');
       setTimeout(() => {
         showPage('main');
+        window._initialLoad = true;
         showSubPage('dashboard');
+        window._initialLoad = false;
+        try { localStorage.setItem('lspd_last_page', 'dashboard'); } catch(e) {}
         hideLoader();
       }, 400);
       return;
@@ -997,7 +1000,10 @@ window.doGoogleLogin = async function() {
       setLoadStatus('ZUGRIFF GEWÄHRT');
       setTimeout(() => {
         showPage('main');
+        window._initialLoad = true;
         showSubPage('dashboard');
+        window._initialLoad = false;
+        try { localStorage.setItem('lspd_last_page', 'dashboard'); } catch(e) {}
         hideLoader();
       }, 400);
     } else {
@@ -1111,24 +1117,42 @@ window.updateZugriff = async function(docId, field, val) {
 window.saveZugriff = async function() {
   const email = document.getElementById('z-email').value.trim();
   if (!email) { showNotif('Bitte E-Mail eingeben.', true); return; }
-  // Auto-generate stable ID from email
+  const vorname = document.getElementById('z-vorname').value.trim();
+  const nachname = document.getElementById('z-nachname').value.trim();
+  const passNr = document.getElementById('z-id').value.trim();
+  const tel = document.getElementById('z-tel').value.trim();
+  if (!vorname) { showNotif('Bitte Vorname eingeben.', true); return; }
+
+  // Auto-generate stable ID from email (same email = always same ID)
   const autoId = generateIdFromEmail(email);
-  const data = {
-    vorname: document.getElementById('z-vorname').value,
-    nachname: document.getElementById('z-nachname').value,
-    id: autoId,
-    pass: document.getElementById('z-id').value,
-    email: email,
-    tel: document.getElementById('z-tel').value,
-    status: 'VERWEIGERT', freigeben: 'Nein', zugriffsrang: '1 | Gast',
-    createdAt: new Date().toISOString()
-  };
+
+  // Check if entry with this email already exists
   try {
-    await addDoc(collection(db, 'zugriffsanfragen'), data);
+    const snap = await getDocs(collection(db, 'zugriffsanfragen'));
+    let existingDoc = null;
+    snap.forEach(d => { if ((d.data().email||'').toLowerCase() === email.toLowerCase()) existingDoc = d; });
+    if (existingDoc) {
+      showNotif('Ein Eintrag mit dieser E-Mail existiert bereits (ID: ' + existingDoc.data().id + ').', true);
+      return;
+    }
+
+    await addDoc(collection(db, 'zugriffsanfragen'), {
+      vorname, nachname, id: autoId, pass: passNr, email, tel,
+      status: 'VERWEIGERT', freigeben: 'Nein', zugriffsrang: '1 | Gast',
+      createdAt: new Date().toISOString()
+    });
+
+    // Reset form
+    ['z-vorname','z-nachname','z-id','z-email','z-tel','z-auto-id'].forEach(id => {
+      const el = document.getElementById(id); if (el) el.value = '';
+    });
     closePopup('add-zugriff');
     showNotif('Zugriff hinzugefügt! ID: ' + autoId);
     loadZugriffTable();
-  } catch(e) { showNotif('Fehler: '+e.message, true); }
+  } catch(e) {
+    console.error('saveZugriff error:', e);
+    showNotif('Fehler: ' + e.message, true);
+  }
 };
 
 // Generate stable numeric ID from email (same email = same ID, always)
@@ -1283,8 +1307,10 @@ function showSubPage(name) {
 
   if (name === 'zugriff') { window.loadZugriffTable && window.loadZugriffTable(); }
 
-  // Letzte Seite merken
-  try { localStorage.setItem('lspd_last_page', name); } catch(e) {}
+  // Letzte Seite merken (nicht beim initialen Laden)
+  if (!window._initialLoad) {
+    try { localStorage.setItem('lspd_last_page', name); } catch(e) {}
+  }
 }
 
 // ===== POPUP =====
@@ -1372,7 +1398,9 @@ window._finishLoader = function(goToMain, lastPage) {
       let lp = 'dashboard';
       try { lp = localStorage.getItem('lspd_last_page') || 'dashboard'; } catch(e) {}
       if (lastPage) lp = lastPage;
+      window._initialLoad = true;
       showSubPage(lp);
+      window._initialLoad = false;
       hideLoader();
     }, 400);
   } else {
@@ -1387,8 +1415,10 @@ window._finishLoader = function(goToMain, lastPage) {
 // Timeout-Fallback falls Firebase nicht antwortet
 setTimeout(() => { window._finishLoader(false); }, 3000);
 
-// Init subpage default (wird später überschrieben)
+// Init — setze initialLoad flag damit showSubPage jetzt nicht in localStorage schreibt
+window._initialLoad = true;
 showSubPage('dashboard');
+window._initialLoad = false;
 </script>
 
 </body>
