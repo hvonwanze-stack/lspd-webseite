@@ -689,7 +689,7 @@
         <table class="data-table">
           <thead>
             <tr>
-              <th>NAME</th><th>IDENTIFIKATIONSNUMMER</th><th>NACHNAME</th>
+              <th>IDENTIFIKATIONSNUMMER</th><th>NAME</th><th>REISEPASSNUMMER</th><th>NACHNAME</th>
               <th>EMAIL</th><th>TELEFONNUMMER</th><th>FREIGEBEN</th><th>ZUGRIFFSRANG</th><th>STATUS</th>
             </tr>
           </thead>
@@ -1010,6 +1010,7 @@ window.doGoogleRegister = async function() {
       email: user.email,
       tel: window._icData.tel || '',
       id: window._icData.pass || '',
+      pass: window._icData.pass || '',
       status: 'VERWEIGERT',
       zugriffsrang: '11 | Web Admin XI',
       freigeben: 'Nein',
@@ -1031,15 +1032,16 @@ window.loadZugriffTable = async function() {
     const snap = await getDocs(collection(db, 'zugriffsanfragen'));
     tbody.innerHTML = '';
     if (snap.empty) {
-      tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:var(--text-dim);padding:16px;">Keine Anfragen vorhanden.</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;color:var(--text-dim);padding:16px;">Keine Anfragen vorhanden.</td></tr>';
       return;
     }
     snap.forEach(d => {
       const row = d.data();
       const tr = document.createElement('tr');
       tr.innerHTML = `
-        <td>${row.vorname || '-'}</td>
         <td>${row.id || '-'}</td>
+        <td>${row.vorname || '-'}</td>
+        <td>${row.pass || '-'}</td>
         <td>${row.nachname || '-'}</td>
         <td>${row.email || '-'}</td>
         <td>${row.tel || '-'}</td>
@@ -1057,7 +1059,7 @@ window.loadZugriffTable = async function() {
       tbody.appendChild(tr);
     });
   } catch(e) {
-    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:var(--red2);">Fehler beim Laden.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;color:var(--text-dim);padding:16px;">Keine Anfragen vorhanden.</td></tr>'; console.warn('Zugriff load error:', e);
   }
 };
 
