@@ -31,10 +31,8 @@
       font-family: Inter, Arial, sans-serif;
       color: var(--text);
       background:
-        linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px),
-        radial-gradient(circle at top, #08204a 0%, #030b17 38%, #020811 100%);
-      background-size: 24px 24px, 24px 24px, cover;
+        radial-gradient(circle at top center, rgba(11, 49, 105, 0.35) 0%, rgba(4, 20, 44, 0.12) 28%, rgba(2, 10, 20, 0) 52%),
+        linear-gradient(180deg, #05152d 0%, #031020 55%, #020913 100%);
       min-height: 100vh;
     }
 
@@ -835,11 +833,16 @@
       measurementId: 'G-65J0VDPSTS'
     };
 
-    const ADMIN_EMAIL = 'h.vonwanze@gmail.com';
+    const ADMIN_EMAIL = 'h.vonwanze@gmail.com'.trim().toLowerCase();
+
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
     const provider = new GoogleAuthProvider();
+
+    provider.setCustomParameters({
+      prompt: 'select_account'
+    });
 
     const loginPage = document.getElementById('loginPage');
     const portalPage = document.getElementById('portalPage');
@@ -905,12 +908,13 @@
     async function ensureUserDoc(user, requestData = null) {
       const userRef = doc(db, 'users', user.uid);
       const snap = await getDoc(userRef);
-      const isAdmin = user.email === ADMIN_EMAIL;
+      const userEmail = (user.email || '').trim().toLowerCase();
+      const isAdmin = userEmail === ADMIN_EMAIL;
 
       if (!snap.exists()) {
         const payload = {
           uid: user.uid,
-          email: user.email,
+          email: user.email || '',
           displayName: user.displayName || '',
           role: isAdmin ? 'admin' : 'user',
           status: isAdmin ? 'approved' : 'pending',
@@ -918,14 +922,18 @@
           lastName: requestData?.lastName || '',
           phone: requestData?.phone || '',
           passport: requestData?.passport || '',
+          vacation: '0/3',
+          strike: '0/3',
           createdAt: serverTimestamp(),
           updatedAt: serverTimestamp()
         };
+
         await setDoc(userRef, payload);
+
         if (!isAdmin && requestData) {
           await setDoc(doc(db, 'accessRequests', user.uid), {
             uid: user.uid,
-            email: user.email,
+            email: user.email || '',
             firstName: requestData.firstName,
             lastName: requestData.lastName,
             phone: requestData.phone,
@@ -937,15 +945,29 @@
             updatedAt: serverTimestamp()
           });
         }
+
         return payload;
       }
 
       const existing = snap.data();
-      if (isAdmin && existing.status !== 'approved') {
-        await updateDoc(userRef, { status: 'approved', role: 'admin', updatedAt: serverTimestamp() });
-        existing.status = 'approved';
-        existing.role = 'admin';
+      const normalizedExistingEmail = (existing.email || user.email || '').trim().toLowerCase();
+
+      if (isAdmin || normalizedExistingEmail === ADMIN_EMAIL) {
+        await updateDoc(userRef, {
+          email: user.email || existing.email || '',
+          role: 'admin',
+          status: 'approved',
+          updatedAt: serverTimestamp()
+        });
+
+        return {
+          ...existing,
+          email: user.email || existing.email || '',
+          role: 'admin',
+          status: 'approved'
+        };
       }
+
       return existing;
     }
 
@@ -953,11 +975,36 @@
       try {
         const result = await signInWithPopup(auth, provider);
         const user = result.user;
+        const userEmail = (user.email || '').trim().toLowerCase();
+
         const storedRequest = sessionStorage.getItem('pendingRequestData');
         const requestData = storedRequest ? JSON.parse(storedRequest) : null;
+
         const profile = await ensureUserDoc(user, mode === 'request' ? requestData : null);
+        const isAdmin =
+          userEmail === ADMIN_EMAIL ||
+          (profile.email || '').trim().toLowerCase() === ADMIN_EMAIL;
 
         if (mode === 'request') {
+          if (isAdmin) {
+            currentUserData = {
+              ...profile,
+              email: user.email,
+              uid: user.uid,
+              role: 'admin',
+              status: 'approved'
+            };
+            currentUserLabel.textContent = `${user.email} · Admin`;
+            updatePersonalData(profile);
+            closeModal();
+            showPortal();
+            switchView('dashboardView');
+            await loadAccessRequests();
+            await loadEmployees();
+            setMessage(authMessage, '');
+            return;
+          }
+
           sessionStorage.removeItem('pendingRequestData');
           setMessage(authMessage, 'Anfrage gespeichert. Warte jetzt auf die Freischaltung durch den Admin.');
           closeModal();
@@ -966,9 +1013,9 @@
           return;
         }
 
-        if (user.email === ADMIN_EMAIL || profile.status === 'approved') {
+        if (isAdmin || profile.status === 'approved') {
           currentUserData = { ...profile, email: user.email, uid: user.uid };
-          currentUserLabel.textContent = `${user.email} · ${user.email === ADMIN_EMAIL ? 'Admin' : 'Freigeschaltet'}`;
+          currentUserLabel.textContent = `${user.email} · ${isAdmin ? 'Admin' : 'Freigeschaltet'}`;
           updatePersonalData(profile);
           showPortal();
           switchView('dashboardView');
@@ -991,6 +1038,7 @@
         const q = query(collection(db, 'accessRequests'), orderBy('createdAt', 'desc'));
         const snap = await getDocs(q);
         const filter = accessFilterInput.value.trim().toLowerCase();
+
         if (snap.empty) {
           accessRequestsBody.innerHTML = '<tr><td colspan="8">Keine Zugriffsanfragen vorhanden</td></tr>';
           return;
@@ -1000,8 +1048,10 @@
         snap.forEach(docSnap => {
           const item = docSnap.data();
           if (filter && !(String(item.passport || '').toLowerCase().includes(filter))) return;
-          const isAdmin = currentUserData?.email === ADMIN_EMAIL;
+
+          const isAdmin = (currentUserData?.email || '').trim().toLowerCase() === ADMIN_EMAIL;
           const canEdit = isAdmin;
+
           rows.push(`
             <tr>
               <td>${item.firstName || '-'}</td>
@@ -1046,15 +1096,18 @@
           const approved = e.target.value === 'true';
           const requestRef = doc(db, 'accessRequests', uid);
           const userRef = doc(db, 'users', uid);
+
           await updateDoc(requestRef, {
             approved,
             status: approved ? 'approved' : 'rejected',
             updatedAt: serverTimestamp()
           });
+
           await updateDoc(userRef, {
             status: approved ? 'approved' : 'rejected',
             updatedAt: serverTimestamp()
           });
+
           await loadAccessRequests();
         });
       });
@@ -1074,14 +1127,17 @@
       try {
         const snap = await getDocs(query(collection(db, 'users'), orderBy('createdAt', 'desc')));
         const employees = [];
+
         snap.forEach(docSnap => {
           const u = docSnap.data();
           if (u.status === 'approved') employees.push(u);
         });
+
         if (!employees.length) {
           employeeTableBody.innerHTML = '<tr><td colspan="28">Keine eingetragenen Mitarbeiter vorhanden</td></tr>';
           return;
         }
+
         employeeTableBody.innerHTML = employees.map(u => `
           <tr>
             <td>•</td>
@@ -1089,7 +1145,7 @@
             <td>-</td>
             <td>${u.firstName || '-'} ${u.lastName || ''}</td>
             <td>${u.phone || '-'}</td>
-            <td>${u.role === 'admin' ? 'Admin' : '-'}</td>
+            <td>${(u.email || '').trim().toLowerCase() === ADMIN_EMAIL ? 'Admin' : '-'}</td>
             <td>-</td>
             <td>0/3</td>
             <td>0/3</td>
@@ -1108,12 +1164,15 @@
     document.getElementById('requestBtn').addEventListener('click', openModal);
     document.getElementById('closeModalBtn').addEventListener('click', closeModal);
     document.getElementById('loginBtn').addEventListener('click', () => loginWithGoogle('login'));
+
     document.getElementById('continueRequestBtn').addEventListener('click', async () => {
       const data = getRequestFormData();
+
       if (!validateRequestData(data)) {
         setMessage(requestMsg, 'Bitte alle Felder ausfüllen.', true);
         return;
       }
+
       sessionStorage.setItem('pendingRequestData', JSON.stringify(data));
       setMessage(requestMsg, 'Google-Anmeldung wird geöffnet...');
       await loginWithGoogle('request');
@@ -1130,18 +1189,22 @@
     });
 
     document.getElementById('refreshRequestsBtn').addEventListener('click', loadAccessRequests);
+
     document.getElementById('clearAccessFilterBtn').addEventListener('click', () => {
       accessFilterInput.value = '';
       loadAccessRequests();
     });
+
     accessFilterInput.addEventListener('input', loadAccessRequests);
 
     document.getElementById('addEmployeeBtn').addEventListener('click', () => {
       alert('Mitarbeiter können über Zugriffsanfragen freigeschaltet werden.');
     });
+
     document.getElementById('archiveBtn').addEventListener('click', () => {
       alert('Archiv-Funktion ist als UI vorbereitet und kann später erweitert werden.');
     });
+
     document.getElementById('addAccessBtn').addEventListener('click', openModal);
 
     requestModal.addEventListener('click', (e) => {
@@ -1153,18 +1216,31 @@
         showLogin();
         return;
       }
-      const profile = await ensureUserDoc(user);
-      if (user.email === ADMIN_EMAIL || profile.status === 'approved') {
-        currentUserData = { ...profile, email: user.email, uid: user.uid };
-        currentUserLabel.textContent = `${user.email} · ${user.email === ADMIN_EMAIL ? 'Admin' : 'Freigeschaltet'}`;
-        updatePersonalData(profile);
-        showPortal();
-        switchView('dashboardView');
-        await loadAccessRequests();
-        await loadEmployees();
-      } else {
+
+      try {
+        const profile = await ensureUserDoc(user);
+        const userEmail = (user.email || '').trim().toLowerCase();
+        const isAdmin =
+          userEmail === ADMIN_EMAIL ||
+          (profile.email || '').trim().toLowerCase() === ADMIN_EMAIL;
+
+        if (isAdmin || profile.status === 'approved') {
+          currentUserData = { ...profile, email: user.email, uid: user.uid };
+          currentUserLabel.textContent = `${user.email} · ${isAdmin ? 'Admin' : 'Freigeschaltet'}`;
+          updatePersonalData(profile);
+          showPortal();
+          switchView('dashboardView');
+          await loadAccessRequests();
+          await loadEmployees();
+        } else {
+          await signOut(auth);
+          setMessage(authMessage, 'Dein Konto ist noch nicht freigeschaltet.', true);
+        }
+      } catch (error) {
+        console.error(error);
+        setMessage(authMessage, 'Fehler beim Prüfen des Kontos: ' + error.message, true);
         await signOut(auth);
-        setMessage(authMessage, 'Dein Konto ist noch nicht freigeschaltet.', true);
+        showLogin();
       }
     });
   </script>
