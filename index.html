@@ -173,21 +173,21 @@
     flex: 1;
     background: linear-gradient(180deg, #4a3a00 0%, #2a2000 100%);
     border: 1px solid var(--gold);
-    border-radius: 6px; padding: 18px;
+    border-radius: 6px; padding: 10px;
   }
   .training-panel h3 {
-    font-family: 'Rajdhani', sans-serif; font-size: 0.85rem; font-weight: 700; letter-spacing: 3px;
-    color: var(--gold); text-align: center; padding: 8px; margin-bottom: 14px;
+    font-family: 'Rajdhani', sans-serif; font-size: 0.75rem; font-weight: 700; letter-spacing: 2px;
+    color: var(--gold); text-align: center; padding: 5px; margin-bottom: 8px;
     border-bottom: 1px solid var(--gold);
   }
 
-  .training-grid { display: grid; grid-template-columns: 1fr; gap: 6px; }
+  .training-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
 
   .training-category { background: transparent; position: relative; }
   .cat-header {
-    padding: 4px 6px; border-radius: 4px 4px 0 0; text-align: center;
-    font-family: 'Rajdhani', sans-serif; font-size: 0.6rem; font-weight: 700; letter-spacing: 1px;
-    margin-bottom: -1px; position: relative; z-index: 1;
+    padding: 3px 4px; border-radius: 3px; text-align: center;
+    font-family: 'Rajdhani', sans-serif; font-size: 0.55rem; font-weight: 700; letter-spacing: 0.5px;
+    margin-bottom: 2px;
   }
   .cat-rookie { background: var(--green); border: 1px solid var(--green2); }
   .cat-officer { background: var(--orange); border: 1px solid #c87a00; }
@@ -201,26 +201,26 @@
   .cat-aks { background: #3a1a3a; border: 1px solid #7a3a7a; }
 
   .training-item {
-    display: flex; align-items: center; gap: 3px; margin-bottom: 3px;
-    justify-content: flex-start; padding: 2px 4px;
+    display: flex; align-items: center; gap: 2px; margin-bottom: 2px;
+    justify-content: flex-start; padding: 1px 3px;
     background: rgba(255,255,255,0.03);
     border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 3px;
+    border-radius: 2px;
   }
-  .training-item input[type=checkbox] { width: 13px; height: 13px; flex-shrink: 0; cursor: not-allowed; }
+  .training-item input[type=checkbox] { width: 11px; height: 11px; flex-shrink: 0; cursor: not-allowed; }
   .training-item input[type=checkbox] { accent-color: var(--gold); }
   .training-label {
-    flex: 1; padding: 1px 3px; border-radius: 2px; text-align: left;
-    font-family: 'Rajdhani', sans-serif; font-size: 0.6rem; font-weight: 700;
+    flex: 1; padding: 1px 2px; border-radius: 2px; text-align: left;
+    font-family: 'Rajdhani', sans-serif; font-size: 0.55rem; font-weight: 700;
     background: transparent; border: none;
-    line-height: 1.2;
+    line-height: 1.2; word-break: break-word;
   }
 
   .free-training {
     margin-top: 14px; border-top: 1px solid var(--gold); padding-top: 12px;
   }
   .free-training .cat-header { background: var(--purple); border: 1px solid var(--purple2); }
-  .free-grid { display: grid; grid-template-columns: 1fr; gap: 4px; margin-top: 4px; }
+  .free-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; margin-top: 4px; }
 
   /* ===== TABLES ===== */
   .data-table { width: 100%; border-collapse: collapse; font-size: 0.72rem; }
@@ -507,8 +507,8 @@ window.generateIdFromEmail = generateIdFromEmail;
           <div class="data-row"><span class="data-label">Telefonnummer:</span><span class="data-val" id="dash-tel" style="font-weight:700;font-size:0.85rem;">-</span></div>
           <div class="data-row"><span class="data-label">Dienstnummer:</span><span class="data-val" id="dash-dn" style="font-weight:700;font-size:0.85rem;">-</span></div>
           <div class="data-row"><span class="data-label">Rang:</span><span class="data-val" id="dash-rang" style="font-weight:700;font-size:0.85rem;">-</span></div>
-          <div class="data-row"><span class="data-label">Abteilung 1:</span><span class="data-val" id="dash-abt1" style="font-weight:700;font-size:0.85rem;">-</span></div>
-          <div class="data-row"><span class="data-label">Abteilung 2:</span><span class="data-val" id="dash-abt2" style="font-weight:700;font-size:0.85rem;">-</span></div>
+          <div class="data-row"><span class="data-label">Abteilung:</span><span class="data-val" id="dash-abt1" style="font-weight:700;font-size:0.85rem;">-</span></div>
+          <div class="data-row"><span class="data-label">Zweitabteilung:</span><span class="data-val" id="dash-abt2" style="font-weight:700;font-size:0.85rem;">-</span></div>
           <div class="data-row"><span class="data-label">Invite:</span><span class="data-val" id="dash-invite" style="font-weight:700;font-size:0.85rem;">-</span></div>
           <div class="data-row"><span class="data-label">Letzter RankUp:</span><span class="data-val" id="dash-rankup" style="font-weight:700;font-size:0.85rem;">-</span></div>
           <div class="data-row"><span class="data-label">Urlaub:</span><span class="data-val" id="dash-urlaub" style="font-weight:700;font-size:0.85rem;">-</span></div>
@@ -528,7 +528,7 @@ window.generateIdFromEmail = generateIdFromEmail;
         </div>
 
         <!-- Trainings -->
-        <div class="training-panel" style="width:160px;flex-shrink:0;align-self:stretch;">
+        <div class="training-panel" style="width:320px;flex-shrink:0;align-self:stretch;">
           <h3>AUSBILDUNGEN</h3>
           <div class="training-grid">
             <div class="training-category">
@@ -664,7 +664,7 @@ window.generateIdFromEmail = generateIdFromEmail;
             <tr>
               <th>ID</th><th>DN</th><th>NAME</th><th>TEL. NR.</th>
               <th>RANG</th><th class="th-sep"></th><th>DIVISION</th><th class="th-sep"></th><th>URLAUB</th><th>STRIKE</th>
-              <th>INVITE-DATUM</th><th>LETZTER RANKUP</th><th>ABTEILUNG 1</th><th>ZWEIT ABTEILUNG</th>
+              <th>INVITE-DATUM</th><th>LETZTER RANKUP</th><th>ABTEILUNG</th><th>ZWEIT ABTEILUNG</th>
               <th class="th-sep"></th>
               <th>GA</th><th>EHK</th><th>ES</th><th>OP</th><th>OK</th><th>FULA</th>
               <th>TST</th><th>KS</th><th>OK+</th><th>FT</th><th>COP</th><th>JP</th>
@@ -729,7 +729,7 @@ window.generateIdFromEmail = generateIdFromEmail;
             <tr>
               <th>ID</th><th>DN</th><th>NAME</th><th>TEL. NR.</th>
               <th>RANG</th><th class="th-sep"></th><th>DIVISION</th><th class="th-sep"></th><th>URLAUB</th><th>STRIKE</th>
-              <th>INVITE-DATUM</th><th>LETZTER RANKUP</th><th>ABTEILUNG 1</th><th>ZWEIT ABTEILUNG</th>
+              <th>INVITE-DATUM</th><th>LETZTER RANKUP</th><th>ABTEILUNG</th><th>ZWEIT ABTEILUNG</th>
               <th class="th-sep"></th>
               <th>GA</th><th>EHK</th><th>ES</th><th>OP</th><th>OK</th><th>FULA</th>
               <th>TST</th><th>KS</th><th>OK+</th><th>FT</th><th>COP</th><th>JP</th>
@@ -4105,8 +4105,8 @@ async function fillDashboardFromMitarbeiter() {
 
   if (!userPassId) return;
 
-  // Suche Mitarbeiter dessen ID mit der pass-ID übereinstimmt
-  const ma = mitarbeiterData.find(m => (m.id || '') === userPassId);
+  // Suche Mitarbeiter dessen ID mit der Zugriffs-ID übereinstimmt
+  const ma = mitarbeiterData.find(m => (m.id || '').toLowerCase() === userPassId.toLowerCase());
   if (!ma) return;
   const set = (elId, val) => { const el = document.getElementById(elId); if(el) el.textContent = val || '-'; };
   set('dash-name', ma.vorname || '-');
