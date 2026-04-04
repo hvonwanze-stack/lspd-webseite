@@ -704,7 +704,7 @@ window.generateIdFromEmail = generateIdFromEmail;
 
     <!-- MITARBEITER ARCHIV (Seite 9) -->
     <div id="sub-archiv" style="display:none;">
-      <div style="display:flex;justify-content:flex-start;margin-bottom:16px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
         <button onclick="showSubPage('mitarbeiter')" style="
           background:var(--bg3);border:1px solid var(--blue-light);color:var(--text);
           padding:9px 20px;border-radius:6px;cursor:pointer;
@@ -713,14 +713,23 @@ window.generateIdFromEmail = generateIdFromEmail;
         " onmouseover="this.style.background='var(--blue-accent)'" onmouseout="this.style.background='var(--bg3)'">
           ← ZURÜCK
         </button>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <button onclick="deleteArchivEntry()" style="
+            background:var(--red2);border:1px solid #e74c3c;color:#fff;
+            padding:9px 14px;border-radius:6px;cursor:pointer;
+            font-family:'Rajdhani',sans-serif;font-size:0.9rem;font-weight:700;
+          ">✕</button>
+          <input class="search-input" placeholder="Reisepassnummer suchen..." id="archiv-search" oninput="filterArchiv()" style="max-width:220px;border-radius:5px;">
+        </div>
       </div>
       <div class="table-wrap register-table-wrap">
         <table class="data-table register-table">
           <thead>
             <tr>
               <th>ID</th><th>DN</th><th>NAME</th><th>TEL. NR.</th>
-              <th>RANG</th><th>DIVISION</th><th>URLAUB</th><th>STRIKE</th>
+              <th>RANG</th><th class="th-sep"></th><th>DIVISION</th><th class="th-sep"></th><th>URLAUB</th><th>STRIKE</th>
               <th>INVITE-DATUM</th><th>LETZTER RANKUP</th><th>ABTEILUNG 1</th><th>ABTEILUNG 2</th>
+              <th class="th-sep"></th>
               <th>GA</th><th>EHK</th><th>ES</th><th>OP</th><th>OK</th><th>FULA</th>
               <th>TST</th><th>KS</th><th>OK+</th><th>FT</th><th>COP</th><th>JP</th>
               <th>ZP</th><th>VHP</th><th>TOW/BL</th>
@@ -941,6 +950,26 @@ window.generateIdFromEmail = generateIdFromEmail;
   </div>
 </div>
 
+<!-- Confirm Delete Archiv -->
+<div class="overlay" id="overlay-confirm-archiv-delete">
+  <div class="popup" style="max-width:380px;">
+    <div class="popup-header">
+      <h2>ARCHIVEINTRAG LÖSCHEN</h2>
+      <button class="popup-close" onclick="closePopup('confirm-archiv-delete')">✕</button>
+    </div>
+    <div class="popup-body">
+      <div class="info-box" style="border-color:var(--red2);background:rgba(139,26,26,0.2);text-align:center;">
+        ⚠️ Möchtest du diesen Archiveintrag wirklich löschen?<br>
+        <span id="archiv-delete-name" style="color:var(--gold);font-weight:700;"></span>
+      </div>
+    </div>
+    <div class="popup-footer" style="justify-content:space-between;">
+      <button class="btn btn-danger" onclick="confirmArchivDelete()">JA, LÖSCHEN</button>
+      <button class="btn btn-primary" onclick="closePopup('confirm-archiv-delete')">NEIN, ABBRECHEN</button>
+    </div>
+  </div>
+</div>
+
 <!-- Confirm Delete Zugriff -->
 <div class="overlay" id="overlay-confirm-delete">
   <div class="popup" style="max-width:380px;">
@@ -1083,6 +1112,7 @@ onAuthStateChanged(auth, async (user) => {
       document.getElementById('dash-id').textContent = data.id || '-';
       document.getElementById('dash-tel').textContent = data.tel || '-';
       window._currentRolle = data.rolle || 'user';
+      window._currentUserData = data;
       loadZugriffTable();
       window._finishLoader(true);
     } else {
@@ -1518,6 +1548,9 @@ window.saveMitarbeiter = async function() {
   const name = document.getElementById('ma-vorname').value.trim();
   if (!identnr) { showNotif('Bitte Identifikationsnummer eingeben!', true); return; }
   if (!name) { showNotif('Bitte Name eingeben!', true); return; }
+  // Prüfen ob Identifikationsnummer bereits vergeben
+  const duplicate = mitarbeiterData.find(m => m.identnr === identnr);
+  if (duplicate) { showNotif('Identifikationsnummer bereits vergeben!', true); return; }
   const ma = {
     identnr: identnr,
     reisepass: document.getElementById('ma-reisepass') ? document.getElementById('ma-reisepass').value.trim() || '-' : '-',
@@ -1579,6 +1612,64 @@ window.deleteMitarbeiter = async function(docId) {
   } catch(e) { showNotif('Fehler: ' + e.message, true); }
 };
 
+// Track selected archiv entry for deletion
+window._selectedArchivId = null;
+
+window.deleteArchivEntry = function() {
+  const pass = document.getElementById('archiv-search') ? document.getElementById('archiv-search').value.trim() : '';
+  if (!pass) { showNotif('Bitte Reisepassnummer ins Suchfeld eingeben.', true); return; }
+  const found = (window._currentArchivData || []).find(m => (m.reisepass||'').toLowerCase() === pass.toLowerCase());
+  if (!found) { showNotif('Kein Archiveintrag mit dieser Reisepassnummer gefunden.', true); return; }
+  window._selectedArchivId = found._id;
+  document.getElementById('archiv-delete-name').textContent = found.vorname || found.id || found._id;
+  openPopup('confirm-archiv-delete');
+};
+
+window.confirmArchivDelete = async function() {
+  if (!window._selectedArchivId) return;
+  try {
+    await deleteDoc(doc(db, 'mitarbeiter_archiv', window._selectedArchivId));
+    archivData = archivData.filter(m => m._id !== window._selectedArchivId);
+    renderArchiv();
+    closePopup('confirm-archiv-delete');
+    showNotif('Archiveintrag gelöscht.');
+    window._selectedArchivId = null;
+  } catch(e) { showNotif('Fehler: ' + e.message, true); }
+};
+
+window.filterArchiv = function() {
+  const term = (document.getElementById('archiv-search').value || '').toLowerCase();
+  if (!term) { renderArchiv(); return; }
+  const filtered = (archivData || []).filter(m =>
+    (m.reisepass||'').toLowerCase().includes(term) ||
+    (m.vorname||'').toLowerCase().includes(term) ||
+    (m.id||'').toLowerCase().includes(term)
+  );
+  const tbody = document.getElementById('archiv-tbody');
+  if (!tbody) return;
+  const chk = (v) => v ? '<span style="color:#27ae60;font-weight:900;">✔</span>' : '☐';
+  if (!filtered.length) {
+    tbody.innerHTML = '<tr><td colspan="31" style="text-align:center;color:var(--text-dim);padding:16px;">Keine Ergebnisse.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = filtered.map(m => `
+    <tr data-archiv-id="${m._id}" data-reisepass="${m.reisepass||''}">
+      <td>${m.id||'-'}</td><td>${m.dn||'-'}</td><td>${m.vorname||''}</td>
+      <td>${m.tel||'-'}</td><td>${m.rang||'-'}</td>
+      <td class="td-sep"></td><td>${m.division||'-'}</td><td class="td-sep"></td>
+      <td>${m.urlaub||'-'}</td><td>${m.strike||'-'}</td>
+      <td>${m.invite||'-'}</td><td>${m.rankup||'-'}</td>
+      <td>${m.abt1||'-'}</td><td>${m.abt2||'-'}</td>
+      <td class="td-sep"></td>
+      <td>${chk(m.ga)}</td><td>${chk(m.ehk)}</td><td>${chk(m.es)}</td><td>${chk(m.op)}</td>
+      <td>${chk(m.ok)}</td><td>${chk(m.fula)}</td><td>${chk(m.tst)}</td><td>${chk(m.ks)}</td>
+      <td>${chk(m.okp)}</td><td>${chk(m.ft)}</td><td>${chk(m.cop)}</td><td>${chk(m.jp)}</td>
+      <td>${chk(m.zp)}</td><td>${chk(m.vhp)}</td><td>${chk(m.tow)}</td>
+      <td style="font-size:0.65rem;">${(m.archiviertAm||'').slice(0,10)}</td>
+    </tr>
+  `).join('');
+};
+
 window.loadArchiv = async function() {
   try {
     const snap = await getDocs(collection(db, 'mitarbeiter_archiv'));
@@ -1596,13 +1687,18 @@ function renderArchiv() {
     return;
   }
   const chk = (v) => v ? '<span style="color:#27ae60;font-weight:900;">✔</span>' : '☐';
+  window._currentArchivData = archivData;
   tbody.innerHTML = archivData.map(m => `
-    <tr>
+    <tr data-archiv-id="${m._id}" data-reisepass="${m.reisepass||''}">
       <td>${m.id||'-'}</td><td>${m.dn||'-'}</td><td>${m.vorname||''}</td>
-      <td>${m.tel||'-'}</td><td>${m.rang||'-'}</td><td>${m.division||'-'}</td>
+      <td>${m.tel||'-'}</td><td>${m.rang||'-'}</td>
+      <td class="td-sep"></td>
+      <td>${m.division||'-'}</td>
+      <td class="td-sep"></td>
       <td>${m.urlaub||'-'}</td><td>${m.strike||'-'}</td>
       <td>${m.invite||'-'}</td><td>${m.rankup||'-'}</td>
       <td>${m.abt1||'-'}</td><td>${m.abt2||'-'}</td>
+      <td class="td-sep"></td>
       <td>${chk(m.ga)}</td><td>${chk(m.ehk)}</td><td>${chk(m.es)}</td><td>${chk(m.op)}</td>
       <td>${chk(m.ok)}</td><td>${chk(m.fula)}</td><td>${chk(m.tst)}</td><td>${chk(m.ks)}</td>
       <td>${chk(m.okp)}</td><td>${chk(m.ft)}</td><td>${chk(m.cop)}</td><td>${chk(m.jp)}</td>
@@ -1764,9 +1860,47 @@ async function loadMitarbeiter() {
     mitarbeiterData = [];
     snap.forEach(d => mitarbeiterData.push({ ...d.data(), _id: d.id }));
     renderMitarbeiter();
+    fillDashboardFromMitarbeiter && fillDashboardFromMitarbeiter();
   } catch(e) {}
 }
 loadMitarbeiter();
+
+// Nach Laden der Mitarbeiter: Dashboard mit Mitarbeiterdaten befüllen falls passend
+async function fillDashboardFromMitarbeiter() {
+  if (!window._currentUserData) return;
+  const userData = window._currentUserData;
+  // Suche Mitarbeiter anhand der Identifikationsnummer (gespeichert in users als identnr oder id)
+  const identnr = userData.identnr || userData.id || '';
+  if (!identnr || identnr === '-') return;
+  const ma = mitarbeiterData.find(m => m.identnr === identnr || m.id === identnr);
+  if (!ma) return;
+  const set = (elId, val) => { const el = document.getElementById(elId); if(el) el.textContent = val || '-'; };
+  set('dash-name', ma.vorname || '-');
+  set('dash-id', ma.id || '-');
+  set('dash-dn', ma.dn || '-');
+  set('dash-tel', ma.tel || '-');
+  set('dash-rang', ma.rang || '-');
+  set('dash-abt1', ma.abt1 || '-');
+  set('dash-abt2', ma.abt2 || '-');
+  set('dash-invite', ma.invite || '-');
+  set('dash-rankup', ma.rankup || '-');
+  set('dash-urlaub', ma.urlaub || '0/3');
+  set('dash-strike', ma.strike || '0/3');
+  // Ausbildungen setzen
+  const ausbMap = {
+    'dash-ausb-ga': ma.ga, 'dash-ausb-ehk': ma.ehk, 'dash-ausb-es': ma.es,
+    'dash-ausb-op': ma.op, 'dash-ausb-ok': ma.ok, 'dash-ausb-fula': ma.fula,
+    'dash-ausb-tst': ma.tst, 'dash-ausb-ks': ma.ks, 'dash-ausb-okp': ma.okp,
+    'dash-ausb-cop': ma.cop, 'dash-ausb-ft': ma.ft, 'dash-ausb-jp': ma.jp,
+    'dash-ausb-aks': ma.aks, 'dash-ausb-zp': ma.zp, 'dash-ausb-vhp': ma.vhp,
+    'dash-ausb-tow': ma.tow
+  };
+  Object.entries(ausbMap).forEach(([id, val]) => {
+    const el = document.getElementById(id);
+    if (el) el.checked = !!val;
+  });
+}
+window.fillDashboardFromMitarbeiter = fillDashboardFromMitarbeiter;
 </script>
 
 <script>
