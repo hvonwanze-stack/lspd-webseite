@@ -350,10 +350,6 @@
   /* Kleiderordnung placeholder */
   .kleid-content { padding: 30px; text-align: center; color: var(--text-dim); font-family: 'Rajdhani', sans-serif; font-size: 1rem; letter-spacing: 2px; }
 
-  /* Table separators */
-  .th-sep { background: #000 !important; width: 3px !important; min-width: 3px !important; max-width: 3px !important; padding: 0 !important; border: none !important; }
-  .td-sep { background: #000 !important; width: 3px !important; min-width: 3px !important; max-width: 3px !important; padding: 0 !important; border: none !important; }
-
   /* Responsive */
   @media (max-width: 768px) {
     .dashboard-grid { flex-direction: column; }
@@ -667,13 +663,10 @@ window.generateIdFromEmail = generateIdFromEmail;
     <!-- MITARBEITER REGISTER (Bild 7) -->
     <div id="sub-mitarbeiter" style="display:none;">
       <div class="search-area">
-        <input class="search-input" placeholder="Mitarbeiter suchen..." id="ma-search" oninput="filterMitarbeiter()" style="max-width:180px;font-size:0.75rem;">
+        <input class="search-input" placeholder="Mitarbeiter suchen..." id="ma-search" oninput="filterMitarbeiter()">
         <button class="btn btn-primary" onclick="openPopup('add-ma')">Mitarbeiter hinzufügen</button>
         <div style="flex:1"></div>
-        <div style="display:flex;align-items:stretch;gap:6px;">
-          <button class="btn btn-primary" onclick="editMitarbeiter()" style="padding:0 10px;font-size:1rem;align-self:stretch;" title="Mitarbeiter bearbeiten">✏️</button>
-          <input class="search-input" placeholder="ID eingeben" id="ma-id-input" style="max-width:150px;border-radius:5px;">
-        </div>
+        <input class="search-input" placeholder="ID eingeben" id="ma-id-input" style="max-width:160px;">
         <button class="btn btn-primary" onclick="archivieren()">Archivieren</button>
         <button class="btn btn-primary" onclick="showSubPage('archiv')">Mitarbeiter Archiv</button>
       </div>
@@ -681,10 +674,9 @@ window.generateIdFromEmail = generateIdFromEmail;
         <table class="data-table register-table">
           <thead>
             <tr>
-              <th>✏️</th><th>ID</th><th>DN</th><th>NAME</th><th>TEL. NR.</th>
-              <th>RANG</th><th class="th-sep"></th><th>DIVISION</th><th>URLAUB</th><th class="th-sep"></th><th>STRIKE</th>
+              <th>DATEN</th><th>ID</th><th>DN</th><th>NAME</th><th>TEL. NR.</th>
+              <th>RANG</th><th>DIVISION</th><th>URLAUB</th><th>STRIKE</th>
               <th>INVITE-DATUM</th><th>LETZTER RANKUP</th><th>ABTEILUNG 1</th><th>ABTEILUNG 2</th>
-              <th class="th-sep"></th>
               <th>GA</th><th>EHK</th><th>ES</th><th>OP</th><th>OK</th><th>FULA</th>
               <th>TST</th><th>KS</th><th>OK+</th><th>FT</th><th>COP</th><th>JP</th>
               <th>ZP</th><th>VHP</th><th>TOW/BL</th>
@@ -982,46 +974,25 @@ window.ensureAdminInFirestore = async function(user) {
   } catch(e) { console.warn('ensureAdmin error:', e); }
 }
 
-// Auth state — wird beim Seitenlade einmal aufgerufen
+// Auth state
 onAuthStateChanged(auth, async (user) => {
-  try {
-    if (user) {
-      let userDoc = await getDoc(doc(db, 'users', user.uid));
-
-      if (!userDoc.exists()) {
-        // Neuer Nutzer: anlegen und direkt auf Login schicken
-        const autoId = window.generateIdFromEmail(user.email);
-        await setDoc(doc(db, 'users', user.uid), {
-          uid: user.uid, email: user.email,
-          displayName: user.displayName || '',
-          vorname: user.displayName || '',
-          nachname: '', tel: '-', id: autoId,
-          approved: false, rolle: 'user',
-          createdAt: new Date().toISOString()
-        });
-        await signOut(auth);
-        window._finishLoader(false);
-        return;
-      }
-
+  if (user) {
+    const userDoc = await getDoc(doc(db, 'users', user.uid));
+    if (userDoc.exists() && userDoc.data().approved === true) {
       const data = userDoc.data();
-      if (data.approved === true) {
-        document.getElementById('dash-name').textContent = data.vorname || data.displayName || '-';
-        document.getElementById('dash-id').textContent = data.identnr || data.id || '-';
-        document.getElementById('dash-tel').textContent = data.tel || '-';
-        window._currentRolle = data.rolle || 'user';
-        loadZugriffTable();
-        window._finishLoader(true);
-      } else {
-        await signOut(auth);
-        window._finishLoader(false);
-      }
+      document.getElementById('dash-name').textContent = data.vorname || data.displayName || '-';
+      document.getElementById('dash-id').textContent = data.id || '-';
+      document.getElementById('dash-tel').textContent = data.tel || '-';
+      window._currentRolle = data.rolle || 'user';
+      loadZugriffTable();
+      window._finishLoader && window._finishLoader(true);
     } else {
-      window._finishLoader(false);
+      showNotif('Dein Konto wurde noch nicht freigeschalten. Bitte warte auf Admin-Bestätigung.', true);
+      await signOut(auth);
+      window._finishLoader && window._finishLoader(false);
     }
-  } catch(e) {
-    console.error('Auth error:', e);
-    window._finishLoader(false);
+  } else {
+    window._finishLoader && window._finishLoader(false);
   }
 });
 
@@ -1438,17 +1409,7 @@ window.saveMitarbeiter = async function() {
   } catch(e) { showNotif('Fehler: '+e.message, true); }
 };
 
-window.archivieren = function() {
-  const id = document.getElementById('ma-id-input').value.trim();
-  if (!id) { showNotif('Bitte ID eingeben.', true); return; }
-  showNotif('Mitarbeiter archiviert.');
-};
-
-window.editMitarbeiter = function() {
-  const id = document.getElementById('ma-id-input').value.trim();
-  if (!id) { showNotif('Bitte zuerst eine ID eingeben.', true); return; }
-  showNotif('Bearbeitung von ID: ' + id + ' (coming soon)');
-};
+window.archivieren = function() { showSubPage('archiv'); };
 
 window.filterMitarbeiter = function() {
   const term = document.getElementById('ma-search').value.toLowerCase();
@@ -1467,20 +1428,14 @@ function renderMitarbeiter(data) {
   }
   tbody.innerHTML = arr.map(m => `
     <tr>
-      <td><button class="btn btn-primary" style="padding:3px 8px;font-size:0.75rem;" onclick="openDashWithMA('${m._id}')">✏️</button></td>
+      <td><button class="btn btn-primary" style="padding:3px 8px;font-size:0.65rem;" onclick="openDashWithMA('${m._id}')">📋</button></td>
       <td>${m.identnr||'-'}</td>
       <td>${m.id||'-'}</td>
-      <td>${(m.vorname||'')} ${(m.nachname||'')}</td>
-      <td>${m.tel||'-'}</td>
-      <td>${m.rang||'-'}</td>
-      <td class="td-sep"></td>
-      <td>${m.division||'-'}</td>
-      <td>${m.urlaub||'0/3'}</td>
-      <td class="td-sep"></td>
-      <td>${m.strike||'0/3'}</td>
+      <td>${m.vorname||''} ${m.nachname||''}</td>
+      <td>${m.tel||'-'}</td><td>${m.rang||'-'}</td>
+      <td>${m.division||'-'}</td><td>${m.urlaub||'0/3'}</td><td>${m.strike||'0/3'}</td>
       <td>${m.invite||'-'}</td><td>${m.rankup||'-'}</td>
       <td>${m.abt1||'-'}</td><td>${m.abt2||'-'}</td>
-      <td class="td-sep"></td>
       ${Array(15).fill('<td>☐</td>').join('')}
     </tr>
   `).join('');
@@ -1511,18 +1466,13 @@ loadMitarbeiter();
 <script>
 // ===== PAGE NAVIGATION =====
 function showPage(name) {
-  try {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    if (name === 'login') {
-      const pl = document.getElementById('page-login');
-      if (pl) pl.classList.add('active');
-    } else if (name === 'main') {
-      const pm = document.getElementById('page-main');
-      if (pm) pm.classList.add('active');
-      const hb = document.getElementById('header-badge');
-      if (hb) hb.style.display = 'flex';
-    }
-  } catch(e) { console.error('showPage error:', e); }
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  if (name === 'login') {
+    document.getElementById('page-login').classList.add('active');
+  } else if (name === 'main') {
+    document.getElementById('page-main').classList.add('active');
+    document.getElementById('header-badge').style.display = 'flex';
+  }
 }
 
 function showSubPage(name) {
