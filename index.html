@@ -967,13 +967,31 @@ window.ensureAdminInFirestore = async function(user) {
 // Auth state
 onAuthStateChanged(auth, async (user) => {
   if (user) {
-    const userDoc = await getDoc(doc(db, 'users', user.uid));
-    if (userDoc.exists() && userDoc.data().approved === true) {
-      const data = userDoc.data();
+    let userDoc = await getDoc(doc(db, 'users', user.uid));
+
+    // Wenn kein Eintrag existiert: automatisch anlegen mit approved:false
+    if (!userDoc.exists()) {
+      const autoId = window.generateIdFromEmail(user.email);
+      await setDoc(doc(db, 'users', user.uid), {
+        uid: user.uid,
+        email: user.email,
+        displayName: user.displayName || '',
+        vorname: user.displayName || '',
+        nachname: '',
+        tel: '-',
+        id: autoId,
+        approved: false,
+        rolle: 'user',
+        createdAt: new Date().toISOString()
+      });
+      userDoc = await getDoc(doc(db, 'users', user.uid));
+    }
+
+    const data = userDoc.data();
+    if (data.approved === true) {
       document.getElementById('dash-name').textContent = data.vorname || data.displayName || '-';
       document.getElementById('dash-id').textContent = data.id || '-';
       document.getElementById('dash-tel').textContent = data.tel || '-';
-      // Store rolle globally for UI decisions
       window._currentRolle = data.rolle || 'user';
       loadZugriffTable();
       window._finishLoader && window._finishLoader(true);
@@ -1003,22 +1021,29 @@ window.doGoogleLogin = async function() {
     setLoadStatus('ZUGRIFF WIRD GEPRÜFT ...');
 
     // Nutzer in Firestore prüfen
-    const userDoc = await getDoc(doc(db, 'users', user.uid));
-    if (userDoc.exists() && userDoc.data().approved === true) {
-      const data = userDoc.data();
-      document.getElementById('dash-name').textContent = data.vorname || '-';
-      document.getElementById('dash-id').textContent = data.id || '-';
-      document.getElementById('dash-tel').textContent = data.tel || '-';
-      loadZugriffTable();
-      setLoadStatus('ZUGRIFF GEWÄHRT');
-      setTimeout(() => {
-        showPage('main');
-        window._initialLoad = true;
-        showSubPage('dashboard');
-        window._initialLoad = false;
-        try { localStorage.setItem('lspd_last_page', 'dashboard'); } catch(e) {}
-        hideLoader();
-      }, 400);
+    let userDoc = await getDoc(doc(db, 'users', user.uid));
+
+    // Kein Eintrag = neu, anlegen mit approved:false
+    if (!userDoc.exists()) {
+      const autoId = window.generateIdFromEmail(user.email);
+      await setDoc(doc(db, 'users', user.uid), {
+        uid: user.uid,
+        email: user.email,
+        displayName: user.displayName || '',
+        vorname: user.displayName || '',
+        nachname: '',
+        tel: '-',
+        id: autoId,
+        approved: false,
+        rolle: 'user',
+        createdAt: new Date().toISOString()
+      });
+      userDoc = await getDoc(doc(db, 'users', user.uid));
+    }
+
+    if (userDoc.data().approved === true) {
+      // onAuthStateChanged übernimmt die Weiterleitung
+      return;
     } else {
       showNotif('Konto noch nicht freigeschalten. Bitte warte auf Admin.', true);
       await signOut(auth);
@@ -1054,11 +1079,11 @@ window.doGoogleRegister = async function() {
       return;
     }
 
-    // Save to users collection
+    // Save to users collection (still logged in = has write permission)
     await setDoc(doc(db, 'users', user.uid), {
       uid: user.uid,
       email: user.email,
-      displayName: user.displayName,
+      displayName: user.displayName || '',
       vorname: window._icData.vorname || '',
       nachname: window._icData.nachname || '',
       tel: window._icData.tel || '',
@@ -1071,7 +1096,9 @@ window.doGoogleRegister = async function() {
     // Check if zugriff entry already exists for this email
     const snap = await getDocs(collection(db, 'zugriffsanfragen'));
     let alreadyInZugriff = false;
-    snap.forEach(d => { if ((d.data().email||'').toLowerCase() === user.email.toLowerCase()) alreadyInZugriff = true; });
+    snap.forEach(d => {
+      if ((d.data().email || '').toLowerCase() === user.email.toLowerCase()) alreadyInZugriff = true;
+    });
 
     if (!alreadyInZugriff) {
       await addDoc(collection(db, 'zugriffsanfragen'), {
@@ -1089,17 +1116,20 @@ window.doGoogleRegister = async function() {
       });
     }
 
+    // Sign out AFTER all writes are done
     await signOut(auth);
 
     // Close ALL popups
     document.querySelectorAll('.overlay').forEach(o => o.classList.remove('open'));
 
-    // Show success notification
+    // Show success notification in green
     showNotif('Anfrage erfolgreich gesendet, warte auf Freischaltung durch Admin.');
 
   } catch(e) {
-    console.error('Register error:', e);
-    showNotif('Fehler: ' + e.message, true);
+    console.error('Register error:', e.code, e.message);
+    // Close popups even on error so user isn't stuck
+    document.querySelectorAll('.overlay').forEach(o => o.classList.remove('open'));
+    showNotif('Fehler beim Senden der Anfrage: ' + e.message, true);
   }
 };
 
@@ -1144,11 +1174,54 @@ window.updateZugriff = async function(docId, field, val) {
     const ref = doc(db, 'zugriffsanfragen', docId);
     const update = {};
     update[field] = val;
-    if (field === 'freigeben' && val === 'Ja') update.status = 'FREIGEGEBEN';
-    else if (field === 'freigeben' && val === 'Nein') update.status = 'VERWEIGERT';
+
+    if (field === 'freigeben') {
+      if (val === 'Ja') {
+        update.status = 'FREIGEGEBEN';
+
+        // Nutzer in users Collection freischalten
+        const zaSnap = await getDoc(ref);
+        const zaData = zaSnap.data();
+        if (zaData && zaData.uid) {
+          // Nutzer hat sich selbst registriert - über UID updaten
+          await setDoc(doc(db, 'users', zaData.uid), { approved: true }, { merge: true });
+        } else if (zaData && zaData.email) {
+          // Manuell hinzugefügt - über Email suchen
+          const usersSnap = await getDocs(collection(db, 'users'));
+          usersSnap.forEach(async (ud) => {
+            if ((ud.data().email || '').toLowerCase() === zaData.email.toLowerCase()) {
+              await setDoc(doc(db, 'users', ud.id), { approved: true }, { merge: true });
+            }
+          });
+        }
+        showNotif('Zugriff freigegeben ✓');
+
+      } else {
+        update.status = 'VERWEIGERT';
+
+        // Zugriff wieder entziehen
+        const zaSnap = await getDoc(ref);
+        const zaData = zaSnap.data();
+        if (zaData && zaData.uid) {
+          await setDoc(doc(db, 'users', zaData.uid), { approved: false }, { merge: true });
+        } else if (zaData && zaData.email) {
+          const usersSnap = await getDocs(collection(db, 'users'));
+          usersSnap.forEach(async (ud) => {
+            if ((ud.data().email || '').toLowerCase() === zaData.email.toLowerCase()) {
+              await setDoc(doc(db, 'users', ud.id), { approved: false }, { merge: true });
+            }
+          });
+        }
+        showNotif('Zugriff entzogen.');
+      }
+    }
+
     await setDoc(ref, update, { merge: true });
     loadZugriffTable();
-  } catch(e) {}
+  } catch(e) {
+    console.error('updateZugriff error:', e);
+    showNotif('Fehler: ' + e.message, true);
+  }
 };
 
 window.saveZugriff = async function() {
