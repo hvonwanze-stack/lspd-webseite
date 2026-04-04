@@ -1082,14 +1082,25 @@ window.doGoogleRegister = async function() {
     // Auto-generate stable ID from email
     const autoId = window.generateIdFromEmail(user.email);
 
-    // Check if user already exists
+    // Prüfen ob Nutzer bereits in users existiert (noch nicht gelöscht)
     const existingUser = await getDoc(doc(db, 'users', user.uid));
     if (existingUser.exists()) {
-      await signOut(auth);
-      closePopup('step-google');
-      closePopup('step-ic');
-      showNotif('Du hast bereits eine Anfrage gestellt. Warte auf Freischaltung.', true);
-      return;
+      // Prüfen ob auch noch in zugriffsanfragen vorhanden
+      const zaSnap = await getDocs(collection(db, 'zugriffsanfragen'));
+      let inZugriff = false;
+      zaSnap.forEach(d => {
+        if ((d.data().email || '').toLowerCase() === user.email.toLowerCase()) inZugriff = true;
+      });
+      if (inZugriff) {
+        // Noch in der Liste → echte Doppel-Registrierung
+        await signOut(auth);
+        closePopup('step-google');
+        closePopup('step-ic');
+        showNotif('Du hast bereits eine Anfrage gestellt. Warte auf Freischaltung.', true);
+        return;
+      }
+      // Nicht mehr in zugriffsanfragen → wurde gelöscht, darf neu anfragen
+      // users Eintrag wird weiter unten neu angelegt
     }
 
     // Save to users collection (still logged in = has write permission)
@@ -1106,7 +1117,7 @@ window.doGoogleRegister = async function() {
       requestedAt: new Date().toISOString()
     });
 
-    // Check if zugriff entry already exists for this email
+    // Zugriffsanfragen: nur hinzufügen wenn noch nicht vorhanden
     const snap = await getDocs(collection(db, 'zugriffsanfragen'));
     let alreadyInZugriff = false;
     snap.forEach(d => {
@@ -1261,7 +1272,7 @@ window.saveZugriff = async function() {
 
     await addDoc(collection(db, 'zugriffsanfragen'), {
       vorname, nachname, id: autoId, pass: passNr, email, tel,
-      status: 'FREIGEGEBEN', freigeben: 'Ja', zugriffsrang: '1 | Gast',
+      status: 'VERWEIGERT', freigeben: 'Nein', zugriffsrang: '1 | Gast',
       createdAt: new Date().toISOString(),
       manuallyAdded: true
     });
