@@ -702,6 +702,38 @@ window.generateIdFromEmail = generateIdFromEmail;
       </div>
     </div>
 
+    <!-- MITARBEITER ARCHIV (Seite 9) -->
+    <div id="sub-archiv" style="display:none;">
+      <div style="display:flex;justify-content:flex-end;margin-bottom:16px;">
+        <button onclick="showSubPage('mitarbeiter')" style="
+          background:var(--bg3);border:1px solid var(--blue-light);color:var(--text);
+          padding:9px 20px;border-radius:6px;cursor:pointer;
+          font-family:'Rajdhani',sans-serif;font-size:0.9rem;font-weight:700;letter-spacing:2px;
+          display:flex;align-items:center;gap:8px;transition:background 0.2s;
+        " onmouseover="this.style.background='var(--blue-accent)'" onmouseout="this.style.background='var(--bg3)'">
+          ← ZURÜCK
+        </button>
+      </div>
+      <div class="table-wrap register-table-wrap">
+        <table class="data-table register-table">
+          <thead>
+            <tr>
+              <th>ID</th><th>DN</th><th>NAME</th><th>TEL. NR.</th>
+              <th>RANG</th><th>DIVISION</th><th>URLAUB</th><th>STRIKE</th>
+              <th>INVITE-DATUM</th><th>LETZTER RANKUP</th><th>ABTEILUNG 1</th><th>ABTEILUNG 2</th>
+              <th>GA</th><th>EHK</th><th>ES</th><th>OP</th><th>OK</th><th>FULA</th>
+              <th>TST</th><th>KS</th><th>OK+</th><th>FT</th><th>COP</th><th>JP</th>
+              <th>ZP</th><th>VHP</th><th>TOW/BL</th>
+              <th>ARCHIVIERT AM</th>
+            </tr>
+          </thead>
+          <tbody id="archiv-tbody">
+            <tr><td colspan="28" style="text-align:center;color:var(--text-dim);padding:20px;">Keine archivierten Mitarbeiter vorhanden.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
   </div><!-- end page-content -->
 </div><!-- end page-main -->
 
