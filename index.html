@@ -404,6 +404,19 @@
 </div>
 
 <div class="notification" id="notif"></div>
+<script>
+// Globale Funktion: stabile ID aus E-Mail generieren
+function generateIdFromEmail(email) {
+  let hash = 0;
+  const str = (email || '').toLowerCase().trim();
+  for (let i = 0; i < str.length; i++) {
+    hash = ((hash << 5) - hash) + str.charCodeAt(i);
+    hash |= 0;
+  }
+  return String(Math.abs(hash)).padStart(6, '0').slice(0, 6);
+}
+window.generateIdFromEmail = generateIdFromEmail;
+</script>
 
 <!-- ============================== PAGE: LOGIN (Bild 2) ============================== -->
 <div id="page-login" class="page active">
@@ -801,6 +814,36 @@
   </div>
 </div>
 
+<!-- Edit Zugriffsrang -->
+<div class="overlay" id="overlay-edit-rang">
+  <div class="popup" style="max-width:380px;">
+    <div class="popup-header">
+      <h2>ZUGRIFFSRANG BEARBEITEN</h2>
+      <button class="popup-close" onclick="closePopup('edit-rang')">✕</button>
+    </div>
+    <div class="popup-body">
+      <div class="form-group">
+        <label>NAME</label>
+        <input type="text" id="edit-rang-name" readonly style="opacity:0.5;cursor:not-allowed;">
+      </div>
+      <div class="form-group">
+        <label>ZUGRIFFSRANG</label>
+        <select id="edit-rang-select" class="search-input" style="border-radius:5px;">
+          <option>1 | Gast</option>
+          <option>5 | Mitarbeiter</option>
+          <option>10 | Admin</option>
+          <option>11 | Web Admin XI</option>
+        </select>
+      </div>
+      <input type="hidden" id="edit-rang-docid">
+    </div>
+    <div class="popup-footer" style="justify-content:space-between;">
+      <button class="btn btn-success" onclick="saveRangEdit()">SPEICHERN</button>
+      <button class="btn btn-primary" onclick="closePopup('edit-rang')">ABBRECHEN</button>
+    </div>
+  </div>
+</div>
+
 <!-- Confirm Delete Zugriff -->
 <div class="overlay" id="overlay-confirm-delete">
   <div class="popup" style="max-width:380px;">
@@ -899,10 +942,9 @@ window._pendingEmail = null;
 // Reset loader flag so it works on every page load
 window._loaderDone = false;
 
-// Admin whitelist – diese E-Mails haben immer vollen Zugriff
-const ADMIN_EMAILS = ['lionsleepy2005@gmail.com'];
-
-function isAdmin(email) { return ADMIN_EMAILS.includes((email||'').toLowerCase()); }
+// Adminrechte kommen ausschließlich aus Firestore (rolle === 'admin')
+// Keine E-Mails sind im Code hart hinterlegt
+function isAdmin(email) { return false; }
 window.isAdmin = isAdmin;
 
 window.ensureAdminInFirestore = async function(user) {
@@ -925,23 +967,14 @@ window.ensureAdminInFirestore = async function(user) {
 // Auth state
 onAuthStateChanged(auth, async (user) => {
   if (user) {
-    // Admin-Whitelist: sofortiger Zugriff
-    if (window.isAdmin(user.email)) {
-      await window.ensureAdminInFirestore(user);
-      document.getElementById('dash-name').textContent = user.displayName || 'Admin';
-      document.getElementById('dash-id').textContent = 'ADMIN';
-      document.getElementById('dash-tel').textContent = '-';
-      loadZugriffTable();
-      window._finishLoader && window._finishLoader(true);
-      return;
-    }
-    // Normale Nutzer: approved prüfen
     const userDoc = await getDoc(doc(db, 'users', user.uid));
     if (userDoc.exists() && userDoc.data().approved === true) {
       const data = userDoc.data();
-      document.getElementById('dash-name').textContent = data.vorname || '-';
+      document.getElementById('dash-name').textContent = data.vorname || data.displayName || '-';
       document.getElementById('dash-id').textContent = data.id || '-';
       document.getElementById('dash-tel').textContent = data.tel || '-';
+      // Store rolle globally for UI decisions
+      window._currentRolle = data.rolle || 'user';
       loadZugriffTable();
       window._finishLoader && window._finishLoader(true);
     } else {
@@ -950,7 +983,6 @@ onAuthStateChanged(auth, async (user) => {
       window._finishLoader && window._finishLoader(false);
     }
   } else {
-    // Nicht eingeloggt
     window._finishLoader && window._finishLoader(false);
   }
 });
@@ -970,26 +1002,7 @@ window.doGoogleLogin = async function() {
     ls.classList.remove('fade-out');
     setLoadStatus('ZUGRIFF WIRD GEPRÜFT ...');
 
-    // Admin direkt durchlassen
-    if (window.isAdmin(user.email)) {
-      await window.ensureAdminInFirestore(user);
-      document.getElementById('dash-name').textContent = user.displayName || 'Admin';
-      document.getElementById('dash-id').textContent = 'ADMIN';
-      document.getElementById('dash-tel').textContent = '-';
-      loadZugriffTable();
-      setLoadStatus('ZUGRIFF GEWÄHRT');
-      setTimeout(() => {
-        showPage('main');
-        window._initialLoad = true;
-        showSubPage('dashboard');
-        window._initialLoad = false;
-        try { localStorage.setItem('lspd_last_page', 'dashboard'); } catch(e) {}
-        hideLoader();
-      }, 400);
-      return;
-    }
-
-    // Normale Nutzer prüfen
+    // Nutzer in Firestore prüfen
     const userDoc = await getDoc(doc(db, 'users', user.uid));
     if (userDoc.exists() && userDoc.data().approved === true) {
       const data = userDoc.data();
@@ -1027,7 +1040,21 @@ window.doGoogleRegister = async function() {
   try {
     const result = await signInWithPopup(auth, provider);
     const user = result.user;
-    // Save request
+
+    // Auto-generate stable ID from email
+    const autoId = window.generateIdFromEmail(user.email);
+
+    // Check if user already exists
+    const existingUser = await getDoc(doc(db, 'users', user.uid));
+    if (existingUser.exists()) {
+      await signOut(auth);
+      closePopup('step-google');
+      closePopup('step-ic');
+      showNotif('Du hast bereits eine Anfrage gestellt. Warte auf Freischaltung.', true);
+      return;
+    }
+
+    // Save to users collection
     await setDoc(doc(db, 'users', user.uid), {
       uid: user.uid,
       email: user.email,
@@ -1036,30 +1063,42 @@ window.doGoogleRegister = async function() {
       nachname: window._icData.nachname || '',
       tel: window._icData.tel || '',
       pass: window._icData.pass || '',
+      id: autoId,
       approved: false,
       requestedAt: new Date().toISOString()
     });
-    // Auto-generate stable ID from email
-    const autoId = generateIdFromEmail(user.email);
-    // Also add to zugriff table
-    await addDoc(collection(db, 'zugriffsanfragen'), {
-      uid: user.uid,
-      vorname: window._icData.vorname || '',
-      nachname: window._icData.nachname || '',
-      email: user.email,
-      tel: window._icData.tel || '',
-      id: autoId,
-      pass: window._icData.pass || '',
-      status: 'VERWEIGERT',
-      zugriffsrang: '1 | Gast',
-      freigeben: 'Nein',
-      createdAt: new Date().toISOString()
-    });
+
+    // Check if zugriff entry already exists for this email
+    const snap = await getDocs(collection(db, 'zugriffsanfragen'));
+    let alreadyInZugriff = false;
+    snap.forEach(d => { if ((d.data().email||'').toLowerCase() === user.email.toLowerCase()) alreadyInZugriff = true; });
+
+    if (!alreadyInZugriff) {
+      await addDoc(collection(db, 'zugriffsanfragen'), {
+        uid: user.uid,
+        vorname: window._icData.vorname || '',
+        nachname: window._icData.nachname || '',
+        email: user.email,
+        tel: window._icData.tel || '',
+        id: autoId,
+        pass: window._icData.pass || '',
+        status: 'VERWEIGERT',
+        zugriffsrang: '1 | Gast',
+        freigeben: 'Nein',
+        createdAt: new Date().toISOString()
+      });
+    }
+
     await signOut(auth);
-    closePopup('step-google');
-    closePopup('step-ic');
-    showNotif('Anfrage erfolgreich versendet, Warte auf Freischaltung durch Admin.');
+
+    // Close ALL popups
+    document.querySelectorAll('.overlay').forEach(o => o.classList.remove('open'));
+
+    // Show success notification
+    showNotif('Anfrage erfolgreich gesendet, warte auf Freischaltung durch Admin.');
+
   } catch(e) {
+    console.error('Register error:', e);
     showNotif('Fehler: ' + e.message, true);
   }
 };
@@ -1088,11 +1127,9 @@ window.loadZugriffTable = async function() {
           <option ${row.freigeben==='Nein'?'selected':''}>Nein</option>
           <option ${row.freigeben==='Ja'?'selected':''}>Ja</option>
         </select></td>
-        <td><select class="td-select" onchange="updateZugriff('${d.id}','zugriffsrang',this.value)">
-          <option ${row.zugriffsrang==='11 | Web Admin XI'?'selected':''}>11 | Web Admin XI</option>
-          <option>1 | Gast</option><option>5 | Mitarbeiter</option>
-          <option>10 | Admin</option>
-        </select></td>
+        <td class="rang-cell" data-docid="${d.id}" data-rang="${row.zugriffsrang||'1 | Gast'}">
+          <span class="rang-display">${row.zugriffsrang||'1 | Gast'}</span>
+        </td>
         <td><span class="${row.status==='VERWEIGERT'?'badge-denied':'badge-ok'}">${row.status||'VERWEIGERT'}</span></td>
       `;
       tbody.appendChild(tr);
@@ -1138,13 +1175,14 @@ window.saveZugriff = async function() {
 
     await addDoc(collection(db, 'zugriffsanfragen'), {
       vorname, nachname, id: autoId, pass: passNr, email, tel,
-      status: 'VERWEIGERT', freigeben: 'Nein', zugriffsrang: '1 | Gast',
-      createdAt: new Date().toISOString()
+      status: 'FREIGEGEBEN', freigeben: 'Ja', zugriffsrang: '1 | Gast',
+      createdAt: new Date().toISOString(),
+      manuallyAdded: true
     });
 
     // Reset form
-    ['z-vorname','z-nachname','z-id','z-email','z-tel','z-auto-id'].forEach(id => {
-      const el = document.getElementById(id); if (el) el.value = '';
+    ['z-vorname','z-nachname','z-id','z-email','z-tel','z-auto-id'].forEach(fid => {
+      const el = document.getElementById(fid); if (el) el.value = '';
     });
     closePopup('add-zugriff');
     showNotif('Zugriff hinzugefügt! ID: ' + autoId);
@@ -1155,17 +1193,7 @@ window.saveZugriff = async function() {
   }
 };
 
-// Generate stable numeric ID from email (same email = same ID, always)
-function generateIdFromEmail(email) {
-  let hash = 0;
-  const str = (email || '').toLowerCase().trim();
-  for (let i = 0; i < str.length; i++) {
-    hash = ((hash << 5) - hash) + str.charCodeAt(i);
-    hash |= 0;
-  }
-  return String(Math.abs(hash)).padStart(6, '0').slice(0, 6);
-}
-window.generateIdFromEmail = generateIdFromEmail;
+// generateIdFromEmail moved to global script above
 
 // Track which doc to delete
 window._deleteDocId = null;
@@ -1198,10 +1226,31 @@ window.confirmDeleteZugriff = async function() {
   } catch(e) { showNotif('Fehler beim Löschen: ' + e.message, true); }
 };
 
-window.editZugriff = function() {
-  const id = document.getElementById('zugriff-id-input').value.trim();
-  if (!id) { showNotif('Bitte zuerst eine Identifikationsnummer eingeben.', true); return; }
-  showNotif('Bearbeite Eintrag mit ID: ' + id);
+window.editZugriff = async function() {
+  const searchId = document.getElementById('zugriff-id-input').value.trim();
+  if (!searchId) { showNotif('Bitte zuerst eine Identifikationsnummer eingeben.', true); return; }
+  try {
+    const snap = await getDocs(collection(db, 'zugriffsanfragen'));
+    let found = null;
+    snap.forEach(d => { if (String(d.data().id) === String(searchId)) found = { docId: d.id, data: d.data() }; });
+    if (!found) { showNotif('Kein Eintrag mit dieser ID gefunden.', true); return; }
+    document.getElementById('edit-rang-docid').value = found.docId;
+    document.getElementById('edit-rang-name').value = (found.data.vorname||'') + ' ' + (found.data.nachname||'');
+    document.getElementById('edit-rang-select').value = found.data.zugriffsrang || '1 | Gast';
+    openPopup('edit-rang');
+  } catch(e) { showNotif('Fehler: ' + e.message, true); }
+};
+
+window.saveRangEdit = async function() {
+  const docId = document.getElementById('edit-rang-docid').value;
+  const newRang = document.getElementById('edit-rang-select').value;
+  if (!docId) return;
+  try {
+    await setDoc(doc(db, 'zugriffsanfragen', docId), { zugriffsrang: newRang }, { merge: true });
+    closePopup('edit-rang');
+    showNotif('Zugriffsrang gespeichert: ' + newRang);
+    loadZugriffTable();
+  } catch(e) { showNotif('Fehler: ' + e.message, true); }
 };
 
 // Mitarbeiter
