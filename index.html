@@ -207,7 +207,8 @@
 
     .mini-row {
       display: grid;
-      grid-template-columns: 34px 1fr;
+      grid-template-columns: 38px 38px;
+      justify-content: center;
       gap: 1px;
       margin-bottom: 10px;
     }
@@ -215,9 +216,7 @@
     .mini-row div {
       padding: 10px;
       min-height: 38px;
-    }
-
-    .mini-row div:first-child {
+      min-width: 38px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -322,10 +321,9 @@
     .add-access-btn,
     .rank-edit-btn,
     .data-edit-btn,
-    .archive-btn,
-    .restore-btn,
     .archive-open-btn,
-    .back-btn {
+    .back-btn,
+    .move-btn {
       border: none;
       color: #fff;
       font-size: 14px;
@@ -348,17 +346,15 @@
       background: var(--green);
     }
 
-    .archive-btn {
-      background: #7a4b0f;
-    }
-
-    .restore-btn {
-      background: #0f6a41;
-    }
-
     .archive-open-btn {
       background: #2a2a2a;
       min-width: 180px;
+      height: 46px;
+    }
+
+    .move-btn {
+      background: #444;
+      min-width: 140px;
       height: 46px;
     }
 
@@ -473,7 +469,17 @@
       flex: 1;
     }
 
-    .rank-search-input {
+    .rank-search-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      margin-left: auto;
+    }
+
+    .rank-search-input,
+    .move-id-input {
       width: 100%;
       max-width: 420px;
       background: #111;
@@ -485,7 +491,12 @@
       height: 46px;
     }
 
-    .rank-search-input:focus {
+    .move-id-input {
+      max-width: 180px;
+    }
+
+    .rank-search-input:focus,
+    .move-id-input:focus {
       border-color: #0b4c84;
       box-shadow: 0 0 0 1px #0b4c84 inset;
     }
@@ -682,8 +693,10 @@
       .modal-grid { grid-template-columns: 1fr; }
       .training-edit-grid { grid-template-columns: repeat(2, 1fr); }
       .rank-search-wrap { flex-direction: column; align-items: stretch; }
-      .rank-search-left { width: 100%; }
+      .rank-search-left,
+      .rank-search-right { width: 100%; }
       .rank-search-input { max-width: 100%; }
+      .move-id-input { max-width: 100%; }
     }
   </style>
 </head>
@@ -697,8 +710,8 @@
       <div class="logo-line">Los Santos Police Department.</div>
     </div>
     <div class="auth-box">
-      <button class="outline-btn" onclick="registerWithGoogle()">Registrieren</button>
       <button class="outline-btn" onclick="loginWithGoogle()">Anmelden</button>
+      <button class="outline-btn" onclick="openRequestModal()">Anfrage</button>
       <div id="loginMessage" class="small-note"></div>
     </div>
   </section>
@@ -858,6 +871,16 @@
             placeholder="Mitarbeiter suchen..."
           />
           <button class="add-access-btn" id="addEmployeeBtn">Mitarbeiter hinzufügen</button>
+        </div>
+
+        <div class="rank-search-right">
+          <input
+            id="moveEmployeeIdInput"
+            class="move-id-input"
+            type="text"
+            placeholder="ID eingeben"
+          />
+          <button class="move-btn" id="moveEmployeeBtn">Verschieben</button>
           <button class="archive-open-btn" id="openArchiveBtn">Mitarbeiter Archiv</button>
         </div>
       </div>
@@ -884,7 +907,7 @@
             <th>GA</th>
             <th>EHK</th>
             <th>ES</th>
-            <th>Officer</th>
+            <th>OP</th>
             <th>OK</th>
             <th>FULA</th>
             <th>TST</th>
@@ -915,7 +938,10 @@
           <tr>
             <th>Bearbeiten</th>
             <th>Name</th>
+            <th>Nachname</th>
             <th>Email</th>
+            <th>ID</th>
+            <th>Telefonnummer</th>
             <th>Freigeben</th>
             <th>Zugriffsrang</th>
             <th>Status</th>
@@ -940,7 +966,6 @@
       <table class="rank-list-table">
         <thead>
           <tr>
-            <th>Aktion</th>
             <th>Email</th>
             <th>Name</th>
             <th>ID</th>
@@ -995,7 +1020,7 @@
         <label class="training-edit-item"><input id="trGA" type="checkbox" /><span>GA</span></label>
         <label class="training-edit-item"><input id="trEHK" type="checkbox" /><span>EHK</span></label>
         <label class="training-edit-item"><input id="trES" type="checkbox" /><span>ES</span></label>
-        <label class="training-edit-item"><input id="trOfficer" type="checkbox" /><span>Officer</span></label>
+        <label class="training-edit-item"><input id="trOfficer" type="checkbox" /><span>OP</span></label>
         <label class="training-edit-item"><input id="trOK" type="checkbox" /><span>OK</span></label>
         <label class="training-edit-item"><input id="trFULA" type="checkbox" /><span>FULA</span></label>
         <label class="training-edit-item"><input id="trTST" type="checkbox" /><span>TST</span></label>
@@ -1022,7 +1047,10 @@
       <h2 class="modal-title" id="accessModalTitle">Zugriff hinzufügen</h2>
       <div class="modal-grid">
         <label>Name<input id="accessName" type="text" /></label>
+        <label>Nachname<input id="accessLastName" type="text" /></label>
         <label>Email<input id="accessEmail" type="email" /></label>
+        <label>ID<input id="accessId" type="text" /></label>
+        <label>Telefonnummer<input id="accessPhone" type="text" /></label>
         <label>Freigeben
           <select id="accessApproved">
             <option value="true">ja</option>
@@ -1036,6 +1064,23 @@
       <div class="modal-actions">
         <button class="muted-btn" type="button" onclick="closeAccessModal()">Abbrechen</button>
         <button class="save-btn" type="button" onclick="saveAccessEntry()">Speichern</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Anfrage Modal -->
+  <div id="requestModal" class="modal hidden">
+    <div class="modal-content">
+      <h2 class="modal-title">Anfrage senden</h2>
+      <div class="modal-grid">
+        <label>Name<input id="requestFirstName" type="text" /></label>
+        <label>Nachname<input id="requestLastName" type="text" /></label>
+        <label>ID<input id="requestEmployeeId" type="text" /></label>
+        <label>Telefonnummer<input id="requestPhone" type="text" /></label>
+      </div>
+      <div class="modal-actions">
+        <button class="muted-btn" type="button" onclick="closeRequestModal()">Abbrechen</button>
+        <button class="save-btn" type="button" onclick="submitRequestWithGoogle()">Weiter mit Google</button>
       </div>
     </div>
   </div>
@@ -1073,7 +1118,9 @@
     const PREAPPROVED_USERS = [
       {
         uid: 'preapproved-admin-h-vonwanze',
-        name: 'H vonwanze',
+        name: 'H',
+        lastName: 'vonwanze',
+        fullName: 'H vonwanze',
         email: 'H.vonwanze@gmail.com',
         approved: true,
         websiteAccessRank: 30,
@@ -1229,6 +1276,10 @@
       });
     }
 
+    function buildFullName(firstName = '', lastName = '') {
+      return `${String(firstName || '').trim()} ${String(lastName || '').trim()}`.trim();
+    }
+
     async function ensurePreapprovedUsers() {
       for (const user of PREAPPROVED_USERS) {
         const accessRef = doc(db, ACCESS_COLLECTION, getAccessDocIdByEmail(user.email));
@@ -1237,7 +1288,11 @@
         await setDoc(accessRef, {
           uid: user.uid,
           name: user.name,
+          lastName: user.lastName,
+          fullName: user.fullName,
           email: user.email,
+          employeeId: user.employeeId,
+          phone: user.phone,
           approved: true,
           websiteAccessRank: user.websiteAccessRank,
           role: user.role,
@@ -1247,6 +1302,8 @@
         await setDoc(employeeRef, {
           uid: user.uid,
           name: user.name,
+          lastName: user.lastName,
+          fullName: user.fullName,
           email: user.email,
           employeeId: user.employeeId,
           phone: user.phone,
@@ -1339,8 +1396,10 @@
 
     function renderPersonalData(data, user) {
       const personalRank = getPersonalRank(data);
+      const nameValue = data?.fullName || buildFullName(data?.name, data?.lastName) || '-';
+
       const personalData = [
-        ['Name:', data?.name || '-'],
+        ['Name:', nameValue],
         ['ID:', data?.employeeId || '-'],
         ['Telefonnummer:', data?.phone || '-'],
         ['Dienstnummer', data?.serviceNumber || '-'],
@@ -1367,6 +1426,11 @@
         uid: user.uid,
         email: user.email,
         name: employeeEntry?.data?.name || accessEntry?.data?.name || user.displayName || user.email.split('@')[0],
+        lastName: employeeEntry?.data?.lastName || accessEntry?.data?.lastName || '',
+        fullName: employeeEntry?.data?.fullName || accessEntry?.data?.fullName || buildFullName(
+          employeeEntry?.data?.name || accessEntry?.data?.name || user.displayName || user.email.split('@')[0],
+          employeeEntry?.data?.lastName || accessEntry?.data?.lastName || ''
+        ),
         approved: !!accessEntry?.data?.approved,
         websiteAccessRank: getWebsiteAccessRank(accessEntry?.data || {}),
         role: accessEntry?.data?.role || 'user',
@@ -1389,15 +1453,22 @@
       return merged;
     }
 
-    async function createOrUpdateAccessFromGoogleUser(user, forceApprovedState = null) {
+    async function createOrUpdateAccessFromGoogleUser(user, extraData = {}) {
       const existingAccess = await findAccessByEmail(user.email);
       const targetId = existingAccess?.id || getAccessDocIdByEmail(user.email);
 
       const payload = {
         uid: user.uid,
         email: user.email,
-        name: existingAccess?.data?.name || user.displayName || user.email.split('@')[0],
-        approved: forceApprovedState ?? existingAccess?.data?.approved ?? false,
+        name: extraData.name || existingAccess?.data?.name || user.displayName || user.email.split('@')[0],
+        lastName: extraData.lastName || existingAccess?.data?.lastName || '',
+        fullName: extraData.fullName || existingAccess?.data?.fullName || buildFullName(
+          extraData.name || existingAccess?.data?.name || user.displayName || user.email.split('@')[0],
+          extraData.lastName || existingAccess?.data?.lastName || ''
+        ),
+        employeeId: extraData.employeeId || existingAccess?.data?.employeeId || '',
+        phone: extraData.phone || existingAccess?.data?.phone || '',
+        approved: existingAccess?.data?.approved ?? false,
         websiteAccessRank: existingAccess?.data?.websiteAccessRank ?? 0,
         role: existingAccess?.data?.role || 'user',
         createdAt: existingAccess?.data?.createdAt || new Date().toISOString()
@@ -1407,26 +1478,49 @@
       return payload;
     }
 
-    window.registerWithGoogle = async function () {
+    window.openRequestModal = function () {
+      document.getElementById('requestFirstName').value = '';
+      document.getElementById('requestLastName').value = '';
+      document.getElementById('requestEmployeeId').value = '';
+      document.getElementById('requestPhone').value = '';
+      document.getElementById('requestModal').classList.remove('hidden');
+    };
+
+    window.closeRequestModal = function () {
+      document.getElementById('requestModal').classList.add('hidden');
+    };
+
+    window.submitRequestWithGoogle = async function () {
+      const firstName = document.getElementById('requestFirstName').value.trim();
+      const lastName = document.getElementById('requestLastName').value.trim();
+      const employeeId = document.getElementById('requestEmployeeId').value.trim();
+      const phone = document.getElementById('requestPhone').value.trim();
+
+      if (!firstName || !lastName || !employeeId || !phone) {
+        alert('Bitte Name, Nachname, ID und Telefonnummer eintragen.');
+        return;
+      }
+
       try {
         showMessage('');
         await signOut(auth);
         const result = await signInWithPopup(auth, provider);
         const user = result.user;
 
-        const accessPayload = await createOrUpdateAccessFromGoogleUser(user, null);
+        await createOrUpdateAccessFromGoogleUser(user, {
+          name: firstName,
+          lastName,
+          fullName: buildFullName(firstName, lastName),
+          employeeId,
+          phone
+        });
 
-        if (accessPayload.approved) {
-          await loadCurrentUserData(user, accessPayload);
-          const lastPage = getLastPage();
-          showPage(lastPage);
-        } else {
-          showMessage('Registrierung gespeichert. Ein Admin muss dich freigeben.');
-          await signOut(auth);
-        }
+        closeRequestModal();
+        showMessage('Anfrage gespeichert. Ein Admin muss dich freigeben.');
+        await signOut(auth);
       } catch (error) {
         console.error(error);
-        showMessage('Google Registrierung fehlgeschlagen. Nutze localhost und prüfe die freigegebene Domain in Firebase.');
+        showMessage('Google Anfrage fehlgeschlagen. Nutze localhost und prüfe die freigegebene Domain in Firebase.');
       }
     };
 
@@ -1440,15 +1534,14 @@
         const accessEntry = await findAccessByEmail(user.email);
 
         if (!accessEntry) {
-          showMessage('Du bist noch nicht registriert. Bitte zuerst registrieren.');
+          showMessage('Du hast noch keine Anfrage gesendet.');
           await signOut(auth);
           return;
         }
 
         await setDoc(doc(db, ACCESS_COLLECTION, accessEntry.id), {
           uid: user.uid,
-          email: user.email,
-          name: accessEntry.data.name || user.displayName || user.email.split('@')[0]
+          email: user.email
         }, { merge: true });
 
         const merged = await loadCurrentUserData(user, {
@@ -1513,7 +1606,7 @@
         document.getElementById('employeeModalTitle').textContent = 'Mitarbeiter bearbeiten';
         document.getElementById('empEmail').value = item.email || '';
         document.getElementById('empEmail').disabled = true;
-        document.getElementById('empName').value = item.name || '';
+        document.getElementById('empName').value = item.fullName || buildFullName(item.name, item.lastName) || '';
         document.getElementById('empId').value = item.employeeId || '';
         document.getElementById('empPhone').value = item.phone || '';
         document.getElementById('empServiceNumber').value = item.serviceNumber || '';
@@ -1538,6 +1631,7 @@
       }
 
       const existingEmployee = await findEmployeeByEmail(email);
+      const existingAccess = await findAccessByEmail(email);
       const targetId = editingEmployeeId || existingEmployee?.id || getEmployeeDocIdByEmail(email);
 
       let existingData = existingEmployee?.data || {};
@@ -1548,10 +1642,17 @@
         }
       }
 
+      const fullNameInput = document.getElementById('empName').value.trim();
+      const nameParts = fullNameInput.split(' ').filter(Boolean);
+      const firstName = nameParts.shift() || fullNameInput || '';
+      const lastName = nameParts.join(' ');
+
       const payload = {
         uid: existingData.uid || targetId,
         email,
-        name: document.getElementById('empName').value.trim() || existingData.name || email.split('@')[0],
+        name: firstName,
+        lastName,
+        fullName: fullNameInput || buildFullName(existingData.name, existingData.lastName) || email.split('@')[0],
         employeeId: document.getElementById('empId').value.trim() || existingData.employeeId || '',
         phone: document.getElementById('empPhone').value.trim() || existingData.phone || '',
         serviceNumber: document.getElementById('empServiceNumber').value.trim() || existingData.serviceNumber || '',
@@ -1568,6 +1669,17 @@
       };
 
       await setDoc(doc(db, EMPLOYEE_COLLECTION, targetId), payload, { merge: true });
+
+      if (existingAccess) {
+        await setDoc(doc(db, ACCESS_COLLECTION, existingAccess.id), {
+          name: firstName,
+          lastName,
+          fullName: payload.fullName,
+          employeeId: payload.employeeId,
+          phone: payload.phone
+        }, { merge: true });
+      }
+
       closeEmployeeModal();
 
       if (normalizeEmail(currentUser?.email) === normalizeEmail(email)) {
@@ -1630,7 +1742,10 @@
     function openAccessModal(item = null, docId = null) {
       const title = document.getElementById('accessModalTitle');
       document.getElementById('accessName').value = item?.name || '';
+      document.getElementById('accessLastName').value = item?.lastName || '';
       document.getElementById('accessEmail').value = item?.email || '';
+      document.getElementById('accessId').value = item?.employeeId || '';
+      document.getElementById('accessPhone').value = item?.phone || '';
       document.getElementById('accessApproved').value = String(item?.approved ?? true);
       populateAccessRankSelect(document.getElementById('accessRank'), getWebsiteAccessRank(item || {}));
       title.textContent = item && docId ? 'Zugriff bearbeiten' : 'Zugriff hinzufügen';
@@ -1653,11 +1768,22 @@
       const targetId = modalEditId || existingByEmail?.id || getAccessDocIdByEmail(email);
       const existingData = existingByEmail?.data || {};
       const accessRankValue = Math.max(0, Math.min(30, Number(document.getElementById('accessRank').value || 0)));
+      const firstName = document.getElementById('accessName').value.trim();
+      const lastName = document.getElementById('accessLastName').value.trim();
+      const employeeId = document.getElementById('accessId').value.trim();
+      const phone = document.getElementById('accessPhone').value.trim();
 
       const payload = {
         uid: existingData.uid || targetId,
         email,
-        name: document.getElementById('accessName').value.trim() || existingData.name || email.split('@')[0],
+        name: firstName || existingData.name || email.split('@')[0],
+        lastName: lastName || existingData.lastName || '',
+        fullName: buildFullName(
+          firstName || existingData.name || email.split('@')[0],
+          lastName || existingData.lastName || ''
+        ),
+        employeeId: employeeId || existingData.employeeId || '',
+        phone: phone || existingData.phone || '',
         approved: document.getElementById('accessApproved').value === 'true',
         websiteAccessRank: accessRankValue,
         role: accessRankValue >= 30 ? 'admin' : 'user',
@@ -1679,16 +1805,16 @@
       await deleteDoc(doc(db, ACCESS_COLLECTION, id));
     }
 
-    async function archiveEmployee(id) {
-      if (!currentUser || !isAdmin(currentUser.email)) return;
-      const confirmed = confirm('Diesen Mitarbeiter ins Archiv verschieben?');
-      if (!confirmed) return;
-      await updateDoc(doc(db, EMPLOYEE_COLLECTION, id), { archived: true });
-    }
+    async function archiveEmployeeByEmployeeId(employeeId) {
+      if (!currentUser || !isAdmin(currentUser.email)) return false;
+      const normalizedId = String(employeeId || '').trim();
+      if (!normalizedId) return false;
 
-    async function restoreEmployee(id) {
-      if (!currentUser || !isAdmin(currentUser.email)) return;
-      await updateDoc(doc(db, EMPLOYEE_COLLECTION, id), { archived: false });
+      const found = employeesCache.find(entry => String(entry.data.employeeId || '').trim() === normalizedId && !entry.data.archived);
+      if (!found) return false;
+
+      await updateDoc(doc(db, EMPLOYEE_COLLECTION, found.id), { archived: true });
+      return true;
     }
 
     function subscribeAccessRequests() {
@@ -1714,7 +1840,10 @@
               <button class="icon-btn" data-access-edit-id="${docSnap.id}" ${disabled}>✎</button>
             </td>
             <td>${item.name || '-'}</td>
+            <td>${item.lastName || '-'}</td>
             <td>${item.email || '-'}</td>
+            <td>${item.employeeId || '-'}</td>
+            <td>${item.phone || '-'}</td>
             <td class="request-controls">
               <select data-type="approved" data-id="${docSnap.id}" ${disabled}>
                 <option value="false" ${!item.approved ? 'selected' : ''}>nein</option>
@@ -1883,18 +2012,18 @@
 
     function createEmployeeRankRow(item, docId, disabledAttr) {
       const personalRank = Math.max(1, Math.min(30, Number(getPersonalRank(item) || 1)));
+      const nameValue = item.fullName || buildFullName(item.name, item.lastName) || '';
 
       return `
         <tr>
           <td>
             <div class="table-action-stack">
               <button class="data-edit-btn" data-employee-edit-id="${docId}" ${disabledAttr}>✎</button>
-              <button class="archive-btn" data-archive-id="${docId}" ${disabledAttr}>Archiv</button>
             </div>
           </td>
           <td class="left-dark">${item.employeeId || ''}</td>
           <td class="left-dark">${item.serviceNumber || ''}</td>
-          <td class="left-dark">${item.name || ''}</td>
+          <td class="left-dark">${nameValue}</td>
           <td class="left-dark">${item.phone || ''}</td>
           <td class="rank-main-cell rank-${personalRank}">${personalRank} | ${rankLabel(personalRank)}</td>
           <td class="vertical-sep"></td>
@@ -1935,6 +2064,8 @@
 
       const searchText = [
         item.name,
+        item.lastName,
+        item.fullName,
         item.email,
         item.employeeId,
         item.phone,
@@ -2017,12 +2148,6 @@
           openTrainingModal(found.data, rowId);
         });
       });
-
-      tbody.querySelectorAll('[data-archive-id]').forEach(btn => {
-        btn.addEventListener('click', async () => {
-          await archiveEmployee(btn.dataset.archiveId);
-        });
-      });
     }
 
     function renderArchivedEmployeesFromCache() {
@@ -2042,13 +2167,10 @@
 
       archivedEntries.forEach((entry) => {
         const item = entry.data;
-        const disabledAttr = currentUser && isAdmin(currentUser.email) ? '' : 'disabled';
-
         const tr = document.createElement('tr');
         tr.innerHTML = `
-          <td><button class="restore-btn" data-restore-id="${entry.id}" ${disabledAttr}>Wiederherstellen</button></td>
           <td>${item.email || '-'}</td>
-          <td>${item.name || '-'}</td>
+          <td>${item.fullName || buildFullName(item.name, item.lastName) || '-'}</td>
           <td>${item.employeeId || '-'}</td>
           <td>${item.serviceNumber || '-'}</td>
           <td>${item.phone || '-'}</td>
@@ -2061,12 +2183,6 @@
           <td>${item.strike || '0/3'}</td>
         `;
         tbody.appendChild(tr);
-      });
-
-      tbody.querySelectorAll('[data-restore-id]').forEach(btn => {
-        btn.addEventListener('click', async () => {
-          await restoreEmployee(btn.dataset.restoreId);
-        });
       });
     }
 
@@ -2120,6 +2236,24 @@
       showPage('page9');
     });
 
+    document.getElementById('moveEmployeeBtn').addEventListener('click', async () => {
+      if (!currentUser || !isAdmin(currentUser.email)) return;
+
+      const employeeId = document.getElementById('moveEmployeeIdInput').value.trim();
+      if (!employeeId) {
+        alert('Bitte eine ID eingeben.');
+        return;
+      }
+
+      const success = await archiveEmployeeByEmployeeId(employeeId);
+      if (!success) {
+        alert('Kein aktiver Mitarbeiter mit dieser ID gefunden.');
+        return;
+      }
+
+      document.getElementById('moveEmployeeIdInput').value = '';
+    });
+
     document.getElementById('employeeSearchInput').addEventListener('input', (e) => {
       employeeSearchTerm = e.target.value.trim();
       renderEmployeesFromCache();
@@ -2147,8 +2281,7 @@
 
         await setDoc(doc(db, ACCESS_COLLECTION, accessEntry.id), {
           uid: user.uid,
-          email: user.email,
-          name: accessEntry.data.name || user.displayName || user.email.split('@')[0]
+          email: user.email
         }, { merge: true });
 
         const merged = await loadCurrentUserData(user, {
