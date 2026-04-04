@@ -6,66 +6,31 @@
   <title>LSPD Portal</title>
   <style>
     :root {
-      --bg: #07111d;
-      --bg-2: #0b1727;
-      --bg-3: #0f1f34;
-      --panel: rgba(9, 18, 31, 0.94);
-      --panel-2: rgba(13, 25, 42, 0.96);
-      --panel-3: rgba(18, 34, 56, 0.98);
-      --text: #eef4ff;
-      --muted: #a7b8d3;
-      --blue: #1d4f91;
-      --blue-2: #2f6fbe;
-      --blue-3: #123763;
-      --gold: #c8a24e;
-      --gold-2: #f0c96d;
-      --line: rgba(102, 148, 209, 0.34);
-      --line-2: rgba(200, 162, 78, 0.3);
-      --green: #1f7a3f;
-      --red: #b92a2a;
-      --orange: #c67a17;
-      --purple: #7d35d3;
-      --shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
+      --bg: #000;
+      --text: #fff;
+      --blue: #0e4d86;
+      --gray: #6a6a6a;
+      --line: #5e5e5e;
+      --purple: #b300ff;
+      --orange: #c77711;
+      --red: #ff1a1a;
+      --green: #1d6b32;
       --check-green: #22c55e;
       --check-border: #8a8a8a;
       --check-bg: #111;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
-    html, body {
+    body {
       margin: 0;
-      min-height: 100%;
       font-family: Arial, Helvetica, sans-serif;
-      background:
-        radial-gradient(circle at top, rgba(49, 99, 171, 0.18), transparent 36%),
-        linear-gradient(180deg, #040b14 0%, #07111d 38%, #091523 100%);
-      color: var(--text);
+      background: #000;
+      color: #fff;
+      min-height: 100vh;
     }
 
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      background:
-        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
-      background-size: 34px 34px;
-      opacity: 0.45;
-      z-index: 0;
-    }
-
-    body > * {
-      position: relative;
-      z-index: 1;
-    }
-
-    .hidden {
-      display: none !important;
-    }
+    .hidden { display: none !important; }
 
     body.auth-loading .page {
       display: none !important;
@@ -74,18 +39,14 @@
     #authLoadingScreen {
       position: fixed;
       inset: 0;
-      background:
-        radial-gradient(circle at center, rgba(47,111,190,0.16), transparent 35%),
-        linear-gradient(180deg, #06101c, #081321);
-      color: var(--text);
+      background: #000;
+      color: #fff;
       display: flex;
       align-items: center;
       justify-content: center;
       z-index: 99999;
-      font-size: 30px;
-      letter-spacing: 1px;
-      font-weight: 700;
-      text-transform: uppercase;
+      font-size: 28px;
+      font-family: Arial, Helvetica, sans-serif;
     }
 
     body:not(.auth-loading) #authLoadingScreen {
@@ -94,58 +55,57 @@
 
     .page {
       min-height: 100vh;
-      padding: 24px;
+      padding: 20px;
+      background:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px),
+        #000;
+      background-size: 36px 36px;
     }
 
     .login-page {
+      background: #000;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
-      padding-top: 40px;
+      padding-top: 30px;
     }
 
     .logo-wrap {
       width: 100%;
-      max-width: 1180px;
+      max-width: 1100px;
       display: flex;
       align-items: center;
-      gap: 24px;
-      margin-bottom: 90px;
+      gap: 18px;
+      margin-bottom: 120px;
     }
 
     .fake-badge {
-      width: 220px;
-      height: 220px;
-      border: 4px solid var(--gold-2);
+      width: 210px;
+      height: 210px;
+      border: 5px solid #f1c232;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: var(--gold-2);
+      color: #f1c232;
       font-weight: bold;
       text-align: center;
       padding: 18px;
-      letter-spacing: 1px;
-      background:
-        radial-gradient(circle at center, #224878 0%, #102848 58%, #081321 100%);
-      box-shadow:
-        0 0 0 4px rgba(240, 201, 109, 0.16) inset,
-        0 0 28px rgba(29, 79, 145, 0.28);
+      background: radial-gradient(circle at center, #16365c 0%, #0b1f3d 55%, #06111f 100%);
+      box-shadow: 0 0 0 4px #08224a inset;
     }
 
     .logo-line {
       flex: 1;
-      border-top: 4px solid var(--gold);
-      border-bottom: 4px solid var(--gold);
-      padding: 20px 28px;
+      border-top: 4px solid #d4af37;
+      border-bottom: 4px solid #d4af37;
+      padding: 18px 24px;
       font-size: 58px;
       font-family: Georgia, serif;
       font-weight: 700;
-      color: #f8fbff;
-      background: linear-gradient(90deg, rgba(18,55,99,0.2), rgba(200,162,78,0.08), rgba(18,55,99,0.2));
-      box-shadow: var(--shadow);
-      text-shadow: 0 2px 12px rgba(0,0,0,0.35);
+      color: #f3f3f3;
     }
 
     .auth-box {
@@ -153,122 +113,59 @@
       flex-direction: column;
       gap: 18px;
       align-items: center;
-      background: var(--panel);
-      padding: 28px;
-      border: 1px solid var(--line);
-      box-shadow: var(--shadow);
-      min-width: 320px;
-      border-radius: 16px;
     }
 
     button {
       cursor: pointer;
-      border: 1px solid rgba(117, 157, 211, 0.35);
+      border: none;
       color: #fff;
-      background: linear-gradient(180deg, #1b4b88, #123763);
-      padding: 11px 18px;
-      font-size: 15px;
-      font-weight: 700;
-      border-radius: 10px;
-      transition: 0.18s ease;
-      box-shadow: 0 8px 18px rgba(0,0,0,0.2);
-    }
-
-    button:hover {
-      transform: translateY(-1px);
-      filter: brightness(1.08);
+      background: var(--blue);
+      padding: 10px 18px;
+      font-size: 16px;
     }
 
     .outline-btn {
-      width: 240px;
-      background:
-        linear-gradient(180deg, rgba(16, 46, 85, 0.92), rgba(10, 28, 49, 0.92));
-      border: 1px solid rgba(200, 162, 78, 0.45);
-      font-size: 22px;
-      padding: 12px 14px;
-      letter-spacing: 0.4px;
+      width: 220px;
+      background: transparent;
+      border: 1px solid #aaa;
+      font-size: 24px;
+      padding: 8px 12px;
     }
 
     .top-title {
       text-align: center;
-      font-size: 54px;
-      margin: 0 0 14px;
-      font-weight: 800;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: #f8fbff;
-      text-shadow: 0 4px 18px rgba(0, 0, 0, 0.38);
-    }
-
-    .content-wrap,
-    .panel-card,
-    .rank-list-wrap,
-    .archive-page-wrap {
-      max-width: 1450px;
-      margin: 0 auto;
+      font-size: 72px;
+      margin: 0 0 10px;
+      font-weight: 300;
     }
 
     .nav {
       display: flex;
       justify-content: center;
-      gap: 14px;
+      gap: 18px;
       flex-wrap: wrap;
       margin: 18px 0 12px;
-      padding: 0 10px;
     }
 
     .nav button {
-      min-width: 175px;
-      padding: 10px 16px;
-      background: linear-gradient(180deg, #1d4f91, #133864);
-      border: 1px solid rgba(200,162,78,0.24);
+      min-width: 165px;
+      padding: 8px 14px;
+      background: #0b4c84;
     }
 
     .nav-separator {
       height: 10px;
-      margin: 10px 0 26px;
-      border-radius: 999px;
-      background: linear-gradient(90deg, transparent, var(--gold), transparent);
-      opacity: 0.8;
+      background: #6b6b6b;
+      margin: 8px 0 24px;
     }
 
     .dashboard-grid {
       display: grid;
-      grid-template-columns: 430px 1fr;
-      gap: 24px;
+      grid-template-columns: 330px 1fr;
+      gap: 34px;
       align-items: start;
-      max-width: 1450px;
+      max-width: 1200px;
       margin: 0 auto;
-    }
-
-    .dashboard-panel,
-    .lspd-panel,
-    .info-card {
-      background: linear-gradient(180deg, var(--panel), var(--panel-2));
-      border: 1px solid var(--line);
-      box-shadow: var(--shadow);
-      border-radius: 16px;
-    }
-
-    .dashboard-panel,
-    .lspd-panel {
-      padding: 18px;
-    }
-
-    .dashboard-section-title,
-    .lspd-section-title {
-      background: linear-gradient(90deg, #123763, #1e5fa8, #123763);
-      border: 1px solid rgba(200, 162, 78, 0.25);
-      color: #fff;
-      text-align: center;
-      padding: 13px 16px;
-      font-size: 18px;
-      font-weight: 800;
-      margin-bottom: 14px;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      border-radius: 12px;
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
     }
 
     .box-title {
@@ -278,140 +175,87 @@
       margin-bottom: 12px;
     }
 
-    .purple { background: linear-gradient(180deg, #9545ff, #6d28d9); }
-    .orange { background: linear-gradient(180deg, #d78a20, #b56610); }
+    .purple { background: var(--purple); }
+    .orange { background: var(--orange); }
 
     .info-grid {
       display: grid;
-      grid-template-columns: 165px minmax(0, 1fr);
-      gap: 8px;
+      grid-template-columns: 110px 1fr;
+      gap: 10px 16px;
     }
 
-    .info-label,
-    .info-value {
-      padding: 11px 12px;
+    .info-grid div {
+      background: var(--purple);
+      padding: 10px;
       text-align: center;
-      min-height: 44px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow-wrap: anywhere;
-      word-break: break-word;
-      border-radius: 10px;
-    }
-
-    .info-label {
-      background: linear-gradient(180deg, #123763, #102d50);
-      font-weight: 700;
-      border: 1px solid rgba(117, 157, 211, 0.25);
-    }
-
-    .info-value {
-      background: rgba(255,255,255,0.04);
-      min-width: 0;
-      border: 1px solid rgba(255,255,255,0.06);
-    }
-
-    .info-value.phone-box,
-    .info-value.service-box {
-      min-height: 52px;
-      padding: 12px 14px;
-      font-size: 15px;
-      line-height: 1.25;
+      min-height: 38px;
     }
 
     .training-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
+      gap: 16px;
     }
 
-    .training-card {
-      text-align: center;
-      background: rgba(255,255,255,0.035);
-      border: 1px solid rgba(117,157,211,0.18);
-      padding: 12px;
-      border-radius: 14px;
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02);
-    }
+    .training-card { text-align: center; }
 
     .training-card h4 {
       margin: 0 0 10px;
       padding: 10px;
       font-size: 16px;
-      border-radius: 10px;
-      border: 1px solid rgba(255,255,255,0.08);
     }
 
     .mini-row {
       display: grid;
-      grid-template-columns: 42px 1fr;
+      grid-template-columns: 38px 38px;
       justify-content: center;
       gap: 1px;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
     }
 
     .mini-row div {
       padding: 10px;
-      min-height: 40px;
-      min-width: 40px;
+      min-height: 38px;
+      min-width: 38px;
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 8px;
-      border: 1px solid rgba(255,255,255,0.08);
     }
 
     .bg-green { background: #3d7d21; }
     .bg-gold { background: #a8870f; }
     .bg-blue { background: #10559b; }
     .bg-red { background: #cf1404; }
-    .bg-cyan { background: #5ac3d9; color: #000; }
+    .bg-cyan { background: #5ac3d9; }
     .bg-pink { background: #c86aa2; }
-    .bg-light { background: #b9d3db; color: #000; }
+    .bg-light { background: #b9d3db; color: #fff; }
     .bg-orange { background: #ef6d2f; }
-    .bg-beige { background: #f5bc77; color: #000; }
-    .bg-violet { background: #b8acd8; color: #000; }
+    .bg-beige { background: #f5bc77; }
+    .bg-violet { background: #b8acd8; }
     .bg-wine { background: #6f184f; }
 
-    table,
-    .rank-list-table,
-    .archive-style-table,
-    .lspd-data-table {
-      width: 100%;
-      border-collapse: collapse;
-      color: var(--text);
-      background: rgba(255,255,255,0.03);
-      border-radius: 14px;
-      overflow: hidden;
-      box-shadow: var(--shadow);
+    .content-wrap {
+      max-width: 1400px;
+      margin: 0 auto;
     }
 
     table {
+      width: 100%;
+      border-collapse: collapse;
       font-size: 13px;
+      color: #fff;
+      background: rgba(80,80,80,0.85);
     }
 
     th, td {
-      border: 1px solid rgba(117,157,211,0.14);
-      padding: 8px 10px;
+      border: 1px solid #2d2d2d;
+      padding: 6px 8px;
       text-align: center;
       white-space: nowrap;
       vertical-align: middle;
     }
 
-    th {
-      background: linear-gradient(180deg, #163f72, #102d50);
-      font-weight: 800;
-      color: #fff;
-    }
-
-    td {
-      background: rgba(255,255,255,0.035);
-    }
-
-    tr:hover td {
-      background: rgba(255,255,255,0.06);
-    }
+    th { background: #666; }
 
     .action-cell {
       width: 55px;
@@ -419,48 +263,40 @@
     }
 
     .left-btn {
-      margin-top: 0;
-      min-width: 220px;
-      border: 1px solid rgba(200,162,78,0.28);
+      margin-top: 20px;
+      background: #666;
+      min-width: 180px;
     }
 
     .logout {
       position: fixed;
       right: 30px;
       bottom: 26px;
-      background: linear-gradient(180deg, #c73838, #912121);
+      background: var(--red);
       min-width: 165px;
-      font-weight: 800;
-      z-index: 10;
+      font-weight: bold;
+    }
+
+    .panel-card {
+      max-width: 1100px;
+      margin: 0 auto;
     }
 
     .request-controls select,
-    .request-controls input,
-    input,
-    select,
-    textarea {
+    .request-controls input {
       width: 100%;
-      padding: 10px 12px;
-      background: rgba(7, 15, 27, 0.95);
+      padding: 6px;
+      background: #222;
       color: #fff;
-      border: 1px solid rgba(117,157,211,0.28);
-      border-radius: 10px;
-      outline: none;
-    }
-
-    input:focus,
-    select:focus,
-    textarea:focus {
-      border-color: rgba(200,162,78,0.55);
-      box-shadow: 0 0 0 1px rgba(200,162,78,0.25) inset;
+      border: 1px solid #555;
     }
 
     .status-pill {
       display: inline-block;
-      padding: 5px 10px;
+      padding: 4px 10px;
       border-radius: 999px;
       font-size: 12px;
-      font-weight: 800;
+      font-weight: 700;
     }
 
     .yes { background: #1d6b32; }
@@ -468,20 +304,15 @@
     .pending { background: #7c620f; }
 
     .small-note {
-      margin-top: 10px;
-      color: var(--muted);
+      margin-top: 12px;
+      color: #d0d0d0;
       text-align: center;
-      min-height: 22px;
     }
 
     .welcome-box {
       text-align: center;
-      margin-top: 18px;
-      color: #d7e8ff;
-      padding: 15px;
-      background: linear-gradient(180deg, rgba(16,54,99,0.82), rgba(11,39,70,0.82));
-      border: 1px solid rgba(117,157,211,0.22);
-      border-radius: 12px;
+      margin-top: 14px;
+      color: #ddd;
     }
 
     .icon-btn,
@@ -492,51 +323,44 @@
     .data-edit-btn,
     .archive-open-btn,
     .back-btn,
-    .move-btn,
-    .vehicle-edit-btn,
-    .sanction-edit-btn {
+    .move-btn {
+      border: none;
       color: #fff;
       font-size: 14px;
-      padding: 8px 11px;
+      padding: 7px 10px;
       min-width: auto;
     }
 
     .icon-btn,
     .rank-edit-btn,
-    .data-edit-btn,
-    .vehicle-edit-btn,
-    .sanction-edit-btn {
-      background: linear-gradient(180deg, #40556d, #243648);
-      font-weight: 800;
+    .data-edit-btn {
+      background: #3e3e3e;
+      font-weight: bold;
     }
 
     .danger-btn {
-      background: linear-gradient(180deg, #b52a2a, #7c1818);
+      background: #8b1e1e;
     }
 
     .save-btn {
-      background: linear-gradient(180deg, #2e954e, #1d6b32);
-    }
-
-    .archive-open-btn,
-    .back-btn,
-    .add-access-btn,
-    .move-btn {
-      background: linear-gradient(180deg, #1d4f91, #123763);
-      border: 1px solid rgba(200,162,78,0.22);
+      background: var(--green);
     }
 
     .archive-open-btn {
+      background: #2a2a2a;
       min-width: 180px;
       height: 46px;
     }
 
     .move-btn {
+      background: #444;
       min-width: 140px;
       height: 46px;
     }
 
     .back-btn {
+      background: #1f1f1f;
+      border: 1px solid #555;
       padding: 12px 18px;
       margin-bottom: 24px;
     }
@@ -549,12 +373,6 @@
       flex-wrap: wrap;
     }
 
-    .page8-top-row {
-      display: flex;
-      justify-content: flex-start;
-      margin-bottom: 16px;
-    }
-
     .page8-bottom-row {
       display: flex;
       justify-content: flex-start;
@@ -562,15 +380,14 @@
     }
 
     .add-access-btn {
-      min-width: 220px;
-      height: 46px;
+      background: #666;
+      min-width: 180px;
     }
 
     .modal {
       position: fixed;
       inset: 0;
-      background: rgba(1, 6, 13, 0.78);
-      backdrop-filter: blur(4px);
+      background: rgba(0,0,0,0.7);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -580,21 +397,17 @@
 
     .modal-content {
       width: 100%;
-      max-width: 820px;
-      background: linear-gradient(180deg, #091321, #0d192a);
-      border: 1px solid rgba(117,157,211,0.22);
-      box-shadow: var(--shadow);
-      padding: 22px;
-      border-radius: 18px;
+      max-width: 720px;
+      background: #111;
+      border: 1px solid #444;
+      padding: 20px;
     }
 
     .modal-title {
       margin: 0 0 18px;
       text-align: center;
       font-size: 28px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+      font-weight: 400;
     }
 
     .modal-grid {
@@ -608,16 +421,20 @@
       flex-direction: column;
       gap: 6px;
       font-size: 14px;
-      color: #dce7f7;
+      color: #ddd;
     }
 
-    .modal-grid textarea {
-      min-height: 100px;
-      resize: vertical;
+    .modal-grid input,
+    .modal-grid select {
+      width: 100%;
+      background: #1d1d1d;
+      border: 1px solid #444;
+      color: #fff;
+      padding: 10px;
     }
 
     .modal-grid input[readonly] {
-      background: #101925;
+      background: #141414;
       color: #cfcfcf;
       cursor: not-allowed;
     }
@@ -631,12 +448,10 @@
     }
 
     .muted-btn {
-      background: linear-gradient(180deg, #6a7685, #4c5561);
+      background: #555;
     }
 
-    .full-width {
-      grid-column: 1 / -1;
-    }
+    .full-width { grid-column: 1 / -1; }
 
     .rank-list-wrap {
       max-width: 1920px;
@@ -671,77 +486,85 @@
 
     .rank-search-input,
     .move-id-input,
-    .archive-search-input {
+    .archive-delete-input {
       width: 100%;
       max-width: 420px;
+      background: #111;
+      color: #fff;
+      border: 1px solid #444;
       padding: 12px 14px;
       font-size: 15px;
+      outline: none;
       height: 46px;
-      background: rgba(7,15,27,0.96);
-      border: 1px solid rgba(117,157,211,0.28);
-      color: #fff;
-      border-radius: 10px;
     }
 
-    .move-id-input {
+    .move-id-input,
+    .archive-delete-input {
       max-width: 180px;
     }
 
-    .archive-search-input {
-      max-width: 340px;
+    .rank-search-input:focus,
+    .move-id-input:focus,
+    .archive-delete-input:focus {
+      border-color: #0b4c84;
+      box-shadow: 0 0 0 1px #0b4c84 inset;
     }
 
     .rank-list-table {
+      width: 100%;
+      border-collapse: collapse;
       font-size: 11px;
-      background: rgba(255,255,255,0.02);
+      color: #fff;
+      background: rgba(60,60,60,0.94);
     }
 
     .rank-list-table th,
     .rank-list-table td {
-      border: 1px solid rgba(117,157,211,0.1);
-      padding: 3px 5px;
+      border: 1px solid #0f0f0f;
+      padding: 2px 5px;
       text-align: center;
       white-space: nowrap;
       vertical-align: middle;
-      height: 24px;
+      height: 22px;
     }
 
     .rank-list-table th {
-      background: linear-gradient(180deg, #163f72, #102d50);
+      background: #12305c;
+      font-weight: bold;
     }
 
     .rank-list-table .sep-row td {
-      background: transparent;
-      border-color: transparent;
+      background: #000;
+      border-color: #000;
       padding: 0;
       height: 16px;
     }
 
     .rank-list-table .left-dark {
-      background: rgba(255,255,255,0.05);
+      background: rgba(70,70,70,0.88);
     }
 
     .rank-main-cell {
-      font-weight: 800;
+      font-weight: bold;
       min-width: 180px;
       color: #fff;
     }
 
     .division-cell {
-      font-weight: 800;
+      font-weight: bold;
       min-width: 110px;
     }
 
     .rank-empty-row td {
-      background: rgba(255,255,255,0.05);
+      background: rgba(74,74,74,0.88);
       color: #d7d7d7;
     }
 
     .vertical-sep {
-      background: rgba(255,255,255,0.02) !important;
-      border-color: rgba(117,157,211,0.08) !important;
-      width: 12px;
-      min-width: 12px;
+      background: #000 !important;
+      border-color: #000 !important;
+      width: 16px;
+      min-width: 16px;
       padding: 0 !important;
     }
 
@@ -754,7 +577,7 @@
     }
 
     .archive-page-wrap {
-      max-width: 1920px;
+      max-width: 1500px;
       margin: 0 auto;
     }
 
@@ -771,112 +594,6 @@
       gap: 12px;
       margin-bottom: 16px;
       flex-wrap: wrap;
-      justify-content: space-between;
-    }
-
-    .archive-search-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-      width: 100%;
-    }
-
-    .archive-style-table {
-      font-size: 11px;
-    }
-
-    .archive-style-table th,
-    .archive-style-table td {
-      border: 1px solid rgba(117,157,211,0.1);
-      text-align: center;
-      padding: 4px 6px;
-      white-space: nowrap;
-      height: 28px;
-    }
-
-    .archive-style-table th {
-      background: linear-gradient(180deg, #163f72, #102d50);
-      color: #fff;
-      font-weight: 800;
-    }
-
-    .archive-style-table tbody tr td {
-      background: rgba(255,255,255,0.04);
-    }
-
-    .archive-style-table tbody tr:hover td {
-      background: rgba(255,255,255,0.065);
-    }
-
-    .archive-empty-row td {
-      background: rgba(255,255,255,0.04) !important;
-      color: #fff;
-      height: 48px;
-      font-size: 14px;
-      font-weight: 800;
-    }
-
-    .rule-grid,
-    .policy-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-    }
-
-    .info-card {
-      padding: 16px;
-    }
-
-    .info-card h3 {
-      margin: 0 0 10px;
-      font-size: 18px;
-      color: #8fc0ff;
-    }
-
-    .info-card p,
-    .info-card li {
-      color: #dde7f7;
-      line-height: 1.5;
-      font-size: 14px;
-    }
-
-    .info-card ul {
-      margin: 0;
-      padding-left: 18px;
-    }
-
-    .lspd-data-table th,
-    .lspd-data-table td {
-      border: 1px solid rgba(117,157,211,0.14);
-      padding: 10px 12px;
-      text-align: center;
-      white-space: normal;
-      vertical-align: middle;
-    }
-
-    .lspd-data-table th {
-      background: linear-gradient(180deg, #163f72, #102d50);
-      color: #fff;
-      font-size: 14px;
-    }
-
-    .lspd-data-table td {
-      background: rgba(255,255,255,0.04);
-    }
-
-    .page-tools {
-      display: flex;
-      gap: 12px;
-      margin-top: 18px;
-      margin-bottom: 18px;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: flex-start;
-    }
-
-    .page-tools button {
-      border: 1px solid rgba(200,162,78,0.24);
     }
 
     .rank-30 { background: #000000; color: #fff; }
@@ -900,15 +617,15 @@
     .rank-12 { background: #f4a000; color: #000; }
     .rank-11 { background: #f4a000; color: #000; }
     .rank-10 { background: #08db1a; color: #000; }
-    .rank-9 { background: #08db1a; color: #000; }
-    .rank-8 { background: #08db1a; color: #000; }
-    .rank-7 { background: #08db1a; color: #000; }
-    .rank-6 { background: #08db1a; color: #000; }
-    .rank-5 { background: #08db1a; color: #000; }
-    .rank-4 { background: #19c7c8; color: #000; }
-    .rank-3 { background: #a8d0f0; color: #000; }
-    .rank-2 { background: #6fa8dc; }
-    .rank-1 { background: #ff1b1b; }
+    .rank-9  { background: #08db1a; color: #000; }
+    .rank-8  { background: #08db1a; color: #000; }
+    .rank-7  { background: #08db1a; color: #000; }
+    .rank-6  { background: #08db1a; color: #000; }
+    .rank-5  { background: #08db1a; color: #000; }
+    .rank-4  { background: #19c7c8; color: #000; }
+    .rank-3  { background: #a8d0f0; color: #000; }
+    .rank-2  { background: #6fa8dc; }
+    .rank-1  { background: #ff1b1b; }
 
     .division-leadership { background: #b40000; }
     .division-highcommand { background: #3d85c6; }
@@ -978,73 +695,26 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(117,157,211,0.15);
+      background: #1a1a1a;
+      border: 1px solid #333;
       padding: 10px 12px;
       color: #fff;
-      border-radius: 10px;
-    }
-
-    @media (max-width: 1200px) {
-      .rule-grid,
-      .policy-grid {
-        grid-template-columns: 1fr 1fr;
-      }
     }
 
     @media (max-width: 1000px) {
-      .logo-wrap {
-        flex-direction: column;
-      }
-
-      .logo-line {
-        font-size: 38px;
-        text-align: center;
-      }
-
-      .top-title {
-        font-size: 38px;
-      }
-
-      .dashboard-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .logout {
-        position: static;
-        margin-top: 20px;
-      }
-
-      .modal-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .training-edit-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .rank-search-wrap {
-        flex-direction: column;
-        align-items: stretch;
-      }
-
+      .logo-wrap { flex-direction: column; }
+      .logo-line { font-size: 40px; text-align: center; }
+      .top-title { font-size: 44px; }
+      .dashboard-grid { grid-template-columns: 1fr; }
+      .logout { position: static; margin-top: 20px; }
+      .modal-grid { grid-template-columns: 1fr; }
+      .training-edit-grid { grid-template-columns: repeat(2, 1fr); }
+      .rank-search-wrap { flex-direction: column; align-items: stretch; }
       .rank-search-left,
-      .rank-search-right {
-        width: 100%;
-      }
-
-      .rank-search-input,
-      .move-id-input,
-      .archive-search-input {
-        max-width: 100%;
-      }
-
-      .rule-grid,
-      .policy-grid,
-      .info-grid,
-      .training-grid {
-        grid-template-columns: 1fr;
-      }
+      .rank-search-right { width: 100%; }
+      .rank-search-input { max-width: 100%; }
+      .move-id-input { max-width: 100%; }
+      .archive-delete-input { max-width: 100%; }
     }
   </style>
 </head>
@@ -1057,7 +727,6 @@
       <div class="fake-badge">LOS SANTOS<br>POLICE<br>DEPARTMENT</div>
       <div class="logo-line">Los Santos Police Department.</div>
     </div>
-
     <div class="auth-box">
       <button class="outline-btn" onclick="loginWithGoogle()">Anmelden</button>
       <button class="outline-btn" onclick="openRequestModal()">Anfrage</button>
@@ -1070,70 +739,57 @@
     <div class="content-wrap">
       <h1 class="top-title">Los Santos Police Department</h1>
       <div id="navMount"></div>
-
       <div class="dashboard-grid">
-        <div class="dashboard-panel">
-          <div class="dashboard-section-title">Persönliche Daten</div>
+        <div>
+          <div class="box-title purple">Persönliche Daten</div>
           <div class="info-grid" id="personalDataGrid"></div>
         </div>
-
-        <div class="dashboard-panel">
-          <div class="dashboard-section-title">Ausbildungen</div>
-
+        <div>
+          <div class="box-title orange">Ausbildungen</div>
           <div class="training-grid">
             <div class="training-card">
               <h4 class="bg-green">Für Rookie</h4>
               <div class="mini-row"><div class="bg-green"><input class="dashboard-training-checkbox" data-training="GA" type="checkbox" disabled></div><div class="bg-green">GA</div></div>
               <div class="mini-row"><div class="bg-green"><input class="dashboard-training-checkbox" data-training="EHK" type="checkbox" disabled></div><div class="bg-green">EHK</div></div>
             </div>
-
             <div class="training-card">
               <h4 class="bg-gold">Für Officer</h4>
               <div class="mini-row"><div class="bg-gold"><input class="dashboard-training-checkbox" data-training="ES" type="checkbox" disabled></div><div class="bg-gold">ES</div></div>
               <div class="mini-row"><div class="bg-gold"><input class="dashboard-training-checkbox" data-training="Officer" type="checkbox" disabled></div><div class="bg-gold">OP</div></div>
             </div>
-
             <div class="training-card">
               <h4 class="bg-blue">Für Officer II</h4>
               <div class="mini-row"><div class="bg-blue"><input class="dashboard-training-checkbox" data-training="OK" type="checkbox" disabled></div><div class="bg-blue">OK</div></div>
               <div class="mini-row"><div class="bg-blue"><input class="dashboard-training-checkbox" data-training="FULA" type="checkbox" disabled></div><div class="bg-blue">FULA</div></div>
             </div>
-
             <div class="training-card">
               <h4 class="bg-red">Für Officer First Class</h4>
               <div class="mini-row"><div class="bg-red"><input class="dashboard-training-checkbox" data-training="TST" type="checkbox" disabled></div><div class="bg-red">TST</div></div>
             </div>
-
             <div class="training-card">
               <h4 class="bg-cyan">Für Supervising Officer</h4>
               <div class="mini-row"><div class="bg-cyan"><input class="dashboard-training-checkbox" data-training="KS" type="checkbox" disabled></div><div class="bg-cyan">KS</div></div>
             </div>
-
             <div class="training-card">
               <h4 class="bg-pink">Für Senior Supervisor</h4>
               <div class="mini-row"><div class="bg-pink"><input class="dashboard-training-checkbox" data-training="OKPLUS" type="checkbox" disabled></div><div class="bg-pink">OK+</div></div>
             </div>
-
             <div class="training-card">
               <h4 class="bg-light">Für Corporal</h4>
               <div class="mini-row"><div class="bg-light"><input class="dashboard-training-checkbox" data-training="COP" type="checkbox" disabled></div><div class="bg-light">COP</div></div>
             </div>
-
             <div class="training-card">
               <h4 class="bg-orange">Für Lead Supervisor</h4>
               <div class="mini-row"><div class="bg-orange"><input class="dashboard-training-checkbox" data-training="FT" type="checkbox" disabled></div><div class="bg-orange">FT</div></div>
             </div>
-
             <div class="training-card">
               <h4 class="bg-beige">Für Detective</h4>
               <div class="mini-row"><div class="bg-beige"><input class="dashboard-training-checkbox" data-training="JP" type="checkbox" disabled></div><div class="bg-beige">JP</div></div>
             </div>
-
             <div class="training-card">
               <h4 class="bg-violet">AKS</h4>
               <div class="mini-row"><div class="bg-violet"><input class="dashboard-training-checkbox" data-training="AKS" type="checkbox" disabled></div><div class="bg-violet">AKS</div></div>
             </div>
-
             <div class="training-card" style="grid-column: 1 / -1;">
               <h4 class="bg-wine">Freiwillige Ausbildungen</h4>
               <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
@@ -1143,82 +799,18 @@
               </div>
             </div>
           </div>
-
           <div class="welcome-box" id="welcomeBox"></div>
         </div>
       </div>
-
       <button class="logout" onclick="logout()">Abmelden</button>
     </div>
   </section>
 
   <!-- Seite 3 -->
   <section id="page3" class="page hidden app-page">
-    <div class="content-wrap panel-card">
+    <div class="content-wrap">
       <h1 class="top-title">Los Santos Police Department</h1>
       <div id="navMount3"></div>
-
-      <div class="lspd-panel">
-        <div class="lspd-section-title">Kleiderordnung</div>
-
-        <div class="rule-grid">
-          <div class="info-card">
-            <h3>Allgemein</h3>
-            <ul>
-              <li>Dienstkleidung muss sauber, ordentlich und vollständig getragen werden.</li>
-              <li>Farben und Kombinationen müssen zum offiziellen LSPD-Auftritt passen.</li>
-              <li>Privatkleidung ist im aktiven Dienst nicht erlaubt.</li>
-            </ul>
-          </div>
-
-          <div class="info-card">
-            <h3>Pflichtausrüstung</h3>
-            <ul>
-              <li>Je nach Rang und Einheit passende Uniform auswählen.</li>
-              <li>Schutzweste nur passend zum Einsatz oder Dienstbereich.</li>
-              <li>Kopfbedeckungen nur, wenn sie zur Einheit gehören.</li>
-            </ul>
-          </div>
-
-          <div class="info-card">
-            <h3>Nicht erlaubt</h3>
-            <ul>
-              <li>Auffällige unpassende Farben oder zivile Mischkleidung.</li>
-              <li>Unrealistische Accessoires im regulären Streifendienst.</li>
-              <li>Kleidung, die Rang oder Einheit falsch darstellt.</li>
-            </ul>
-          </div>
-        </div>
-
-        <div style="margin-top:18px;">
-          <table class="lspd-data-table">
-            <thead>
-              <tr>
-                <th>Bereich</th>
-                <th>Erlaubt</th>
-                <th>Nicht erlaubt</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Streifendienst</td>
-                <td>Offizielle Patrol-Uniform, Standardgürtel, passende Schuhe</td>
-                <td>Zivile Kleidung, bunte Einzelteile, falsche Abzeichen</td>
-              </tr>
-              <tr>
-                <td>Spezialeinheiten</td>
-                <td>Einheitskleidung laut interner Vorgabe</td>
-                <td>Normale Streifenuniform bei Spezialeinsatz ohne Freigabe</td>
-              </tr>
-              <tr>
-                <td>Führungsebene</td>
-                <td>Freigegebene Command-/Dress-Uniform</td>
-                <td>Nicht freigegebene Kombinationen</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
     </div>
   </section>
 
@@ -1227,7 +819,6 @@
     <div class="content-wrap">
       <h1 class="top-title">Los Santos Police Department</h1>
       <div id="navMount4"></div>
-
       <table>
         <thead>
           <tr>
@@ -1250,36 +841,15 @@
     <div class="content-wrap panel-card">
       <h1 class="top-title">Los Santos Police Department</h1>
       <div id="navMount5"></div>
-
-      <div class="lspd-panel">
-        <div class="lspd-section-title">Fahrzeugordnung</div>
-
-        <div class="policy-grid" style="margin-bottom:18px;">
-          <div class="info-card">
-            <h3>Fahrzeugnutzung</h3>
-            <p>Dienstfahrzeuge dürfen nur entsprechend Rang, Aufgabe und Abteilung genutzt werden.</p>
-          </div>
-          <div class="info-card">
-            <h3>Pflege</h3>
-            <p>Beschädigte oder unpassend abgestellte Fahrzeuge sind unverzüglich zu sichern oder zu melden.</p>
-          </div>
-          <div class="info-card">
-            <h3>Freigabe</h3>
-            <p>Sonderfahrzeuge und Abteilungsfahrzeuge nur mit passender interner Freigabe verwenden.</p>
-          </div>
-        </div>
-
-        <div class="page-tools">
-          <button class="left-btn" id="addVehicleBtn">Fahrzeug Hinzufügen</button>
-        </div>
-
-        <table class="lspd-data-table">
-          <thead>
-            <tr><th>Fahrzeug</th><th>Erforderlicher Rang</th><th>Abteilung</th><th>Bearbeiten</th></tr>
-          </thead>
-          <tbody id="vehicleTableBody"></tbody>
-        </table>
-      </div>
+      <table>
+        <thead>
+          <tr><th>Fahrzeug</th><th class="action-cell">&gt;</th><th>Rang</th><th class="action-cell">&gt;</th><th>Abteilung</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>AMG GT 20</td><td>&gt;</td><td>29 | Deputy Chief of Police</td><td>&gt;</td><td>HR</td></tr>
+        </tbody>
+      </table>
+      <button class="left-btn">Fahrzeug +</button>
     </div>
   </section>
 
@@ -1288,48 +858,19 @@
     <div class="content-wrap panel-card">
       <h1 class="top-title">Los Santos Police Department</h1>
       <div id="navMount6"></div>
-
-      <div class="lspd-panel">
-        <div class="lspd-section-title">Sanktionskatalog</div>
-
-        <div class="policy-grid" style="margin-bottom:18px;">
-          <div class="info-card">
-            <h3>Grundsatz</h3>
-            <p>Verstöße werden je nach Schwere, Wiederholung und Verhalten des Mitarbeiters bewertet.</p>
-          </div>
-          <div class="info-card">
-            <h3>Führungsebene</h3>
-            <p>Endgültige Entscheidungen können durch die zuständige Leaderschaft oder Interne-Ebene angepasst werden.</p>
-          </div>
-          <div class="info-card">
-            <h3>Dokumentation</h3>
-            <p>Jede Sanktion ist nachvollziehbar und sauber im System zu dokumentieren.</p>
-          </div>
-        </div>
-
-        <div class="page-tools">
-          <button class="left-btn" id="addSanctionBtn">Sanktion +</button>
-        </div>
-
-        <table class="lspd-data-table">
-          <thead>
-            <tr>
-              <th>Bearbeiten</th>
-              <th>§</th>
-              <th>Regeldefinition</th>
-              <th>Geldstrafe</th>
-              <th>TOW Fahrt</th>
-              <th>Human Labs</th>
-              <th>NG Runden</th>
-              <th>RankUp-Sperre</th>
-              <th>Strike</th>
-              <th>Suspendierung</th>
-              <th>Kündigung</th>
-            </tr>
-          </thead>
-          <tbody id="sanctionTableBody"></tbody>
-        </table>
-      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>§</th><th>Regeldefinition</th><th class="action-cell">&gt;</th><th>Geldstrafe</th><th>TOW Fahrt</th><th>Human Labs</th><th>NG Runde</th><th>RankUp-Sperre</th><th>Strike</th><th>Suspendierung</th><th>Kündigung</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>§1</td><td>Beleidigungen, Respektlosigkeit und sonstiges niederes Verhalten</td><td>&gt;</td><td>150</td><td>10 Autos</td><td>30 min</td><td>2</td><td>2 Wochen</td><td>1</td><td>3 Tage</td><td>✓</td>
+          </tr>
+        </tbody>
+      </table>
+      <button class="left-btn">Sanktion +</button>
     </div>
   </section>
 
@@ -1341,12 +882,22 @@
 
       <div class="rank-search-wrap">
         <div class="rank-search-left">
-          <input id="employeeSearchInput" class="rank-search-input" type="text" placeholder="Mitarbeiter suchen..." />
+          <input
+            id="employeeSearchInput"
+            class="rank-search-input"
+            type="text"
+            placeholder="Mitarbeiter suchen..."
+          />
           <button class="add-access-btn" id="addEmployeeBtn">Mitarbeiter hinzufügen</button>
         </div>
 
         <div class="rank-search-right">
-          <input id="moveEmployeeIdInput" class="move-id-input" type="text" placeholder="ID eingeben" />
+          <input
+            id="moveEmployeeIdInput"
+            class="move-id-input"
+            type="text"
+            placeholder="ID eingeben"
+          />
           <button class="move-btn" id="moveEmployeeBtn">Archivieren</button>
           <button class="archive-open-btn" id="openArchiveBtn">Mitarbeiter Archiv</button>
         </div>
@@ -1371,7 +922,23 @@
             <th>Abteilung 1</th>
             <th>Abteilung 2</th>
             <th class="vertical-sep"></th>
-            <th>GA</th><th>EHK</th><th>ES</th><th>OP</th><th>OK</th><th>FULA</th><th>TST</th><th>KS</th><th>OK+</th><th>FT</th><th>COP</th><th>JP</th><th>ZP</th><th>VHP</th><th>TOW/BL</th><th>AKS</th><th>Ausbildung</th>
+            <th>GA</th>
+            <th>EHK</th>
+            <th>ES</th>
+            <th>OP</th>
+            <th>OK</th>
+            <th>FULA</th>
+            <th>TST</th>
+            <th>KS</th>
+            <th>OK+</th>
+            <th>FT</th>
+            <th>COP</th>
+            <th>JP</th>
+            <th>ZP</th>
+            <th>VHP</th>
+            <th>TOW/BL</th>
+            <th>AKS</th>
+            <th>Ausbildung</th>
           </tr>
         </thead>
         <tbody id="employeesTableBody"></tbody>
@@ -1384,18 +951,12 @@
     <div class="content-wrap">
       <h1 class="top-title">Los Santos Police Department</h1>
       <div id="navMount8"></div>
-
-      <div class="page8-top-row">
-        <button class="add-access-btn" id="addAccessBtn">Zugriff Hinzufügen</button>
-      </div>
-
       <table>
         <thead>
           <tr>
             <th>Bearbeiten</th>
-            <th>Identifikationsnummer</th>
-            <th>ID</th>
             <th>Name</th>
+            <th>Identifikationsnummer</th>
             <th>Nachname</th>
             <th>Email</th>
             <th>Telefonnummer</th>
@@ -1407,41 +968,44 @@
         </thead>
         <tbody id="accessRequestBody"></tbody>
       </table>
+
+      <div class="page8-bottom-row">
+        <button class="add-access-btn" id="addAccessBtn">Zugriff hinzufügen</button>
+      </div>
     </div>
   </section>
 
   <!-- Seite 9 -->
-  <section id="page9" class="page hidden app-page">
+  <section id="page9" class="page hidden app-page" style="background:#000;">
     <div class="archive-page-wrap">
       <button class="back-btn" onclick="showPage('page7')">&lt;- Zurück</button>
       <h1 class="top-title">Mitarbeiter Archiv</h1>
 
       <div class="archive-top-actions">
-        <div class="archive-search-left">
-          <input id="archiveSearchInput" class="archive-search-input" type="text" placeholder="Mitarbeiter im Archiv suchen..." />
-        </div>
+        <input
+          id="archiveDeleteEmployeeIdInput"
+          class="archive-delete-input"
+          type="text"
+          placeholder="ID eingeben"
+        />
+        <button class="danger-btn" id="deleteArchivedEmployeeBtn">Löschen</button>
       </div>
 
-      <table class="archive-style-table">
+      <table class="rank-list-table">
         <thead>
           <tr>
-            <th>Daten</th>
-            <th>ID</th>
-            <th>DN</th>
+            <th>Email</th>
             <th>Name</th>
-            <th>Tel. Nr.</th>
+            <th>ID</th>
+            <th>Dienstnummer</th>
+            <th>Telefonnummer</th>
             <th>Rang</th>
-            <th class="vertical-sep"></th>
-            <th>Division</th>
-            <th class="vertical-sep"></th>
-            <th>Urlaub</th>
-            <th>Strike</th>
-            <th>Invite-Datum</th>
-            <th>Letzter RankUp</th>
             <th>Abteilung 1</th>
             <th>Abteilung 2</th>
-            <th class="vertical-sep"></th>
-            <th>GA</th><th>EHK</th><th>ES</th><th>OP</th><th>OK</th><th>FULA</th><th>TST</th><th>KS</th><th>OK+</th><th>FT</th><th>COP</th><th>JP</th><th>ZP</th><th>VHP</th><th>TOW/BL</th><th>AKS</th><th>Ausbildung</th>
+            <th>Invite</th>
+            <th>Letzter RankUp</th>
+            <th>Urlaub</th>
+            <th>Strike</th>
           </tr>
         </thead>
         <tbody id="archivedEmployeesTableBody"></tbody>
@@ -1511,8 +1075,7 @@
       <h2 class="modal-title" id="accessModalTitle">Zugriff hinzufügen</h2>
       <div class="modal-grid">
         <label>Name<input id="accessName" type="text" /></label>
-        <label>Identifikationsnummer<input id="accessStableId" type="text" readonly /></label>
-        <label>ID<input id="accessRequestId" type="text" /></label>
+        <label>Identifikationsnummer<input id="accessId" type="text" readonly /></label>
         <label>Nachname<input id="accessLastName" type="text" /></label>
         <label>Email<input id="accessEmail" type="email" /></label>
         <label>Telefonnummer<input id="accessPhone" type="text" /></label>
@@ -1550,49 +1113,22 @@
     </div>
   </div>
 
-  <!-- Fahrzeug Modal -->
-  <div id="vehicleModal" class="modal hidden">
-    <div class="modal-content">
-      <h2 class="modal-title" id="vehicleModalTitle">Fahrzeug hinzufügen</h2>
-      <div class="modal-grid">
-        <label>Fahrzeug<input id="vehicleName" type="text" /></label>
-        <label>Erforderlicher Rang <select id="vehicleRank"></select></label>
-        <label>Abteilung <select id="vehicleDepartment"></select></label>
-      </div>
-      <div class="modal-actions">
-        <button class="muted-btn" type="button" onclick="closeVehicleModal()">Abbrechen</button>
-        <button class="save-btn" type="button" onclick="saveVehicle()">Speichern</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Sanktions Modal -->
-  <div id="sanctionModal" class="modal hidden">
-    <div class="modal-content">
-      <h2 class="modal-title" id="sanctionModalTitle">Sanktion hinzufügen</h2>
-      <div class="modal-grid">
-        <label>§<input id="sanctionParagraph" type="text" /></label>
-        <label class="full-width">Regeldefinition<textarea id="sanctionDefinition"></textarea></label>
-        <label>Geldstrafe <select id="sanctionFine"></select></label>
-        <label>TOW Fahrt <select id="sanctionTow"></select></label>
-        <label>Human Labs <select id="sanctionLabs"></select></label>
-        <label>NG Runden <select id="sanctionNg"></select></label>
-        <label>RankUp-Sperre <select id="sanctionRankup"></select></label>
-        <label>Strike <select id="sanctionStrike"></select></label>
-        <label>Suspendierung <select id="sanctionSuspend"></select></label>
-        <label>Kündigung <select id="sanctionDismissal"></select></label>
-      </div>
-      <div class="modal-actions">
-        <button class="muted-btn" type="button" onclick="closeSanctionModal()">Abbrechen</button>
-        <button class="save-btn" type="button" onclick="saveSanction()">Speichern</button>
-      </div>
-    </div>
-  </div>
-
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js';
     import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
-    import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, updateDoc, query, orderBy, getDocs, deleteDoc } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js';
+    import {
+      getFirestore,
+      doc,
+      setDoc,
+      getDoc,
+      collection,
+      onSnapshot,
+      updateDoc,
+      query,
+      orderBy,
+      getDocs,
+      deleteDoc
+    } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js';
 
     const firebaseConfig = {
       apiKey: 'AIzaSyCtjm0vz5sJ8i_Jdl3HzdVmxwqcYRJa7bg',
@@ -1606,8 +1142,6 @@
 
     const ACCESS_COLLECTION = 'accessRequests';
     const EMPLOYEE_COLLECTION = 'employees';
-    const VEHICLE_COLLECTION = 'vehicles';
-    const SANCTION_COLLECTION = 'sanctions';
 
     const PREAPPROVED_USERS = [
       {
@@ -1619,8 +1153,7 @@
         approved: true,
         websiteAccessRank: 30,
         role: 'admin',
-        requestId: '164895',
-        stableId: '164895001',
+        employeeId: '164895',
         phone: '16-48-950',
         serviceNumber: '1',
         rank: 30,
@@ -1636,56 +1169,20 @@
       }
     ];
 
-    const TRAINING_KEYS = ['GA', 'EHK', 'ES', 'Officer', 'OK', 'FULA', 'TST', 'KS', 'OKPLUS', 'FT', 'COP', 'JP', 'ZP', 'VHP', 'TOWBL', 'AKS'];
-
-    const RANK_OPTIONS = [
-      { value: 30, label: '30 | Chief of Police' },
-      { value: 29, label: '29 | Deputy Chief of Police' },
-      { value: 28, label: '28 | Assistant Chief of Police' },
-      { value: 27, label: '27 | Advising Chief of Police' },
-      { value: 26, label: '26 | Chief of Department' },
-      { value: 25, label: '25 | Deputy Chief of Department' },
-      { value: 24, label: '24 | Police Commander' },
-      { value: 23, label: '23 | Police Inspector' },
-      { value: 22, label: '22 | IU Investigator' },
-      { value: 21, label: '21 | HR Coordinator' },
-      { value: 20, label: '20 | S.W.A.T. Captain' },
-      { value: 19, label: '19 | Enforcement Supervisor' },
-      { value: 18, label: '18 | Press Associator' },
-      { value: 17, label: '17 | Special Police Officer' },
-      { value: 16, label: '16 | Commander' },
-      { value: 15, label: '15 | Captain' },
-      { value: 14, label: '14 | Lieutenant' },
-      { value: 13, label: '13 | Sergeant' },
-      { value: 12, label: '12 | Detective' },
-      { value: 11, label: '11 | Corporal' },
-      { value: 10, label: '10 | Lead Supervisor' },
-      { value: 9, label: '9 | Senior Supervisor' },
-      { value: 8, label: '8 | Supervising Officer' },
-      { value: 7, label: '7 | Officer First Class' },
-      { value: 6, label: '6 | Officer II' },
-      { value: 5, label: '5 | Officer I' },
-      { value: 4, label: '4 | Rookie' },
-      { value: 3, label: '3 | TOW Officer' },
-      { value: 2, label: '2 | Cadet' },
-      { value: 1, label: '1 | Suspended' }
+    const TRAINING_KEYS = [
+      'GA', 'EHK', 'ES', 'Officer', 'OK', 'FULA', 'TST', 'KS',
+      'OKPLUS', 'FT', 'COP', 'JP', 'ZP', 'VHP', 'TOWBL', 'AKS'
     ];
-
-    const VEHICLE_DEPARTMENTS = ['X', 'IU', 'HR', 'PA', 'SWAT', 'TF'];
-    const FINE_OPTIONS = ['X', '10K', '20K', '30K', '40K', '50K', '60K', '70K', '80K', '90K', '100K', '110K', '120K', '130K', '140K', '150K'];
-    const TOW_OPTIONS = ['X', '1 Auto', '2 Autos', '3 Autos', '4 Autos', '5 Autos', '6 Autos', '7 Autos', '8 Autos', '9 Autos', '10 Autos', '11 Autos', '12 Autos', '13 Autos', '14 Autos', '15 Autos', '16 Autos', '17 Autos', '18 Autos', '19 Autos', '20 Autos'];
-    const LAB_OPTIONS = ['X', '5 Min', '10 Min', '15 Min', '20 Min', '25 Min', '30 Min', '35 Min', '40 Min', '45 Min', '50 Min', '55 Min', '60 Min'];
-    const NG_OPTIONS = ['X', '1 Runde', '2 Runden', '3 Runden', '4 Runden', '5 Runden', '6 Runden', '7 Runden', '8 Runden', '9 Runden', '10 Runden', '11 Runden', '12 Runden', '13 Runden', '14 Runden', '15 Runden', '16 Runden', '17 Runden', '18 Runden', '19 Runden', '20 Runden'];
-    const RANKUP_OPTIONS = ['X', '1 Tag', '2 Tage', '3 Tage', '4 Tage', '5 Tage', '6 Tage', '7 Tage', '8 Tage', '9 Tage', '10 Tage', '11 Tage', '12 Tage', '13 Tage', '14 Tage'];
-    const SUSPEND_OPTIONS = ['X', '1 Tag', '2 Tage', '3 Tage', '4 Tage', '5 Tage', '6 Tage', '7 Tage', '8 Tage', '9 Tage', '10 Tage', '11 Tage', '12 Tage', '13 Tage', '14 Tage'];
-    const CHECK_OR_X_OPTIONS = ['X', '✓'];
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
     const provider = new GoogleAuthProvider();
 
-    provider.setCustomParameters({ prompt: 'select_account' });
+    provider.setCustomParameters({
+      prompt: 'select_account'
+    });
+
     await setPersistence(auth, browserLocalPersistence);
 
     let currentUserData = null;
@@ -1693,17 +1190,9 @@
     let editingEmployeeId = null;
     let editingEmployeeTrainings = {};
     let editingTrainingId = null;
-    let editingVehicleId = null;
-    let editingSanctionId = null;
     let employeeSearchTerm = '';
-    let archiveSearchTerm = '';
     let employeesCache = [];
-    let vehiclesCache = [];
-    let sanctionsCache = [];
     let unsubscribeEmployeesSnapshot = null;
-    let unsubscribeVehiclesSnapshot = null;
-    let unsubscribeSanctionsSnapshot = null;
-
     const LAST_PAGE_KEY = 'lspd_last_page';
 
     const navItems = [
@@ -1740,28 +1229,18 @@
         hash = ((hash << 5) - hash) + normalized.charCodeAt(i);
         hash |= 0;
       }
-      return String(Math.abs(hash)).padStart(8, '0').slice(0, 9);
-    }
-
-    function getRequestId(data = {}) {
-      return String(data?.requestId || data?.employeeId || '').trim();
-    }
-
-    function getStableAccessId(data = {}) {
-      return String(data?.stableId || buildStableIdFromEmail(data?.email || '') || '').trim();
+      return String(Math.abs(hash)).padStart(6, '0').slice(0, 8);
     }
 
     function mountNav(targetId) {
       const target = document.getElementById(targetId);
       if (!target) return;
-
       target.innerHTML = `
         <div class="nav">
           ${navItems.map(item => `<button data-page="${item.id}">${item.label}</button>`).join('')}
         </div>
         <div class="nav-separator"></div>
       `;
-
       target.querySelectorAll('button').forEach(btn => {
         btn.addEventListener('click', () => showPage(btn.dataset.page));
       });
@@ -1840,27 +1319,17 @@
       return `${String(firstName || '').trim()} ${String(lastName || '').trim()}`.trim();
     }
 
-    function fillSelectOptions(select, options, selectedValue = '') {
-      if (!select) return;
-      select.innerHTML = options.map(option => {
-        const value = typeof option === 'object' ? option.value : option;
-        const label = typeof option === 'object' ? option.label : option;
-        return `<option value="${value}" ${String(selectedValue) === String(value) ? 'selected' : ''}>${label}</option>`;
-      }).join('');
-    }
-
     async function ensurePreapprovedUsers() {
       for (const user of PREAPPROVED_USERS) {
         const accessRef = doc(db, ACCESS_COLLECTION, getAccessDocIdByEmail(user.email));
+
         await setDoc(accessRef, {
           uid: user.uid,
           name: user.name,
           lastName: user.lastName,
           fullName: user.fullName,
           email: user.email,
-          requestId: user.requestId || '',
-          stableId: user.stableId || buildStableIdFromEmail(user.email),
-          employeeId: user.requestId || '',
+          employeeId: user.employeeId || buildStableIdFromEmail(user.email),
           phone: user.phone,
           approved: true,
           websiteAccessRank: user.websiteAccessRank,
@@ -1868,37 +1337,6 @@
           createdAt: user.createdAt
         }, { merge: true });
       }
-    }
-
-    async function ensureDefaultVehicles() {
-      const snapshot = await getDocs(collection(db, VEHICLE_COLLECTION));
-      if (!snapshot.empty) return;
-
-      await setDoc(doc(db, VEHICLE_COLLECTION, 'vehicle_default_amggt20'), {
-        name: 'AMG GT 20',
-        requiredRank: 29,
-        department: 'HR',
-        createdAt: new Date().toISOString()
-      });
-    }
-
-    async function ensureDefaultSanctions() {
-      const snapshot = await getDocs(collection(db, SANCTION_COLLECTION));
-      if (!snapshot.empty) return;
-
-      await setDoc(doc(db, SANCTION_COLLECTION, 'sanction_default_1'), {
-        paragraph: '§1',
-        definition: 'Beleidigungen, Respektlosigkeit und sonstiges niederes Verhalten',
-        fine: '150K',
-        tow: '10 Autos',
-        labs: '30 Min',
-        ng: '2 Runden',
-        rankup: '14 Tage',
-        strike: '✓',
-        suspend: '3 Tage',
-        dismissal: '✓',
-        createdAt: new Date().toISOString()
-      });
     }
 
     async function findAccessByEmail(email) {
@@ -1910,7 +1348,6 @@
 
       const snap = await getDocs(collection(db, ACCESS_COLLECTION));
       const targetEmail = normalizeEmail(email);
-
       for (const docSnap of snap.docs) {
         const data = docSnap.data();
         if (normalizeEmail(data.email) === targetEmail) {
@@ -1927,7 +1364,7 @@
       const snap = await getDocs(collection(db, ACCESS_COLLECTION));
       for (const docSnap of snap.docs) {
         const data = docSnap.data();
-        if (String(getRequestId(data)).trim() === normalizedId) {
+        if (String(data.employeeId || '').trim() === normalizedId) {
           return { id: docSnap.id, data };
         }
       }
@@ -1943,10 +1380,23 @@
 
       const snap = await getDocs(collection(db, EMPLOYEE_COLLECTION));
       const targetEmail = normalizeEmail(email);
-
       for (const docSnap of snap.docs) {
         const data = docSnap.data();
         if (normalizeEmail(data.email) === targetEmail) {
+          return { id: docSnap.id, data };
+        }
+      }
+      return null;
+    }
+
+    async function findEmployeeByEmployeeId(employeeId) {
+      const normalizedId = String(employeeId || '').trim();
+      if (!normalizedId) return null;
+
+      const snap = await getDocs(collection(db, EMPLOYEE_COLLECTION));
+      for (const docSnap of snap.docs) {
+        const data = docSnap.data();
+        if (String(data.employeeId || '').trim() === normalizedId) {
           return { id: docSnap.id, data };
         }
       }
@@ -1974,7 +1424,7 @@
         17: 'Special Police Officer',
         18: 'Press Associator',
         19: 'Enforcement Supervisor',
-        20: 'S.W.A.T. Captain',
+        20: 'S.W.A.T Captain',
         21: 'HR Coordinator',
         22: 'IU Investigator',
         23: 'Police Inspector',
@@ -1989,83 +1439,58 @@
       return labels[rank] || `Rang ${rank}`;
     }
 
-    function getEmptyPersonalData() {
-      return {
-        fullName: '',
-        employeeId: '',
-        phone: '',
-        serviceNumber: '',
-        rank: '',
-        department1: '',
-        department2: '',
-        invite: '',
-        lastRankUp: '',
-        vacation: '',
-        strike: '',
-        trainings: {}
-      };
-    }
-
     function renderPersonalData(data, user) {
-      const hasEmployeeData = !!data?.hasEmployeeData;
-      const personalRank = hasEmployeeData ? getPersonalRank(data) : 0;
-      const nameValue = hasEmployeeData ? (data?.fullName || buildFullName(data?.name, data?.lastName) || '') : '';
+      const personalRank = getPersonalRank(data);
+      const nameValue = data?.fullName || buildFullName(data?.name, data?.lastName) || '-';
 
       const personalData = [
         ['Name:', nameValue],
-        ['ID:', hasEmployeeData ? (data?.employeeId || '') : ''],
-        ['Telefonnummer:', hasEmployeeData ? (data?.phone || '') : ''],
-        ['Dienstnummer:', hasEmployeeData ? (data?.serviceNumber || '') : ''],
-        ['Rang:', hasEmployeeData ? (personalRank ? `${personalRank} | ${rankLabel(personalRank)}` : '') : ''],
-        ['Abteilung 1:', hasEmployeeData ? (data?.department1 || '') : ''],
-        ['Abteilung 2:', hasEmployeeData ? (data?.department2 || '') : ''],
-        ['Invite:', hasEmployeeData ? (data?.invite || '') : ''],
-        ['Letzter RankUp:', hasEmployeeData ? (data?.lastRankUp || '') : ''],
-        ['Urlaub:', hasEmployeeData ? (data?.vacation || '') : ''],
-        ['Strike:', hasEmployeeData ? (data?.strike || '') : '']
+        ['ID:', data?.employeeId || '-'],
+        ['Telefonnummer:', data?.phone || '-'],
+        ['Dienstnummer:', data?.serviceNumber || '-'],
+        ['Rang:', personalRank ? `${personalRank} | ${rankLabel(personalRank)}` : '-'],
+        ['Abteilung 1:', data?.department1 || '-'],
+        ['Abteilung 2:', data?.department2 || '-'],
+        ['Invite:', data?.invite || '-'],
+        ['Letzter RankUp:', data?.lastRankUp || '-'],
+        ['Urlaub:', data?.vacation || '0/3'],
+        ['Strike:', data?.strike || '0/3']
       ];
 
       const grid = document.getElementById('personalDataGrid');
-      grid.innerHTML = personalData.map(([k, v]) => {
-        const valueClass = k === 'Telefonnummer:' ? 'info-value phone-box' : k === 'Dienstnummer:' ? 'info-value service-box' : 'info-value';
-        return `
-          <div class="info-label">${k}</div>
-          <div class="${valueClass}">${v || ''}</div>
-        `;
-      }).join('');
-
+      grid.innerHTML = personalData.map(([k, v]) => `<div>${k}</div><div>${v}</div>`).join('');
       document.getElementById('welcomeBox').textContent = `Angemeldet als ${user.email}`;
-      renderDashboardTrainings(hasEmployeeData ? data : { trainings: {} });
+      renderDashboardTrainings(data || {});
     }
 
     async function loadCurrentUserData(user, accessData = null) {
       const accessEntry = accessData ? { data: accessData } : await findAccessByEmail(user.email);
       const employeeEntry = await findEmployeeByEmail(user.email);
-      const employeeData = employeeEntry?.data || null;
-      const hasEmployeeData = !!employeeData && !employeeData.archived;
 
       const merged = {
         uid: user.uid,
         email: user.email,
+        name: employeeEntry?.data?.name || accessEntry?.data?.name || user.displayName || user.email.split('@')[0],
+        lastName: employeeEntry?.data?.lastName || accessEntry?.data?.lastName || '',
+        fullName: employeeEntry?.data?.fullName || accessEntry?.data?.fullName || buildFullName(
+          employeeEntry?.data?.name || accessEntry?.data?.name || user.displayName || user.email.split('@')[0],
+          employeeEntry?.data?.lastName || accessEntry?.data?.lastName || ''
+        ),
         approved: !!accessEntry?.data?.approved,
         websiteAccessRank: getWebsiteAccessRank(accessEntry?.data || {}),
         role: accessEntry?.data?.role || 'user',
-        hasEmployeeData,
-        archived: !!employeeData?.archived,
-        name: hasEmployeeData ? (employeeData?.name || '') : '',
-        lastName: hasEmployeeData ? (employeeData?.lastName || '') : '',
-        fullName: hasEmployeeData ? (employeeData?.fullName || buildFullName(employeeData?.name, employeeData?.lastName)) : '',
-        employeeId: hasEmployeeData ? (employeeData?.employeeId || '') : '',
-        phone: hasEmployeeData ? (employeeData?.phone || '') : '',
-        serviceNumber: hasEmployeeData ? (employeeData?.serviceNumber || '') : '',
-        rank: hasEmployeeData ? getPersonalRank(employeeData || {}) : '',
-        department1: hasEmployeeData ? (employeeData?.department1 || '') : '',
-        department2: hasEmployeeData ? (employeeData?.department2 || '') : '',
-        invite: hasEmployeeData ? (employeeData?.invite || '') : '',
-        lastRankUp: hasEmployeeData ? (employeeData?.lastRankUp || '') : '',
-        vacation: hasEmployeeData ? (employeeData?.vacation || '') : '',
-        strike: hasEmployeeData ? (employeeData?.strike || '') : '',
-        trainings: hasEmployeeData ? normalizeTrainings(employeeData?.trainings || {}) : normalizeTrainings({})
+        employeeId: employeeEntry?.data?.employeeId || accessEntry?.data?.employeeId || '-',
+        phone: employeeEntry?.data?.phone || accessEntry?.data?.phone || '-',
+        serviceNumber: employeeEntry?.data?.serviceNumber || '-',
+        rank: getPersonalRank(employeeEntry?.data || {}),
+        department1: employeeEntry?.data?.department1 || '-',
+        department2: employeeEntry?.data?.department2 || '-',
+        invite: employeeEntry?.data?.invite || '-',
+        lastRankUp: employeeEntry?.data?.lastRankUp || '-',
+        vacation: employeeEntry?.data?.vacation || '0/3',
+        strike: employeeEntry?.data?.strike || '0/3',
+        trainings: normalizeTrainings(employeeEntry?.data?.trainings || {}),
+        archived: !!employeeEntry?.data?.archived
       };
 
       currentUserData = merged;
@@ -2075,8 +1500,7 @@
 
     async function createOrUpdateAccessFromGoogleUser(user, extraData = {}) {
       const existingAccess = await findAccessByEmail(user.email);
-      const stableId = existingAccess?.data?.stableId || buildStableIdFromEmail(user.email);
-      const requestId = extraData.requestId || existingAccess?.data?.requestId || existingAccess?.data?.employeeId || '';
+      const stableEmployeeId = existingAccess?.data?.employeeId || extraData.employeeId || buildStableIdFromEmail(user.email);
       const targetId = existingAccess?.id || getAccessDocIdByEmail(user.email);
 
       const payload = {
@@ -2088,9 +1512,7 @@
           extraData.name || existingAccess?.data?.name || user.displayName || user.email.split('@')[0],
           extraData.lastName || existingAccess?.data?.lastName || ''
         ),
-        requestId,
-        employeeId: requestId,
-        stableId,
+        employeeId: stableEmployeeId,
         phone: extraData.phone || existingAccess?.data?.phone || '',
         approved: existingAccess?.data?.approved ?? false,
         websiteAccessRank: existingAccess?.data?.websiteAccessRank ?? 0,
@@ -2107,7 +1529,9 @@
 
       const employeeId = document.getElementById('empId').value.trim();
       const emailInput = document.getElementById('empEmail');
+
       emailInput.value = '';
+
       if (!employeeId) return;
 
       const accessEntry = await findAccessByEmployeeId(employeeId);
@@ -2119,7 +1543,6 @@
       if (!document.getElementById('empName').value.trim()) {
         document.getElementById('empName').value = accessData.fullName || buildFullName(accessData.name, accessData.lastName) || '';
       }
-
       if (!document.getElementById('empPhone').value.trim()) {
         document.getElementById('empPhone').value = accessData.phone || '';
       }
@@ -2140,10 +1563,10 @@
     window.submitRequestWithGoogle = async function () {
       const firstName = document.getElementById('requestFirstName').value.trim();
       const lastName = document.getElementById('requestLastName').value.trim();
-      const requestId = document.getElementById('requestEmployeeId').value.trim();
+      const employeeId = document.getElementById('requestEmployeeId').value.trim();
       const phone = document.getElementById('requestPhone').value.trim();
 
-      if (!firstName || !lastName || !requestId || !phone) {
+      if (!firstName || !lastName || !employeeId || !phone) {
         alert('Bitte Name, Nachname, ID und Telefonnummer eintragen.');
         return;
       }
@@ -2158,7 +1581,7 @@
           name: firstName,
           lastName,
           fullName: buildFullName(firstName, lastName),
-          requestId,
+          employeeId,
           phone
         });
 
@@ -2177,6 +1600,7 @@
         await signOut(auth);
         const result = await signInWithPopup(auth, provider);
         const user = result.user;
+
         const accessEntry = await findAccessByEmail(user.email);
 
         if (!accessEntry) {
@@ -2185,8 +1609,16 @@
           return;
         }
 
-        await setDoc(doc(db, ACCESS_COLLECTION, accessEntry.id), { uid: user.uid, email: user.email }, { merge: true });
-        const merged = await loadCurrentUserData(user, { ...accessEntry.data, uid: user.uid, email: user.email });
+        await setDoc(doc(db, ACCESS_COLLECTION, accessEntry.id), {
+          uid: user.uid,
+          email: user.email
+        }, { merge: true });
+
+        const merged = await loadCurrentUserData(user, {
+          ...accessEntry.data,
+          uid: user.uid,
+          email: user.email
+        });
 
         if (!accessEntry.data.approved && !isAdmin(user.email, merged)) {
           showMessage('Dein Zugriff wurde noch nicht freigegeben.');
@@ -2208,13 +1640,9 @@
 
     function populateAccessRankSelect(selectElement, selectedValue = 0) {
       if (!selectElement) return;
-      selectElement.innerHTML = Array.from({ length: 31 }, (_, i) =>
-        `<option value="${i}" ${Number(selectedValue) === i ? 'selected' : ''}>${i}</option>`
-      ).join('');
-    }
-
-    function populateRankDropdown(selectElement, selectedValue = 1) {
-      fillSelectOptions(selectElement, RANK_OPTIONS, selectedValue);
+      selectElement.innerHTML = Array.from({ length: 31 }, (_, i) => `
+        <option value="${i}" ${Number(selectedValue) === i ? 'selected' : ''}>${i}</option>
+      `).join('');
     }
 
     function resetEmployeeModal() {
@@ -2242,7 +1670,6 @@
 
     function openEmployeeModal(item = null, docId = null) {
       resetEmployeeModal();
-
       if (item && docId) {
         editingEmployeeId = docId;
         editingEmployeeTrainings = normalizeTrainings(item.trainings || {});
@@ -2261,7 +1688,6 @@
         document.getElementById('empVacation').value = item.vacation || '0/3';
         document.getElementById('empStrike').value = item.strike || '0/3';
       }
-
       document.getElementById('employeeModal').classList.remove('hidden');
     }
 
@@ -2293,8 +1719,8 @@
 
       const existingEmployee = await findEmployeeByEmail(email);
       const targetId = editingEmployeeId || existingEmployee?.id || getEmployeeDocIdByEmail(email);
-      let existingData = existingEmployee?.data || {};
 
+      let existingData = existingEmployee?.data || {};
       if (editingEmployeeId) {
         const currentDocSnap = await getDoc(doc(db, EMPLOYEE_COLLECTION, editingEmployeeId));
         if (currentDocSnap.exists()) {
@@ -2337,7 +1763,6 @@
           name: firstName,
           lastName,
           fullName: payload.fullName,
-          requestId: payload.employeeId,
           employeeId: payload.employeeId,
           phone: payload.phone
         }, { merge: true });
@@ -2367,10 +1792,12 @@
       resetTrainingModal();
       editingTrainingId = docId || null;
       const trainings = normalizeTrainings(item?.trainings || {});
+
       TRAINING_KEYS.forEach(key => {
         const el = document.getElementById(`tr${key}`);
         if (el) el.checked = !!trainings[key];
       });
+
       document.getElementById('trainingModal').classList.remove('hidden');
     }
 
@@ -2383,7 +1810,10 @@
         payload[key] = !!document.getElementById(`tr${key}`)?.checked;
       });
 
-      await setDoc(doc(db, EMPLOYEE_COLLECTION, editingTrainingId), { trainings: payload, trainingsArchived: false }, { merge: true });
+      await setDoc(doc(db, EMPLOYEE_COLLECTION, editingTrainingId), {
+        trainings: payload,
+        trainingsArchived: false
+      }, { merge: true });
 
       const currentEmployeeEntry = currentUser ? await findEmployeeByEmail(currentUser.email) : null;
       if (currentEmployeeEntry && currentEmployeeEntry.id === editingTrainingId) {
@@ -2401,14 +1831,12 @@
     function openAccessModal(item = null, docId = null) {
       const title = document.getElementById('accessModalTitle');
       const emailValue = item?.email || '';
-      const stableId = getStableAccessId(item || {});
-      const requestId = getRequestId(item || {});
+      const stableId = item?.employeeId || (emailValue ? buildStableIdFromEmail(emailValue) : '');
 
       document.getElementById('accessName').value = item?.name || '';
       document.getElementById('accessLastName').value = item?.lastName || '';
       document.getElementById('accessEmail').value = emailValue;
-      document.getElementById('accessStableId').value = stableId;
-      document.getElementById('accessRequestId').value = requestId;
+      document.getElementById('accessId').value = stableId;
       document.getElementById('accessPhone').value = item?.phone || '';
       document.getElementById('accessApproved').value = String(item?.approved ?? true);
       populateAccessRankSelect(document.getElementById('accessRank'), getWebsiteAccessRank(item || {}));
@@ -2435,11 +1863,10 @@
       const accessRankValue = Math.max(0, Math.min(30, Number(document.getElementById('accessRank').value || 0)));
       const firstName = document.getElementById('accessName').value.trim();
       const lastName = document.getElementById('accessLastName').value.trim();
-      const requestId = document.getElementById('accessRequestId').value.trim();
-      const stableId = existingData.stableId || document.getElementById('accessStableId').value.trim() || buildStableIdFromEmail(email);
+      const stableEmployeeId = existingData.employeeId || buildStableIdFromEmail(email);
       const phone = document.getElementById('accessPhone').value.trim();
 
-      document.getElementById('accessStableId').value = stableId;
+      document.getElementById('accessId').value = stableEmployeeId;
 
       const payload = {
         uid: existingData.uid || targetId,
@@ -2450,9 +1877,7 @@
           firstName || existingData.name || email.split('@')[0],
           lastName || existingData.lastName || ''
         ),
-        requestId: requestId || existingData.requestId || existingData.employeeId || '',
-        employeeId: requestId || existingData.requestId || existingData.employeeId || '',
-        stableId,
+        employeeId: stableEmployeeId,
         phone: phone || existingData.phone || '',
         approved: document.getElementById('accessApproved').value === 'true',
         websiteAccessRank: accessRankValue,
@@ -2477,7 +1902,6 @@
 
     async function archiveEmployeeByEmployeeId(employeeId) {
       if (!currentUser || !isAdmin(currentUser.email)) return false;
-
       const normalizedId = String(employeeId || '').trim();
       if (!normalizedId) return false;
 
@@ -2490,13 +1914,23 @@
         archivedTrainings: normalizeTrainings(found.data.trainings || {}),
         trainingsArchived: true
       });
+      return true;
+    }
 
+    async function deleteArchivedEmployeeByEmployeeId(employeeId) {
+      if (!currentUser || !isAdmin(currentUser.email)) return false;
+      const normalizedId = String(employeeId || '').trim();
+      if (!normalizedId) return false;
+
+      const found = employeesCache.find(entry => String(entry.data.employeeId || '').trim() === normalizedId && !!entry.data.archived);
+      if (!found) return false;
+
+      await deleteDoc(doc(db, EMPLOYEE_COLLECTION, found.id));
       return true;
     }
 
     function subscribeAccessRequests() {
       const q = query(collection(db, ACCESS_COLLECTION), orderBy('createdAt', 'desc'));
-
       onSnapshot(q, (snapshot) => {
         const body = document.getElementById('accessRequestBody');
         body.innerHTML = '';
@@ -2517,9 +1951,8 @@
             <td>
               <button class="icon-btn" data-access-edit-id="${docSnap.id}" ${disabled}>✎</button>
             </td>
-            <td>${getStableAccessId(item) || '-'}</td>
-            <td>${getRequestId(item) || '-'}</td>
             <td>${item.name || '-'}</td>
+            <td>${item.employeeId || buildStableIdFromEmail(item.email || '') || '-'}</td>
             <td>${item.lastName || '-'}</td>
             <td>${item.email || '-'}</td>
             <td>${item.phone || '-'}</td>
@@ -2541,19 +1974,17 @@
               </div>
             </td>
           `;
-
           body.appendChild(tr);
         });
 
         body.querySelectorAll('select').forEach(control => {
           control.addEventListener('change', async (e) => {
             if (!currentUser || !isAdmin(currentUser.email)) return;
-
             const id = e.target.dataset.id;
             const type = e.target.dataset.type;
             if (!id || !type) return;
-
             const ref = doc(db, ACCESS_COLLECTION, id);
+
             if (type === 'approved') {
               await updateDoc(ref, { approved: e.target.value === 'true' });
             }
@@ -2583,6 +2014,7 @@
 
     function getDivisionLabel(rank) {
       const r = Number(rank || 1);
+
       if (r >= 28) return 'Leadership';
       if (r >= 23 && r <= 27) return 'High Command';
       if (r >= 18 && r <= 22) return 'Department';
@@ -2597,6 +2029,7 @@
 
     function getDivisionClass(rank) {
       const r = Number(rank || 1);
+
       if (r >= 28) return 'division-leadership';
       if (r >= 23 && r <= 27) return 'division-highcommand';
       if (r >= 18 && r <= 22) return 'division-department';
@@ -2674,49 +2107,6 @@
       `;
     }
 
-    function createArchivedEmployeeRow(item, docId) {
-      const personalRank = Math.max(1, Math.min(30, Number(getPersonalRank(item) || 1)));
-      const nameValue = item.fullName || buildFullName(item.name, item.lastName) || '';
-
-      return `
-        <tr>
-          <td><div class="table-action-stack"><button class="data-edit-btn" data-employee-edit-id="${docId}" disabled>✎</button></div></td>
-          <td>${item.employeeId || ''}</td>
-          <td>${item.serviceNumber || ''}</td>
-          <td>${nameValue}</td>
-          <td>${item.phone || ''}</td>
-          <td class="rank-${personalRank}">${personalRank} | ${rankLabel(personalRank)}</td>
-          <td class="vertical-sep"></td>
-          <td class="${getDivisionClass(personalRank)}">${getDivisionLabel(personalRank)}</td>
-          <td class="vertical-sep"></td>
-          <td>${item.vacation || '0/3'}</td>
-          <td>${item.strike || '0/3'}</td>
-          <td>${item.invite || '-'}</td>
-          <td>${item.lastRankUp || '-'}</td>
-          <td>${item.department1 || '-'}</td>
-          <td>${item.department2 || '-'}</td>
-          <td class="vertical-sep"></td>
-          ${createTrainingCell(item, 'GA')}
-          ${createTrainingCell(item, 'EHK')}
-          ${createTrainingCell(item, 'ES')}
-          ${createTrainingCell(item, 'Officer')}
-          ${createTrainingCell(item, 'OK')}
-          ${createTrainingCell(item, 'FULA')}
-          ${createTrainingCell(item, 'TST')}
-          ${createTrainingCell(item, 'KS')}
-          ${createTrainingCell(item, 'OKPLUS')}
-          ${createTrainingCell(item, 'FT')}
-          ${createTrainingCell(item, 'COP')}
-          ${createTrainingCell(item, 'JP')}
-          ${createTrainingCell(item, 'ZP')}
-          ${createTrainingCell(item, 'VHP')}
-          ${createTrainingCell(item, 'TOWBL')}
-          ${createTrainingCell(item, 'AKS')}
-          <td><button class="rank-edit-btn" disabled>✎</button></td>
-        </tr>
-      `;
-    }
-
     function matchesSearch(item, term) {
       if (!term) return true;
 
@@ -2732,7 +2122,9 @@
         item.department2,
         rankLabel(getPersonalRank(item)),
         getDivisionLabel(getPersonalRank(item))
-      ].join(' ').toLowerCase();
+      ]
+        .join(' ')
+        .toLowerCase();
 
       return searchText.includes(term.toLowerCase());
     }
@@ -2740,10 +2132,9 @@
     function renderEmployeesFromCache() {
       const tbody = document.getElementById('employeesTableBody');
       if (!tbody) return;
-
       tbody.innerHTML = '';
-      const seenEmails = new Set();
 
+      const seenEmails = new Set();
       const activeEntries = employeesCache
         .filter(entry => !entry.data.archived)
         .filter(entry => {
@@ -2756,8 +2147,10 @@
         .sort((a, b) => {
           const rankDiff = Number(getPersonalRank(b.data) || 0) - Number(getPersonalRank(a.data) || 0);
           if (rankDiff !== 0) return rankDiff;
-          return String(a.data.fullName || buildFullName(a.data.name, a.data.lastName) || '')
-            .localeCompare(String(b.data.fullName || buildFullName(b.data.name, b.data.lastName) || ''), 'de');
+          return String(a.data.fullName || buildFullName(a.data.name, a.data.lastName) || '').localeCompare(
+            String(b.data.fullName || buildFullName(b.data.name, b.data.lastName) || ''),
+            'de'
+          );
         });
 
       if (activeEntries.length === 0) {
@@ -2807,30 +2200,42 @@
       if (!tbody || !emptyState) return;
 
       tbody.innerHTML = '';
-
       const archivedEntries = employeesCache
         .filter(entry => !!entry.data.archived)
-        .filter(entry => matchesSearch(entry.data, archiveSearchTerm))
         .sort((a, b) => {
           const rankDiff = Number(getPersonalRank(b.data) || 0) - Number(getPersonalRank(a.data) || 0);
           if (rankDiff !== 0) return rankDiff;
-          return String(a.data.fullName || buildFullName(a.data.name, a.data.lastName) || '')
-            .localeCompare(String(b.data.fullName || buildFullName(b.data.name, b.data.lastName) || ''), 'de');
+          return String(a.data.fullName || buildFullName(a.data.name, a.data.lastName) || '').localeCompare(
+            String(b.data.fullName || buildFullName(b.data.name, b.data.lastName) || ''),
+            'de'
+          );
         });
 
       if (archivedEntries.length === 0) {
         emptyState.classList.remove('hidden');
-        tbody.innerHTML = `
-          <tr class="archive-empty-row">
-            <td colspan="33">Keine eingetragenen Mitarbeiter vorhanden.</td>
-          </tr>
-        `;
         return;
       }
 
       emptyState.classList.add('hidden');
+
       archivedEntries.forEach((entry) => {
-        tbody.innerHTML += createArchivedEmployeeRow(entry.data, entry.id);
+        const item = entry.data;
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${item.email || '-'}</td>
+          <td>${item.fullName || buildFullName(item.name, item.lastName) || '-'}</td>
+          <td>${item.employeeId || '-'}</td>
+          <td>${item.serviceNumber || '-'}</td>
+          <td>${item.phone || '-'}</td>
+          <td>${getPersonalRank(item) ? `${getPersonalRank(item)} | ${rankLabel(getPersonalRank(item))}` : '-'}</td>
+          <td>${item.department1 || '-'}</td>
+          <td>${item.department2 || '-'}</td>
+          <td>${item.invite || '-'}</td>
+          <td>${item.lastRankUp || '-'}</td>
+          <td>${item.vacation || '0/3'}</td>
+          <td>${item.strike || '0/3'}</td>
+        `;
+        tbody.appendChild(tr);
       });
     }
 
@@ -2840,11 +2245,13 @@
       }
 
       const q = query(collection(db, EMPLOYEE_COLLECTION), orderBy('createdAt', 'desc'));
-
       unsubscribeEmployeesSnapshot = onSnapshot(q, async (snapshot) => {
         employeesCache = snapshot.docs.map(docSnap => ({
           id: docSnap.id,
-          data: { ...docSnap.data(), trainings: normalizeTrainings(docSnap.data().trainings || {}) }
+          data: {
+            ...docSnap.data(),
+            trainings: normalizeTrainings(docSnap.data().trainings || {})
+          }
         }));
 
         if (currentUser) {
@@ -2857,233 +2264,12 @@
       });
     }
 
-    function resetVehicleModal() {
-      editingVehicleId = null;
-      document.getElementById('vehicleModalTitle').textContent = 'Fahrzeug hinzufügen';
-      document.getElementById('vehicleName').value = '';
-      populateRankDropdown(document.getElementById('vehicleRank'), 1);
-      fillSelectOptions(document.getElementById('vehicleDepartment'), VEHICLE_DEPARTMENTS, 'X');
-    }
-
-    function openVehicleModal(item = null, docId = null) {
-      resetVehicleModal();
-
-      if (item && docId) {
-        editingVehicleId = docId;
-        document.getElementById('vehicleModalTitle').textContent = 'Fahrzeug bearbeiten';
-        document.getElementById('vehicleName').value = item.name || '';
-        populateRankDropdown(document.getElementById('vehicleRank'), item.requiredRank || 1);
-        fillSelectOptions(document.getElementById('vehicleDepartment'), VEHICLE_DEPARTMENTS, item.department || 'X');
-      }
-
-      document.getElementById('vehicleModal').classList.remove('hidden');
-    }
-
-    window.closeVehicleModal = function () {
-      document.getElementById('vehicleModal').classList.add('hidden');
-    };
-
-    window.saveVehicle = async function () {
-      if (!currentUser || !isAdmin(currentUser.email)) return;
-
-      const name = document.getElementById('vehicleName').value.trim();
-      const requiredRank = Number(document.getElementById('vehicleRank').value || 1);
-      const department = document.getElementById('vehicleDepartment').value;
-
-      if (!name) {
-        alert('Bitte einen Fahrzeugnamen eintragen.');
-        return;
-      }
-
-      const targetId = editingVehicleId || `vehicle_${Date.now()}`;
-
-      await setDoc(doc(db, VEHICLE_COLLECTION, targetId), {
-        name,
-        requiredRank,
-        department,
-        createdAt: vehiclesCache.find(v => v.id === targetId)?.data?.createdAt || new Date().toISOString()
-      }, { merge: true });
-
-      closeVehicleModal();
-    };
-
-    function renderVehicles() {
-      const body = document.getElementById('vehicleTableBody');
-      if (!body) return;
-
-      body.innerHTML = '';
-      const disabled = currentUser && isAdmin(currentUser.email) ? '' : 'disabled';
-      const sorted = [...vehiclesCache].sort((a, b) => Number(b.data.requiredRank || 0) - Number(a.data.requiredRank || 0));
-
-      if (sorted.length === 0) {
-        body.innerHTML = `<tr><td colspan="4">Keine Fahrzeuge vorhanden.</td></tr>`;
-        return;
-      }
-
-      sorted.forEach(item => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${item.data.name || '-'}</td>
-          <td>${item.data.requiredRank ? `${item.data.requiredRank} | ${rankLabel(item.data.requiredRank)}` : '-'}</td>
-          <td>${item.data.department || '-'}</td>
-          <td><button class="vehicle-edit-btn" data-vehicle-edit-id="${item.id}" ${disabled}>✎</button></td>
-        `;
-        body.appendChild(tr);
-      });
-
-      body.querySelectorAll('[data-vehicle-edit-id]').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const found = vehiclesCache.find(item => item.id === btn.dataset.vehicleEditId);
-          if (!found) return;
-          openVehicleModal(found.data, found.id);
-        });
-      });
-    }
-
-    function subscribeVehicles() {
-      if (unsubscribeVehiclesSnapshot) {
-        unsubscribeVehiclesSnapshot();
-      }
-
-      const q = query(collection(db, VEHICLE_COLLECTION), orderBy('createdAt', 'desc'));
-      unsubscribeVehiclesSnapshot = onSnapshot(q, (snapshot) => {
-        vehiclesCache = snapshot.docs.map(docSnap => ({ id: docSnap.id, data: docSnap.data() }));
-        renderVehicles();
-      });
-    }
-
-    function resetSanctionModal() {
-      editingSanctionId = null;
-      document.getElementById('sanctionModalTitle').textContent = 'Sanktion hinzufügen';
-      document.getElementById('sanctionParagraph').value = '';
-      document.getElementById('sanctionDefinition').value = '';
-      fillSelectOptions(document.getElementById('sanctionFine'), FINE_OPTIONS, 'X');
-      fillSelectOptions(document.getElementById('sanctionTow'), TOW_OPTIONS, 'X');
-      fillSelectOptions(document.getElementById('sanctionLabs'), LAB_OPTIONS, 'X');
-      fillSelectOptions(document.getElementById('sanctionNg'), NG_OPTIONS, 'X');
-      fillSelectOptions(document.getElementById('sanctionRankup'), RANKUP_OPTIONS, 'X');
-      fillSelectOptions(document.getElementById('sanctionStrike'), CHECK_OR_X_OPTIONS, 'X');
-      fillSelectOptions(document.getElementById('sanctionSuspend'), SUSPEND_OPTIONS, 'X');
-      fillSelectOptions(document.getElementById('sanctionDismissal'), CHECK_OR_X_OPTIONS, 'X');
-    }
-
-    function openSanctionModal(item = null, docId = null) {
-      resetSanctionModal();
-
-      if (item && docId) {
-        editingSanctionId = docId;
-        document.getElementById('sanctionModalTitle').textContent = 'Sanktion bearbeiten';
-        document.getElementById('sanctionParagraph').value = item.paragraph || '';
-        document.getElementById('sanctionDefinition').value = item.definition || '';
-        fillSelectOptions(document.getElementById('sanctionFine'), FINE_OPTIONS, item.fine || 'X');
-        fillSelectOptions(document.getElementById('sanctionTow'), TOW_OPTIONS, item.tow || 'X');
-        fillSelectOptions(document.getElementById('sanctionLabs'), LAB_OPTIONS, item.labs || 'X');
-        fillSelectOptions(document.getElementById('sanctionNg'), NG_OPTIONS, item.ng || 'X');
-        fillSelectOptions(document.getElementById('sanctionRankup'), RANKUP_OPTIONS, item.rankup || 'X');
-        fillSelectOptions(document.getElementById('sanctionStrike'), CHECK_OR_X_OPTIONS, item.strike || 'X');
-        fillSelectOptions(document.getElementById('sanctionSuspend'), SUSPEND_OPTIONS, item.suspend || 'X');
-        fillSelectOptions(document.getElementById('sanctionDismissal'), CHECK_OR_X_OPTIONS, item.dismissal || 'X');
-      }
-
-      document.getElementById('sanctionModal').classList.remove('hidden');
-    }
-
-    window.closeSanctionModal = function () {
-      document.getElementById('sanctionModal').classList.add('hidden');
-    };
-
-    window.saveSanction = async function () {
-      if (!currentUser || !isAdmin(currentUser.email)) return;
-
-      const paragraph = document.getElementById('sanctionParagraph').value.trim();
-      const definition = document.getElementById('sanctionDefinition').value.trim();
-
-      if (!paragraph || !definition) {
-        alert('Bitte § und Regeldefinition eintragen.');
-        return;
-      }
-
-      const targetId = editingSanctionId || `sanction_${Date.now()}`;
-
-      await setDoc(doc(db, SANCTION_COLLECTION, targetId), {
-        paragraph,
-        definition,
-        fine: document.getElementById('sanctionFine').value,
-        tow: document.getElementById('sanctionTow').value,
-        labs: document.getElementById('sanctionLabs').value,
-        ng: document.getElementById('sanctionNg').value,
-        rankup: document.getElementById('sanctionRankup').value,
-        strike: document.getElementById('sanctionStrike').value,
-        suspend: document.getElementById('sanctionSuspend').value,
-        dismissal: document.getElementById('sanctionDismissal').value,
-        createdAt: sanctionsCache.find(s => s.id === targetId)?.data?.createdAt || new Date().toISOString()
-      }, { merge: true });
-
-      closeSanctionModal();
-    };
-
-    function renderSanctions() {
-      const body = document.getElementById('sanctionTableBody');
-      if (!body) return;
-
-      body.innerHTML = '';
-      const disabled = currentUser && isAdmin(currentUser.email) ? '' : 'disabled';
-
-      const sorted = [...sanctionsCache].sort((a, b) => {
-        return String(a.data.paragraph || '').localeCompare(String(b.data.paragraph || ''), 'de', { numeric: true });
-      });
-
-      if (sorted.length === 0) {
-        body.innerHTML = `<tr><td colspan="11">Keine Sanktionen vorhanden.</td></tr>`;
-        return;
-      }
-
-      sorted.forEach(item => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td><button class="sanction-edit-btn" data-sanction-edit-id="${item.id}" ${disabled}>✎</button></td>
-          <td>${item.data.paragraph || '-'}</td>
-          <td>${item.data.definition || '-'}</td>
-          <td>${item.data.fine || 'X'}</td>
-          <td>${item.data.tow || 'X'}</td>
-          <td>${item.data.labs || 'X'}</td>
-          <td>${item.data.ng || 'X'}</td>
-          <td>${item.data.rankup || 'X'}</td>
-          <td>${item.data.strike || 'X'}</td>
-          <td>${item.data.suspend || 'X'}</td>
-          <td>${item.data.dismissal || 'X'}</td>
-        `;
-        body.appendChild(tr);
-      });
-
-      body.querySelectorAll('[data-sanction-edit-id]').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const found = sanctionsCache.find(item => item.id === btn.dataset.sanctionEditId);
-          if (!found) return;
-          openSanctionModal(found.data, found.id);
-        });
-      });
-    }
-
-    function subscribeSanctions() {
-      if (unsubscribeSanctionsSnapshot) {
-        unsubscribeSanctionsSnapshot();
-      }
-
-      const q = query(collection(db, SANCTION_COLLECTION), orderBy('createdAt', 'desc'));
-      unsubscribeSanctionsSnapshot = onSnapshot(q, (snapshot) => {
-        sanctionsCache = snapshot.docs.map(docSnap => ({ id: docSnap.id, data: docSnap.data() }));
-        renderSanctions();
-      });
-    }
-
     window.logout = async function () {
       await signOut(auth);
       currentUser = null;
       currentUserData = null;
       showMessage('');
       clearLastPage();
-      renderPersonalData({ ...getEmptyPersonalData(), hasEmployeeData: false }, { email: '' });
       showPage('page1', { save: false });
       finishAuthCheck();
     };
@@ -3106,7 +2292,7 @@
       const modal = document.getElementById('accessModal');
       const isEdit = !!(modal.dataset.editId || '');
       if (isEdit) return;
-      document.getElementById('accessStableId').value = buildStableIdFromEmail(e.target.value.trim());
+      document.getElementById('accessId').value = buildStableIdFromEmail(e.target.value.trim());
     });
 
     document.getElementById('openArchiveBtn').addEventListener('click', () => {
@@ -3132,37 +2318,30 @@
       document.getElementById('moveEmployeeIdInput').value = '';
     });
 
+    document.getElementById('deleteArchivedEmployeeBtn').addEventListener('click', async () => {
+      if (!currentUser || !isAdmin(currentUser.email)) return;
+
+      const employeeId = document.getElementById('archiveDeleteEmployeeIdInput').value.trim();
+      if (!employeeId) {
+        alert('Bitte eine ID eingeben.');
+        return;
+      }
+
+      const success = await deleteArchivedEmployeeByEmployeeId(employeeId);
+      if (!success) {
+        alert('Kein archivierter Mitarbeiter mit dieser ID gefunden.');
+        return;
+      }
+
+      document.getElementById('archiveDeleteEmployeeIdInput').value = '';
+    });
+
     document.getElementById('employeeSearchInput').addEventListener('input', (e) => {
       employeeSearchTerm = e.target.value.trim();
       renderEmployeesFromCache();
     });
 
-    document.getElementById('archiveSearchInput').addEventListener('input', (e) => {
-      archiveSearchTerm = e.target.value.trim();
-      renderArchivedEmployeesFromCache();
-    });
-
-    document.getElementById('addVehicleBtn').addEventListener('click', () => {
-      if (!currentUser || !isAdmin(currentUser.email)) return;
-      openVehicleModal();
-    });
-
-    document.getElementById('addSanctionBtn').addEventListener('click', () => {
-      if (!currentUser || !isAdmin(currentUser.email)) return;
-      openSanctionModal();
-    });
-
     populateAccessRankSelect(document.getElementById('accessRank'), 0);
-    populateRankDropdown(document.getElementById('vehicleRank'), 1);
-    fillSelectOptions(document.getElementById('vehicleDepartment'), VEHICLE_DEPARTMENTS, 'X');
-    fillSelectOptions(document.getElementById('sanctionFine'), FINE_OPTIONS, 'X');
-    fillSelectOptions(document.getElementById('sanctionTow'), TOW_OPTIONS, 'X');
-    fillSelectOptions(document.getElementById('sanctionLabs'), LAB_OPTIONS, 'X');
-    fillSelectOptions(document.getElementById('sanctionNg'), NG_OPTIONS, 'X');
-    fillSelectOptions(document.getElementById('sanctionRankup'), RANKUP_OPTIONS, 'X');
-    fillSelectOptions(document.getElementById('sanctionStrike'), CHECK_OR_X_OPTIONS, 'X');
-    fillSelectOptions(document.getElementById('sanctionSuspend'), SUSPEND_OPTIONS, 'X');
-    fillSelectOptions(document.getElementById('sanctionDismissal'), CHECK_OR_X_OPTIONS, 'X');
 
     onAuthStateChanged(auth, async (user) => {
       try {
@@ -3175,14 +2354,23 @@
         }
 
         const accessEntry = await findAccessByEmail(user.email);
+
         if (!accessEntry) {
           showPage('page1', { save: false });
           finishAuthCheck();
           return;
         }
 
-        await setDoc(doc(db, ACCESS_COLLECTION, accessEntry.id), { uid: user.uid, email: user.email }, { merge: true });
-        const merged = await loadCurrentUserData(user, { ...accessEntry.data, uid: user.uid, email: user.email });
+        await setDoc(doc(db, ACCESS_COLLECTION, accessEntry.id), {
+          uid: user.uid,
+          email: user.email
+        }, { merge: true });
+
+        const merged = await loadCurrentUserData(user, {
+          ...accessEntry.data,
+          uid: user.uid,
+          email: user.email
+        });
 
         if (!accessEntry.data.approved && !isAdmin(user.email, merged)) {
           showPage('page1', { save: false });
@@ -3202,11 +2390,7 @@
 
     subscribeAccessRequests();
     subscribeEmployees();
-    subscribeVehicles();
-    subscribeSanctions();
     ensurePreapprovedUsers();
-    ensureDefaultVehicles();
-    ensureDefaultSanctions();
   </script>
 </body>
 </html>
