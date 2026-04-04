@@ -463,7 +463,7 @@ window.generateIdFromEmail = generateIdFromEmail;
   </div>
 
   <!-- Main Header -->
-  <div class="main-header">
+  <div class="main-header" id="main-header-div">
     <div style="display:flex;align-items:center;gap:16px;justify-content:center;">
       <div class="login-badge" id="header-badge" style="display:none;width:60px;height:60px;font-size:8px;">LSPD<br>GOVNET</div>
       <div>
@@ -474,7 +474,7 @@ window.generateIdFromEmail = generateIdFromEmail;
   </div>
 
   <!-- Nav -->
-  <div class="nav-bar">
+  <div class="nav-bar" id="nav-bar-div">
     <button class="nav-btn active" onclick="showSubPage('dashboard')">LSPD Dashboard</button>
     <button class="nav-btn" onclick="showSubPage('kleider')">Kleiderordnung</button>
     <button class="nav-btn" onclick="showSubPage('rang')">Rangbefugnisse</button>
@@ -655,7 +655,7 @@ window.generateIdFromEmail = generateIdFromEmail;
         <table class="data-table register-table">
           <thead>
             <tr>
-              <th>ID</th><th>DN</th><th>NAME</th><th>TEL. NR.</th>
+              <th></th><th>ID</th><th>DN</th><th>NAME</th><th>TEL. NR.</th>
               <th>RANG</th><th>DIVISION</th><th class="th-sep"></th><th>URLAUB</th><th>STRIKE</th>
               <th>INVITE-DATUM</th><th>LETZTER RANKUP</th><th>ABTEILUNG 1</th><th>ABTEILUNG 2</th>
               <th class="th-sep"></th>
@@ -665,7 +665,7 @@ window.generateIdFromEmail = generateIdFromEmail;
             </tr>
           </thead>
           <tbody id="ma-tbody">
-            <tr><td colspan="30" style="text-align:center;color:var(--text-dim);padding:20px;">Keine eingetragenen Mitarbeiter vorhanden.</td></tr>
+            <tr><td colspan="31" style="text-align:center;color:var(--text-dim);padding:20px;">Keine eingetragenen Mitarbeiter vorhanden.</td></tr>
           </tbody>
         </table>
       </div>
@@ -822,6 +822,8 @@ window.generateIdFromEmail = generateIdFromEmail;
     </div>
     <div class="popup-body" style="display:grid;grid-template-columns:1fr 1fr;gap:0 16px;">
       <input type="hidden" id="edit-ma-id">
+      <div class="form-group"><label>IDENTIFIKATIONSNUMMER</label><input type="text" id="edit-ma-identnr" readonly style="opacity:0.5;cursor:not-allowed;"></div>
+      <div class="form-group"><label>REISEPASSNUMMER</label><input type="text" id="edit-ma-reisepass" readonly style="opacity:0.5;cursor:not-allowed;"></div>
       <div class="form-group"><label>ID</label><input type="text" id="edit-ma-new-id" placeholder="ID"></div>
       <div class="form-group"><label>DIENSTNUMMER (DN)</label><input type="text" id="edit-ma-dn" placeholder="DN"></div>
       <div class="form-group"><label>NAME</label><input type="text" id="edit-ma-vorname" placeholder="Name"></div>
@@ -832,6 +834,8 @@ window.generateIdFromEmail = generateIdFromEmail;
       <div class="form-group"><label>LETZTER RANKUP</label><input type="text" id="edit-ma-rankup" placeholder="TT.MM.JJJJ"></div>
       <div class="form-group"><label>ABTEILUNG 1</label><input type="text" id="edit-ma-abt1" placeholder="Abteilung 1"></div>
       <div class="form-group"><label>ABTEILUNG 2</label><input type="text" id="edit-ma-abt2" placeholder="Abteilung 2"></div>
+      <div class="form-group"><label>URLAUB</label><input type="text" id="edit-ma-urlaub" placeholder="0/3"></div>
+      <div class="form-group"><label>STRIKE</label><input type="text" id="edit-ma-strike" placeholder="0/3"></div>
     </div>
     <div class="popup-footer" style="justify-content:space-between;">
       <button class="btn btn-primary" onclick="closePopup('edit-ma-daten')">Abbrechen</button>
@@ -842,30 +846,30 @@ window.generateIdFromEmail = generateIdFromEmail;
 
 <!-- Edit Mitarbeiter Ausbildungen Popup -->
 <div class="overlay" id="overlay-edit-ma-ausb">
-  <div class="popup" style="max-width:500px;">
+  <div class="popup" style="max-width:700px;">
     <div class="popup-header">
       <h2>AUSBILDUNGEN BEARBEITEN</h2>
       <button class="popup-close" onclick="closePopup('edit-ma-ausb')">✕</button>
     </div>
     <div class="popup-body">
       <input type="hidden" id="edit-ausb-id">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-        <label style="display:flex;align-items:center;gap:6px;font-family:Rajdhani,sans-serif;font-size:0.8rem;"><input type="checkbox" id="ausb-ga"> Grundausbildung</label>
-        <label style="display:flex;align-items:center;gap:6px;font-family:Rajdhani,sans-serif;font-size:0.8rem;"><input type="checkbox" id="ausb-ehk"> Erste Hilfe Kurs</label>
-        <label style="display:flex;align-items:center;gap:6px;font-family:Rajdhani,sans-serif;font-size:0.8rem;"><input type="checkbox" id="ausb-es"> Event Schulung</label>
-        <label style="display:flex;align-items:center;gap:6px;font-family:Rajdhani,sans-serif;font-size:0.8rem;"><input type="checkbox" id="ausb-op"> Officerprüfung</label>
-        <label style="display:flex;align-items:center;gap:6px;font-family:Rajdhani,sans-serif;font-size:0.8rem;"><input type="checkbox" id="ausb-ok"> Ortskunde Prüfung</label>
-        <label style="display:flex;align-items:center;gap:6px;font-family:Rajdhani,sans-serif;font-size:0.8rem;"><input type="checkbox" id="ausb-fula"> Funk- und Leitstellenausbildung</label>
-        <label style="display:flex;align-items:center;gap:6px;font-family:Rajdhani,sans-serif;font-size:0.8rem;"><input type="checkbox" id="ausb-tst"> Tactical Shootingprüfung</label>
-        <label style="display:flex;align-items:center;gap:6px;font-family:Rajdhani,sans-serif;font-size:0.8rem;"><input type="checkbox" id="ausb-ks"> Konvoi Schulung</label>
-        <label style="display:flex;align-items:center;gap:6px;font-family:Rajdhani,sans-serif;font-size:0.8rem;"><input type="checkbox" id="ausb-okp"> Ortskunde+ Prüfung</label>
-        <label style="display:flex;align-items:center;gap:6px;font-family:Rajdhani,sans-serif;font-size:0.8rem;"><input type="checkbox" id="ausb-cop"> Corporate Prüfung</label>
-        <label style="display:flex;align-items:center;gap:6px;font-family:Rajdhani,sans-serif;font-size:0.8rem;"><input type="checkbox" id="ausb-ft"> Flugtauglichkeitsprüfung</label>
-        <label style="display:flex;align-items:center;gap:6px;font-family:Rajdhani,sans-serif;font-size:0.8rem;"><input type="checkbox" id="ausb-jp"> Juraprüfung</label>
-        <label style="display:flex;align-items:center;gap:6px;font-family:Rajdhani,sans-serif;font-size:0.8rem;"><input type="checkbox" id="ausb-aks"> Antikorruptionsschulung</label>
-        <label style="display:flex;align-items:center;gap:6px;font-family:Rajdhani,sans-serif;font-size:0.8rem;"><input type="checkbox" id="ausb-zp"> Zivilprüfung</label>
-        <label style="display:flex;align-items:center;gap:6px;font-family:Rajdhani,sans-serif;font-size:0.8rem;"><input type="checkbox" id="ausb-vhp"> Einsatzleitung/Verhandlungsführung</label>
-        <label style="display:flex;align-items:center;gap:6px;font-family:Rajdhani,sans-serif;font-size:0.8rem;"><input type="checkbox" id="ausb-tow"> TW und Blitzerzertifikat</label>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
+        <label style="display:flex;align-items:center;gap:8px;font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:700;cursor:pointer;padding:6px 8px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:4px;"><input type="checkbox" id="ausb-ga"> Grundausbildung</label>
+        <label style="display:flex;align-items:center;gap:8px;font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:700;cursor:pointer;padding:6px 8px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:4px;"><input type="checkbox" id="ausb-ehk"> Erste Hilfe Kurs</label>
+        <label style="display:flex;align-items:center;gap:8px;font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:700;cursor:pointer;padding:6px 8px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:4px;"><input type="checkbox" id="ausb-es"> Event Schulung</label>
+        <label style="display:flex;align-items:center;gap:8px;font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:700;cursor:pointer;padding:6px 8px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:4px;"><input type="checkbox" id="ausb-op"> Officerprüfung</label>
+        <label style="display:flex;align-items:center;gap:8px;font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:700;cursor:pointer;padding:6px 8px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:4px;"><input type="checkbox" id="ausb-ok"> Ortskunde Prüfung</label>
+        <label style="display:flex;align-items:center;gap:8px;font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:700;cursor:pointer;padding:6px 8px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:4px;"><input type="checkbox" id="ausb-fula"> Funk- und Leitstellenausbildung</label>
+        <label style="display:flex;align-items:center;gap:8px;font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:700;cursor:pointer;padding:6px 8px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:4px;"><input type="checkbox" id="ausb-tst"> Tactical Shootingprüfung</label>
+        <label style="display:flex;align-items:center;gap:8px;font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:700;cursor:pointer;padding:6px 8px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:4px;"><input type="checkbox" id="ausb-ks"> Konvoi Schulung</label>
+        <label style="display:flex;align-items:center;gap:8px;font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:700;cursor:pointer;padding:6px 8px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:4px;"><input type="checkbox" id="ausb-okp"> Ortskunde+ Prüfung</label>
+        <label style="display:flex;align-items:center;gap:8px;font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:700;cursor:pointer;padding:6px 8px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:4px;"><input type="checkbox" id="ausb-cop"> Corporate Prüfung</label>
+        <label style="display:flex;align-items:center;gap:8px;font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:700;cursor:pointer;padding:6px 8px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:4px;"><input type="checkbox" id="ausb-ft"> Flugtauglichkeitsprüfung</label>
+        <label style="display:flex;align-items:center;gap:8px;font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:700;cursor:pointer;padding:6px 8px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:4px;"><input type="checkbox" id="ausb-jp"> Juraprüfung</label>
+        <label style="display:flex;align-items:center;gap:8px;font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:700;cursor:pointer;padding:6px 8px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:4px;"><input type="checkbox" id="ausb-aks"> Antikorruptionsschulung</label>
+        <label style="display:flex;align-items:center;gap:8px;font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:700;cursor:pointer;padding:6px 8px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:4px;"><input type="checkbox" id="ausb-zp"> Zivilprüfung</label>
+        <label style="display:flex;align-items:center;gap:8px;font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:700;cursor:pointer;padding:6px 8px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:4px;"><input type="checkbox" id="ausb-vhp"> Einsatzleitung/Verhandlungsführung</label>
+        <label style="display:flex;align-items:center;gap:8px;font-family:Rajdhani,sans-serif;font-size:0.9rem;font-weight:700;cursor:pointer;padding:6px 8px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:4px;"><input type="checkbox" id="ausb-tow"> TW und Blitzerzertifikat</label>
       </div>
     </div>
     <div class="popup-footer" style="justify-content:space-between;">
@@ -1533,6 +1537,16 @@ window.archivieren = async function() {
   } catch(e) { showNotif('Fehler: ' + e.message, true); }
 };
 
+window.deleteMitarbeiter = async function(docId) {
+  if (!confirm('Mitarbeiter wirklich löschen?')) return;
+  try {
+    await deleteDoc(doc(db, 'mitarbeiter', docId));
+    mitarbeiterData = mitarbeiterData.filter(m => m._id !== docId);
+    renderMitarbeiter();
+    showNotif('Mitarbeiter gelöscht.');
+  } catch(e) { showNotif('Fehler: ' + e.message, true); }
+};
+
 window.loadArchiv = async function() {
   try {
     const snap = await getDocs(collection(db, 'mitarbeiter_archiv'));
@@ -1549,7 +1563,7 @@ function renderArchiv() {
     tbody.innerHTML = '<tr><td colspan="28" style="text-align:center;color:var(--text-dim);padding:20px;">Keine archivierten Mitarbeiter vorhanden.</td></tr>';
     return;
   }
-  const chk = (v) => v ? '✔' : '☐';
+  const chk = (v) => v ? '<span style="color:#27ae60;font-weight:900;">✔</span>' : '☐';
   tbody.innerHTML = archivData.map(m => `
     <tr>
       <td>${m.id||'-'}</td><td>${m.dn||'-'}</td><td>${m.vorname||''}</td>
@@ -1572,6 +1586,8 @@ window.openEditMaDaten = function() {
   const ma = mitarbeiterData.find(m => m.id === searchId || m.reisepass === searchId);
   if (!ma) { showNotif('Kein Mitarbeiter gefunden.', true); return; }
   document.getElementById('edit-ma-id').value = ma._id;
+  document.getElementById('edit-ma-identnr').value = ma.identnr || '';
+  document.getElementById('edit-ma-reisepass').value = ma.reisepass || '';
   document.getElementById('edit-ma-new-id').value = ma.id || '';
   document.getElementById('edit-ma-dn').value = ma.dn || '';
   document.getElementById('edit-ma-vorname').value = ma.vorname || '';
@@ -1582,6 +1598,8 @@ window.openEditMaDaten = function() {
   document.getElementById('edit-ma-rankup').value = ma.rankup || '';
   document.getElementById('edit-ma-abt1').value = ma.abt1 || '';
   document.getElementById('edit-ma-abt2').value = ma.abt2 || '';
+  document.getElementById('edit-ma-urlaub').value = ma.urlaub || '';
+  document.getElementById('edit-ma-strike').value = ma.strike || '';
   openPopup('edit-ma-daten');
 };
 
@@ -1598,6 +1616,8 @@ window.saveMaDaten = async function() {
     rankup: document.getElementById('edit-ma-rankup').value.trim(),
     abt1: document.getElementById('edit-ma-abt1').value.trim(),
     abt2: document.getElementById('edit-ma-abt2').value.trim(),
+    urlaub: document.getElementById('edit-ma-urlaub').value.trim(),
+    strike: document.getElementById('edit-ma-strike').value.trim(),
   };
   try {
     await setDoc(doc(db, 'mitarbeiter', docId), update, { merge: true });
@@ -1654,12 +1674,13 @@ function renderMitarbeiter(data) {
   const arr = data || mitarbeiterData;
   const tbody = document.getElementById('ma-tbody');
   if (!arr.length) {
-    tbody.innerHTML = '<tr><td colspan="30" style="text-align:center;color:var(--text-dim);padding:20px;">Keine eingetragenen Mitarbeiter vorhanden.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="31" style="text-align:center;color:var(--text-dim);padding:20px;">Keine eingetragenen Mitarbeiter vorhanden.</td></tr>';
     return;
   }
-  const chk = (v) => v ? '✔' : '☐';
+  const chk = (v) => v ? '<span style="color:#27ae60;font-weight:900;">✔</span>' : '☐';
   tbody.innerHTML = arr.map(m => `
     <tr>
+      <td><button onclick="deleteMitarbeiter('${m._id}')" style="background:var(--red2);border:1px solid #e74c3c;color:#fff;padding:2px 7px;border-radius:3px;cursor:pointer;font-size:0.75rem;font-weight:700;">✕</button></td>
       <td>${m.id||'-'}</td>
       <td>${m.dn||'-'}</td>
       <td style="font-size:0.8rem;font-weight:600;">${m.vorname||''}</td>
@@ -1741,6 +1762,8 @@ function showSubPage(name) {
   const pageLabels = { dashboard:'DASHBOARD · PERSONNEL · ACCESS CONTROL · SERVICE RECORDS', kleider:'KLEIDERORDNUNG', rang:'RANGBEFUGNISSE', fahr:'FAHRZEUGORDNUNG', sank:'SANKTIONSKATALOG', mitarbeiter:'MITARBEITER REGISTER', zugriff:'ZUGRIFFSANFRAGE', archiv:'MITARBEITER ARCHIV' };
   document.getElementById('page-label-text').textContent = pageLabels[name] || '';
   const tb = document.getElementById('topbar'); if(tb) tb.style.display = name === 'dashboard' ? 'flex' : 'none';
+  const mh = document.getElementById('main-header-div'); if(mh) mh.style.display = name === 'archiv' ? 'none' : '';
+  const nb = document.getElementById('nav-bar-div'); if(nb) nb.style.display = name === 'archiv' ? 'none' : '';
 
   if (name === 'zugriff') { window.loadZugriffTable && window.loadZugriffTable(); }
   if (name === 'archiv') { window.loadArchiv && window.loadArchiv(); }
