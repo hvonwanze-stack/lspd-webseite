@@ -181,13 +181,13 @@
     border-bottom: 1px solid var(--gold);
   }
 
-  .training-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .training-grid { display: grid; grid-template-columns: 1fr; gap: 6px; }
 
-  .training-category { background: transparent; }
+  .training-category { background: transparent; position: relative; }
   .cat-header {
-    padding: 5px 8px; border-radius: 4px; text-align: center;
-    font-family: 'Rajdhani', sans-serif; font-size: 0.68rem; font-weight: 700; letter-spacing: 1px;
-    margin-bottom: 5px;
+    padding: 4px 6px; border-radius: 4px 4px 0 0; text-align: center;
+    font-family: 'Rajdhani', sans-serif; font-size: 0.6rem; font-weight: 700; letter-spacing: 1px;
+    margin-bottom: -1px; position: relative; z-index: 1;
   }
   .cat-rookie { background: var(--green); border: 1px solid var(--green2); }
   .cat-officer { background: var(--orange); border: 1px solid #c87a00; }
@@ -200,13 +200,19 @@
   .cat-det { background: var(--orange); border: 1px solid #c87a00; }
   .cat-aks { background: #3a1a3a; border: 1px solid #7a3a7a; }
 
-  .training-item { display: flex; align-items: center; gap: 2px; margin-bottom: 4px; justify-content: center; }
-  .training-item input[type=checkbox] { width: 14px; height: 14px; flex-shrink: 0; cursor: not-allowed; }
+  .training-item {
+    display: flex; align-items: center; gap: 3px; margin-bottom: 3px;
+    justify-content: flex-start; padding: 2px 4px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 3px;
+  }
+  .training-item input[type=checkbox] { width: 13px; height: 13px; flex-shrink: 0; cursor: not-allowed; }
   .training-item input[type=checkbox] { accent-color: var(--gold); }
   .training-label {
-    flex: 1; padding: 3px 5px; border-radius: 3px; text-align: center;
-    font-family: 'Rajdhani', sans-serif; font-size: 0.72rem; font-weight: 700;
-    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1);
+    flex: 1; padding: 1px 3px; border-radius: 2px; text-align: left;
+    font-family: 'Rajdhani', sans-serif; font-size: 0.6rem; font-weight: 700;
+    background: transparent; border: none;
     line-height: 1.2;
   }
 
@@ -214,7 +220,7 @@
     margin-top: 14px; border-top: 1px solid var(--gold); padding-top: 12px;
   }
   .free-training .cat-header { background: var(--purple); border: 1px solid var(--purple2); }
-  .free-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 8px; }
+  .free-grid { display: grid; grid-template-columns: 1fr; gap: 4px; margin-top: 4px; }
 
   /* ===== TABLES ===== */
   .data-table { width: 100%; border-collapse: collapse; font-size: 0.72rem; }
@@ -514,7 +520,7 @@ window.generateIdFromEmail = generateIdFromEmail;
         </div>
 
         <!-- Trainings -->
-        <div class="training-panel" style="width:320px;flex-shrink:0;">
+        <div class="training-panel" style="width:160px;flex-shrink:0;align-self:stretch;">
           <h3>AUSBILDUNGEN</h3>
           <div class="training-grid">
             <div class="training-category">
@@ -634,8 +640,8 @@ window.generateIdFromEmail = generateIdFromEmail;
     <!-- MITARBEITER REGISTER (Bild 7) -->
     <div id="sub-mitarbeiter" style="display:none;">
       <div class="search-area">
-        <input class="search-input" placeholder="Mitarbeiter suchen..." id="ma-search" oninput="filterMitarbeiter()" style="max-width:130px;">
         <button class="btn btn-primary" onclick="openPopup('add-ma')">Mitarbeiter hinzufügen</button>
+        <input class="search-input" placeholder="Mitarbeiter suchen..." id="ma-search" oninput="filterMitarbeiter()" style="max-width:130px;margin-left:8px;margin-right:8px;">
         <div style="flex:1"></div>
         <div style="display:flex;align-items:stretch;gap:6px;">
           <button class="btn btn-primary" onclick="editMitarbeiterById()" style="padding:0 10px;font-size:1rem;align-self:stretch;" title="Mitarbeiter bearbeiten">✏️</button>
@@ -1468,8 +1474,8 @@ function renderMitarbeiter(data) {
   }
   tbody.innerHTML = arr.map(m => `
     <tr>
-      <td>${m.identnr||'-'}</td>
       <td>${m.id||'-'}</td>
+      <td>${m.dn||m.id||'-'}</td>
       <td>${m.vorname||''} ${m.nachname||''}</td>
       <td>${m.tel||'-'}</td>
       <td>${m.rang||'-'}</td>
