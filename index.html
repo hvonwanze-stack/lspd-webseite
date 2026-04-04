@@ -152,7 +152,7 @@
   .page-content { padding: 20px; }
 
   /* ===== DASHBOARD (Bild 3) ===== */
-  .dashboard-grid { display: flex; gap: 20px; justify-content: center; align-items: flex-start; flex-wrap: wrap; }
+  .dashboard-grid { display: flex; gap: 4px; justify-content: center; align-items: flex-start; flex-wrap: wrap; }
 
   .personal-panel {
     width: 320px; flex-shrink: 0;
@@ -167,7 +167,7 @@
   }
   .data-row { display: flex; margin-bottom: 9px; }
   .data-label { font-size: 0.9rem; color: var(--text-dim); width: 120px; text-align: right; padding-right: 10px; font-family: 'Rajdhani', sans-serif; font-weight: 700; }
-  .data-val { flex: 1; background: rgba(255,255,255,0.05); border-radius: 3px; padding: 5px 10px; font-size: 0.9rem; font-family: 'Rajdhani', sans-serif; font-weight: 700; }
+  .data-val { flex: 1; background: rgba(180,190,210,0.10); border: 1px solid rgba(180,190,210,0.15); border-radius: 3px; padding: 5px 10px; font-size: 0.9rem; font-family: 'Rajdhani', sans-serif; font-weight: 700; min-height: 30px; display:flex; align-items:center; }
 
   .training-panel {
     flex: 1;
@@ -507,6 +507,7 @@ window.generateIdFromEmail = generateIdFromEmail;
           <div class="data-row"><span class="data-label">Telefonnummer:</span><span class="data-val" id="dash-tel" style="font-weight:700;font-size:0.85rem;">-</span></div>
           <div class="data-row"><span class="data-label">Dienstnummer:</span><span class="data-val" id="dash-dn" style="font-weight:700;font-size:0.85rem;">-</span></div>
           <div class="data-row"><span class="data-label">Rang:</span><span class="data-val" id="dash-rang" style="font-weight:700;font-size:0.85rem;">-</span></div>
+          <div class="data-row"><span class="data-label">Division:</span><span class="data-val" id="dash-division" style="font-weight:700;font-size:0.85rem;">-</span></div>
           <div class="data-row"><span class="data-label">Abteilung:</span><span class="data-val" id="dash-abt1" style="font-weight:700;font-size:0.85rem;">-</span></div>
           <div class="data-row"><span class="data-label">Zweitabteilung:</span><span class="data-val" id="dash-abt2" style="font-weight:700;font-size:0.85rem;">-</span></div>
           <div class="data-row"><span class="data-label">Invite:</span><span class="data-val" id="dash-invite" style="font-weight:700;font-size:0.85rem;">-</span></div>
@@ -528,7 +529,7 @@ window.generateIdFromEmail = generateIdFromEmail;
         </div>
 
         <!-- Trainings -->
-        <div class="training-panel" style="width:320px;flex-shrink:0;align-self:stretch;">
+        <div class="training-panel" style="width:160px;flex-shrink:0;align-self:stretch;">
           <h3>AUSBILDUNGEN</h3>
           <div class="training-grid">
             <div class="training-category">
@@ -4124,18 +4125,19 @@ loadMitarbeiter();
 // Abgleich: pass in zugriffsanfragen (= ID auf Seite 8) mit id in mitarbeiter (= ID auf Seite 7)
 // Helper to write to dashboard fields
 function applyMaToDashboard(ma) {
-  const set = (elId, val) => { const el = document.getElementById(elId); if(el) el.textContent = (val !== undefined && val !== null && val !== '') ? String(val) : '-'; };
+  const set = (elId, val) => { const el = document.getElementById(elId); if(el) el.textContent = (val !== undefined && val !== null && val !== '' && val !== '-') ? String(val) : '-'; };
   set('dash-name', ma.vorname);
   set('dash-id', ma.id);
   set('dash-dn', ma.dn);
   set('dash-tel', ma.tel);
   set('dash-rang', ma.rang);
+  set('dash-division', ma.division);
   set('dash-abt1', ma.abt1);
   set('dash-abt2', ma.abt2);
   set('dash-invite', ma.invite);
   set('dash-rankup', ma.rankup);
-  set('dash-urlaub', ma.urlaub !== undefined ? String(ma.urlaub) : '-');
-  set('dash-strike', ma.strike !== undefined ? String(ma.strike) : '-');
+  set('dash-urlaub', ma.urlaub !== undefined && ma.urlaub !== '' ? String(ma.urlaub) : '-');
+  set('dash-strike', ma.strike !== undefined && ma.strike !== '' ? String(ma.strike) : '-');
 }
 window.applyMaToDashboard = applyMaToDashboard;
 
@@ -4160,6 +4162,8 @@ async function fillDashboardFromMitarbeiter() {
 
     if (!userPassId) {
       console.log('fillDashboard: kein pass-Eintrag für', userEmail);
+      window._cachedMaData = null;
+      clearDashboard();
       return;
     }
 
@@ -4177,6 +4181,8 @@ async function fillDashboardFromMitarbeiter() {
 
     if (!ma) {
       console.log('fillDashboard: kein Mitarbeiter mit ID', userPassId);
+      window._cachedMaData = null;
+      clearDashboard();
       return;
     }
 
@@ -4302,7 +4308,7 @@ window.showNotif = showNotif;
 
 // Seite 2 leeren wenn man direkt navigiert
 function clearDashboard() {
-  const fields = ['dash-name','dash-id','dash-dn','dash-tel','dash-rang','dash-abt1','dash-abt2','dash-invite','dash-rankup','dash-urlaub','dash-strike'];
+  const fields = ['dash-name','dash-id','dash-dn','dash-tel','dash-rang','dash-division','dash-abt1','dash-abt2','dash-invite','dash-rankup','dash-urlaub','dash-strike'];
   fields.forEach(function(id) { var el = document.getElementById(id); if(el) el.textContent = '-'; });
 }
 
@@ -4335,6 +4341,7 @@ function setLoadStatus(msg) {
 
 // Einheitliches Loader-System
 window._loaderDone = false;
+window._cachedMaData = null; // Cache beim Start immer leer
 window._finishLoader = function(goToMain) {
   if (window._loaderDone) return;
   window._loaderDone = true;
