@@ -655,8 +655,8 @@ window.generateIdFromEmail = generateIdFromEmail;
         <table class="data-table register-table">
           <thead>
             <tr>
-              <th></th><th>ID</th><th>DN</th><th>NAME</th><th>TEL. NR.</th>
-              <th>RANG</th><th>DIVISION</th><th class="th-sep"></th><th>URLAUB</th><th>STRIKE</th>
+              <th>ID</th><th>DN</th><th>NAME</th><th>TEL. NR.</th>
+              <th>RANG</th><th class="th-sep"></th><th>DIVISION</th><th class="th-sep"></th><th>URLAUB</th><th>STRIKE</th>
               <th>INVITE-DATUM</th><th>LETZTER RANKUP</th><th>ABTEILUNG 1</th><th>ABTEILUNG 2</th>
               <th class="th-sep"></th>
               <th>GA</th><th>EHK</th><th>ES</th><th>OP</th><th>OK</th><th>FULA</th>
@@ -665,7 +665,7 @@ window.generateIdFromEmail = generateIdFromEmail;
             </tr>
           </thead>
           <tbody id="ma-tbody">
-            <tr><td colspan="31" style="text-align:center;color:var(--text-dim);padding:20px;">Keine eingetragenen Mitarbeiter vorhanden.</td></tr>
+            <tr><td colspan="30" style="text-align:center;color:var(--text-dim);padding:20px;">Keine eingetragenen Mitarbeiter vorhanden.</td></tr>
           </tbody>
         </table>
       </div>
@@ -704,7 +704,7 @@ window.generateIdFromEmail = generateIdFromEmail;
 
     <!-- MITARBEITER ARCHIV (Seite 9) -->
     <div id="sub-archiv" style="display:none;">
-      <div style="display:flex;justify-content:flex-end;margin-bottom:16px;">
+      <div style="display:flex;justify-content:flex-start;margin-bottom:16px;">
         <button onclick="showSubPage('mitarbeiter')" style="
           background:var(--bg3);border:1px solid var(--blue-light);color:var(--text);
           padding:9px 20px;border-radius:6px;cursor:pointer;
@@ -854,8 +854,8 @@ window.generateIdFromEmail = generateIdFromEmail;
     </div>
     <div class="popup-body" style="display:grid;grid-template-columns:1fr 1fr;gap:0 16px;">
       <input type="hidden" id="edit-ma-id">
-      <div class="form-group"><label>IDENTIFIKATIONSNUMMER</label><input type="text" id="edit-ma-identnr" readonly style="opacity:0.5;cursor:not-allowed;"></div>
-      <div class="form-group"><label>REISEPASSNUMMER</label><input type="text" id="edit-ma-reisepass" readonly style="opacity:0.5;cursor:not-allowed;"></div>
+      <div class="form-group"><label>IDENTIFIKATIONSNUMMER</label><input type="text" id="edit-ma-identnr" placeholder="Identifikationsnummer"></div>
+      <div class="form-group"><label>REISEPASSNUMMER</label><input type="text" id="edit-ma-reisepass" placeholder="Reisepassnummer"></div>
       <div class="form-group"><label>ID</label><input type="text" id="edit-ma-new-id" placeholder="ID"></div>
       <div class="form-group"><label>DIENSTNUMMER (DN)</label><input type="text" id="edit-ma-dn" placeholder="DN"></div>
       <div class="form-group"><label>NAME</label><input type="text" id="edit-ma-vorname" placeholder="Name"></div>
@@ -1556,7 +1556,7 @@ let archivData = [];
 window.archivieren = async function() {
   const searchId = document.getElementById('ma-id-input').value.trim();
   if (!searchId) { showNotif('Bitte ID eingeben.', true); return; }
-  const ma = mitarbeiterData.find(m => m.id === searchId || m.reisepass === searchId);
+  const ma = mitarbeiterData.find(m => m.id === searchId);
   if (!ma) { showNotif('Kein Mitarbeiter mit dieser ID gefunden.', true); return; }
   try {
     const archivEntry = { ...ma, archiviertAm: new Date().toISOString() };
@@ -1638,6 +1638,8 @@ window.openEditMaDaten = function() {
 window.saveMaDaten = async function() {
   const docId = document.getElementById('edit-ma-id').value;
   const update = {
+    identnr: document.getElementById('edit-ma-identnr').value.trim(),
+    reisepass: document.getElementById('edit-ma-reisepass').value.trim(),
     id: document.getElementById('edit-ma-new-id').value.trim(),
     dn: document.getElementById('edit-ma-dn').value.trim(),
     vorname: document.getElementById('edit-ma-vorname').value.trim(),
@@ -1706,18 +1708,18 @@ function renderMitarbeiter(data) {
   const arr = data || mitarbeiterData;
   const tbody = document.getElementById('ma-tbody');
   if (!arr.length) {
-    tbody.innerHTML = '<tr><td colspan="31" style="text-align:center;color:var(--text-dim);padding:20px;">Keine eingetragenen Mitarbeiter vorhanden.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="30" style="text-align:center;color:var(--text-dim);padding:20px;">Keine eingetragenen Mitarbeiter vorhanden.</td></tr>';
     return;
   }
   const chk = (v) => v ? '<span style="color:#27ae60;font-weight:900;">✔</span>' : '☐';
   tbody.innerHTML = arr.map(m => `
     <tr>
-      <td><button onclick="deleteMitarbeiter('${m._id}')" style="background:var(--red2);border:1px solid #e74c3c;color:#fff;padding:2px 7px;border-radius:3px;cursor:pointer;font-size:0.75rem;font-weight:700;">✕</button></td>
       <td>${m.id||'-'}</td>
       <td>${m.dn||'-'}</td>
       <td style="font-size:0.8rem;font-weight:600;">${m.vorname||''}</td>
       <td>${m.tel||'-'}</td>
       <td>${m.rang||'-'}</td>
+      <td class="td-sep"></td>
       <td>${m.division||'-'}</td>
       <td class="td-sep"></td>
       <td>${m.urlaub||'0/3'}</td>
