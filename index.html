@@ -679,10 +679,10 @@
     <div id="sub-zugriff" style="display:none;">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
         <button class="btn btn-primary" onclick="openPopup('add-zugriff')">Zugriff hinzufügen</button>
-        <div style="display:flex;align-items:center;gap:8px;">
-          <button class="btn btn-danger" onclick="deleteZugriff()" style="padding:5px 10px;font-size:0.75rem;white-space:nowrap;">X</button>
+        <div style="display:flex;align-items:stretch;gap:8px;">
+          <button class="btn btn-danger" onclick="deleteZugriff()" style="padding:0 14px;font-size:0.8rem;white-space:nowrap;height:auto;align-self:stretch;">X</button>
           <input class="search-input" placeholder="Identifikationsnummer eingeben" id="zugriff-id-input" style="border-radius:5px;max-width:220px;">
-          <button class="btn btn-primary" onclick="editZugriff()" style="padding:7px 12px;font-size:1rem;" title="Bearbeiten">✏️</button>
+          <button class="btn btn-primary" onclick="editZugriff()" style="padding:0 12px;font-size:1rem;align-self:stretch;" title="Bearbeiten">✏️</button>
         </div>
       </div>
       <div class="table-wrap">
@@ -801,6 +801,26 @@
   </div>
 </div>
 
+<!-- Confirm Delete Zugriff -->
+<div class="overlay" id="overlay-confirm-delete">
+  <div class="popup" style="max-width:380px;">
+    <div class="popup-header">
+      <h2>ZUGRIFF ENTFERNEN</h2>
+      <button class="popup-close" onclick="closePopup('confirm-delete')">✕</button>
+    </div>
+    <div class="popup-body">
+      <div class="info-box" style="border-color:var(--red2);background:rgba(139,26,26,0.2);text-align:center;">
+        ⚠️ Möchtest du diesen Zugriff wirklich entfernen?<br>
+        <span id="confirm-delete-name" style="color:var(--gold);font-weight:700;"></span>
+      </div>
+    </div>
+    <div class="popup-footer" style="justify-content:space-between;">
+      <button class="btn btn-danger" onclick="confirmDeleteZugriff()">JA, ENTFERNEN</button>
+      <button class="btn btn-primary" onclick="closePopup('confirm-delete')">NEIN, ABBRECHEN</button>
+    </div>
+  </div>
+</div>
+
 <!-- Add Zugriff -->
 <div class="overlay" id="overlay-add-zugriff">
   <div class="popup">
@@ -811,8 +831,9 @@
     <div class="popup-body">
       <div class="form-group"><label>VORNAME</label><input type="text" id="z-vorname" placeholder="Vorname"></div>
       <div class="form-group"><label>NACHNAME</label><input type="text" id="z-nachname" placeholder="Nachname"></div>
-      <div class="form-group"><label>IDENTIFIKATIONSNUMMER</label><input type="text" id="z-id" placeholder="ID-Nummer"></div>
+      <div class="form-group"><label>REISEPASSNUMMER</label><input type="text" id="z-id" placeholder="Reisepassnummer"></div>
       <div class="form-group"><label>EMAIL</label><input type="email" id="z-email" placeholder="email@beispiel.com"></div>
+      <div class="form-group"><label>IDENTIFIKATIONSNUMMER</label><input type="text" id="z-auto-id" placeholder="Wird automatisch generiert" readonly style="opacity:0.5;cursor:not-allowed;"></div>
       <div class="form-group"><label>TELEFONNUMMER</label><input type="text" id="z-tel" placeholder="Telefonnummer"></div>
     </div>
     <div class="popup-footer">
@@ -820,6 +841,13 @@
     </div>
   </div>
 </div>
+<script>
+document.getElementById('z-email').addEventListener('input', function() {
+  const autoId = window.generateIdFromEmail && window.generateIdFromEmail(this.value);
+  const field = document.getElementById('z-auto-id');
+  if (field && autoId) field.value = autoId;
+});
+</script>
 
 <!-- Firebase SDKs -->
 <script type="module">
@@ -867,6 +895,9 @@ window._signOut = signOut;
 // Temp IC data storage
 window._icData = {};
 window._pendingEmail = null;
+
+// Reset loader flag so it works on every page load
+window._loaderDone = false;
 
 // Admin whitelist – diese E-Mails haben immer vollen Zugriff
 const ADMIN_EMAILS = ['lionsleepy2005@gmail.com'];
@@ -948,9 +979,9 @@ window.doGoogleLogin = async function() {
       loadZugriffTable();
       setLoadStatus('ZUGRIFF GEWÄHRT');
       setTimeout(() => {
-        hideLoader();
         showPage('main');
         showSubPage('dashboard');
+        hideLoader();
       }, 400);
       return;
     }
@@ -965,9 +996,9 @@ window.doGoogleLogin = async function() {
       loadZugriffTable();
       setLoadStatus('ZUGRIFF GEWÄHRT');
       setTimeout(() => {
-        hideLoader();
         showPage('main');
         showSubPage('dashboard');
+        hideLoader();
       }, 400);
     } else {
       showNotif('Konto noch nicht freigeschalten. Bitte warte auf Admin.', true);
@@ -1002,6 +1033,8 @@ window.doGoogleRegister = async function() {
       approved: false,
       requestedAt: new Date().toISOString()
     });
+    // Auto-generate stable ID from email
+    const autoId = generateIdFromEmail(user.email);
     // Also add to zugriff table
     await addDoc(collection(db, 'zugriffsanfragen'), {
       uid: user.uid,
@@ -1009,10 +1042,10 @@ window.doGoogleRegister = async function() {
       nachname: window._icData.nachname || '',
       email: user.email,
       tel: window._icData.tel || '',
-      id: window._icData.pass || '',
+      id: autoId,
       pass: window._icData.pass || '',
       status: 'VERWEIGERT',
-      zugriffsrang: '11 | Web Admin XI',
+      zugriffsrang: '1 | Gast',
       freigeben: 'Nein',
       createdAt: new Date().toISOString()
     });
@@ -1076,11 +1109,16 @@ window.updateZugriff = async function(docId, field, val) {
 };
 
 window.saveZugriff = async function() {
+  const email = document.getElementById('z-email').value.trim();
+  if (!email) { showNotif('Bitte E-Mail eingeben.', true); return; }
+  // Auto-generate stable ID from email
+  const autoId = generateIdFromEmail(email);
   const data = {
     vorname: document.getElementById('z-vorname').value,
     nachname: document.getElementById('z-nachname').value,
-    id: document.getElementById('z-id').value,
-    email: document.getElementById('z-email').value,
+    id: autoId,
+    pass: document.getElementById('z-id').value,
+    email: email,
     tel: document.getElementById('z-tel').value,
     status: 'VERWEIGERT', freigeben: 'Nein', zugriffsrang: '1 | Gast',
     createdAt: new Date().toISOString()
@@ -1088,15 +1126,52 @@ window.saveZugriff = async function() {
   try {
     await addDoc(collection(db, 'zugriffsanfragen'), data);
     closePopup('add-zugriff');
-    showNotif('Zugriff hinzugefügt!');
+    showNotif('Zugriff hinzugefügt! ID: ' + autoId);
     loadZugriffTable();
   } catch(e) { showNotif('Fehler: '+e.message, true); }
 };
 
+// Generate stable numeric ID from email (same email = same ID, always)
+function generateIdFromEmail(email) {
+  let hash = 0;
+  const str = (email || '').toLowerCase().trim();
+  for (let i = 0; i < str.length; i++) {
+    hash = ((hash << 5) - hash) + str.charCodeAt(i);
+    hash |= 0;
+  }
+  return String(Math.abs(hash)).padStart(6, '0').slice(0, 6);
+}
+window.generateIdFromEmail = generateIdFromEmail;
+
+// Track which doc to delete
+window._deleteDocId = null;
+window._deleteDocName = null;
+
 window.deleteZugriff = async function() {
-  const id = document.getElementById('zugriff-id-input').value.trim();
-  if (!id) { showNotif('Bitte Identifikationsnummer eingeben.', true); return; }
-  showNotif('Suche nach ID: ' + id);
+  const searchId = document.getElementById('zugriff-id-input').value.trim();
+  if (!searchId) { showNotif('Bitte Identifikationsnummer eingeben.', true); return; }
+
+  try {
+    const snap = await getDocs(collection(db, 'zugriffsanfragen'));
+    let found = null;
+    snap.forEach(d => { if (String(d.data().id) === String(searchId)) found = { docId: d.id, data: d.data() }; });
+    if (!found) { showNotif('Kein Eintrag mit dieser ID gefunden.', true); return; }
+    window._deleteDocId = found.docId;
+    window._deleteDocName = (found.data.vorname || '') + ' ' + (found.data.nachname || '');
+    document.getElementById('confirm-delete-name').textContent = window._deleteDocName;
+    openPopup('confirm-delete');
+  } catch(e) { showNotif('Fehler beim Suchen.', true); }
+};
+
+window.confirmDeleteZugriff = async function() {
+  if (!window._deleteDocId) return;
+  try {
+    await deleteDoc(doc(db, 'zugriffsanfragen', window._deleteDocId));
+    closePopup('confirm-delete');
+    showNotif('Zugriff erfolgreich entfernt!');
+    loadZugriffTable();
+    window._deleteDocId = null;
+  } catch(e) { showNotif('Fehler beim Löschen: ' + e.message, true); }
 };
 
 window.editZugriff = function() {
@@ -1287,23 +1362,24 @@ function setLoadStatus(msg) {
 // Init — warte auf Firebase Auth
 // (onAuthStateChanged in firebase module übernimmt die Weiterleitung)
 // Fallback: nach 4s Ladescreen ausblenden und Login zeigen
-window._loaderDone = false;
 window._finishLoader = function(goToMain, lastPage) {
   if (window._loaderDone) return;
   window._loaderDone = true;
   if (goToMain) {
     setLoadStatus('ZUGRIFF GEWÄHRT');
     setTimeout(() => {
-      hideLoader();
       showPage('main');
-      const lp = lastPage || (function(){ try{ return localStorage.getItem('lspd_last_page'); }catch(e){return null;} })() || 'dashboard';
+      let lp = 'dashboard';
+      try { lp = localStorage.getItem('lspd_last_page') || 'dashboard'; } catch(e) {}
+      if (lastPage) lp = lastPage;
       showSubPage(lp);
+      hideLoader();
     }, 400);
   } else {
     setLoadStatus('BITTE ANMELDEN');
     setTimeout(() => {
-      hideLoader();
       showPage('login');
+      hideLoader();
     }, 300);
   }
 };
