@@ -928,23 +928,53 @@ window.doGoogleLogin = async function() {
     const result = await signInWithPopup(auth, provider);
     const user = result.user;
 
-    // Ladescreen anzeigen während geprüft wird
+    // Ladescreen anzeigen
     window._loaderDone = false;
-    document.getElementById('loading-screen').style.display = 'flex';
-    document.getElementById('loading-screen').style.opacity = '1';
-    document.getElementById('loading-screen').classList.remove('fade-out');
+    const ls = document.getElementById('loading-screen');
+    ls.style.display = 'flex';
+    ls.style.opacity = '1';
+    ls.classList.remove('fade-out');
     setLoadStatus('ZUGRIFF WIRD GEPRÜFT ...');
 
-    if (isAdmin(user.email)) return; // onAuthStateChanged übernimmt
+    // Admin direkt durchlassen
+    if (isAdmin(user.email)) {
+      await ensureAdminInFirestore(user);
+      document.getElementById('dash-name').textContent = user.displayName || 'Admin';
+      document.getElementById('dash-id').textContent = 'ADMIN';
+      document.getElementById('dash-tel').textContent = '-';
+      loadZugriffTable();
+      setLoadStatus('ZUGRIFF GEWÄHRT');
+      setTimeout(() => {
+        hideLoader();
+        showPage('main');
+        showSubPage('dashboard');
+      }, 400);
+      return;
+    }
 
+    // Normale Nutzer prüfen
     const userDoc = await getDoc(doc(db, 'users', user.uid));
-    if (!userDoc.exists() || !userDoc.data().approved) {
+    if (userDoc.exists() && userDoc.data().approved === true) {
+      const data = userDoc.data();
+      document.getElementById('dash-name').textContent = data.vorname || '-';
+      document.getElementById('dash-id').textContent = data.id || '-';
+      document.getElementById('dash-tel').textContent = data.tel || '-';
+      loadZugriffTable();
+      setLoadStatus('ZUGRIFF GEWÄHRT');
+      setTimeout(() => {
+        hideLoader();
+        showPage('main');
+        showSubPage('dashboard');
+      }, 400);
+    } else {
       showNotif('Konto noch nicht freigeschalten. Bitte warte auf Admin.', true);
       await signOut(auth);
-      window._finishLoader(false);
+      setLoadStatus('BITTE ANMELDEN');
+      setTimeout(() => { hideLoader(); showPage('login'); }, 300);
     }
-    // Erfolg: onAuthStateChanged ruft _finishLoader(true) auf → Seite 2
   } catch(e) {
+    setLoadStatus('BITTE ANMELDEN');
+    setTimeout(() => { hideLoader(); showPage('login'); }, 300);
     if (e.code !== 'auth/popup-closed-by-user') {
       showNotif('Anmeldung fehlgeschlagen: ' + e.message, true);
     }
