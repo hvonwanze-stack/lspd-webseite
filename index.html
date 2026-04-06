@@ -1198,6 +1198,7 @@
         <option value="9">9 - HR</option>
         <option value="10">10 - HR Leitung</option>
         <option value="Admin">Admin</option>
+        <option value="Leaderschaft">Leaderschaft</option>
         <option value="Ersteller">Ersteller</option>
       </select>
     </div>
@@ -1228,6 +1229,7 @@
         <option value="9">9 - HR</option>
         <option value="10">10 - HR Leitung</option>
         <option value="Admin">Admin</option>
+        <option value="Leaderschaft">Leaderschaft</option>
         <option value="Ersteller">Ersteller</option>
       </select>
     </div>
@@ -1717,7 +1719,7 @@ window.doRegister = async function() {
     const daten = {
       id: id, name: name, nachname: nachname, tel: tel,
       email: user.email, uid: user.uid,
-      rang: 'Admin', freigegeben: false,
+      rang: '1', freigegeben: false,
       timestamp: new Date().toISOString()
     };
 
@@ -2162,9 +2164,17 @@ function renderZugriff(filtered=null) {
 window.setFreigabe = async function(docId, val) {
   const freigegeben = val === 'ja';
   try {
-    await updateDoc(doc(db,'zugriff',docId), {freigegeben});
     const z = zugriffData.find(x=>x._id===docId);
-    if (z) z.freigegeben = freigegeben;
+    // Wenn erstmals freigegeben und noch kein Rang gesetzt → Rang 1 setzen
+    const updateData = {freigegeben};
+    if (freigegeben && z && (!z.rang || z.rang === '')) {
+      updateData.rang = '1';
+    }
+    await updateDoc(doc(db,'zugriff',docId), updateData);
+    if (z) {
+      z.freigegeben = freigegeben;
+      if (updateData.rang) z.rang = updateData.rang;
+    }
     if (freigegeben && z) await handleFreigabe(z);
     showNotif(freigegeben ? 'Zugriff freigegeben' : 'Zugriff entzogen', freigegeben?'success':'error');
   } catch(e) { showNotif('Fehler: '+e.message,'error'); }
@@ -2217,7 +2227,7 @@ window.addZugriff = async function() {
     nachname: document.getElementById('az-nachname').value.trim(),
     tel: document.getElementById('az-tel').value.trim(),
     email: email,
-    rang: document.getElementById('az-rang').value,
+    rang: '1',
     freigegeben: false,
     uid: 'manual-' + id + '-' + Date.now()
   };
@@ -2696,6 +2706,7 @@ let currentRangNum = 1;
 
 function rangNumFromStr(r) {
   if (r === 'Ersteller') return 1000;
+  if (r === 'Leaderschaft') return 998;
   if (r === 'Admin') return 999;
   const n = parseInt(r);
   return isNaN(n) ? 0 : n;
@@ -2717,29 +2728,29 @@ function applyRangPermissions(rang) {
   const navP2 = document.getElementById('nav-p2');
   if (navP2) navP2.style.display = '';
 
-  // Pages 3,4,5,6: Rang 1 + Admin + Ersteller
-  const canSee345 = (currentRangNum === 1 || currentRangNum === 6 || currentRangNum >= 999);
+  // Pages 3,4,5,6: Rang 1 + PA + Admin + Leaderschaft + Ersteller
+  const canSee345 = (currentRangNum === 1 || currentRangNum === 6 || currentRangNum >= 998);
   ['nav-p3','nav-p4','nav-p5','nav-p6'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.style.display = canSee345 ? '' : 'none';
   });
 
-  // Page 7: Rang 6 (PA) + Ersteller
-  const canSeeP7 = (currentRangNum === 6 || currentRangNum >= 999);
+  // Page 7: Rang 6 (PA) + Leaderschaft + Ersteller
+  const canSeeP7 = (currentRangNum === 6 || currentRangNum >= 998);
   const navP7 = document.getElementById('nav-p7');
   if (navP7) navP7.style.display = canSeeP7 ? '' : 'none';
 
-  // Pages 8,9,10,11,12: nur Ersteller
+  // Pages 8,9,10,11,12: Leaderschaft + Ersteller
   ['nav-p8'].forEach(id => {
     const el = document.getElementById(id);
-    if (el) el.style.display = (currentRangNum >= 999) ? '' : 'none';
+    if (el) el.style.display = (currentRangNum >= 998) ? '' : 'none';
   });
 
   // ===== ABMELDEN BUTTON always visible =====
 
   // ===== PAGE 6 - SANKTIONSKATALOG =====
   // Rang 1 und 6 sehen Seite 6 nur lesend - keine Knöpfe
-  const canEditP6 = currentRangNum >= 999; // nur Ersteller
+  const canEditP6 = currentRangNum >= 998; // Leaderschaft + Ersteller
   document.querySelectorAll('#page6 .tool-btn').forEach(btn => {
     // Keep all hidden for non-Ersteller
     btn.style.display = canEditP6 ? '' : 'none';
@@ -2771,6 +2782,7 @@ function applyRangPermissions(rang) {
   }
 
   // ===== Ränge 2,3,4,5,7,8,9,10: NUR Seite 2, Nav komplett ausblenden =====
+  // Leaderschaft (998) bekommt gleiche Rechte wie Ersteller (1000)
   const onlyPage2 = (currentRangNum >= 2 && currentRangNum <= 5) ||
                     currentRangNum === 7 || currentRangNum === 8 ||
                     currentRangNum === 9 || currentRangNum === 10;
@@ -2784,7 +2796,7 @@ function applyRangPermissions(rang) {
   }
 
   // ===== Admin: sieht alles, aber keine Edit/Delete/Add Knöpfe =====
-  if (currentRang === 'Admin') {
+  if (currentRang === 'Admin') { // Leaderschaft wird wie Ersteller behandelt
     ['nav-p3','nav-p4','nav-p5','nav-p6','nav-p7','nav-p8'].forEach(id => {
       const el = document.getElementById(id);
       if (el) el.style.display = '';
