@@ -1019,7 +1019,7 @@
 <div id="page7" class="page">
   <div class="toolbar">
     <button class="tool-btn purple" onclick="openAddMitarbeiterModal()">＋</button>
-    <button class="tool-btn red" onclick="showPage(14)" title="Rang Historie">＋</button>
+    <button class="tool-btn red" onclick="showPage(11)" title="Rang Historie">＋</button>
     <div class="ml-auto"></div>
     <button class="tool-btn" onclick="openAusbildungModal()" title="Ausbildungen bearbeiten">📋</button>
     <button class="tool-btn" onclick="openEditMitarbeiterModal()" title="Bearbeiten">✏️</button>
@@ -1284,7 +1284,7 @@
     <input class="search-input" autocomplete="off" id="sank-search" placeholder="Sanktion Suchen">
     <div style="width:20px;"></div>
     <button class="tool-btn" title="">📦→</button>
-    <button class="tool-btn" onclick="openPage16()" title="Archiv">📁</button>
+    <button class="tool-btn" onclick="openPage12()" title="Archiv">📁</button>
   </div>
   <div class="table-wrapper">
     <table class="data-table">
@@ -1314,8 +1314,8 @@
 
 
 
-<!-- ==================== PAGE 14 ==================== -->
-<div id="page14" class="page" style="position:fixed;inset:0;z-index:200;background:var(--bg-dark);display:none;flex-direction:column;">
+<!-- ==================== PAGE 11 ==================== -->
+<div id="page11" class="page" style="position:fixed;inset:0;z-index:200;background:var(--bg-dark);display:none;flex-direction:column;">
   <div style="padding:8px 12px;background:var(--bg-panel);border-bottom:1px solid var(--border);flex-shrink:0;">
     <button class="tool-btn back" onclick="showPage(7)">← BACK</button>
   </div>
@@ -1330,22 +1330,15 @@
           <th>Sanktion</th>
         </tr>
       </thead>
-      <tbody id="p14-tbody"></tbody>
+      <tbody id="p11-tbody"></tbody>
     </table>
   </div>
 </div>
 
-<!-- ==================== PAGE 15 ==================== -->
-<div id="page15" class="page" style="min-height:100vh;">
-  <div style="padding:8px 12px;background:var(--bg-panel);border-bottom:1px solid var(--border);">
-    <button class="tool-btn back" onclick="showPage(10)">← BACK</button>
-  </div>
-</div>
-
-<!-- ==================== PAGE 16 ==================== -->
-<div id="page16" class="page" style="position:fixed;inset:0;z-index:500;background:var(--bg-dark);overflow-y:auto;display:none;flex-direction:column;">
+<!-- ==================== PAGE 12 ==================== -->
+<div id="page12" style="position:fixed;inset:0;z-index:500;background:var(--bg-dark);overflow-y:auto;display:none;flex-direction:column;">
   <div style="display:flex;align-items:center;padding:8px 12px;background:var(--bg-panel);border-bottom:1px solid var(--border);flex-shrink:0;">
-    <button class="tool-btn back" onclick="hidePage16()">← BACK</button>
+    <button class="tool-btn back" onclick="hidePage12()">← BACK</button>
   </div>
 </div>
 
@@ -1424,15 +1417,15 @@ window.closeModal = function(id) { document.getElementById(id).classList.remove(
 
 // ===== PAGES =====
 // Pages where nav buttons should be hidden
-const HIDE_NAV_PAGES = [9, 10, 14, 15];
+const HIDE_NAV_PAGES = [9, 10, 11];
 
-function openPage16() {
-  const p16 = document.getElementById('page16');
+function openPage12() {
+  const p16 = document.getElementById('page12');
   if (p16) { p16.style.display = 'flex'; }
 }
 
-function hidePage16() {
-  const p16 = document.getElementById('page16');
+function hidePage12() {
+  const p16 = document.getElementById('page12');
   if (p16) { p16.style.display = 'none'; }
 }
 
@@ -1452,17 +1445,17 @@ window.showPage = function(n) {
   }
 
   // Page 14 uses fixed positioning - handle display separately
-  const p14 = document.getElementById('page14');
+  const p14 = document.getElementById('page11');
   if (p14) {
-    p14.style.display = (n === 14) ? 'flex' : 'none';
+    p14.style.display = (n === 11) ? 'flex' : 'none';
   }
   // Page 16 is also a fixed overlay
-  const p16 = document.getElementById('page16');
+  const p16 = document.getElementById('page12');
   if (p16 && n !== 16) p16.style.display = 'none';
 
 
   // Aktuelle Seite speichern (nur Hauptseiten 2-10)
-  if ((n >= 2 && n <= 10) || n === 14 || n === 15 || n === 16) {
+  if ((n >= 2 && n <= 10) || n === 11 || n === 12) {
     try { localStorage.setItem('lspd_page', n); } catch(e) {}
   }
   window.scrollTo(0, 0);
@@ -1471,7 +1464,7 @@ window.showPage = function(n) {
   if (n === 9) renderArchiv();
   if (n === 10) renderSanktionen();
   if (n === 6) renderSKRules();
-  if (n === 14) renderPage14();
+  if (n === 11) renderPage11();
 }
 
 // ===== AUTH =====
@@ -1558,7 +1551,7 @@ onAuthStateChanged(auth, async (user) => {
       try {
         const sp = localStorage.getItem('lspd_page');
         const spNum = parseInt(sp);
-        if ((spNum >= 2 && spNum <= 10) || spNum === 14 || spNum === 15 || spNum === 16) {
+        if ((spNum >= 2 && spNum <= 10) || spNum === 11 || spNum === 12) {
           savedPage = spNum;
         }
       } catch(e) {}
@@ -2625,8 +2618,8 @@ function checkVoraussetzung(ma) {
   }
 }
 
-function renderPage14() {
-  const tbody = document.getElementById('p14-tbody');
+function renderPage11() {
+  const tbody = document.getElementById('p11-tbody');
   if (!tbody) return;
 
   // Filter Mitarbeiter die Voraussetzungen erfüllen
