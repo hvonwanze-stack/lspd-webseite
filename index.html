@@ -1803,19 +1803,33 @@ window.addZugriff = async function() {
   const id = document.getElementById('az-id').value.trim();
   if (!id) return showNotif('ID erforderlich','error');
   const data = {
-    id, name: document.getElementById('az-name').value.trim(),
+    id,
+    name: document.getElementById('az-name').value.trim(),
     nachname: document.getElementById('az-nachname').value.trim(),
     tel: document.getElementById('az-tel').value.trim(),
     email: document.getElementById('az-email').value.trim(),
     rang: document.getElementById('az-rang').value,
-    freigegeben: false
+    freigegeben: false,
+    // uid wird leer gelassen da Admin manuell anlegt (kein Google-Account nötig)
+    uid: 'manual-' + id + '-' + Date.now()
   };
   try {
-    await addDoc(collection(db,'zugriff'), data);
+    // Prüfe ob ID schon existiert
+    const existing = zugriffData.find(z => z.id === id);
+    if (existing) return showNotif('Diese ID existiert bereits!', 'error');
+
+    // Nutze eine eigene Doc-ID basierend auf der IC-ID damit Rule nicht uid==auth.uid prüft
+    const docRef = doc(collection(db,'zugriff'));
+    await setDoc(docRef, data);
     showNotif('Zugriff hinzugefügt','success');
     closeModal('addZugriffModal');
+    // Felder leeren
+    ['az-id','az-name','az-nachname','az-tel','az-email'].forEach(f => document.getElementById(f).value = '');
     await loadZugriff();
-  } catch(e) { showNotif('Fehler: '+e.message,'error'); }
+  } catch(e) {
+    console.error('addZugriff Fehler:', e);
+    showNotif('Fehler: ' + e.message,'error');
+  }
 }
 
 window.searchZugriff = function() {
