@@ -2183,15 +2183,20 @@ window.openEditZugriffModal = function() {
   if (!id) return showNotif('Bitte ID eingeben','error');
   const z = zugriffData.find(x=>x.id===id);
   if (!z) return showNotif('Nicht gefunden','error');
-
-  document.getElementById('ez-idx').value = z._id;
-  document.getElementById('ez-id').value = z.id||'';
-  document.getElementById('ez-name').value = z.name||'';
-  document.getElementById('ez-nachname').value = z.nachname||'';
-  document.getElementById('ez-tel').value = z.tel||'';
-  document.getElementById('ez-email').value = z.email||'';
-  document.getElementById('ez-rang').value = z.rang || 'Admin';
   openModal('editZugriffModal');
+  setTimeout(() => {
+    const fill = (elId, val) => {
+      const el = document.getElementById(elId);
+      if (el) el.value = val !== undefined && val !== null ? String(val) : '';
+    };
+    fill('ez-idx',      z._id);
+    fill('ez-id',       z.id);
+    fill('ez-name',     z.name);
+    fill('ez-nachname', z.nachname);
+    fill('ez-tel',      z.tel);
+    fill('ez-email',    z.email);
+    document.getElementById('ez-rang').value = z.rang || 'Admin';
+  }, 30);
 }
 
 window.saveZugriff = async function() {
@@ -2351,6 +2356,12 @@ window.openEditSanktionModal = function(nr) {
     </div>
   </div>`;
   document.body.appendChild(modal);
+  setTimeout(() => {
+    const idEl = document.getElementById('se-id');
+    const nameEl = document.getElementById('se-name');
+    if (idEl) idEl.value = s.id || '';
+    if (nameEl) nameEl.value = s.name || '';
+  }, 30);
 }
 
 window.saveSanktionEdit = async function(docId, nr) {
@@ -2425,16 +2436,21 @@ window.searchRule = function() {
 }
 
 window.openEditRuleModal = function() {
-  // Left pencil: edit header names 0-12
   openModal('editHeaderModal');
-  const grid = document.getElementById('ehm-grid');
-  grid.innerHTML = '';
-  skHeaders.forEach((h,i) => {
-    const d = document.createElement('div');
-    d.className = 'modal-field';
-    d.innerHTML = `<div class="modal-label">Name ändern von ${h}</div><input class="modal-input" autocomplete="off" id="eh-${i}" placeholder="${h}">`;
-    grid.appendChild(d);
-  });
+  setTimeout(() => {
+    const grid = document.getElementById('ehm-grid');
+    grid.innerHTML = '';
+    skHeaders.forEach((h,i) => {
+      const d = document.createElement('div');
+      d.className = 'modal-field';
+      d.innerHTML = `<div class="modal-label">Name ändern von ${h}</div><input class="modal-input" autocomplete="off" id="eh-${i}" placeholder="${h}">`;
+      grid.appendChild(d);
+      setTimeout(() => {
+        const el = document.getElementById('eh-'+i);
+        if (el) el.value = h;
+      }, 10);
+    });
+  }, 30);
 }
 
 window.saveHeader = async function() {
@@ -2470,16 +2486,21 @@ window.openEditRuleBySearch = function() {
   const q = document.getElementById('sk-search').value.trim();
   const rule = skRules.find(r=>(r.para||'').includes(q));
   if (!rule) return showNotif('Nicht gefunden','error');
-  document.getElementById('er-idx').value = rule._id;
-  document.getElementById('er-para').value = rule.para||'';
-  document.getElementById('er-def').value = rule.def||'';
-  // Update labels to show current header names
-  for(let i=0;i<=12;i++) {
-    document.getElementById('er-'+i).value = rule['v'+i]||'';
-    const lbl = document.getElementById('er-lbl-'+i);
-    if (lbl) lbl.textContent = skHeaders[i] || String(i);
-  }
   openModal('editRuleModal');
+  setTimeout(() => {
+    const fill = (elId, val) => {
+      const el = document.getElementById(elId);
+      if (el) el.value = val !== undefined && val !== null ? String(val) : '';
+    };
+    fill('er-idx',  rule._id);
+    fill('er-para', rule.para);
+    fill('er-def',  rule.def);
+    for(let i=0;i<=12;i++) {
+      fill('er-'+i, rule['v'+i]);
+      const lbl = document.getElementById('er-lbl-'+i);
+      if (lbl) lbl.textContent = skHeaders[i] || String(i);
+    }
+  }, 30);
 }
 
 // ===== DELETE CONFIRM =====
