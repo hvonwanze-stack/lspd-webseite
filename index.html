@@ -913,18 +913,44 @@ window.showPage = function(n) {
 }
 
 // ===== AUTH =====
+// Flag: wenn true, ignoriert onAuthStateChanged den nächsten Login (z.B. bei Registrierung)
+let isRegistering = false;
+
 onAuthStateChanged(auth, async (user) => {
+  // Während Registrierung nichts tun - doRegister übernimmt selbst die Kontrolle
+  if (isRegistering) {
+    console.log('[AUTH] isRegistering=true, überspringe onAuthStateChanged');
+    return;
+  }
+
   if (user) {
     currentUser = user;
-    const zugDoc = await getDoc(doc(db, 'zugriff', user.uid));
-    if (zugDoc.exists() && zugDoc.data().freigegeben === true) {
-      document.getElementById('page1').classList.remove('active');
-      document.getElementById('innerPages').style.display = 'block';
-      loadAllData();
-      showPage(2);
-      loadUserDashboard(zugDoc.data());
-    } else {
-      document.getElementById('loginError').style.display = 'block';
+    console.log('[AUTH] User eingeloggt:', user.email);
+
+    try {
+      const zugDoc = await getDoc(doc(db, 'zugriff', user.uid));
+      console.log('[AUTH] zugriff doc exists:', zugDoc.exists());
+
+      if (zugDoc.exists()) {
+        console.log('[AUTH] freigegeben:', zugDoc.data().freigegeben);
+      }
+
+      if (zugDoc.exists() && zugDoc.data().freigegeben === true) {
+        document.getElementById('page1').classList.remove('active');
+        document.getElementById('innerPages').style.display = 'block';
+        loadAllData();
+        showPage(2);
+        loadUserDashboard(zugDoc.data());
+      } else {
+        // Kein Zugriff
+        document.getElementById('loginError').style.display = 'block';
+        setTimeout(() => {
+          document.getElementById('loginError').style.display = 'none';
+        }, 5000);
+        await signOut(auth);
+      }
+    } catch(e) {
+      console.error('[AUTH] Fehler beim Zugriff-Check:', e);
       await signOut(auth);
     }
   }
@@ -951,47 +977,52 @@ window.doLogin = async function() {
 // ===== REGISTER =====
 window.openRegisterModal = function() { openModal('registerModal'); }
 
+
 window.doRegister = async function() {
   const id = document.getElementById('reg-id').value.trim();
   const name = document.getElementById('reg-name').value.trim();
   const nachname = document.getElementById('reg-nachname').value.trim();
   const tel = document.getElementById('reg-tel').value.trim();
   const confirmed = document.getElementById('reg-confirm').checked;
+
   if (!id||!name||!nachname||!tel) return showNotif('Bitte alle Felder ausfüllen!','error');
   if (!confirmed) return showNotif('Bitte die Warnung bestätigen!','error');
 
+  showNotif('Öffne Google Anmeldung...', 'success');
   let user = null;
+
+  // Verhindere dass onAuthStateChanged die Kontrolle übernimmt
+  isRegistering = true;
+  console.log('[REG] isRegistering = true');
+
   try {
-    // 1. Erst Google Login
+    console.log('[REG] Starte Google Login...');
     const result = await signInWithPopup(auth, provider);
     user = result.user;
+    console.log('[REG] Google Login OK:', user.email, user.uid);
   } catch(e) {
-    showNotif('Google Anmeldung fehlgeschlagen: ' + e.message, 'error');
+    console.error('[REG] Google Login Fehler:', e.code, e.message);
+    if (e.code === 'auth/popup-closed-by-user') {
+      showNotif('Popup geschlossen. Bitte nochmal versuchen.', 'error');
+    } else if (e.code === 'auth/popup-blocked') {
+      showNotif('Popup blockiert! Bitte Popups erlauben.', 'error');
+    } else {
+      showNotif('Google Fehler: ' + e.message, 'error');
+    }
     return;
   }
 
-  try {
-    // 2. Prüfen ob User schon registriert ist (anhand Email in zugriff collection)
-    const zugriffSnap = await getDocs(collection(db, 'zugriff'));
-    const alleZugriff = zugriffSnap.docs.map(d => d.data());
-    
-    const bereitsEmail = alleZugriff.find(z => z.email === user.email);
-    if (bereitsEmail) {
-      await signOut(auth);
-      showNotif('Diese Email hat bereits eine Anfrage gestellt!', 'error');
-      return;
-    }
-    
-    const bereitsID = alleZugriff.find(z => z.id === id);
-    if (bereitsID) {
-      await signOut(auth);
-      showNotif('Diese ID wurde bereits verwendet!', 'error');
-      return;
-    }
+  await new Promise(r => setTimeout(r, 800));
 
-    // 3. Daten speichern (User ist jetzt eingeloggt → hat Berechtigung)
+  try {
+    console.log('[REG] Auth currentUser:', auth.currentUser ? auth.currentUser.email : 'NULL');
+    console.log('[REG] Schreibe in Firestore...');
+
     const daten = {
-      id, name, nachname, tel,
+      id: id,
+      name: name,
+      nachname: nachname,
+      tel: tel,
       email: user.email,
       uid: user.uid,
       rang: 'Admin',
@@ -999,25 +1030,35 @@ window.doRegister = async function() {
       timestamp: new Date().toISOString()
     };
 
-    // In beide Collections speichern
-    await setDoc(doc(db, 'anfragen', user.uid), daten);
-    await setDoc(doc(db, 'zugriff', user.uid), daten);
+    console.log('[REG] Daten:', JSON.stringify(daten));
 
-    // 4. Ausloggen (kein Zugriff noch)
+    await setDoc(doc(db, 'anfragen', user.uid), daten);
+    console.log('[REG] anfragen gespeichert!');
+
+    await setDoc(doc(db, 'zugriff', user.uid), daten);
+    console.log('[REG] zugriff gespeichert!');
+
     await signOut(auth);
+    console.log('[REG] Ausgeloggt. Fertig!');
+    isRegistering = false;
+
     closeModal('registerModal');
-    // Felder leeren
     ['reg-id','reg-name','reg-nachname','reg-tel'].forEach(f => document.getElementById(f).value = '');
     document.getElementById('reg-confirm').checked = false;
     showNotif('Du hast dich erfolgreich Registriert, Warte bis du Freigeben wirst', 'success');
 
   } catch(e) {
-    // Falls Fehler beim Speichern → ausloggen
+    console.error('[REG] Firestore Fehler:', e.code, e.message, e);
+    isRegistering = false;
     try { await signOut(auth); } catch(_) {}
-    showNotif('Fehler beim Speichern: ' + e.message, 'error');
-    console.error('Register error:', e);
+    let msg = e.message;
+    if (e.code === 'permission-denied' || (e.message && e.message.includes('permission'))) {
+      msg = 'Firestore Rules Problem! Gehe zu Firebase Console → Firestore → Regeln → setze: allow read, write: if true;';
+    }
+    showNotif('FEHLER: ' + msg, 'error');
   }
 }
+
 
 // ===== LOGOUT =====
 window.doLogout = async function() {
