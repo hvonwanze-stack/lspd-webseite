@@ -767,7 +767,7 @@
         <div class="db-field"><div class="db-label">Rang:</div><div class="db-value" id="db-rang"></div></div>
         <div class="db-field"><div class="db-label">Abteilung:</div><div class="db-value" id="db-abt"></div></div>
         <div class="db-field"><div class="db-label">ZweitAbteilung:</div><div class="db-value" id="db-zabt"></div></div>
-        <div class="db-field"><div class="db-label">Invite:</div><div class="db-value" id="db-invite"></div></div>
+        <div class="db-field"><div class="db-label">Invite Datum:</div><div class="db-value" id="db-invite"></div></div>
         <div class="db-field"><div class="db-label">Last RankUp:</div><div class="db-value" id="db-rankup"></div></div>
         <div class="db-field"><div class="db-label">Urlaub:</div><div class="db-value" id="db-urlaub"></div></div>
         <div class="db-field" style="border-bottom:1px solid rgba(30,58,95,0.25);"><div class="db-label">Strike:</div><div class="db-value" id="db-strike"></div></div>
@@ -1036,7 +1036,7 @@
           <th class="sep-col"></th>
           <th>Division</th>
           <th class="sep-col"></th>
-          <th>Urlaub</th><th>Strike</th><th>Invite Date</th><th>Last Rankup</th><th>UpRank</th>
+          <th>Urlaub</th><th>Strike</th><th>Invite Datum</th><th>Last Rankup</th><th>UpRank</th>
           <th>Abteilung</th><th>Zweitabteilung</th>
           <th class="sep-col"></th>
           <th>GA</th><th>EHK</th><th>ES</th><th>OP</th><th>OK</th><th>FULA</th>
@@ -1259,7 +1259,7 @@
           <th class="sep-col"></th>
           <th>Division</th>
           <th class="sep-col"></th>
-          <th>Urlaub</th><th>Strike</th><th>Invite Date</th><th>Last Rankup</th><th>UpRank</th>
+          <th>Urlaub</th><th>Strike</th><th>Invite Datum</th><th>Last Rankup</th><th>UpRank</th>
           <th>Abteilung</th><th>Zweitabteilung</th>
           <th class="sep-col"></th>
           <th>GA</th><th>EHK</th><th>ES</th><th>OP</th><th>OK</th><th>FULA</th>
@@ -1918,6 +1918,8 @@ window.openEditMitarbeiterModal = async function() {
 window.addMitarbeiter = async function() {
   const id = document.getElementById('ma-id').value.trim();
   if (!id) return showNotif('ID erforderlich','error');
+  const today = new Date().toISOString().split('T')[0];
+  const isNew = !editingMaId;
   const data = {
     id,
     dn: document.getElementById('ma-dn').value.trim(),
@@ -1925,7 +1927,7 @@ window.addMitarbeiter = async function() {
     tel: document.getElementById('ma-tel').value.trim(),
     rank: document.getElementById('ma-rank').value,
     division: document.getElementById('ma-div').value,
-    invite: document.getElementById('ma-invite').value,
+    invite: isNew ? today : (document.getElementById('ma-invite').value || today),
     rankup: document.getElementById('ma-rankup').value,
     abteilung: document.getElementById('ma-abt').value.trim(),
     zabt: document.getElementById('ma-zabt').value.trim(),
@@ -1940,10 +1942,18 @@ window.addMitarbeiter = async function() {
   try {
     if (editingMaId) {
       const existing = mitarbeiterData.find(m=>m._id===editingMaId);
-      if (existing) data.ausbildungen = existing.ausbildungen || {};
+      if (existing) {
+        data.ausbildungen = existing.ausbildungen || {};
+        // Auto-set rankup date if rank changed
+        if (existing.rank !== data.rank) {
+          data.rankup = new Date().toISOString().split('T')[0];
+        }
+      }
       await updateDoc(doc(db,'mitarbeiter',editingMaId), data);
       showNotif('Mitarbeiter aktualisiert','success');
     } else {
+      // New mitarbeiter: set rankup = today too
+      data.rankup = data.rankup || new Date().toISOString().split('T')[0];
       await addDoc(collection(db,'mitarbeiter'), data);
       showNotif('Mitarbeiter hinzugefügt','success');
     }
