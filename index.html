@@ -1283,7 +1283,7 @@
     <button class="tool-btn" onclick="searchSanktion()">🔍</button>
     <input class="search-input" autocomplete="off" id="sank-search" placeholder="Sanktion Suchen">
     <div style="width:20px;"></div>
-    <button class="tool-btn" title="">📦→</button>
+    <button class="tool-btn" onclick="archiveSanktion()" title="Ins Archiv verschieben">📦→</button>
     <button class="tool-btn" onclick="showPage(12)" title="Archiv">📁</button>
   </div>
   <div class="table-wrapper">
@@ -1312,8 +1312,18 @@
 
 <!-- ==================== PAGE 12 ==================== -->
 <div id="page12" class="page">
-  <div style="padding:8px 12px;background:var(--bg-panel);border-bottom:1px solid var(--border);display:flex;align-items:center;">
+  <div class="toolbar">
     <button class="tool-btn back" onclick="showPage(10)">← BACK</button>
+    <div style="flex:1;text-align:center;font-size:14px;font-weight:700;color:var(--text-secondary);">Sanktions Archiv</div>
+    <button class="tool-btn" onclick="searchSanktionArchiv()">🔍</button>
+    <button class="tool-btn red" onclick="deleteSanktionArchiv()">✕</button>
+    <input class="search-input" autocomplete="off" id="sank-archiv-search" placeholder="ID Suchen">
+  </div>
+  <div class="table-wrapper">
+    <table class="data-table" style="width:100%;">
+      <thead><tr><th>SK</th><th>ID</th><th>Name</th><th>Grund der Sanktion</th><th>Strafe</th></tr></thead>
+      <tbody id="sank-archiv-tbody"></tbody>
+    </table>
   </div>
 </div>
 
@@ -1456,7 +1466,7 @@ window.showPage = function(n) {
   if (n === 10) renderSanktionen();
   if (n === 6) renderSKRules();
   if (n === 11) renderPage11();
-  if (n === 12) {} // Seite 12 Archiv
+  if (n === 12) { loadSanktionArchiv(); }
 }
 
 // ===== AUTH =====
@@ -1574,6 +1584,7 @@ async function loadAllData() {
   await loadArchiv();
   await loadZugriff();
   await loadSanktionen();
+  await loadSanktionArchiv();
   await loadSKRules();
   await loadSKHeaders();
 }
@@ -2245,6 +2256,70 @@ async function loadSanktionen() {
   const snap = await getDocs(collection(db,'sanktionen'));
   sanktionData = snap.docs.map(d => ({...d.data(), _id: d.id}));
   renderSanktionen();
+}
+
+let sanktionArchivData = [];
+
+async function loadSanktionArchiv() {
+  const snap = await getDocs(collection(db,'sanktionenArchiv'));
+  sanktionArchivData = snap.docs.map(d => ({...d.data(), _id: d.id}));
+  renderSanktionArchiv();
+}
+
+function renderSanktionArchiv(filtered=null) {
+  const list = filtered || sanktionArchivData;
+  const tbody = document.getElementById('sank-archiv-tbody');
+  if (!tbody) return;
+  if (list.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:20px;">Kein Archiv vorhanden.</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = list.map(s => `<tr>
+    <td>${s.nr||''}</td><td>${s.id||''}</td><td>${s.name||''}</td>
+    <td>${s.grund||''}</td><td>${s.strafe||''}</td>
+  </tr>`).join('');
+}
+
+window.searchSanktionArchiv = function() {
+  const q = document.getElementById('sank-archiv-search').value.trim().toLowerCase();
+  if (!q) { renderSanktionArchiv(); return; }
+  renderSanktionArchiv(sanktionArchivData.filter(s => (s.id||'').toLowerCase().includes(q)));
+}
+
+window.deleteSanktionArchiv = function() {
+  const id = document.getElementById('sank-archiv-search').value.trim();
+  if (!id) return showNotif('Bitte ID eingeben','error');
+  const found = sanktionArchivData.filter(s => s.id === id);
+  if (found.length === 0) return showNotif('Keine Sanktion mit dieser ID gefunden','error');
+  document.getElementById('del-title').textContent = 'Archiv-Sanktion löschen?';
+  document.getElementById('del-msg').textContent = `Alle Sanktionen der ID "${id}" aus dem Archiv wirklich löschen?`;
+  deleteCallback = async () => {
+    for (const s of found) {
+      await deleteDoc(doc(db,'sanktionenArchiv', s._id));
+    }
+    showNotif('Gelöscht','success');
+    await loadSanktionArchiv();
+  };
+  openModal('deleteConfirmModal');
+}
+
+window.archiveSanktion = async function() {
+  const nr = document.getElementById('sank-search').value.trim();
+  if (!nr) return showNotif('Bitte SK Nummer ins Suchfeld eingeben','error');
+  const s = sanktionData.find(x => x.nr === nr);
+  if (!s) return showNotif('Sanktion nicht gefunden','error');
+  try {
+    // Copy to archive
+    await addDoc(collection(db,'sanktionenArchiv'), {...s});
+    // Remove from sanktionen
+    await deleteDoc(doc(db,'sanktionen', s._id));
+    showNotif('Sanktion archiviert','success');
+    document.getElementById('sank-search').value = '';
+    await loadSanktionen();
+    await loadSanktionArchiv();
+  } catch(e) {
+    showNotif('Fehler: '+e.message,'error');
+  }
 }
 
 function renderSanktionen(filtered=null) {
