@@ -1907,11 +1907,13 @@ window.openEditMitarbeiterModal = async function() {
   document.getElementById('ma-rankup').value = ma.rankup||'';
   document.getElementById('ma-abt').value = ma.abteilung||'';
   document.getElementById('ma-zabt').value = ma.zabt||'';
-  document.getElementById('ma-urlaub').textContent = ma.urlaub||'0';
-  document.getElementById('ma-strike').textContent = ma.strike||'0';
-  document.querySelector('#addMaModal .modal-title').textContent='Mitarbeiter Bearbeiten';
-  document.getElementById('addMaSubmitBtn').textContent='Speichern';
+  document.getElementById('ma-urlaub').textContent = String(ma.urlaub||0);
+  document.getElementById('ma-strike').textContent = String(ma.strike||0);
+  document.querySelector('#addMaModal .modal-title').textContent = 'Mitarbeiter Bearbeiten';
+  document.getElementById('addMaSubmitBtn').textContent = 'Speichern';
   document.getElementById('ma-id').readOnly = true;
+  // Force update division display
+  updateDivision();
   openModal('addMaModal');
 }
 
@@ -1927,7 +1929,7 @@ window.addMitarbeiter = async function() {
     tel: document.getElementById('ma-tel').value.trim(),
     rank: document.getElementById('ma-rank').value,
     division: document.getElementById('ma-div').value,
-    invite: isNew ? today : (document.getElementById('ma-invite').value || today),
+    invite: isNew ? today : (document.getElementById('ma-invite').value || (mitarbeiterData.find(m=>m._id===editingMaId)||{}).invite || today),
     rankup: document.getElementById('ma-rankup').value,
     abteilung: document.getElementById('ma-abt').value.trim(),
     zabt: document.getElementById('ma-zabt').value.trim(),
@@ -2180,7 +2182,7 @@ window.openEditZugriffModal = function() {
   document.getElementById('ez-nachname').value = z.nachname||'';
   document.getElementById('ez-tel').value = z.tel||'';
   document.getElementById('ez-email').value = z.email||'';
-  document.getElementById('ez-rang').value = z.rang||'Admin';
+  document.getElementById('ez-rang').value = z.rang || 'Admin';
   openModal('editZugriffModal');
 }
 
