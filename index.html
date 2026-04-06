@@ -1013,7 +1013,7 @@
 <div id="page7" class="page">
   <div class="toolbar">
     <button class="tool-btn purple" onclick="openAddMitarbeiterModal()">＋</button>
-    <button class="tool-btn red" onclick="showPage(13)" title="">＋</button>
+    <button class="tool-btn red" title="">＋</button>
     <div class="ml-auto"></div>
     <button class="tool-btn" onclick="openAusbildungModal()" title="Ausbildungen bearbeiten">📋</button>
     <button class="tool-btn" onclick="openEditMitarbeiterModal()" title="Bearbeiten">✏️</button>
@@ -1304,13 +1304,6 @@
 
 
 
-<!-- ==================== PAGE 13 ==================== -->
-<div id="page13" class="page" style="height:100vh;overflow:hidden;">
-  <div style="padding:10px 12px;">
-    <button class="tool-btn back" onclick="showPage(7)">← BACK</button>
-  </div>
-</div>
-
 <!-- ==================== SANKTION DETAIL PAGES (dynamisch) ==================== -->
 <div id="sanktionPages"></div>
 
@@ -1371,7 +1364,7 @@ window.closeModal = function(id) { document.getElementById(id).classList.remove(
 
 // ===== PAGES =====
 // Pages where nav buttons should be hidden
-const HIDE_NAV_PAGES = [9, 10, 13];
+const HIDE_NAV_PAGES = [9, 10];
 
 window.showPage = function(n) {
   document.querySelectorAll('#innerPages .page').forEach(p => p.classList.remove('active'));
