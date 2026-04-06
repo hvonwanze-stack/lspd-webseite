@@ -2258,6 +2258,11 @@ window.openEditZugriffModal = function() {
   if (!id) return showNotif('Bitte ID eingeben','error');
   const z = zugriffData.find(x=>x.id===id);
   if (!z) return showNotif('Nicht gefunden','error');
+  // Verhindere dass User seine eigenen Rechte bearbeitet
+  if (currentUser && z.uid === currentUser.uid) {
+    showNotif('Du kannst deine eigenen Rechte nicht bearbeiten!', 'error');
+    return;
+  }
   openModal('editZugriffModal');
   setTimeout(() => {
     const fill = (elId, val) => {
@@ -2276,6 +2281,12 @@ window.openEditZugriffModal = function() {
 
 window.saveZugriff = async function() {
   const docId = document.getElementById('ez-idx').value;
+  // Prüfe ob User versucht seinen eigenen Eintrag zu bearbeiten
+  const z = zugriffData.find(x=>x._id===docId);
+  if (z && currentUser && z.uid === currentUser.uid) {
+    showNotif('Du kannst deine eigenen Rechte nicht bearbeiten!', 'error');
+    return;
+  }
   const data = {
     name: document.getElementById('ez-name').value.trim(),
     nachname: document.getElementById('ez-nachname').value.trim(),
