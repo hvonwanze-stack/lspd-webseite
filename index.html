@@ -2455,21 +2455,19 @@ window.openEditSanktionModal = function(nr) {
   }, 30);
 }
 
-window.saveSanktionEdit = async function(docId, nr) {
-  const data = {
-    id: document.getElementById('se-id').value,
-    name: document.getElementById('se-name').value
-  };
-  try {
-    await updateDoc(doc(db,'sanktionen',docId), data);
-    const idEl = document.getElementById(`sd-id-${nr}`);
-    if (idEl) idEl.textContent = data.id;
-    const nameEl = document.getElementById(`sd-name-${nr}`);
-    if (nameEl) nameEl.textContent = data.name;
-    document.getElementById('tmp-edit-modal').remove();
-    showNotif('Gespeichert','success');
-    await loadSanktionen();
-  } catch(e) { showNotif('Fehler: '+e.message,'error'); }
+window.saveSanktionEdit = function(docId, nr) {
+  const newId = document.getElementById('se-id').value;
+  const newName = document.getElementById('se-name').value;
+
+  // Nur lokale Anzeige auf der Detailseite ändern - NICHT in Firestore speichern
+  const idEl = document.getElementById('sd-id-'+nr);
+  if (idEl) idEl.textContent = newId;
+  const nameEl = document.getElementById('sd-name-'+nr);
+  if (nameEl) nameEl.textContent = newName;
+
+  document.getElementById('tmp-edit-modal').remove();
+  showNotif('Auf dieser Seite gespeichert','success');
+  // Seite 10 bleibt unverändert
 }
 
 // ===== SK RULES =====
