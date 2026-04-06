@@ -1636,15 +1636,21 @@ window.doRegister = async function() {
   if (!id||!name||!nachname||!tel) return showNotif('Bitte alle Felder ausfüllen!','error');
   if (!confirmed) return showNotif('Bitte die Warnung bestätigen!','error');
 
-  // Prüfe ID UND Email-Eindeutigkeit VOR dem Google Login
-  // Kein Login wird gestartet wenn ID oder Email schon existiert
+  // Prüfe ID VOR dem Google Login - in zugriff UND anfragen
   try {
     const zugriffSnap = await getDocs(collection(db, 'zugriff'));
     const alleZugriff = zugriffSnap.docs.map(d => d.data());
+    const idExistsZ = alleZugriff.find(z => z.id === id);
+    if (idExistsZ) {
+      showNotif('Ihre ID hat schon einen Account.', 'error');
+      return;
+    }
 
-    const idExists = alleZugriff.find(z => z.id === id);
-    if (idExists) {
-      showNotif('ID existiert schon, gib eine andere an.', 'error');
+    const anfragenSnap = await getDocs(collection(db, 'anfragen'));
+    const alleAnfragen = anfragenSnap.docs.map(d => d.data());
+    const idExistsA = alleAnfragen.find(a => a.id === id);
+    if (idExistsA) {
+      showNotif('Ihre ID hat schon einen Account.', 'error');
       return;
     }
   } catch(e) {
@@ -1674,15 +1680,36 @@ window.doRegister = async function() {
   await new Promise(r => setTimeout(r, 800));
 
   try {
-    // Nach Login: Email prüfen (jetzt kennen wir die echte Email)
+    // Nach Login: Email prüfen in zugriff UND anfragen
     const zugriffSnap2 = await getDocs(collection(db, 'zugriff'));
     const alleZugriff2 = zugriffSnap2.docs.map(d => d.data());
 
-    const emailExists = alleZugriff2.find(z => z.email === user.email);
-    if (emailExists) {
+    const emailExistsZugriff = alleZugriff2.find(z => z.email === user.email);
+    if (emailExistsZugriff) {
       isRegistering = false;
       await signOut(auth);
-      showNotif('Sie haben schon mit dieser Email eine Anfrage gesendet.', 'error');
+      showNotif('Ihre Email hat schon einen Account.', 'error');
+      return;
+    }
+
+    // Auch in anfragen prüfen
+    const anfragenSnap2 = await getDocs(collection(db, 'anfragen'));
+    const alleAnfragen2 = anfragenSnap2.docs.map(d => d.data());
+
+    const emailExistsAnfragen = alleAnfragen2.find(a => a.email === user.email);
+    if (emailExistsAnfragen) {
+      isRegistering = false;
+      await signOut(auth);
+      showNotif('Ihre Email hat schon einen Account.', 'error');
+      return;
+    }
+
+    // ID nochmal prüfen (könnte sich zwischen Vorprüfung und jetzt geändert haben)
+    const idDoubleCheck = alleZugriff2.find(z => z.id === id);
+    if (idDoubleCheck) {
+      isRegistering = false;
+      await signOut(auth);
+      showNotif('Ihre ID hat schon einen Account.', 'error');
       return;
     }
 
