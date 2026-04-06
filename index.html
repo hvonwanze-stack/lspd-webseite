@@ -1897,23 +1897,16 @@ window.openEditMitarbeiterModal = async function() {
   const ma = mitarbeiterData.find(m=>m.id===id);
   if (!ma) return showNotif('Mitarbeiter nicht gefunden','error');
   editingMaId = ma._id;
-
-  // Set all values
-  const setVal = (id, val) => {
-    const el = document.getElementById(id);
-    if (el) { el.value = val||''; el.setAttribute('value', val||''); }
-  };
-
-  setVal('ma-id',   ma.id);
-  setVal('ma-dn',   ma.dn);
-  setVal('ma-name', ma.name);
-  setVal('ma-tel',  ma.tel);
-  setVal('ma-rank', ma.rank);
-  setVal('ma-invite', ma.invite);
-  setVal('ma-rankup', ma.rankup);
-  setVal('ma-abt',  ma.abteilung);
-  setVal('ma-zabt', ma.zabt);
-
+  document.getElementById('ma-id').value = ma.id||'';
+  document.getElementById('ma-dn').value = ma.dn||'';
+  document.getElementById('ma-name').value = ma.name||'';
+  document.getElementById('ma-tel').value = ma.tel||'';
+  document.getElementById('ma-rank').value = ma.rank||'';
+  updateDivision();
+  document.getElementById('ma-invite').value = ma.invite||'';
+  document.getElementById('ma-rankup').value = ma.rankup||'';
+  document.getElementById('ma-abt').value = ma.abteilung||'';
+  document.getElementById('ma-zabt').value = ma.zabt||'';
   document.getElementById('ma-urlaub').textContent = String(ma.urlaub||0);
   document.getElementById('ma-strike').textContent = String(ma.strike||0);
   document.querySelector('#addMaModal .modal-title').textContent = 'Mitarbeiter Bearbeiten';
@@ -1921,19 +1914,6 @@ window.openEditMitarbeiterModal = async function() {
   document.getElementById('ma-id').readOnly = true;
   updateDivision();
   openModal('addMaModal');
-  // Double-set after modal opens to be safe
-  setTimeout(() => {
-    setVal('ma-id',   ma.id);
-    setVal('ma-dn',   ma.dn);
-    setVal('ma-name', ma.name);
-    setVal('ma-tel',  ma.tel);
-    setVal('ma-rank', ma.rank);
-    setVal('ma-invite', ma.invite);
-    setVal('ma-rankup', ma.rankup);
-    setVal('ma-abt',  ma.abteilung);
-    setVal('ma-zabt', ma.zabt);
-    updateDivision();
-  }, 50);
 }
 
 window.addMitarbeiter = async function() {
@@ -2196,27 +2176,14 @@ window.openEditZugriffModal = function() {
   const z = zugriffData.find(x=>x.id===id);
   if (!z) return showNotif('Nicht gefunden','error');
 
-  const setVal = (id, val) => {
-    const el = document.getElementById(id);
-    if (el) { el.value = val||''; el.setAttribute('value', val||''); }
-  };
-
-  setVal('ez-idx',      z._id);
-  setVal('ez-id',       z.id);
-  setVal('ez-name',     z.name);
-  setVal('ez-nachname', z.nachname);
-  setVal('ez-tel',      z.tel);
-  setVal('ez-email',    z.email||'';
+  document.getElementById('ez-idx').value = z._id;
+  document.getElementById('ez-id').value = z.id||'';
+  document.getElementById('ez-name').value = z.name||'';
+  document.getElementById('ez-nachname').value = z.nachname||'';
+  document.getElementById('ez-tel').value = z.tel||'';
+  document.getElementById('ez-email').value = z.email||'';
   document.getElementById('ez-rang').value = z.rang || 'Admin';
   openModal('editZugriffModal');
-  setTimeout(() => {
-    setVal('ez-id',       z.id);
-    setVal('ez-name',     z.name);
-    setVal('ez-nachname', z.nachname);
-    setVal('ez-tel',      z.tel);
-    setVal('ez-email',    z.email);
-    document.getElementById('ez-rang').value = z.rang || 'Admin';
-  }, 50);
 }
 
 window.saveZugriff = async function() {
