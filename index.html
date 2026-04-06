@@ -1284,7 +1284,7 @@
     <input class="search-input" autocomplete="off" id="sank-search" placeholder="Sanktion Suchen">
     <div style="width:20px;"></div>
     <button class="tool-btn" title="">📦→</button>
-    <button class="tool-btn" onclick="showPage(16)" title="Archiv">📁</button>
+    <button class="tool-btn" onclick="openPage16()" title="Archiv">📁</button>
   </div>
   <div class="table-wrapper">
     <table class="data-table">
@@ -1343,9 +1343,9 @@
 </div>
 
 <!-- ==================== PAGE 16 ==================== -->
-<div id="page16" class="page" style="min-height:100vh;">
-  <div style="display:flex;align-items:center;padding:8px 12px;background:var(--bg-panel);border-bottom:1px solid var(--border);">
-    <button class="tool-btn back" onclick="showPage(10)">← BACK</button>
+<div id="page16" class="page" style="position:fixed;inset:0;z-index:500;background:var(--bg-dark);overflow-y:auto;display:none;flex-direction:column;">
+  <div style="display:flex;align-items:center;padding:8px 12px;background:var(--bg-panel);border-bottom:1px solid var(--border);flex-shrink:0;">
+    <button class="tool-btn back" onclick="hidePage16()">← BACK</button>
   </div>
 </div>
 
@@ -1424,7 +1424,17 @@ window.closeModal = function(id) { document.getElementById(id).classList.remove(
 
 // ===== PAGES =====
 // Pages where nav buttons should be hidden
-const HIDE_NAV_PAGES = [9, 10, 14, 15, 16];
+const HIDE_NAV_PAGES = [9, 10, 14, 15];
+
+function openPage16() {
+  const p16 = document.getElementById('page16');
+  if (p16) { p16.style.display = 'flex'; }
+}
+
+function hidePage16() {
+  const p16 = document.getElementById('page16');
+  if (p16) { p16.style.display = 'none'; }
+}
 
 window.showPage = function(n) {
   document.querySelectorAll('#innerPages .page').forEach(p => p.classList.remove('active'));
@@ -1446,6 +1456,9 @@ window.showPage = function(n) {
   if (p14) {
     p14.style.display = (n === 14) ? 'flex' : 'none';
   }
+  // Page 16 is also a fixed overlay
+  const p16 = document.getElementById('page16');
+  if (p16 && n !== 16) p16.style.display = 'none';
 
 
   // Aktuelle Seite speichern (nur Hauptseiten 2-10)
