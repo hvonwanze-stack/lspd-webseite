@@ -2715,110 +2715,192 @@ function rangNumFromStr(r) {
 function applyRangPermissions(rang) {
   currentRang = rang;
   currentRangNum = rangNumFromStr(rang);
+  const rn = currentRangNum;
 
-  // Helper: show or hide element
+  // Helper: show/hide element by selector
   const show = (sel, visible) => {
     document.querySelectorAll(sel).forEach(el => {
       el.style.display = visible ? '' : 'none';
     });
   };
+  const showEl = (id, visible) => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = visible ? '' : 'none';
+  };
 
   // ===== NAV BUTTONS =====
-  // Seite 2 always visible when logged in
-  const navP2 = document.getElementById('nav-p2');
-  if (navP2) navP2.style.display = '';
+  showEl('nav-p2', true);
+  showEl('nav-p3', rn === 1 || rn === 6 || rn >= 7);
+  showEl('nav-p4', rn === 1 || rn === 6 || rn >= 7);
+  showEl('nav-p5', rn === 1 || rn === 6 || rn >= 7);
+  showEl('nav-p6', rn === 1 || rn === 6 || rn >= 7);
+  showEl('nav-p7', rn === 6 || rn === 9 || rn === 10 || rn >= 998);
+  showEl('nav-p8', rn === 9 || rn === 10 || rn >= 998);
 
-  // Pages 3,4,5,6: Rang 1 + PA + Admin + Leaderschaft + Ersteller
-  const canSee345 = (currentRangNum === 1 || currentRangNum === 6 || currentRangNum >= 998);
-  ['nav-p3','nav-p4','nav-p5','nav-p6'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.style.display = canSee345 ? '' : 'none';
-  });
-
-  // Page 7: Rang 6 (PA) + Leaderschaft + Ersteller
-  const canSeeP7 = (currentRangNum === 6 || currentRangNum >= 998);
-  const navP7 = document.getElementById('nav-p7');
-  if (navP7) navP7.style.display = canSeeP7 ? '' : 'none';
-
-  // Pages 8,9,10,11,12: Leaderschaft + Ersteller
-  ['nav-p8'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.style.display = (currentRangNum >= 998) ? '' : 'none';
-  });
-
-  // ===== ABMELDEN BUTTON always visible =====
+  // Force to page 2 if not allowed on current page
+  const allowedPages = getAllowedPages(rn);
+  if (!allowedPages.includes(currentPage)) showPage(2);
 
   // ===== PAGE 6 - SANKTIONSKATALOG =====
-  // Rang 1 und 6 sehen Seite 6 nur lesend - keine Knöpfe
-  const canEditP6 = currentRangNum >= 998; // Leaderschaft + Ersteller
-  document.querySelectorAll('#page6 .tool-btn').forEach(btn => {
-    // Keep all hidden for non-Ersteller
-    btn.style.display = canEditP6 ? '' : 'none';
-  });
-
-  // ===== PAGE 7 - MITARBEITER REGISTER =====
-  // Rang 6 (PA): nur Suchfeld, Lupe, Ausbildung-Button sehen
-  if (canSeeP7) {
-    document.querySelectorAll('#page7 .tool-btn').forEach(btn => {
-      if (currentRangNum === 6) {
-        // PA: nur 🔍 (search) und 📋 (ausbildung) sichtbar
-        const txt = btn.textContent.trim();
-        const allowed = ['🔍', '📋'];
-        btn.style.display = allowed.includes(txt) ? '' : 'none';
+  // Toolbar buttons on page 6:
+  // lila+ (addRule), ✏️left (editHeader), ✏️right (editRule), 🔍(search), suchfeld, 📁(archiv->p10)
+  setTimeout(() => {
+    const p6btns = document.querySelectorAll('#page6 .toolbar .tool-btn');
+    p6btns.forEach(btn => {
+      const txt = btn.textContent.trim();
+      if (rn === 1 || rn === 6) {
+        // Rang 1 & PA: nur lesen, keine knöpfe auf seite 6
+        btn.style.display = 'none';
+      } else if (rn === 7 || rn === 8) {
+        // IU / IU Leitung: darf 📁 (rechts vom suchfeld = zu seite 10) sehen
+        btn.style.display = txt === '📁' ? '' : 'none';
+      } else if (rn === 9 || rn === 10) {
+        // HR / HR Leitung: darf 📁 sehen
+        btn.style.display = txt === '📁' ? '' : 'none';
+      } else if (rang === 'Admin') {
+        // Admin: nur navigations-buttons und suche
+        btn.style.display = (txt === '📁' || txt === '🔍') ? '' : 'none';
+      } else if (rang === 'Leaderschaft') {
+        // Leaderschaft: alles außer rote x-buttons
+        btn.style.display = (btn.classList.contains('red') && txt === '✕') ? 'none' : '';
       } else {
-        // Ersteller: alles sichtbar
+        // Ersteller: alles
         btn.style.display = '';
       }
     });
-    // PA kann Suchfeld sehen
-    const maSearch = document.getElementById('ma-search');
-    if (maSearch) maSearch.style.display = canSeeP7 ? '' : 'none';
-  }
+    const p6search = document.getElementById('sk-search');
+    if (p6search) p6search.style.display = rn >= 1 ? '' : 'none';
 
-  // ===== PAGES 2,3,4,5: Rang 1 - nur lesen, keine Knöpfe, keine Toolbar =====
-  if (currentRangNum === 1) {
-    // Auf Seite 2 Abmelden Button bleibt
-    // Seiten 3,4,5,6 haben nur WIP Banner - OK
-  }
-
-  // ===== Ränge 2,3,4,5,7,8,9,10: NUR Seite 2, Nav komplett ausblenden =====
-  // Leaderschaft (998) bekommt gleiche Rechte wie Ersteller (1000)
-  const onlyPage2 = (currentRangNum >= 2 && currentRangNum <= 5) ||
-                    currentRangNum === 7 || currentRangNum === 8 ||
-                    currentRangNum === 9 || currentRangNum === 10;
-  if (onlyPage2) {
-    ['nav-p3','nav-p4','nav-p5','nav-p6','nav-p7','nav-p8'].forEach(id => {
-      const el = document.getElementById(id);
-      if (el) el.style.display = 'none';
-    });
-    // Force to page 2 if not already there
-    if (currentPage !== 2) showPage(2);
-  }
-
-  // ===== Admin: sieht alles, aber keine Edit/Delete/Add Knöpfe =====
-  if (currentRang === 'Admin') { // Leaderschaft wird wie Ersteller behandelt
-    ['nav-p3','nav-p4','nav-p5','nav-p6','nav-p7','nav-p8'].forEach(id => {
-      const el = document.getElementById(id);
-      if (el) el.style.display = '';
-    });
-    // Hide all action buttons (purple+, red, edit pencils, archive)
-    document.querySelectorAll('.tool-btn.purple, .tool-btn.red, .btn-abmelden').forEach(btn => {
-      if (!btn.onclick || !btn.onclick.toString().includes('doLogout')) {
-        btn.style.display = 'none';
-      }
-    });
-    // Keep search and read-only buttons
-    // Hide edit pencils in toolbars
-    document.querySelectorAll('.toolbar .tool-btn').forEach(btn => {
+    // ===== PAGE 7 - MITARBEITER REGISTER =====
+    const p7btns = document.querySelectorAll('#page7 .toolbar .tool-btn');
+    p7btns.forEach(btn => {
       const txt = btn.textContent.trim();
-      const readOnly = ['🔍', '← BACK', 'BACK'];
-      if (!readOnly.some(r => txt.includes(r))) {
-        btn.style.display = 'none';
+      if (rn === 6) {
+        // PA: suchfeld ✅, 🔍 ✅, 📋(ausbildung) ✅, 📁(archiv) ✅, rest nein
+        const allowed = ['🔍','📋','📁'];
+        btn.style.display = allowed.includes(txt) ? '' : 'none';
+      } else if (rn === 9) {
+        // HR: ➕rot, 📁(archiv), suchfeld, 🔍, ✏️(edit), 📋(ausbildung)
+        const allowed = ['🔍','📋','📁','✏️','＋'];
+        // roten + knopf: tool-btn red
+        if (btn.classList.contains('red') && txt === '＋') btn.style.display = '';
+        else btn.style.display = allowed.includes(txt) ? '' : 'none';
+      } else if (rn === 10) {
+        // HR Leitung: alles außer rote delete buttons
+        btn.style.display = (btn.classList.contains('red') && txt !== '＋') ? 'none' : '';
+      } else if (rang === 'Admin') {
+        // Admin: nur suchfeld und lupe
+        btn.style.display = (txt === '🔍') ? '' : 'none';
+      } else if (rang === 'Leaderschaft') {
+        btn.style.display = (btn.classList.contains('red') && txt === '✕') ? 'none' : '';
+      } else {
+        btn.style.display = rn >= 1000 ? '' : 'none';
       }
     });
-  }
+    const p7search = document.getElementById('ma-search');
+    if (p7search) p7search.style.display = (rn === 6 || rn === 9 || rn === 10 || rn >= 998) ? '' : 'none';
 
-  console.log('[RANG] Applied permissions for rang:', rang, '(', currentRangNum, ')');
+    // ===== PAGE 8 - ZUGRIFFSANFRAGE =====
+    const p8btns = document.querySelectorAll('#page8 .toolbar .tool-btn');
+    p8btns.forEach(btn => {
+      const txt = btn.textContent.trim();
+      if (rn === 9) {
+        // HR: nur suchfeld und lupe, freigabe-dropdowns bleiben (in tabelle)
+        btn.style.display = txt === '🔍' ? '' : 'none';
+      } else if (rn === 10) {
+        // HR Leitung: alles außer roten x knopf
+        btn.style.display = (btn.classList.contains('red') && txt === '✕') ? 'none' : '';
+      } else if (rang === 'Admin') {
+        btn.style.display = txt === '🔍' ? '' : 'none';
+      } else if (rang === 'Leaderschaft') {
+        btn.style.display = (btn.classList.contains('red') && txt === '✕') ? 'none' : '';
+      } else {
+        btn.style.display = '';
+      }
+    });
+    const p8search = document.getElementById('zug-search');
+    if (p8search) p8search.style.display = (rn === 9 || rn === 10 || rn >= 998) ? '' : 'none';
+
+    // ===== PAGE 9 - MITARBEITER ARCHIV =====
+    const p9btns = document.querySelectorAll('#page9 .toolbar .tool-btn');
+    p9btns.forEach(btn => {
+      const txt = btn.textContent.trim();
+      if (rn === 6) {
+        // PA: nur back, suchfeld, lupe
+        btn.style.display = (txt.includes('BACK') || txt === '🔍') ? '' : 'none';
+      } else if (rn === 9 || rn === 10) {
+        // HR: nur back, suchfeld, lupe
+        btn.style.display = (txt.includes('BACK') || txt === '🔍') ? '' : 'none';
+      } else if (rang === 'Admin') {
+        btn.style.display = (txt.includes('BACK') || txt === '🔍') ? '' : 'none';
+      } else if (rang === 'Leaderschaft') {
+        btn.style.display = (btn.classList.contains('red') && txt === '✕') ? 'none' : '';
+      } else {
+        btn.style.display = '';
+      }
+    });
+    const p9search = document.getElementById('arch-search');
+    if (p9search) p9search.style.display = (rn === 6 || rn === 9 || rn === 10 || rn >= 998) ? '' : 'none';
+
+    // ===== PAGE 10 - SANKTIONEN =====
+    const p10btns = document.querySelectorAll('#page10 .toolbar .tool-btn');
+    p10btns.forEach(btn => {
+      const txt = btn.textContent.trim();
+      if (rn === 7 || rn === 8) {
+        // IU/IU Leitung: alles außer rotem x
+        btn.style.display = (btn.classList.contains('red') && txt === '✕') ? 'none' : '';
+      } else if (rn === 9 || rn === 10) {
+        btn.style.display = (btn.classList.contains('red') && txt === '✕') ? 'none' : '';
+      } else if (rang === 'Admin') {
+        btn.style.display = (txt.includes('BACK') || txt === '🔍' || txt === '📁') ? '' : 'none';
+      } else if (rang === 'Leaderschaft') {
+        btn.style.display = (btn.classList.contains('red') && txt === '✕') ? 'none' : '';
+      } else {
+        btn.style.display = '';
+      }
+    });
+    const p10search = document.getElementById('sank-search');
+    if (p10search) p10search.style.display = (rn === 7 || rn === 8 || rn === 9 || rn === 10 || rn >= 998) ? '' : 'none';
+
+    // ===== PAGE 12 - SANKTIONEN ARCHIV =====
+    const p12btns = document.querySelectorAll('#page12 .toolbar .tool-btn');
+    p12btns.forEach(btn => {
+      const txt = btn.textContent.trim();
+      if (rn === 7 || rn === 8) {
+        // IU: back + suchfeld + lupe, kein roten x
+        btn.style.display = (txt.includes('BACK') || txt === '🔍') ? '' : 'none';
+      } else if (rang === 'Admin') {
+        btn.style.display = (txt.includes('BACK') || txt === '🔍') ? '' : 'none';
+      } else if (rang === 'Leaderschaft') {
+        btn.style.display = (btn.classList.contains('red') && txt === '✕') ? 'none' : '';
+      } else {
+        btn.style.display = '';
+      }
+    });
+    const p12search = document.getElementById('sank-archiv-search');
+    if (p12search) p12search.style.display = (rn === 7 || rn === 8 || rn >= 998) ? '' : 'none';
+
+    // ===== Freigabe dropdowns auf Seite 8 =====
+    // HR (9) darf freigeben, HR Leitung (10) auch
+    document.querySelectorAll('select.freigabe-select').forEach(sel => {
+      sel.disabled = !(rn === 9 || rn === 10 || rn >= 998);
+      sel.style.opacity = sel.disabled ? '0.4' : '1';
+    });
+
+  }, 80);
+
+  console.log('[RANG] Applied:', rang, rn);
+}
+
+function getAllowedPages(rn) {
+  if (rn === 1) return [2,3,4,5,6];
+  if (rn === 6) return [2,3,4,5,6,7,9];
+  if (rn === 7 || rn === 8) return [2,3,4,5,6,10,12];
+  if (rn === 9) return [2,3,4,5,6,7,8,9,11];
+  if (rn === 10) return [2,3,4,5,6,7,8,9,11];
+  if (rn === 999) return [2,3,4,5,6,7,8,9,10,11,12]; // Admin
+  if (rn >= 998) return [2,3,4,5,6,7,8,9,10,11,12]; // Leaderschaft + Ersteller
+  return [2];
 }
 
 function checkVoraussetzung(ma) {
