@@ -1303,8 +1303,43 @@ onAuthStateChanged(auth, async (user) => {
   if (user) {
     currentUser = user;
     try {
-      const zugDoc = await getDoc(doc(db, 'zugriff', user.uid));
-      if (zugDoc.exists() && zugDoc.data().freigegeben === true) {
+      // Schritt 1: Suche per UID (normaler Weg nach Registrierung)
+      let zugData = null;
+      let zugDocId = null;
+
+      const zugDocDirect = await getDoc(doc(db, 'zugriff', user.uid));
+      if (zugDocDirect.exists()) {
+        zugData = zugDocDirect.data();
+        zugDocId = user.uid;
+      } else {
+        // Schritt 2: Suche per Email (manuell hinzugefügte User)
+        const emailQuery = query(
+          collection(db, 'zugriff'),
+          where('email', '==', user.email)
+        );
+        const emailSnap = await getDocs(emailQuery);
+        if (!emailSnap.empty) {
+          zugData = emailSnap.docs[0].data();
+          zugDocId = emailSnap.docs[0].id;
+          // Verknüpfe die echte UID damit nächster Login direkt klappt
+          try {
+            await updateDoc(doc(db, 'zugriff', zugDocId), { uid: user.uid });
+            // Auch ein Dokument mit der echten UID erstellen für direkten Zugriff
+            await setDoc(doc(db, 'zugriff', user.uid), {
+              ...zugData,
+              uid: user.uid
+            });
+            // Altes manual-Dokument löschen falls unterschiedlich
+            if (zugDocId !== user.uid) {
+              try { await deleteDoc(doc(db, 'zugriff', zugDocId)); } catch(_) {}
+            }
+          } catch(linkErr) {
+            console.warn('[AUTH] UID-Verknüpfung fehlgeschlagen:', linkErr);
+          }
+        }
+      }
+
+      if (zugData && zugData.freigegeben === true) {
         // Eingeloggt & freigegeben → direkt zu Seite 2
         document.getElementById('page1').style.display = 'none';
         document.getElementById('page1').classList.remove('active');
@@ -1320,10 +1355,10 @@ onAuthStateChanged(auth, async (user) => {
           }
         } catch(e) {}
         showPage(savedPage);
-        loadUserDashboard(zugDoc.data());
+        loadUserDashboard(zugData);
         hideLoader();
       } else {
-        // Eingeloggt aber kein Zugriff
+        // Eingeloggt aber kein Zugriff oder nicht freigegeben
         await signOut(auth);
         hideLoader();
         document.getElementById('page1').classList.add('active');
