@@ -1429,6 +1429,7 @@ window.showPage = function(n) {
   if (n === 9) renderArchiv();
   if (n === 10) renderSanktionen();
   if (n === 6) renderSKRules();
+  if (n === 14) renderPage14();
 }
 
 // ===== AUTH =====
@@ -2453,6 +2454,91 @@ function getDivisionLabel(rank) {
   if (r===28||r===29) return {label:'Leaderschaft', cls:'div-leadership'};
   if (r===30) return {label:'Leader', cls:'div-leader'};
   return {label:'', cls:''};
+}
+
+function checkVoraussetzung(ma) {
+  const r = parseInt(ma.rank);
+  const ausb = ma.ausbildungen || {};
+  const lastRankup = ma.rankup ? new Date(ma.rankup) : null;
+  const now = new Date();
+  const daysSinceRankup = lastRankup ? Math.floor((now - lastRankup) / (1000*60*60*24)) : 0;
+  const weeksOnRank = daysSinceRankup >= 14;
+  const monthOnRank = daysSinceRankup >= 30;
+
+  const allAusb = ['GA','EHK','ES','OP','OK','FULA','TST','KS','OKP','FT','JP','ZP','SP','VHP','TOW','AKS'];
+  const alleEingetragen = allAusb.every(k => ausb[k] === true);
+
+  switch(r) {
+    case 1:  return false;
+    case 2:  return ausb.GA && ausb.EHK;
+    case 3:  return false;
+    case 4:  return ausb.ES && ausb.OP;
+    case 5:  return ausb.OK && ausb.FULA;
+    case 6:  return ausb.TST;
+    case 7:  return ausb.KS;
+    case 8:  return ausb.OKP;
+    case 9:  return ausb.FT;
+    case 10: return ausb.JP;
+    case 11: return ausb.ZP;
+    case 12: return ausb.SP;
+    case 13: return weeksOnRank;
+    case 14: return weeksOnRank;
+    case 15: return weeksOnRank;
+    case 16: return weeksOnRank;
+    case 17: return false;
+    case 18: return false;
+    case 19: return false;
+    case 20: return false;
+    case 21: return false;
+    case 22: return false;
+    case 23: return alleEingetragen && monthOnRank;
+    case 24: return false;
+    case 25: return false;
+    case 26: return false;
+    case 27: return false;
+    case 28: return false;
+    case 29: return false;
+    case 30: return false;
+    default: return false;
+  }
+}
+
+function renderPage14() {
+  const tbody = document.getElementById('p14-tbody');
+  if (!tbody) return;
+
+  // Filter Mitarbeiter die Voraussetzungen erfüllen
+  const eligible = mitarbeiterData.filter(ma => {
+    const r = parseInt(ma.rank);
+    if (!r || r <= 0) return false;
+    return checkVoraussetzung(ma);
+  });
+
+  if (eligible.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:20px;">Keine Mitarbeiter erfüllen aktuell die Voraussetzungen.</td></tr>`;
+    return;
+  }
+
+  // Sort by rank descending
+  const sorted = [...eligible].sort((a,b) => (parseInt(b.rank)||0) - (parseInt(a.rank)||0));
+
+  tbody.innerHTML = sorted.map(ma => {
+    const r = parseInt(ma.rank);
+    const neuerRang = r + 1;
+    // Check if sanction exists for this ID
+    const hatSanktion = sanktionData.some(s => s.id === ma.id);
+    const sanktionCell = hatSanktion
+      ? `<span style="color:var(--red);font-weight:700;">Ja</span>`
+      : `<span style="color:var(--green);font-weight:700;">Nein</span>`;
+
+    return `<tr>
+      <td>${ma.id||''}</td>
+      <td>${ma.name||''}</td>
+      <td>${rankName(r)}</td>
+      <td>${rankName(neuerRang)}</td>
+      <td>${sanktionCell}</td>
+    </tr>`;
+  }).join('');
 }
 
 function rankName(r) {
