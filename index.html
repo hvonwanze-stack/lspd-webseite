@@ -1281,9 +1281,10 @@
     <button class="tool-btn red" onclick="deleteSanktion()">✕</button>
     <button class="tool-btn purple" onclick="clearAndOpenModal('addSanktionModal')">＋</button>
     <button class="tool-btn" onclick="searchSanktion()">🔍</button>
-    <input class="search-input" autocomplete="off" id="sank-search" placeholder="Sanktion Suchen" style="margin-right:20px;">
+    <input class="search-input" autocomplete="off" id="sank-search" placeholder="Sanktion Suchen">
+    <div style="width:20px;"></div>
     <button class="tool-btn" title="">📦→</button>
-    <button class="tool-btn" title="">📁</button>
+    <button class="tool-btn" onclick="showPage(16)" title="Archiv">📁</button>
   </div>
   <div class="table-wrapper">
     <table class="data-table">
@@ -1337,6 +1338,13 @@
 <!-- ==================== PAGE 15 ==================== -->
 <div id="page15" class="page" style="min-height:100vh;">
   <div style="padding:8px 12px;background:var(--bg-panel);border-bottom:1px solid var(--border);">
+    <button class="tool-btn back" onclick="showPage(10)">← BACK</button>
+  </div>
+</div>
+
+<!-- ==================== PAGE 16 ==================== -->
+<div id="page16" class="page" style="min-height:100vh;">
+  <div style="display:flex;align-items:center;padding:8px 12px;background:var(--bg-panel);border-bottom:1px solid var(--border);">
     <button class="tool-btn back" onclick="showPage(10)">← BACK</button>
   </div>
 </div>
@@ -1416,7 +1424,7 @@ window.closeModal = function(id) { document.getElementById(id).classList.remove(
 
 // ===== PAGES =====
 // Pages where nav buttons should be hidden
-const HIDE_NAV_PAGES = [9, 10, 14, 15];
+const HIDE_NAV_PAGES = [9, 10, 14, 15, 16];
 
 window.showPage = function(n) {
   document.querySelectorAll('#innerPages .page').forEach(p => p.classList.remove('active'));
@@ -1441,7 +1449,7 @@ window.showPage = function(n) {
 
 
   // Aktuelle Seite speichern (nur Hauptseiten 2-10)
-  if ((n >= 2 && n <= 10) || n === 14 || n === 15) {
+  if ((n >= 2 && n <= 10) || n === 14 || n === 15 || n === 16) {
     try { localStorage.setItem('lspd_page', n); } catch(e) {}
   }
   window.scrollTo(0, 0);
@@ -1537,7 +1545,7 @@ onAuthStateChanged(auth, async (user) => {
       try {
         const sp = localStorage.getItem('lspd_page');
         const spNum = parseInt(sp);
-        if ((spNum >= 2 && spNum <= 10) || spNum === 14 || spNum === 15) {
+        if ((spNum >= 2 && spNum <= 10) || spNum === 14 || spNum === 15 || spNum === 16) {
           savedPage = spNum;
         }
       } catch(e) {}
@@ -2308,14 +2316,20 @@ window.showSanktionPage = function(nr) {
     dp.className = 'page';
     dp.style.cssText = 'min-height:100vh;';
     dp.innerHTML = `
-      <div style="padding:8px 12px;background:var(--bg-panel);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;">
+      <div style="display:flex;align-items:center;padding:8px 12px;background:var(--bg-panel);border-bottom:1px solid var(--border);">
         <button class="tool-btn back" onclick="backFromSanktionDetail('${s.nr}')">← BACK</button>
-        <div class="ml-auto"></div>
+        <div style="flex:1;"></div>
         <button class="tool-btn" onclick="openEditSanktionModal('${s.nr}')">✏️</button>
       </div>
-      <div class="table-wrapper" style="padding:10px;">
-        <table class="data-table">
-          <thead><tr><th>ID</th><th>Name</th><th>Beweise (Nur Links)</th></tr></thead>
+      <div class="table-wrapper">
+        <table class="data-table" style="width:100%;">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Beweise (Nur Links)</th>
+            </tr>
+          </thead>
           <tbody>
             <tr>
               <td id="sd-id-${s.nr}"></td>
