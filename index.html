@@ -2784,8 +2784,8 @@ function applyRangPermissions(rang) {
         const allowed = ['🔍','📋','📁'];
         btn.style.display = allowed.includes(txt) ? '' : 'none';
       } else if (rn === 9) {
-        // HR: ➕rot, 📁(archiv), suchfeld, 🔍, ✏️(edit), 📋(ausbildung)
-        const allowed = ['🔍','📋','📁','✏️','＋'];
+        // HR: ➕rot, 📁(archiv), suchfeld, 🔍, ✏️(edit) - KEIN 📋(ausbildung)
+        const allowed = ['🔍','📁','✏️'];
         // roten + knopf: tool-btn red
         if (btn.classList.contains('red') && txt === '＋') btn.style.display = '';
         else btn.style.display = allowed.includes(txt) ? '' : 'none';
