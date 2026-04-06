@@ -901,7 +901,7 @@
 </div>
 
 <!-- ==================== PAGE 6 - SANKTIONSKATALOG ==================== -->
-<div id="page6" class="page">
+<div id="page6" class="page" style="display:flex;flex-direction:column;">
   <div class="toolbar">
     <button class="tool-btn purple" onclick="openModal('addRuleModal')" title="Regel hinzufügen">＋</button>
     <button class="tool-btn" onclick="openModal('editHeaderModal')" title="Header bearbeiten">✏️</button>
@@ -1011,7 +1011,6 @@
 
 <!-- ==================== PAGE 7 - MITARBEITER REGISTER ==================== -->
 <div id="page7" class="page">
-  <div style="height:18px;"></div>
   <div class="toolbar">
     <button class="tool-btn purple" onclick="openAddMitarbeiterModal()">＋</button>
     <button class="tool-btn red" onclick="showPage(13)" title="Seite 13">＋</button>
@@ -1234,9 +1233,9 @@
 </div>
 
 <!-- ==================== PAGE 9 - MITARBEITER ARCHIV ==================== -->
-<div id="page9" class="page">
+<div id="page9" class="page" style="display:flex;flex-direction:column;">
   <div id="nav-hide-p9" style="display:none"></div>
-  <div class="toolbar">
+  <div class="toolbar" style="margin:0;">
     <button class="tool-btn back" onclick="showPage(7)">← BACK</button>
     <div style="flex:1;text-align:center;">
       <span style="font-size:14px;font-weight:700;color:var(--text-secondary);">Mitarbeiter Archiv</span>
@@ -1304,13 +1303,14 @@
 </div><!-- end innerPages -->
 
 <!-- ==================== PAGE 13 ==================== -->
-<div id="page13" class="page" style="min-height:100vh;">
-  <div class="toolbar">
+<div id="page13" class="page" style="height:100vh;overflow:hidden;display:flex;flex-direction:column;">
+  <div style="display:flex;align-items:center;padding:8px 12px;background:var(--bg-panel);border-bottom:1px solid var(--border);">
     <button class="tool-btn back" onclick="showPage(7)" style="background:#1a1a3a;border-color:#7c3aed;color:#8b7cf6;font-weight:700;">← BACK</button>
   </div>
-  <div style="text-align:center;padding:20px;font-family:'Orbitron',monospace;font-size:26px;font-weight:900;color:white;letter-spacing:2px;border-bottom:1px solid var(--border);background:linear-gradient(180deg,rgba(200,146,42,0.05) 0%,transparent 100%);text-shadow:0 0 30px rgba(200,146,42,0.2);">
+  <div style="text-align:center;padding:16px 20px;font-family:'Orbitron',monospace;font-size:26px;font-weight:900;color:white;letter-spacing:2px;border-bottom:1px solid var(--border);background:linear-gradient(180deg,rgba(200,146,42,0.05) 0%,transparent 100%);text-shadow:0 0 30px rgba(200,146,42,0.2);">
     LSPD Personal Terminal
   </div>
+  <div style="flex:1;overflow:hidden;"></div>
 </div>
 
 <!-- ==================== SANKTION DETAIL PAGES (dynamisch) ==================== -->
