@@ -1580,7 +1580,17 @@ window.sendBeweisLink = async function() {
 // ===== MITARBEITER =====
 async function loadMitarbeiter() {
   const snap = await getDocs(collection(db,'mitarbeiter'));
-  mitarbeiterData = snap.docs.map(d => ({...d.data(), _id: d.id}));
+  mitarbeiterData = snap.docs.map(d => {
+    const data = d.data();
+    // Sicherstellen dass alle Ausbildungsfelder existieren
+    const defaultAusb = {
+      GA:false, EHK:false, ES:false, OP:false, OK:false, FULA:false,
+      TST:false, KS:false, OKP:false, FT:false, JP:false, ZP:false,
+      VHP:false, TOW:false, AKS:false
+    };
+    data.ausbildungen = Object.assign({}, defaultAusb, data.ausbildungen || {});
+    return {...data, _id: d.id};
+  });
   renderMitarbeiter();
 }
 
@@ -1593,7 +1603,7 @@ function renderMitarbeiter(filtered=null) {
   tbody.innerHTML = sorted.map(ma => {
     const div = getDivisionLabel(ma.rank);
     const ausb = ma.ausbildungen || {};
-    const chk = (k) => ausb[k] ? '✅' : '⬜';
+    const chk = (k) => ausb[k] === true ? '✅' : '⬜';
     return `<tr>
       <td>${ma.id||''}</td><td>${ma.dn||''}</td><td>${ma.name||''}</td><td>${ma.tel||''}</td>
       <td>${rankName(ma.rank)||''}</td>
@@ -1662,7 +1672,11 @@ window.addMitarbeiter = async function() {
     zabt: document.getElementById('ma-zabt').value.trim(),
     urlaub: parseInt(document.getElementById('ma-urlaub').textContent)||0,
     strike: parseInt(document.getElementById('ma-strike').textContent)||0,
-    ausbildungen: {}
+    ausbildungen: {
+      GA:false, EHK:false, ES:false, OP:false, OK:false, FULA:false,
+      TST:false, KS:false, OKP:false, FT:false, JP:false, ZP:false,
+      VHP:false, TOW:false, AKS:false
+    }
   };
   try {
     if (editingMaId) {
@@ -1739,7 +1753,7 @@ function renderArchiv(filtered=null) {
   tbody.innerHTML = list.map(ma => {
     const div = getDivisionLabel(ma.rank);
     const ausb = ma.ausbildungen || {};
-    const chk = (k) => ausb[k] ? '✅' : '⬜';
+    const chk = (k) => ausb[k] === true ? '✅' : '⬜';
     return `<tr>
       <td>${ma.id||''}</td><td>${ma.dn||''}</td><td>${ma.name||''}</td><td>${ma.tel||''}</td>
       <td>${rankName(ma.rank)||''}</td>
@@ -1821,9 +1835,15 @@ async function handleFreigabe(z) {
   const qs = await getDocs(q);
   if (qs.empty) {
     // Create minimal Mitarbeiter
+    const emptyAusb = {
+      GA:false, EHK:false, ES:false, OP:false, OK:false, FULA:false,
+      TST:false, KS:false, OKP:false, FT:false, JP:false, ZP:false,
+      VHP:false, TOW:false, AKS:false
+    };
     await addDoc(collection(db,'mitarbeiter'), {
       id: z.id, name:'', dn:'', tel:'', rank:'', division:'',
-      invite:'', rankup:'', abteilung:'', zabt:'', urlaub:0, strike:0, ausbildungen:{},
+      invite:'', rankup:'', abteilung:'', zabt:'', urlaub:0, strike:0,
+      ausbildungen: emptyAusb,
       linkedUid: z.uid||''
     });
     await loadMitarbeiter();
