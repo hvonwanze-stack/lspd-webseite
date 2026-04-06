@@ -1886,28 +1886,42 @@ window.openAddMitarbeiterModal = function() {
 }
 
 window.openEditMitarbeiterModal = async function() {
-  const id = document.getElementById('ma-search').value.trim();
-  if (!id) return showNotif('Bitte ID eingeben','error');
-  const ma = mitarbeiterData.find(m=>m.id===id);
+  const searchId = document.getElementById('ma-search').value.trim();
+  if (!searchId) return showNotif('Bitte ID eingeben','error');
+  
+  // Frisch aus Firestore laden um sicherzustellen dass Daten aktuell sind
+  await loadMitarbeiter();
+  const ma = mitarbeiterData.find(m=>m.id===searchId);
   if (!ma) return showNotif('Mitarbeiter nicht gefunden','error');
+  
   editingMaId = ma._id;
-  document.getElementById('ma-id').value = ma.id||'';
-  document.getElementById('ma-dn').value = ma.dn||'';
-  document.getElementById('ma-name').value = ma.name||'';
-  document.getElementById('ma-tel').value = ma.tel||'';
-  document.getElementById('ma-rank').value = ma.rank||'';
-  updateDivision();
-  document.getElementById('ma-invite').value = ma.invite||'';
-  document.getElementById('ma-rankup').value = ma.rankup||'';
-  document.getElementById('ma-abt').value = ma.abteilung||'';
-  document.getElementById('ma-zabt').value = ma.zabt||'';
-  document.getElementById('ma-urlaub').textContent = String(ma.urlaub||0);
-  document.getElementById('ma-strike').textContent = String(ma.strike||0);
+
+  // Modal zuerst öffnen
   document.querySelector('#addMaModal .modal-title').textContent = 'Mitarbeiter Bearbeiten';
   document.getElementById('addMaSubmitBtn').textContent = 'Speichern';
   document.getElementById('ma-id').readOnly = true;
-  updateDivision();
   openModal('addMaModal');
+
+  // Dann Werte setzen (nach dem Öffnen damit der Browser die Felder rendert)
+  setTimeout(() => {
+    const fill = (id, val) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.value = val !== undefined && val !== null ? String(val) : '';
+    };
+    fill('ma-id',     ma.id);
+    fill('ma-dn',     ma.dn);
+    fill('ma-name',   ma.name);
+    fill('ma-tel',    ma.tel);
+    fill('ma-rank',   ma.rank);
+    fill('ma-invite', ma.invite);
+    fill('ma-rankup', ma.rankup);
+    fill('ma-abt',    ma.abteilung);
+    fill('ma-zabt',   ma.zabt);
+    document.getElementById('ma-urlaub').textContent = String(ma.urlaub||0);
+    document.getElementById('ma-strike').textContent = String(ma.strike||0);
+    updateDivision();
+  }, 30);
 }
 
 window.addMitarbeiter = async function() {
