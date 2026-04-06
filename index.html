@@ -35,8 +35,10 @@
   }
 
   /* ============ PAGE SYSTEM ============ */
-  .page { display: none; min-height: 100vh; }
+  .page { display: none; }
   .page.active { display: block; }
+  #page1 { min-height: 100vh; }
+  #page1.active { display: flex; }
 
   /* ============ NOTIFICATIONS ============ */
   .notification {
@@ -936,8 +938,10 @@ onAuthStateChanged(auth, async (user) => {
       }
 
       if (zugDoc.exists() && zugDoc.data().freigegeben === true) {
+        document.getElementById('page1').style.display = 'none';
         document.getElementById('page1').classList.remove('active');
         document.getElementById('innerPages').style.display = 'block';
+        window.scrollTo(0, 0);
         loadAllData();
         showPage(2);
         loadUserDashboard(zugDoc.data());
@@ -1066,32 +1070,27 @@ window.doLogout = async function() {
   currentUser = null;
   document.getElementById('innerPages').style.display = 'none';
   document.querySelectorAll('#innerPages .page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page1').style.display = '';
   document.getElementById('page1').classList.add('active');
+  document.getElementById('loginError').style.display = 'none';
+  window.scrollTo(0, 0);
 }
 
 // ===== DASHBOARD =====
 async function loadUserDashboard(zugData) {
   const id = zugData.id;
-  // Find matching Mitarbeiter
-  const maDoc = await getDocs(query(collection(db,'mitarbeiter'), where('id','==',id)));
-  if (!maDoc.empty) {
-    const ma = maDoc.docs[0].data();
-    document.getElementById('db-name').textContent = ma.name || '';
-    document.getElementById('db-id').textContent = ma.id || '';
-    document.getElementById('db-tel').textContent = ma.tel || '';
-    document.getElementById('db-dn').textContent = ma.dn || '';
-    document.getElementById('db-rang').textContent = rankName(ma.rank) || '';
-    document.getElementById('db-abt').textContent = ma.abteilung || '';
-    document.getElementById('db-zabt').textContent = ma.zabt || '';
-    document.getElementById('db-invite').textContent = ma.invite || '';
-    document.getElementById('db-rankup').textContent = ma.rankup || '';
-    document.getElementById('db-urlaub').textContent = ma.urlaub || '0';
-    document.getElementById('db-strike').textContent = ma.strike || '0';
-  } else {
-    document.getElementById('db-name').textContent = zugData.name || '';
-    document.getElementById('db-id').textContent = zugData.id || '';
-    document.getElementById('db-tel').textContent = zugData.tel || '';
-  }
+  // Nur ID anzeigen, Rest leer lassen
+  document.getElementById('db-id').textContent = id || '';
+  document.getElementById('db-name').textContent = '';
+  document.getElementById('db-tel').textContent = '';
+  document.getElementById('db-dn').textContent = '';
+  document.getElementById('db-rang').textContent = '';
+  document.getElementById('db-abt').textContent = '';
+  document.getElementById('db-zabt').textContent = '';
+  document.getElementById('db-invite').textContent = '';
+  document.getElementById('db-rankup').textContent = '';
+  document.getElementById('db-urlaub').textContent = '';
+  document.getElementById('db-strike').textContent = '';
 }
 
 // ===== MITARBEITER =====
