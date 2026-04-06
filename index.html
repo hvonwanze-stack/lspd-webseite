@@ -2304,17 +2304,15 @@ window.deleteSanktion = function() {
 window.showSanktionPage = function(nr) {
   const s = sanktionData.find(x=>x.nr===nr||x._id===nr);
   if (!s) return;
-  // Hide nav buttons for sanction detail pages
+  // Hide only nav buttons row, keep the top header
   const navButtons = document.querySelector('.nav-buttons');
   if (navButtons) navButtons.style.display = 'none';
-  const navHeader = document.querySelector('.nav-header');
-  if (navHeader) navHeader.style.display = 'none';
   let dp = document.getElementById('sank-detail-'+s.nr);
   if (!dp) {
     dp = document.createElement('div');
     dp.id = 'sank-detail-'+s.nr;
     dp.className = 'page';
-    dp.style.cssText = 'min-height:100vh;';
+    dp.style.cssText = 'position:fixed;inset:0;z-index:500;background:var(--bg-dark);overflow-y:auto;display:none;';
     dp.innerHTML = `
       <div style="display:flex;align-items:center;padding:8px 12px;background:var(--bg-panel);border-bottom:1px solid var(--border);">
         <button class="tool-btn back" onclick="backFromSanktionDetail('${s.nr}')">← BACK</button>
@@ -2342,16 +2340,20 @@ window.showSanktionPage = function(nr) {
     document.getElementById('sanktionPages').appendChild(dp);
   }
   // Hide all
-  document.querySelectorAll('#innerPages .page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('#sanktionPages .page').forEach(p=>p.classList.remove('active'));
-  document.getElementById('innerPages').style.display = 'block';
+  // Show detail page as overlay
+  document.querySelectorAll('#sanktionPages .page').forEach(p=>{p.classList.remove('active'); p.style.display='none';});
+  dp.style.display = 'block';
   dp.classList.add('active');
 }
 
 window.backFromSanktionDetail = function(nr) {
-  document.querySelectorAll('#sanktionPages .page').forEach(p=>p.classList.remove('active'));
-  const navHeader = document.querySelector('.nav-header');
-  if (navHeader) navHeader.style.display = '';
+  document.querySelectorAll('#sanktionPages .page').forEach(p=>{
+    p.classList.remove('active');
+    p.style.display = 'none';
+  });
+  // Restore nav buttons
+  const navButtons = document.querySelector('.nav-buttons');
+  if (navButtons) navButtons.style.display = 'none'; // page 10 hides nav
   showPage(10);
 }
 // Page 13 nav hide handled by showPage HIDE_NAV_PAGES array
