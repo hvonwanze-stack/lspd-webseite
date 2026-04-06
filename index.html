@@ -858,15 +858,6 @@
             <td class="ausb-chk-cell"><span id="db-chk-AKS">⬜</span></td><td class="ausb-lbl-cell">AKS</td>
             <td class="ausb-chk-cell"></td><td class="ausb-lbl-cell"></td>
           </tr>
-          <!-- Freiwillige Ausbildungen -->
-          <tr>
-            <th colspan="6" style="background:linear-gradient(135deg,#374151,#4b5563);padding:5px 8px;text-align:left;font-size:11px;letter-spacing:1px;border-bottom:1px solid rgba(255,255,255,0.1);">Freiwillige Ausbildungen</th>
-          </tr>
-          <tr>
-            <td class="ausb-chk-cell"><span id="db-chk-TOW">⬜</span></td><td class="ausb-lbl-cell">TOW/BLZ</td>
-            <td class="ausb-chk-cell"><span id="db-chk-VHP">⬜</span></td><td class="ausb-lbl-cell">EL/VHP</td>
-            <td class="ausb-chk-cell"></td><td class="ausb-lbl-cell"></td>
-          </tr>
           <!-- Für Sergeant -->
           <tr>
             <th colspan="6" style="background:linear-gradient(135deg,#b45309,#e07b20);padding:5px 8px;text-align:left;font-size:11px;letter-spacing:1px;border-bottom:1px solid rgba(255,255,255,0.1);">Für Sergeant</th>
@@ -874,6 +865,15 @@
           <tr>
             <td class="ausb-chk-cell"><span id="db-chk-SP">⬜</span></td><td class="ausb-lbl-cell">SP</td>
             <td class="ausb-chk-cell"></td><td class="ausb-lbl-cell"></td>
+            <td class="ausb-chk-cell"></td><td class="ausb-lbl-cell"></td>
+          </tr>
+          <!-- Freiwillige Ausbildungen -->
+          <tr>
+            <th colspan="6" style="background:linear-gradient(135deg,#374151,#4b5563);padding:5px 8px;text-align:left;font-size:11px;letter-spacing:1px;border-bottom:1px solid rgba(255,255,255,0.1);">Freiwillige Ausbildungen</th>
+          </tr>
+          <tr>
+            <td class="ausb-chk-cell"><span id="db-chk-TOW">⬜</span></td><td class="ausb-lbl-cell">TOW/BLZ</td>
+            <td class="ausb-chk-cell"><span id="db-chk-VHP">⬜</span></td><td class="ausb-lbl-cell">EL/VHP</td>
             <td class="ausb-chk-cell"></td><td class="ausb-lbl-cell"></td>
           </tr>
         </table>
@@ -1044,7 +1044,7 @@
           <th class="sep-col"></th>
           <th>GA</th><th>EHK</th><th>ES</th><th>OP</th><th>OK</th><th>FULA</th>
           <th>TST</th><th>KS</th><th>OK+</th><th>FT</th>
-          <th>JP</th><th>ZP</th><th>VHP</th><th>SP</th><th>TOW</th><th>AKS</th>
+          <th>JP</th><th>ZP</th><th>SP</th><th>VHP</th><th>TOW</th><th>AKS</th>
         </tr>
       </thead>
       <tbody id="ma-tbody"></tbody>
@@ -1267,7 +1267,7 @@
           <th class="sep-col"></th>
           <th>GA</th><th>EHK</th><th>ES</th><th>OP</th><th>OK</th><th>FULA</th>
           <th>TST</th><th>KS</th><th>OK+</th><th>FT</th>
-          <th>JP</th><th>ZP</th><th>VHP</th><th>SP</th><th>TOW</th><th>AKS</th>
+          <th>JP</th><th>ZP</th><th>SP</th><th>VHP</th><th>TOW</th><th>AKS</th>
         </tr>
       </thead>
       <tbody id="arch-tbody"></tbody>
@@ -1315,11 +1315,11 @@
 
 
 <!-- ==================== PAGE 14 ==================== -->
-<div id="page14" class="page">
-  <div class="toolbar">
+<div id="page14" class="page" style="position:fixed;inset:0;z-index:200;background:var(--bg-dark);display:none;flex-direction:column;">
+  <div style="padding:8px 12px;background:var(--bg-panel);border-bottom:1px solid var(--border);flex-shrink:0;">
     <button class="tool-btn back" onclick="showPage(7)">← BACK</button>
   </div>
-  <div class="table-wrapper">
+  <div class="table-wrapper" style="flex:1;overflow-y:auto;">
     <table class="data-table" style="width:100%;">
       <thead>
         <tr>
@@ -1410,6 +1410,12 @@ window.showPage = function(n) {
   const navButtons = document.querySelector('.nav-buttons');
   if (navButtons) {
     navButtons.style.display = HIDE_NAV_PAGES.includes(n) ? 'none' : 'flex';
+  }
+
+  // Page 14 uses fixed positioning - handle display separately
+  const p14 = document.getElementById('page14');
+  if (p14) {
+    p14.style.display = (n === 14) ? 'flex' : 'none';
   }
 
 
@@ -1837,7 +1843,7 @@ function renderMitarbeiter(filtered=null) {
       <td>${chk('GA')}</td><td>${chk('EHK')}</td><td>${chk('ES')}</td><td>${chk('OP')}</td>
       <td>${chk('OK')}</td><td>${chk('FULA')}</td><td>${chk('TST')}</td><td>${chk('KS')}</td>
       <td>${chk('OKP')}</td><td>${chk('FT')}</td>
-      <td>${chk('JP')}</td><td>${chk('ZP')}</td><td>${chk('VHP')}</td><td>${chk('SP')}</td><td>${chk('TOW')}</td><td>${chk('AKS')}</td>
+      <td>${chk('JP')}</td><td>${chk('ZP')}</td><td>${chk('SP')}</td><td>${chk('VHP')}</td><td>${chk('TOW')}</td><td>${chk('AKS')}</td>
     </tr>`;
   }).join('');
 }
@@ -1991,7 +1997,7 @@ function renderArchiv(filtered=null) {
       <td>${chk('GA')}</td><td>${chk('EHK')}</td><td>${chk('ES')}</td><td>${chk('OP')}</td>
       <td>${chk('OK')}</td><td>${chk('FULA')}</td><td>${chk('TST')}</td><td>${chk('KS')}</td>
       <td>${chk('OKP')}</td><td>${chk('FT')}</td>
-      <td>${chk('JP')}</td><td>${chk('ZP')}</td><td>${chk('VHP')}</td><td>${chk('SP')}</td><td>${chk('TOW')}</td><td>${chk('AKS')}</td>
+      <td>${chk('JP')}</td><td>${chk('ZP')}</td><td>${chk('SP')}</td><td>${chk('VHP')}</td><td>${chk('TOW')}</td><td>${chk('AKS')}</td>
     </tr>`;
   }).join('');
 }
