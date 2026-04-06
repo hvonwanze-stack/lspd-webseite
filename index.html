@@ -701,19 +701,19 @@
     <div class="modal-title">IC Infos</div>
     <div class="modal-field">
       <div class="modal-label">ID *</div>
-      <input class="modal-input" id="reg-id" placeholder="Deine IC ID" type="text">
+      <input class="modal-input" autocomplete="off" id="reg-id" placeholder="Deine IC ID" type="text">
     </div>
     <div class="modal-field">
       <div class="modal-label">Name *</div>
-      <input class="modal-input" id="reg-name" placeholder="IC Vorname" type="text">
+      <input class="modal-input" autocomplete="off" id="reg-name" placeholder="IC Vorname" type="text">
     </div>
     <div class="modal-field">
       <div class="modal-label">Nachname *</div>
-      <input class="modal-input" id="reg-nachname" placeholder="IC Nachname" type="text">
+      <input class="modal-input" autocomplete="off" id="reg-nachname" placeholder="IC Nachname" type="text">
     </div>
     <div class="modal-field">
       <div class="modal-label">Telefonnummer *</div>
-      <input class="modal-input" id="reg-tel" placeholder="IC Telefonnummer" type="text">
+      <input class="modal-input" autocomplete="off" id="reg-tel" placeholder="IC Telefonnummer" type="text">
     </div>
     <div class="modal-warning">
       ⚠️ Alle angeben Daten sollen vom einem GTA5 RP Server sein, heißt alle angegeben Daten sind rein Fiktiv und Dürfen keine echten Daten sein aus dem echten leben sein!!!
@@ -884,7 +884,7 @@
       <div class="db-card-body">
         <div class="sonder-box" id="db-sonder"></div>
         <div style="margin-top:12px;display:flex;gap:10px;align-items:center;">
-          <input class="modal-input" id="db-beweis-input" placeholder="Beweis-Link einfügen (nur Links)" style="flex:1;">
+          <input class="modal-input" autocomplete="off" id="db-beweis-input" placeholder="Beweis-Link einfügen (nur Links)" style="flex:1;">
           <button class="tool-btn purple" onclick="sendBeweisLink()" style="white-space:nowrap;">Senden</button>
         </div>
         <div id="db-beweis-status" style="font-size:12px;color:var(--text-dim);margin-top:6px;"></div>
@@ -917,7 +917,7 @@
     <div class="ml-auto"></div>
     <button class="tool-btn" onclick="openModal('editRuleModal')" title="Regel bearbeiten">✏️</button>
     <button class="tool-btn" onclick="searchRule()">🔍</button>
-    <input class="search-input" id="sk-search" placeholder="§ Durchsuchen" style="margin-left:4px;">
+    <input class="search-input" autocomplete="off" id="sk-search" placeholder="§ Durchsuchen" style="margin-left:4px;">
     <button class="tool-btn" onclick="showPage(10)" title="Sanktionsarchiv">📁</button>
   </div>
   <div class="sk-container table-wrapper" id="sk-table-wrap">
@@ -950,22 +950,22 @@
 <div class="modal-overlay" id="addRuleModal">
   <div class="modal">
     <div class="modal-title">Regel Hinzufügen</div>
-    <div class="modal-field"><div class="modal-label">§</div><input class="modal-input" id="ar-para" placeholder="§ Nummer"></div>
-    <div class="modal-field"><div class="modal-label">Regeldefinition</div><input class="modal-input" id="ar-def" placeholder="Regeldefinition"></div>
+    <div class="modal-field"><div class="modal-label">§</div><input class="modal-input" autocomplete="off" id="ar-para" placeholder="§ Nummer"></div>
+    <div class="modal-field"><div class="modal-label">Regeldefinition</div><input class="modal-input" autocomplete="off" id="ar-def" placeholder="Regeldefinition"></div>
     <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;">
-      <div class="modal-field"><div class="modal-label">0</div><input class="modal-input" id="ar-0" placeholder="0"></div>
-      <div class="modal-field"><div class="modal-label">1</div><input class="modal-input" id="ar-1" placeholder="1"></div>
-      <div class="modal-field"><div class="modal-label">2</div><input class="modal-input" id="ar-2" placeholder="2"></div>
-      <div class="modal-field"><div class="modal-label">3</div><input class="modal-input" id="ar-3" placeholder="3"></div>
-      <div class="modal-field"><div class="modal-label">4</div><input class="modal-input" id="ar-4" placeholder="4"></div>
-      <div class="modal-field"><div class="modal-label">5</div><input class="modal-input" id="ar-5" placeholder="5"></div>
-      <div class="modal-field"><div class="modal-label">6</div><input class="modal-input" id="ar-6" placeholder="6"></div>
-      <div class="modal-field"><div class="modal-label">7</div><input class="modal-input" id="ar-7" placeholder="7"></div>
-      <div class="modal-field"><div class="modal-label">8</div><input class="modal-input" id="ar-8" placeholder="8"></div>
-      <div class="modal-field"><div class="modal-label">9</div><input class="modal-input" id="ar-9" placeholder="9"></div>
-      <div class="modal-field"><div class="modal-label">10</div><input class="modal-input" id="ar-10" placeholder="10"></div>
-      <div class="modal-field"><div class="modal-label">11</div><input class="modal-input" id="ar-11" placeholder="11"></div>
-      <div class="modal-field"><div class="modal-label">12</div><input class="modal-input" id="ar-12" placeholder="12"></div>
+      <div class="modal-field"><div class="modal-label">0</div><input class="modal-input" autocomplete="off" id="ar-0" placeholder="0"></div>
+      <div class="modal-field"><div class="modal-label">1</div><input class="modal-input" autocomplete="off" id="ar-1" placeholder="1"></div>
+      <div class="modal-field"><div class="modal-label">2</div><input class="modal-input" autocomplete="off" id="ar-2" placeholder="2"></div>
+      <div class="modal-field"><div class="modal-label">3</div><input class="modal-input" autocomplete="off" id="ar-3" placeholder="3"></div>
+      <div class="modal-field"><div class="modal-label">4</div><input class="modal-input" autocomplete="off" id="ar-4" placeholder="4"></div>
+      <div class="modal-field"><div class="modal-label">5</div><input class="modal-input" autocomplete="off" id="ar-5" placeholder="5"></div>
+      <div class="modal-field"><div class="modal-label">6</div><input class="modal-input" autocomplete="off" id="ar-6" placeholder="6"></div>
+      <div class="modal-field"><div class="modal-label">7</div><input class="modal-input" autocomplete="off" id="ar-7" placeholder="7"></div>
+      <div class="modal-field"><div class="modal-label">8</div><input class="modal-input" autocomplete="off" id="ar-8" placeholder="8"></div>
+      <div class="modal-field"><div class="modal-label">9</div><input class="modal-input" autocomplete="off" id="ar-9" placeholder="9"></div>
+      <div class="modal-field"><div class="modal-label">10</div><input class="modal-input" autocomplete="off" id="ar-10" placeholder="10"></div>
+      <div class="modal-field"><div class="modal-label">11</div><input class="modal-input" autocomplete="off" id="ar-11" placeholder="11"></div>
+      <div class="modal-field"><div class="modal-label">12</div><input class="modal-input" autocomplete="off" id="ar-12" placeholder="12"></div>
     </div>
     <div class="modal-btns">
       <button class="btn-modal gray" onclick="closeModal('addRuleModal')">Abbrechen</button>
@@ -994,22 +994,22 @@
   <div class="modal">
     <div class="modal-title">Regel Bearbeiten</div>
     <input type="hidden" id="er-idx">
-    <div class="modal-field"><div class="modal-label">§</div><input class="modal-input" id="er-para" placeholder="§ Nummer" readonly></div>
-    <div class="modal-field"><div class="modal-label">Regeldefinition</div><input class="modal-input" id="er-def" placeholder="Regeldefinition"></div>
+    <div class="modal-field"><div class="modal-label">§</div><input class="modal-input" autocomplete="off" id="er-para" placeholder="§ Nummer" readonly></div>
+    <div class="modal-field"><div class="modal-label">Regeldefinition</div><input class="modal-input" autocomplete="off" id="er-def" placeholder="Regeldefinition"></div>
     <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;">
-      <div class="modal-field"><div class="modal-label">0</div><input class="modal-input" id="er-0"></div>
-      <div class="modal-field"><div class="modal-label">1</div><input class="modal-input" id="er-1"></div>
-      <div class="modal-field"><div class="modal-label">2</div><input class="modal-input" id="er-2"></div>
-      <div class="modal-field"><div class="modal-label">3</div><input class="modal-input" id="er-3"></div>
-      <div class="modal-field"><div class="modal-label">4</div><input class="modal-input" id="er-4"></div>
-      <div class="modal-field"><div class="modal-label">5</div><input class="modal-input" id="er-5"></div>
-      <div class="modal-field"><div class="modal-label">6</div><input class="modal-input" id="er-6"></div>
-      <div class="modal-field"><div class="modal-label">7</div><input class="modal-input" id="er-7"></div>
-      <div class="modal-field"><div class="modal-label">8</div><input class="modal-input" id="er-8"></div>
-      <div class="modal-field"><div class="modal-label">9</div><input class="modal-input" id="er-9"></div>
-      <div class="modal-field"><div class="modal-label">10</div><input class="modal-input" id="er-10"></div>
-      <div class="modal-field"><div class="modal-label">11</div><input class="modal-input" id="er-11"></div>
-      <div class="modal-field"><div class="modal-label">12</div><input class="modal-input" id="er-12"></div>
+      <div class="modal-field"><div class="modal-label">0</div><input class="modal-input" autocomplete="off" id="er-0"></div>
+      <div class="modal-field"><div class="modal-label">1</div><input class="modal-input" autocomplete="off" id="er-1"></div>
+      <div class="modal-field"><div class="modal-label">2</div><input class="modal-input" autocomplete="off" id="er-2"></div>
+      <div class="modal-field"><div class="modal-label">3</div><input class="modal-input" autocomplete="off" id="er-3"></div>
+      <div class="modal-field"><div class="modal-label">4</div><input class="modal-input" autocomplete="off" id="er-4"></div>
+      <div class="modal-field"><div class="modal-label">5</div><input class="modal-input" autocomplete="off" id="er-5"></div>
+      <div class="modal-field"><div class="modal-label">6</div><input class="modal-input" autocomplete="off" id="er-6"></div>
+      <div class="modal-field"><div class="modal-label">7</div><input class="modal-input" autocomplete="off" id="er-7"></div>
+      <div class="modal-field"><div class="modal-label">8</div><input class="modal-input" autocomplete="off" id="er-8"></div>
+      <div class="modal-field"><div class="modal-label">9</div><input class="modal-input" autocomplete="off" id="er-9"></div>
+      <div class="modal-field"><div class="modal-label">10</div><input class="modal-input" autocomplete="off" id="er-10"></div>
+      <div class="modal-field"><div class="modal-label">11</div><input class="modal-input" autocomplete="off" id="er-11"></div>
+      <div class="modal-field"><div class="modal-label">12</div><input class="modal-input" autocomplete="off" id="er-12"></div>
     </div>
     <div class="modal-btns">
       <button class="btn-modal gray" onclick="closeModal('editRuleModal')">Abbrechen</button>
@@ -1027,7 +1027,7 @@
     <button class="tool-btn" onclick="openAusbildungModal()" title="Ausbildungen bearbeiten">📋</button>
     <button class="tool-btn" onclick="openEditMitarbeiterModal()" title="Bearbeiten">✏️</button>
     <button class="tool-btn" onclick="searchMitarbeiter()">🔍</button>
-    <input class="search-input" id="ma-search" placeholder="Mitarbeiter Suchen">
+    <input class="search-input" autocomplete="off" id="ma-search" placeholder="Mitarbeiter Suchen">
     <button class="tool-btn" onclick="archiveMitarbeiter()" title="Archivieren">📦→</button>
     <button class="tool-btn" onclick="showPage(9)" title="Archiv">📁</button>
   </div>
@@ -1057,13 +1057,13 @@
   <div class="modal" style="width:600px">
     <div class="modal-title">Mitarbeiter Hinzufügen</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-      <div class="modal-field"><div class="modal-label">ID *</div><input class="modal-input" id="ma-id" placeholder="ID"></div>
-      <div class="modal-field"><div class="modal-label">DN</div><input class="modal-input" id="ma-dn" placeholder="Dienstnummer"></div>
-      <div class="modal-field"><div class="modal-label">Name</div><input class="modal-input" id="ma-name" placeholder="Name"></div>
-      <div class="modal-field"><div class="modal-label">Tel. NR.</div><input class="modal-input" id="ma-tel" placeholder="Telefonnummer"></div>
+      <div class="modal-field"><div class="modal-label">ID *</div><input class="modal-input" autocomplete="off" id="ma-id" placeholder="ID"></div>
+      <div class="modal-field"><div class="modal-label">DN</div><input class="modal-input" autocomplete="off" id="ma-dn" placeholder="Dienstnummer"></div>
+      <div class="modal-field"><div class="modal-label">Name</div><input class="modal-input" autocomplete="off" id="ma-name" placeholder="Name"></div>
+      <div class="modal-field"><div class="modal-label">Tel. NR.</div><input class="modal-input" autocomplete="off" id="ma-tel" placeholder="Telefonnummer"></div>
       <div class="modal-field">
         <div class="modal-label">Rank</div>
-        <select class="modal-input" id="ma-rank" onchange="updateDivision()">
+        <select class="modal-input" autocomplete="off" id="ma-rank" onchange="updateDivision()">
           <option value="">-- Rang wählen --</option>
           <option value="1">1 - Suspended</option>
           <option value="2">2 - Cadet</option>
@@ -1097,11 +1097,11 @@
           <option value="30">30 - Chief of Police</option>
         </select>
       </div>
-      <div class="modal-field"><div class="modal-label">Division (auto)</div><input class="modal-input" id="ma-div" readonly placeholder="Automatisch"></div>
-      <div class="modal-field"><div class="modal-label">Invite Datum</div><input class="modal-input" id="ma-invite" type="date"></div>
-      <div class="modal-field"><div class="modal-label">Last RankUp</div><input class="modal-input" id="ma-rankup" type="date"></div>
-      <div class="modal-field"><div class="modal-label">Abteilung</div><input class="modal-input" id="ma-abt" placeholder="Abteilung"></div>
-      <div class="modal-field"><div class="modal-label">Zweit Abteilung</div><input class="modal-input" id="ma-zabt" placeholder="Zweit Abteilung"></div>
+      <div class="modal-field"><div class="modal-label">Division (auto)</div><input class="modal-input" autocomplete="off" id="ma-div" readonly placeholder="Automatisch"></div>
+      <div class="modal-field"><div class="modal-label">Invite Datum</div><input class="modal-input" autocomplete="off" id="ma-invite" type="date"></div>
+      <div class="modal-field"><div class="modal-label">Last RankUp</div><input class="modal-input" autocomplete="off" id="ma-rankup" type="date"></div>
+      <div class="modal-field"><div class="modal-label">Abteilung</div><input class="modal-input" autocomplete="off" id="ma-abt" placeholder="Abteilung"></div>
+      <div class="modal-field"><div class="modal-label">Zweit Abteilung</div><input class="modal-input" autocomplete="off" id="ma-zabt" placeholder="Zweit Abteilung"></div>
       <div class="modal-field">
         <div class="modal-label">Urlaub (max 3)</div>
         <div class="spinner-row">
@@ -1164,7 +1164,7 @@
     <button class="tool-btn red" onclick="deleteZugriff()">✕</button>
     <button class="tool-btn" onclick="openEditZugriffModal()">✏️</button>
     <button class="tool-btn" onclick="searchZugriff()">🔍</button>
-    <input class="search-input" id="zug-search" placeholder="Zugriff Durchsuchen">
+    <input class="search-input" autocomplete="off" id="zug-search" placeholder="Zugriff Durchsuchen">
   </div>
   <div class="table-wrapper">
     <table class="data-table" id="zug-table">
@@ -1183,14 +1183,14 @@
 <div class="modal-overlay" id="addZugriffModal">
   <div class="modal">
     <div class="modal-title">Zugriff Hinzufügen</div>
-    <div class="modal-field"><div class="modal-label">ID *</div><input class="modal-input" id="az-id" placeholder="ID"></div>
-    <div class="modal-field"><div class="modal-label">Name</div><input class="modal-input" id="az-name" placeholder="Name"></div>
-    <div class="modal-field"><div class="modal-label">Nachname</div><input class="modal-input" id="az-nachname" placeholder="Nachname"></div>
-    <div class="modal-field"><div class="modal-label">Telefonnummer</div><input class="modal-input" id="az-tel" placeholder="Telefonnummer"></div>
-    <div class="modal-field"><div class="modal-label">Email</div><input class="modal-input" id="az-email" placeholder="Email" type="email"></div>
+    <div class="modal-field"><div class="modal-label">ID *</div><input class="modal-input" autocomplete="off" id="az-id" placeholder="ID"></div>
+    <div class="modal-field"><div class="modal-label">Name</div><input class="modal-input" autocomplete="off" id="az-name" placeholder="Name"></div>
+    <div class="modal-field"><div class="modal-label">Nachname</div><input class="modal-input" autocomplete="off" id="az-nachname" placeholder="Nachname"></div>
+    <div class="modal-field"><div class="modal-label">Telefonnummer</div><input class="modal-input" autocomplete="off" id="az-tel" placeholder="Telefonnummer"></div>
+    <div class="modal-field"><div class="modal-label">Email</div><input class="modal-input" autocomplete="off" id="az-email" placeholder="Email" type="email"></div>
     <div class="modal-field">
       <div class="modal-label">Rang (Rechte)</div>
-      <select class="modal-input" id="az-rang">
+      <select class="modal-input" autocomplete="off" id="az-rang">
         <option value="1">1</option><option value="2">2</option><option value="3">3</option>
         <option value="4">4</option><option value="5">5</option><option value="6">6</option>
         <option value="7">7</option><option value="8">8</option><option value="9">9</option>
@@ -1209,14 +1209,14 @@
   <div class="modal">
     <div class="modal-title">Zugriff Bearbeiten</div>
     <input type="hidden" id="ez-idx">
-    <div class="modal-field"><div class="modal-label">ID</div><input class="modal-input" id="ez-id" placeholder="ID" readonly></div>
-    <div class="modal-field"><div class="modal-label">Name</div><input class="modal-input" id="ez-name" placeholder="Name"></div>
-    <div class="modal-field"><div class="modal-label">Nachname</div><input class="modal-input" id="ez-nachname" placeholder="Nachname"></div>
-    <div class="modal-field"><div class="modal-label">Telefonnummer</div><input class="modal-input" id="ez-tel" placeholder="Telefonnummer"></div>
-    <div class="modal-field"><div class="modal-label">Email</div><input class="modal-input" id="ez-email" placeholder="Email"></div>
+    <div class="modal-field"><div class="modal-label">ID</div><input class="modal-input" autocomplete="off" id="ez-id" placeholder="ID" readonly></div>
+    <div class="modal-field"><div class="modal-label">Name</div><input class="modal-input" autocomplete="off" id="ez-name" placeholder="Name"></div>
+    <div class="modal-field"><div class="modal-label">Nachname</div><input class="modal-input" autocomplete="off" id="ez-nachname" placeholder="Nachname"></div>
+    <div class="modal-field"><div class="modal-label">Telefonnummer</div><input class="modal-input" autocomplete="off" id="ez-tel" placeholder="Telefonnummer"></div>
+    <div class="modal-field"><div class="modal-label">Email</div><input class="modal-input" autocomplete="off" id="ez-email" placeholder="Email"></div>
     <div class="modal-field">
       <div class="modal-label">Rang (Rechte)</div>
-      <select class="modal-input" id="ez-rang">
+      <select class="modal-input" autocomplete="off" id="ez-rang">
         <option value="1">1</option><option value="2">2</option><option value="3">3</option>
         <option value="4">4</option><option value="5">5</option><option value="6">6</option>
         <option value="7">7</option><option value="8">8</option><option value="9">9</option>
@@ -1252,7 +1252,7 @@
     </div>
     <button class="tool-btn red" onclick="deleteArchived()">✕</button>
     <button class="tool-btn" onclick="searchArchive()">🔍</button>
-    <input class="search-input" id="arch-search" placeholder="Archiv Durchsuchen">
+    <input class="search-input" autocomplete="off" id="arch-search" placeholder="Archiv Durchsuchen">
   </div>
   <div class="table-wrapper">
     <table class="data-table" id="arch-table">
@@ -1284,7 +1284,7 @@
     <button class="tool-btn purple" onclick="openModal('addSanktionModal')">＋</button>
     <button class="tool-btn red" onclick="deleteSanktion()">✕</button>
     <button class="tool-btn" onclick="searchSanktion()">🔍</button>
-    <input class="search-input" id="sank-search" placeholder="Sanktion Suchen">
+    <input class="search-input" autocomplete="off" id="sank-search" placeholder="Sanktion Suchen">
   </div>
   <div class="table-wrapper">
     <table class="data-table">
@@ -1298,11 +1298,11 @@
 <div class="modal-overlay" id="addSanktionModal">
   <div class="modal">
     <div class="modal-title">Sanktion Erstellen</div>
-    <div class="modal-field"><div class="modal-label">SK NR *</div><input class="modal-input" id="sank-nr" placeholder="SK Nummer"></div>
-    <div class="modal-field"><div class="modal-label">ID</div><input class="modal-input" id="sank-id" placeholder="Mitarbeiter ID"></div>
-    <div class="modal-field"><div class="modal-label">Name</div><input class="modal-input" id="sank-name" placeholder="Name"></div>
-    <div class="modal-field"><div class="modal-label">Grund der Sanktion</div><input class="modal-input" id="sank-grund" placeholder="Grund"></div>
-    <div class="modal-field"><div class="modal-label">Strafe</div><input class="modal-input" id="sank-strafe" placeholder="Strafe"></div>
+    <div class="modal-field"><div class="modal-label">SK NR *</div><input class="modal-input" autocomplete="off" id="sank-nr" placeholder="SK Nummer"></div>
+    <div class="modal-field"><div class="modal-label">ID</div><input class="modal-input" autocomplete="off" id="sank-id" placeholder="Mitarbeiter ID"></div>
+    <div class="modal-field"><div class="modal-label">Name</div><input class="modal-input" autocomplete="off" id="sank-name" placeholder="Name"></div>
+    <div class="modal-field"><div class="modal-label">Grund der Sanktion</div><input class="modal-input" autocomplete="off" id="sank-grund" placeholder="Grund"></div>
+    <div class="modal-field"><div class="modal-label">Strafe</div><input class="modal-input" autocomplete="off" id="sank-strafe" placeholder="Strafe"></div>
     <div class="modal-btns">
       <button class="btn-modal gray" onclick="closeModal('addSanktionModal')">Abbrechen</button>
       <button class="btn-modal green" onclick="addSanktion()">Erstellen</button>
@@ -1332,6 +1332,13 @@
       </thead>
       <tbody id="p14-tbody"></tbody>
     </table>
+  </div>
+</div>
+
+<!-- ==================== PAGE 15 ==================== -->
+<div id="page15" class="page" style="min-height:100vh;">
+  <div style="padding:8px 12px;background:var(--bg-panel);border-bottom:1px solid var(--border);">
+    <button class="tool-btn back" onclick="showPage(10)">← BACK</button>
   </div>
 </div>
 
@@ -1395,7 +1402,7 @@ window.closeModal = function(id) { document.getElementById(id).classList.remove(
 
 // ===== PAGES =====
 // Pages where nav buttons should be hidden
-const HIDE_NAV_PAGES = [9, 10, 14];
+const HIDE_NAV_PAGES = [9, 10, 14, 15];
 
 window.showPage = function(n) {
   document.querySelectorAll('#innerPages .page').forEach(p => p.classList.remove('active'));
@@ -1420,7 +1427,7 @@ window.showPage = function(n) {
 
 
   // Aktuelle Seite speichern (nur Hauptseiten 2-10)
-  if ((n >= 2 && n <= 10) || n === 14) {
+  if ((n >= 2 && n <= 10) || n === 14 || n === 15) {
     try { localStorage.setItem('lspd_page', n); } catch(e) {}
   }
   window.scrollTo(0, 0);
@@ -1516,7 +1523,7 @@ onAuthStateChanged(auth, async (user) => {
       try {
         const sp = localStorage.getItem('lspd_page');
         const spNum = parseInt(sp);
-        if ((spNum >= 2 && spNum <= 10) || spNum === 14) {
+        if ((spNum >= 2 && spNum <= 10) || spNum === 14 || spNum === 15) {
           savedPage = spNum;
         }
       } catch(e) {}
@@ -1838,7 +1845,8 @@ function renderMitarbeiter(filtered=null) {
       <td><span class="${div.cls}">${div.label}</span></td>
       <td class="sep-col"></td>
       <td>${ma.urlaub||0}</td><td>${ma.strike||0}</td>
-      <td>${ma.invite||''}</td><td>${ma.rankup||''}</td><td></td>
+      <td>${ma.invite||''}</td><td>${ma.rankup||''}</td>
+      <td style="text-align:center;">${checkVoraussetzung(ma) ? '<span style="color:var(--green);font-size:16px;">✅</span>' : ''}</td>
       <td>${ma.abteilung||''}</td><td>${ma.zabt||''}</td>
       <td class="sep-col"></td>
       <td>${chk('GA')}</td><td>${chk('EHK')}</td><td>${chk('ES')}</td><td>${chk('OP')}</td>
@@ -1992,7 +2000,8 @@ function renderArchiv(filtered=null) {
       <td><span class="${div.cls}">${div.label}</span></td>
       <td class="sep-col"></td>
       <td>${ma.urlaub||0}</td><td>${ma.strike||0}</td>
-      <td>${ma.invite||''}</td><td>${ma.rankup||''}</td><td></td>
+      <td>${ma.invite||''}</td><td>${ma.rankup||''}</td>
+      <td style="text-align:center;">${checkVoraussetzung(ma) ? '<span style="color:var(--green);font-size:16px;">✅</span>' : ''}</td>
       <td>${ma.abteilung||''}</td><td>${ma.zabt||''}</td>
       <td class="sep-col"></td>
       <td>${chk('GA')}</td><td>${chk('EHK')}</td><td>${chk('ES')}</td><td>${chk('OP')}</td>
@@ -2190,7 +2199,7 @@ function renderSanktionen(filtered=null) {
   const tbody = document.getElementById('sank-tbody');
   if (!tbody) return;
   tbody.innerHTML = list.map(s => `<tr>
-    <td>${s.id||''}</td><td>${s.name||''}</td><td>${s.grund||''}</td>
+    <td>${s.nr||''}</td><td>${s.id||''}</td><td>${s.name||''}</td><td>${s.grund||''}</td>
     <td>${s.strafe||''}</td>
     <td><button class="tool-btn" onclick="showSanktionPage('${s.nr||s._id}')">Zur Sanktion</button></td>
   </tr>`).join('');
@@ -2243,6 +2252,8 @@ window.showSanktionPage = function(nr) {
   // Hide nav buttons for sanction detail pages
   const navButtons = document.querySelector('.nav-buttons');
   if (navButtons) navButtons.style.display = 'none';
+  const navHeader = document.querySelector('.nav-header');
+  if (navHeader) navHeader.style.display = 'none';
   let dp = document.getElementById('sank-detail-'+s.nr);
   if (!dp) {
     dp = document.createElement('div');
@@ -2250,20 +2261,18 @@ window.showSanktionPage = function(nr) {
     dp.className = 'page';
     dp.style.cssText = 'min-height:100vh;';
     dp.innerHTML = `
-      <div class="toolbar">
+      <div style="padding:8px 12px;background:var(--bg-panel);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;">
         <button class="tool-btn back" onclick="backFromSanktionDetail('${s.nr}')">← BACK</button>
         <div class="ml-auto"></div>
         <button class="tool-btn" onclick="openEditSanktionModal('${s.nr}')">✏️</button>
       </div>
       <div class="table-wrapper" style="padding:10px;">
         <table class="data-table">
-          <thead><tr><th>ID</th><th>Name</th><th>Grund der Sanktion</th><th>Strafe</th><th>Beweise (Nur Links)</th></tr></thead>
+          <thead><tr><th>ID</th><th>Name</th><th>Beweise (Nur Links)</th></tr></thead>
           <tbody>
             <tr>
-              <td id="sd-id-${s.nr}">${s.id||''}</td>
-              <td id="sd-name-${s.nr}">${s.name||''}</td>
-              <td id="sd-grund-${s.nr}">${s.grund||''}</td>
-              <td id="sd-strafe-${s.nr}">${s.strafe||''}</td>
+              <td id="sd-id-${s.nr}"></td>
+              <td id="sd-name-${s.nr}"></td>
               <td id="sd-beweise-${s.nr}">${s.beweise||''}</td>
             </tr>
           </tbody>
@@ -2280,6 +2289,8 @@ window.showSanktionPage = function(nr) {
 
 window.backFromSanktionDetail = function(nr) {
   document.querySelectorAll('#sanktionPages .page').forEach(p=>p.classList.remove('active'));
+  const navHeader = document.querySelector('.nav-header');
+  if (navHeader) navHeader.style.display = '';
   showPage(10);
 }
 // Page 13 nav hide handled by showPage HIDE_NAV_PAGES array
@@ -2287,17 +2298,13 @@ window.backFromSanktionDetail = function(nr) {
 window.openEditSanktionModal = function(nr) {
   const s = sanktionData.find(x=>x.nr===nr);
   if (!s) return;
-  // reuse a simple prompt approach with a modal
   const modal = document.createElement('div');
   modal.className = 'modal-overlay open';
   modal.id = 'tmp-edit-modal';
   modal.innerHTML = `<div class="modal">
     <div class="modal-title">Sanktion Bearbeiten</div>
-    <div class="modal-field"><div class="modal-label">ID (Eigene ID)</div><input class="modal-input" id="se-id" placeholder="Eigene ID" value="${s.id||''}"></div>
-    <div class="modal-field"><div class="modal-label">Name (Eigener Name)</div><input class="modal-input" id="se-name" placeholder="Eigener Name" value="${s.name||''}"></div>
-    <div class="modal-field"><div class="modal-label">Grund der Sanktion</div><input class="modal-input" id="se-grund" value="${s.grund||''}"></div>
-    <div class="modal-field"><div class="modal-label">Strafe</div><input class="modal-input" id="se-strafe" value="${s.strafe||''}"></div>
-    <div class="modal-field"><div class="modal-label">Beweise (Nur Links)</div><input class="modal-input" id="se-beweise" value="${s.beweise||''}"></div>
+    <div class="modal-field"><div class="modal-label">ID (Eigene ID)</div><input class="modal-input" autocomplete="off" id="se-id" placeholder="Eigene ID" value="${s.id||''}"></div>
+    <div class="modal-field"><div class="modal-label">Name (Eigener Name)</div><input class="modal-input" autocomplete="off" id="se-name" placeholder="Eigener Name" value="${s.name||''}"></div>
     <div class="modal-btns">
       <button class="btn-modal gray" onclick="document.getElementById('tmp-edit-modal').remove()">Abbrechen</button>
       <button class="btn-modal blue" onclick="saveSanktionEdit('${s._id}','${nr}')">Speichern</button>
@@ -2309,20 +2316,16 @@ window.openEditSanktionModal = function(nr) {
 window.saveSanktionEdit = async function(docId, nr) {
   const data = {
     id: document.getElementById('se-id').value,
-    name: document.getElementById('se-name').value,
-    grund: document.getElementById('se-grund').value,
-    strafe: document.getElementById('se-strafe').value,
-    beweise: document.getElementById('se-beweise').value
+    name: document.getElementById('se-name').value
   };
   try {
     await updateDoc(doc(db,'sanktionen',docId), data);
-    // Update detail page cells
-    ['id','name','grund','strafe','beweise'].forEach(k=>{
-      const el = document.getElementById(`sd-${k}-${nr}`);
-      if (el) el.textContent = data[k];
-    });
+    const idEl = document.getElementById(`sd-id-${nr}`);
+    if (idEl) idEl.textContent = data.id;
+    const nameEl = document.getElementById(`sd-name-${nr}`);
+    if (nameEl) nameEl.textContent = data.name;
     document.getElementById('tmp-edit-modal').remove();
-    showNotif('Sanktion gespeichert','success');
+    showNotif('Gespeichert','success');
     await loadSanktionen();
   } catch(e) { showNotif('Fehler: '+e.message,'error'); }
 }
@@ -2348,7 +2351,13 @@ function updateSKHeaders() {
 }
 
 function renderSKRules(filtered=null) {
-  const list = filtered || skRules;
+  let list = filtered ? [...filtered] : [...skRules];
+  // Sort by § number ascending
+  list.sort((a, b) => {
+    const numA = parseFloat((a.para || '0').replace('§','').trim()) || 0;
+    const numB = parseFloat((b.para || '0').replace('§','').trim()) || 0;
+    return numA - numB;
+  });
   const tbody = document.getElementById('sk-tbody');
   if (!tbody) return;
   tbody.innerHTML = list.map(r => `<tr>
@@ -2383,7 +2392,7 @@ window.openEditRuleModal = function() {
   skHeaders.forEach((h,i) => {
     const d = document.createElement('div');
     d.className = 'modal-field';
-    d.innerHTML = `<div class="modal-label">${i}</div><input class="modal-input" id="eh-${i}" value="${h}">`;
+    d.innerHTML = `<div class="modal-label">${i}</div><input class="modal-input" autocomplete="off" id="eh-${i}" value="${h}">`;
     grid.appendChild(d);
   });
 }
