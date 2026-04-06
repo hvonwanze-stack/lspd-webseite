@@ -502,6 +502,16 @@
 
   /* ======= TABLES ======= */
   .table-wrapper { overflow-x:auto; }
+  .ausb-chk-cell {
+    width:28px; text-align:center; padding:5px 4px;
+    border-bottom:1px solid rgba(30,58,95,0.2);
+    font-size:14px;
+  }
+  .ausb-lbl-cell {
+    padding:5px 10px 5px 2px; font-size:12px; font-weight:600;
+    color:var(--text); border-bottom:1px solid rgba(30,58,95,0.2);
+    border-right:1px solid rgba(30,58,95,0.15);
+  }
   .sep-col { background:#000 !important; width:6px !important; min-width:6px !important; max-width:6px !important; padding:0 !important; border:none !important; }
   .data-table { width:100%; border-collapse:collapse; font-size:12px; }
   .data-table th {
@@ -765,19 +775,98 @@
     </div>
     <div class="db-card">
       <div class="db-card-header orange">Ausbildungen</div>
-      <div class="db-card-body" style="padding:0">
-        <table class="ausb-full">
-          <tr><th colspan="2">Für Rookie</th><th colspan="2">Für Officer</th><th colspan="2">Für Officer 2</th></tr>
-          <tr><td><input type="checkbox" class="chk" disabled></td><td>GA</td><td><input type="checkbox" class="chk" disabled></td><td>ES</td><td><input type="checkbox" class="chk" disabled></td><td>OK</td></tr>
-          <tr><td><input type="checkbox" class="chk" disabled></td><td>EHK</td><td><input type="checkbox" class="chk" disabled></td><td>OP</td><td><input type="checkbox" class="chk" disabled></td><td>FULA</td></tr>
-          <tr><th colspan="4">Für Officer Fist Class</th><th colspan="2">Für Supervising Officer</th></tr>
-          <tr><td><input type="checkbox" class="chk" disabled></td><td colspan="3">TST</td><td><input type="checkbox" class="chk" disabled></td><td>KS</td></tr>
-          <tr><th colspan="3">Für Senior Supervisor</th><th colspan="3">Für Lead Supervisor</th></tr>
-          <tr><td><input type="checkbox" class="chk" disabled></td><td colspan="2">OK+</td><td><input type="checkbox" class="chk" disabled></td><td colspan="2">FT</td></tr>
-          <tr><th colspan="2">für Corpral</th><th colspan="2">Für Detective</th><th colspan="2">AKS</th></tr>
-          <tr><td><input type="checkbox" class="chk" disabled></td><td>JP</td><td><input type="checkbox" class="chk" disabled></td><td>CP</td><td><input type="checkbox" class="chk" disabled></td><td>AKS</td></tr>
-          <tr><th colspan="6">Freiwillige Ausbildungen</th></tr>
-          <tr><td><input type="checkbox" class="chk" disabled></td><td colspan="2">TOW/BLZ</td><td><input type="checkbox" class="chk" disabled></td><td colspan="2">EL/VHP</td></tr>
+      <div class="db-card-body" style="padding:8px;">
+        <table style="width:100%;border-collapse:collapse;font-size:12px;">
+          <!-- Für Rookie -->
+          <tr>
+            <th colspan="6" style="background:linear-gradient(135deg,#b45309,#e07b20);padding:5px 8px;text-align:left;font-size:11px;letter-spacing:1px;border-bottom:1px solid rgba(255,255,255,0.1);">Für Rookie</th>
+          </tr>
+          <tr>
+            <td class="ausb-chk-cell"><span id="db-chk-GA">⬜</span></td><td class="ausb-lbl-cell">GA</td>
+            <td class="ausb-chk-cell"><span id="db-chk-EHK">⬜</span></td><td class="ausb-lbl-cell">EHK</td>
+            <td class="ausb-chk-cell"></td><td class="ausb-lbl-cell"></td>
+          </tr>
+          <!-- Für Officer -->
+          <tr>
+            <th colspan="6" style="background:linear-gradient(135deg,#b45309,#e07b20);padding:5px 8px;text-align:left;font-size:11px;letter-spacing:1px;border-bottom:1px solid rgba(255,255,255,0.1);">Für Officer</th>
+          </tr>
+          <tr>
+            <td class="ausb-chk-cell"><span id="db-chk-ES">⬜</span></td><td class="ausb-lbl-cell">ES</td>
+            <td class="ausb-chk-cell"><span id="db-chk-OP">⬜</span></td><td class="ausb-lbl-cell">OP</td>
+            <td class="ausb-chk-cell"></td><td class="ausb-lbl-cell"></td>
+          </tr>
+          <!-- Für Officer 2 -->
+          <tr>
+            <th colspan="6" style="background:linear-gradient(135deg,#b45309,#e07b20);padding:5px 8px;text-align:left;font-size:11px;letter-spacing:1px;border-bottom:1px solid rgba(255,255,255,0.1);">Für Officer 2</th>
+          </tr>
+          <tr>
+            <td class="ausb-chk-cell"><span id="db-chk-OK">⬜</span></td><td class="ausb-lbl-cell">OK</td>
+            <td class="ausb-chk-cell"><span id="db-chk-FULA">⬜</span></td><td class="ausb-lbl-cell">FULA</td>
+            <td class="ausb-chk-cell"></td><td class="ausb-lbl-cell"></td>
+          </tr>
+          <!-- Für Officer First Class -->
+          <tr>
+            <th colspan="6" style="background:linear-gradient(135deg,#b45309,#e07b20);padding:5px 8px;text-align:left;font-size:11px;letter-spacing:1px;border-bottom:1px solid rgba(255,255,255,0.1);">Für Officer First Class</th>
+          </tr>
+          <tr>
+            <td class="ausb-chk-cell"><span id="db-chk-TST">⬜</span></td><td class="ausb-lbl-cell">TST</td>
+            <td class="ausb-chk-cell"></td><td class="ausb-lbl-cell"></td>
+            <td class="ausb-chk-cell"></td><td class="ausb-lbl-cell"></td>
+          </tr>
+          <!-- Für Supervising Officer -->
+          <tr>
+            <th colspan="6" style="background:linear-gradient(135deg,#b45309,#e07b20);padding:5px 8px;text-align:left;font-size:11px;letter-spacing:1px;border-bottom:1px solid rgba(255,255,255,0.1);">Für Supervising Officer</th>
+          </tr>
+          <tr>
+            <td class="ausb-chk-cell"><span id="db-chk-KS">⬜</span></td><td class="ausb-lbl-cell">KS</td>
+            <td class="ausb-chk-cell"></td><td class="ausb-lbl-cell"></td>
+            <td class="ausb-chk-cell"></td><td class="ausb-lbl-cell"></td>
+          </tr>
+          <!-- Für Senior Supervisor -->
+          <tr>
+            <th colspan="6" style="background:linear-gradient(135deg,#b45309,#e07b20);padding:5px 8px;text-align:left;font-size:11px;letter-spacing:1px;border-bottom:1px solid rgba(255,255,255,0.1);">Für Senior Supervisor</th>
+          </tr>
+          <tr>
+            <td class="ausb-chk-cell"><span id="db-chk-OKP">⬜</span></td><td class="ausb-lbl-cell">OK+</td>
+            <td class="ausb-chk-cell"></td><td class="ausb-lbl-cell"></td>
+            <td class="ausb-chk-cell"></td><td class="ausb-lbl-cell"></td>
+          </tr>
+          <!-- Für Lead Supervisor -->
+          <tr>
+            <th colspan="6" style="background:linear-gradient(135deg,#b45309,#e07b20);padding:5px 8px;text-align:left;font-size:11px;letter-spacing:1px;border-bottom:1px solid rgba(255,255,255,0.1);">Für Lead Supervisor</th>
+          </tr>
+          <tr>
+            <td class="ausb-chk-cell"><span id="db-chk-FT">⬜</span></td><td class="ausb-lbl-cell">FT</td>
+            <td class="ausb-chk-cell"></td><td class="ausb-lbl-cell"></td>
+            <td class="ausb-chk-cell"></td><td class="ausb-lbl-cell"></td>
+          </tr>
+          <!-- Für Corporal -->
+          <tr>
+            <th colspan="6" style="background:linear-gradient(135deg,#b45309,#e07b20);padding:5px 8px;text-align:left;font-size:11px;letter-spacing:1px;border-bottom:1px solid rgba(255,255,255,0.1);">Für Corporal</th>
+          </tr>
+          <tr>
+            <td class="ausb-chk-cell"><span id="db-chk-JP">⬜</span></td><td class="ausb-lbl-cell">JP</td>
+            <td class="ausb-chk-cell"></td><td class="ausb-lbl-cell"></td>
+            <td class="ausb-chk-cell"></td><td class="ausb-lbl-cell"></td>
+          </tr>
+          <!-- Für Detective -->
+          <tr>
+            <th colspan="6" style="background:linear-gradient(135deg,#b45309,#e07b20);padding:5px 8px;text-align:left;font-size:11px;letter-spacing:1px;border-bottom:1px solid rgba(255,255,255,0.1);">Für Detective</th>
+          </tr>
+          <tr>
+            <td class="ausb-chk-cell"><span id="db-chk-ZP">⬜</span></td><td class="ausb-lbl-cell">ZP</td>
+            <td class="ausb-chk-cell"><span id="db-chk-AKS">⬜</span></td><td class="ausb-lbl-cell">AKS</td>
+            <td class="ausb-chk-cell"></td><td class="ausb-lbl-cell"></td>
+          </tr>
+          <!-- Freiwillige Ausbildungen -->
+          <tr>
+            <th colspan="6" style="background:linear-gradient(135deg,#374151,#4b5563);padding:5px 8px;text-align:left;font-size:11px;letter-spacing:1px;border-bottom:1px solid rgba(255,255,255,0.1);">Freiwillige Ausbildungen</th>
+          </tr>
+          <tr>
+            <td class="ausb-chk-cell"><span id="db-chk-TOW">⬜</span></td><td class="ausb-lbl-cell">TOW/BLZ</td>
+            <td class="ausb-chk-cell"><span id="db-chk-VHP">⬜</span></td><td class="ausb-lbl-cell">EL/VHP</td>
+            <td class="ausb-chk-cell"></td><td class="ausb-lbl-cell"></td>
+          </tr>
         </table>
       </div>
     </div>
@@ -1525,20 +1614,47 @@ async function loadUserDashboard(zugData) {
   const id = zugData.id;
   currentUserICId = id;
 
-  // Nur ID anzeigen
+  // Immer ID anzeigen
   document.getElementById('db-id').textContent = id || '';
-  document.getElementById('db-name').textContent = '';
-  document.getElementById('db-tel').textContent = '';
-  document.getElementById('db-dn').textContent = '';
-  document.getElementById('db-rang').textContent = '';
-  document.getElementById('db-abt').textContent = '';
-  document.getElementById('db-zabt').textContent = '';
-  document.getElementById('db-invite').textContent = '';
-  document.getElementById('db-rankup').textContent = '';
-  document.getElementById('db-urlaub').textContent = '';
-  document.getElementById('db-strike').textContent = '';
 
-  // Load sanctions for this user's ID
+  // Mitarbeiterdaten aus Firestore laden
+  try {
+    const maSnap = await getDocs(query(collection(db,'mitarbeiter'), where('id','==', id)));
+    if (!maSnap.empty) {
+      const ma = maSnap.docs[0].data();
+      document.getElementById('db-name').textContent = ma.name || '';
+      document.getElementById('db-tel').textContent = ma.tel || '';
+      document.getElementById('db-dn').textContent = ma.dn || '';
+      document.getElementById('db-rang').textContent = rankName(ma.rank) || '';
+      document.getElementById('db-abt').textContent = ma.abteilung || '';
+      document.getElementById('db-zabt').textContent = ma.zabt || '';
+      document.getElementById('db-invite').textContent = ma.invite || '';
+      document.getElementById('db-rankup').textContent = ma.rankup || '';
+      document.getElementById('db-urlaub').textContent = ma.urlaub || '0';
+      document.getElementById('db-strike').textContent = ma.strike || '0';
+
+      // Ausbildungen rendern
+      const ausb = ma.ausbildungen || {};
+      renderDashboardAusbildungen(ausb);
+    } else {
+      // Kein Mitarbeiter-Eintrag → alles leer
+      document.getElementById('db-name').textContent = '';
+      document.getElementById('db-tel').textContent = '';
+      document.getElementById('db-dn').textContent = '';
+      document.getElementById('db-rang').textContent = '';
+      document.getElementById('db-abt').textContent = '';
+      document.getElementById('db-zabt').textContent = '';
+      document.getElementById('db-invite').textContent = '';
+      document.getElementById('db-rankup').textContent = '';
+      document.getElementById('db-urlaub').textContent = '';
+      document.getElementById('db-strike').textContent = '';
+      renderDashboardAusbildungen({});
+    }
+  } catch(e) {
+    console.error('Mitarbeiterdaten laden Fehler:', e);
+  }
+
+  // Sanktionen laden
   try {
     const snap = await getDocs(query(collection(db,'sanktionen'), where('id','==', id)));
     currentUserSanktionen = snap.docs.map(d => ({...d.data(), _id: d.id}));
@@ -1546,6 +1662,33 @@ async function loadUserDashboard(zugData) {
   } catch(e) {
     console.error('Sanktionen laden Fehler:', e);
   }
+}
+
+function renderDashboardAusbildungen(ausb) {
+  const checks = [
+    { key:'GA',  label:'GA'      },
+    { key:'EHK', label:'EHK'     },
+    { key:'ES',  label:'ES'      },
+    { key:'OP',  label:'OP'      },
+    { key:'OK',  label:'OK'      },
+    { key:'FULA',label:'FULA'    },
+    { key:'TST', label:'TST'     },
+    { key:'KS',  label:'KS'      },
+    { key:'OKP', label:'OK+'     },
+    { key:'FT',  label:'FT'      },
+    { key:'JP',  label:'JP'      },
+    { key:'ZP',  label:'ZP'      },
+    { key:'VHP', label:'VHP'     },
+    { key:'TOW', label:'TOW'     },
+    { key:'AKS', label:'AKS'     },
+  ];
+  checks.forEach(c => {
+    const chkEl = document.getElementById('db-chk-' + c.key);
+    if (chkEl) {
+      chkEl.textContent = ausb[c.key] === true ? '✅' : '⬜';
+      chkEl.style.color = ausb[c.key] === true ? '#22c55e' : '#3a5a7a';
+    }
+  });
 }
 
 function renderSonderInfos() {
