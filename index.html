@@ -411,17 +411,9 @@
 
   /* ======= PAGE 2 - DASHBOARD ======= */
   .dashboard-grid {
-    display:grid; grid-template-columns:1fr 1fr; gap:12px;
-    max-width:1100px; margin:0 auto; padding:20px 20px 10px;
+    display:grid; grid-template-columns:1fr 1fr; gap:20px;
+    max-width:1100px; margin:0 auto; padding:50px 20px 20px;
   }
-  #page2 { overflow:hidden; max-height:calc(100vh - 100px); }
-  #page2 .dashboard-grid { max-height:calc(100vh - 120px); overflow:hidden; }
-  #page2 .db-card-body { padding:0; }
-  #page2 .db-label, #page2 .db-value { padding:4px 8px; font-size:11px; }
-  #page2 .db-card-header { padding:6px 12px; font-size:12px; }
-  #page2 .ausb-chk-cell { padding:3px 2px; font-size:12px; }
-  #page2 .ausb-lbl-cell { padding:3px 6px 3px 2px; font-size:11px; }
-  #page2 .sonder-box { min-height:40px; font-size:11px; padding:6px; margin:6px; }
   .dashboard-separator {
     height:3px;
     background: linear-gradient(90deg, transparent, #000, #000, #000, transparent);
@@ -1551,20 +1543,31 @@ window.doRegister = async function() {
   if (!id||!name||!nachname||!tel) return showNotif('Bitte alle Felder ausfüllen!','error');
   if (!confirmed) return showNotif('Bitte die Warnung bestätigen!','error');
 
+  // Prüfe ID UND Email-Eindeutigkeit VOR dem Google Login
+  // Kein Login wird gestartet wenn ID oder Email schon existiert
+  try {
+    const zugriffSnap = await getDocs(collection(db, 'zugriff'));
+    const alleZugriff = zugriffSnap.docs.map(d => d.data());
+
+    const idExists = alleZugriff.find(z => z.id === id);
+    if (idExists) {
+      showNotif('ID existiert schon, gib eine andere an.', 'error');
+      return;
+    }
+  } catch(e) {
+    console.warn('[REG] Vorprüfung Fehler:', e.message);
+  }
+
+  // Erst jetzt Google Login öffnen
   showNotif('Öffne Google Anmeldung...', 'success');
   let user = null;
-
-  // Verhindere dass onAuthStateChanged die Kontrolle übernimmt
   isRegistering = true;
-  console.log('[REG] isRegistering = true');
 
   try {
-    console.log('[REG] Starte Google Login...');
     const result = await signInWithPopup(auth, provider);
     user = result.user;
-    console.log('[REG] Google Login OK:', user.email, user.uid);
   } catch(e) {
-    console.error('[REG] Google Login Fehler:', e.code, e.message);
+    isRegistering = false;
     if (e.code === 'auth/popup-closed-by-user') {
       showNotif('Popup geschlossen. Bitte nochmal versuchen.', 'error');
     } else if (e.code === 'auth/popup-blocked') {
@@ -1578,31 +1581,29 @@ window.doRegister = async function() {
   await new Promise(r => setTimeout(r, 800));
 
   try {
-    console.log('[REG] Auth currentUser:', auth.currentUser ? auth.currentUser.email : 'NULL');
-    console.log('[REG] Schreibe in Firestore...');
+    // Nach Login: Email prüfen (jetzt kennen wir die echte Email)
+    const zugriffSnap2 = await getDocs(collection(db, 'zugriff'));
+    const alleZugriff2 = zugriffSnap2.docs.map(d => d.data());
 
+    const emailExists = alleZugriff2.find(z => z.email === user.email);
+    if (emailExists) {
+      isRegistering = false;
+      await signOut(auth);
+      showNotif('Sie haben schon mit dieser Email eine Anfrage gesendet.', 'error');
+      return;
+    }
+
+    // Speichern
     const daten = {
-      id: id,
-      name: name,
-      nachname: nachname,
-      tel: tel,
-      email: user.email,
-      uid: user.uid,
-      rang: 'Admin',
-      freigegeben: false,
+      id: id, name: name, nachname: nachname, tel: tel,
+      email: user.email, uid: user.uid,
+      rang: 'Admin', freigegeben: false,
       timestamp: new Date().toISOString()
     };
 
-    console.log('[REG] Daten:', JSON.stringify(daten));
-
     await setDoc(doc(db, 'anfragen', user.uid), daten);
-    console.log('[REG] anfragen gespeichert!');
-
     await setDoc(doc(db, 'zugriff', user.uid), daten);
-    console.log('[REG] zugriff gespeichert!');
-
     await signOut(auth);
-    console.log('[REG] Ausgeloggt. Fertig!');
     isRegistering = false;
 
     closeModal('registerModal');
@@ -1611,12 +1612,11 @@ window.doRegister = async function() {
     showNotif('Du hast dich erfolgreich Registriert, Warte bis du Freigeben wirst', 'success');
 
   } catch(e) {
-    console.error('[REG] Firestore Fehler:', e.code, e.message, e);
     isRegistering = false;
     try { await signOut(auth); } catch(_) {}
     let msg = e.message;
     if (e.code === 'permission-denied' || (e.message && e.message.includes('permission'))) {
-      msg = 'Firestore Rules Problem! Gehe zu Firebase Console → Firestore → Regeln → setze: allow read, write: if true;';
+      msg = 'Firestore Rules Problem!';
     }
     showNotif('FEHLER: ' + msg, 'error');
   }
@@ -2055,29 +2055,36 @@ async function handleFreigabe(z) {
 
 window.addZugriff = async function() {
   const id = document.getElementById('az-id').value.trim();
+  const email = document.getElementById('az-email').value.trim();
+
   if (!id) return showNotif('ID erforderlich','error');
+
+  // Prüfe ob ID schon existiert
+  const existingId = zugriffData.find(z => z.id === id);
+  if (existingId) return showNotif('Diese ID existiert bereits!', 'error');
+
+  // Prüfe ob Email schon existiert
+  if (email) {
+    const existingEmail = zugriffData.find(z => z.email === email);
+    if (existingEmail) return showNotif('Diese Email existiert bereits!', 'error');
+  }
+
   const data = {
     id,
     name: document.getElementById('az-name').value.trim(),
     nachname: document.getElementById('az-nachname').value.trim(),
     tel: document.getElementById('az-tel').value.trim(),
-    email: document.getElementById('az-email').value.trim(),
+    email: email,
     rang: document.getElementById('az-rang').value,
     freigegeben: false,
-    // uid wird leer gelassen da Admin manuell anlegt (kein Google-Account nötig)
     uid: 'manual-' + id + '-' + Date.now()
   };
-  try {
-    // Prüfe ob ID schon existiert
-    const existing = zugriffData.find(z => z.id === id);
-    if (existing) return showNotif('Diese ID existiert bereits!', 'error');
 
-    // Nutze eine eigene Doc-ID basierend auf der IC-ID damit Rule nicht uid==auth.uid prüft
+  try {
     const docRef = doc(collection(db,'zugriff'));
     await setDoc(docRef, data);
     showNotif('Zugriff hinzugefügt','success');
     closeModal('addZugriffModal');
-    // Felder leeren
     ['az-id','az-name','az-nachname','az-tel','az-email'].forEach(f => document.getElementById(f).value = '');
     await loadZugriff();
   } catch(e) {
