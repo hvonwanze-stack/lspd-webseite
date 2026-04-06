@@ -2772,7 +2772,8 @@ function applyRangPermissions(rang) {
       }
     });
     const p6search = document.getElementById('sk-search');
-    if (p6search) p6search.style.display = rn >= 1 ? '' : 'none';
+    // Rang 1 darf Suchfeld auf Seite 6 nicht sehen
+    if (p6search) p6search.style.display = rn > 1 ? '' : 'none';
 
     // ===== PAGE 7 - MITARBEITER REGISTER =====
     const p7btns = document.querySelectorAll('#page7 .toolbar .tool-btn');
