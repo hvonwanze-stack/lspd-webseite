@@ -913,9 +913,9 @@
 <div id="page6" class="page">
   <div class="toolbar">
     <button class="tool-btn purple" onclick="openModal('addRuleModal')" title="Regel hinzufügen">＋</button>
-    <button class="tool-btn" onclick="openModal('editHeaderModal')" title="Header bearbeiten">✏️</button>
+    <button class="tool-btn" onclick="openEditRuleModal()" title="Spalten umbenennen">✏️</button>
     <div class="ml-auto"></div>
-    <button class="tool-btn" onclick="openModal('editRuleModal')" title="Regel bearbeiten">✏️</button>
+    <button class="tool-btn" onclick="openEditRuleBySearch()" title="Regel bearbeiten">✏️</button>
     <button class="tool-btn" onclick="searchRule()">🔍</button>
     <input class="search-input" autocomplete="off" id="sk-search" placeholder="§ Durchsuchen" style="margin-left:4px;">
     <button class="tool-btn" onclick="showPage(10)" title="Sanktionsarchiv">📁</button>
@@ -977,11 +977,8 @@
 <!-- Edit Header Modal -->
 <div class="modal-overlay" id="editHeaderModal">
   <div class="modal">
-    <div class="modal-title">Header Bearbeiten (0–12)</div>
-    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;">
-      <div class="modal-field" id="ehm-fields"></div>
-    </div>
-    <div id="ehm-grid" style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;"></div>
+    <div class="modal-title">Spalten umbenennen</div>
+    <div id="ehm-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;"></div>
     <div class="modal-btns">
       <button class="btn-modal gray" onclick="closeModal('editHeaderModal')">Abbrechen</button>
       <button class="btn-modal blue" onclick="saveHeader()">Speichern</button>
@@ -996,20 +993,20 @@
     <input type="hidden" id="er-idx">
     <div class="modal-field"><div class="modal-label">§</div><input class="modal-input" autocomplete="off" id="er-para" placeholder="§ Nummer" readonly></div>
     <div class="modal-field"><div class="modal-label">Regeldefinition</div><input class="modal-input" autocomplete="off" id="er-def" placeholder="Regeldefinition"></div>
-    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;">
-      <div class="modal-field"><div class="modal-label">0</div><input class="modal-input" autocomplete="off" id="er-0"></div>
-      <div class="modal-field"><div class="modal-label">1</div><input class="modal-input" autocomplete="off" id="er-1"></div>
-      <div class="modal-field"><div class="modal-label">2</div><input class="modal-input" autocomplete="off" id="er-2"></div>
-      <div class="modal-field"><div class="modal-label">3</div><input class="modal-input" autocomplete="off" id="er-3"></div>
-      <div class="modal-field"><div class="modal-label">4</div><input class="modal-input" autocomplete="off" id="er-4"></div>
-      <div class="modal-field"><div class="modal-label">5</div><input class="modal-input" autocomplete="off" id="er-5"></div>
-      <div class="modal-field"><div class="modal-label">6</div><input class="modal-input" autocomplete="off" id="er-6"></div>
-      <div class="modal-field"><div class="modal-label">7</div><input class="modal-input" autocomplete="off" id="er-7"></div>
-      <div class="modal-field"><div class="modal-label">8</div><input class="modal-input" autocomplete="off" id="er-8"></div>
-      <div class="modal-field"><div class="modal-label">9</div><input class="modal-input" autocomplete="off" id="er-9"></div>
-      <div class="modal-field"><div class="modal-label">10</div><input class="modal-input" autocomplete="off" id="er-10"></div>
-      <div class="modal-field"><div class="modal-label">11</div><input class="modal-input" autocomplete="off" id="er-11"></div>
-      <div class="modal-field"><div class="modal-label">12</div><input class="modal-input" autocomplete="off" id="er-12"></div>
+    <div id="er-fields-grid" style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;">
+      <div class="modal-field"><div class="modal-label" id="er-lbl-0">0</div><input class="modal-input" autocomplete="off" id="er-0"></div>
+      <div class="modal-field"><div class="modal-label" id="er-lbl-1">1</div><input class="modal-input" autocomplete="off" id="er-1"></div>
+      <div class="modal-field"><div class="modal-label" id="er-lbl-2">2</div><input class="modal-input" autocomplete="off" id="er-2"></div>
+      <div class="modal-field"><div class="modal-label" id="er-lbl-3">3</div><input class="modal-input" autocomplete="off" id="er-3"></div>
+      <div class="modal-field"><div class="modal-label" id="er-lbl-4">4</div><input class="modal-input" autocomplete="off" id="er-4"></div>
+      <div class="modal-field"><div class="modal-label" id="er-lbl-5">5</div><input class="modal-input" autocomplete="off" id="er-5"></div>
+      <div class="modal-field"><div class="modal-label" id="er-lbl-6">6</div><input class="modal-input" autocomplete="off" id="er-6"></div>
+      <div class="modal-field"><div class="modal-label" id="er-lbl-7">7</div><input class="modal-input" autocomplete="off" id="er-7"></div>
+      <div class="modal-field"><div class="modal-label" id="er-lbl-8">8</div><input class="modal-input" autocomplete="off" id="er-8"></div>
+      <div class="modal-field"><div class="modal-label" id="er-lbl-9">9</div><input class="modal-input" autocomplete="off" id="er-9"></div>
+      <div class="modal-field"><div class="modal-label" id="er-lbl-10">10</div><input class="modal-input" autocomplete="off" id="er-10"></div>
+      <div class="modal-field"><div class="modal-label" id="er-lbl-11">11</div><input class="modal-input" autocomplete="off" id="er-11"></div>
+      <div class="modal-field"><div class="modal-label" id="er-lbl-12">12</div><input class="modal-input" autocomplete="off" id="er-12"></div>
     </div>
     <div class="modal-btns">
       <button class="btn-modal gray" onclick="closeModal('editRuleModal')">Abbrechen</button>
@@ -1288,7 +1285,7 @@
   </div>
   <div class="table-wrapper">
     <table class="data-table">
-      <thead><tr><th>ID</th><th>Name</th><th>Grund der Sanktion</th><th>Strafe</th><th>Zur Sanktion</th></tr></thead>
+      <thead><tr><th>SK</th><th>ID</th><th>Name</th><th>Grund der Sanktion</th><th>Strafe</th><th>Zur Sanktion</th></tr></thead>
       <tbody id="sank-tbody"></tbody>
     </table>
   </div>
@@ -2385,27 +2382,30 @@ window.searchRule = function() {
 }
 
 window.openEditRuleModal = function() {
+  // Left pencil: edit header names 0-12
   openModal('editHeaderModal');
-  // populate header edit fields
   const grid = document.getElementById('ehm-grid');
   grid.innerHTML = '';
   skHeaders.forEach((h,i) => {
     const d = document.createElement('div');
     d.className = 'modal-field';
-    d.innerHTML = `<div class="modal-label">${i}</div><input class="modal-input" autocomplete="off" id="eh-${i}" value="${h}">`;
+    d.innerHTML = `<div class="modal-label">Name ändern von ${h}</div><input class="modal-input" autocomplete="off" id="eh-${i}" placeholder="${h}" value="${h}">`;
     grid.appendChild(d);
   });
 }
 
 window.saveHeader = async function() {
-  skHeaders = Array.from({length:13},(_,i)=>document.getElementById('eh-'+i)?.value||String(i));
+  skHeaders = Array.from({length:13},(_,i)=>document.getElementById('eh-'+i)?.value.trim()||String(i));
   await setDoc(doc(db,'skConfig','headers'), {headers: skHeaders});
   updateSKHeaders();
   closeModal('editHeaderModal');
-  showNotif('Header gespeichert','success');
+  showNotif('Spalten gespeichert','success');
 }
 
-window.openEditHeaderModal = function() { openModal('editHeaderModal'); }
+window.openEditHeaderModal = function() {
+  // This function is now unused - left pencil handles it via openEditRuleModal
+  openEditRuleModal();
+}
 
 window.saveRule = async function() {
   const idx = document.getElementById('er-idx').value;
@@ -2430,7 +2430,12 @@ window.openEditRuleBySearch = function() {
   document.getElementById('er-idx').value = rule._id;
   document.getElementById('er-para').value = rule.para||'';
   document.getElementById('er-def').value = rule.def||'';
-  for(let i=0;i<=12;i++) document.getElementById('er-'+i).value = rule['v'+i]||'';
+  // Update labels to show current header names
+  for(let i=0;i<=12;i++) {
+    document.getElementById('er-'+i).value = rule['v'+i]||'';
+    const lbl = document.getElementById('er-lbl-'+i);
+    if (lbl) lbl.textContent = skHeaders[i] || String(i);
+  }
   openModal('editRuleModal');
 }
 
