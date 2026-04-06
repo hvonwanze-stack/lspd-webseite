@@ -1879,12 +1879,6 @@ function renderMitarbeiter(filtered=null) {
 
 window.openAddMitarbeiterModal = function() {
   editingMaId = null;
-  ['ma-id','ma-dn','ma-name','ma-tel','ma-div','ma-abt','ma-zabt'].forEach(f=>document.getElementById(f).value='');
-  document.getElementById('ma-rank').value='';
-  document.getElementById('ma-invite').value='';
-  document.getElementById('ma-rankup').value='';
-  document.getElementById('ma-urlaub').textContent='0';
-  document.getElementById('ma-strike').textContent='0';
   document.querySelector('#addMaModal .modal-title').textContent='Mitarbeiter Hinzufügen';
   document.getElementById('addMaSubmitBtn').textContent='Hinzufügen';
   document.getElementById('ma-id').readOnly = false;
