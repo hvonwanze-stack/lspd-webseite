@@ -51,6 +51,38 @@
   .notification.error { background: #7f1d1d; border: 1px solid #ef4444; color: #fca5a5; }
   @keyframes slideIn { from { transform: translateX(100px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
+  /* ============ LOADING SCREEN ============ */
+  #loadingScreen {
+    position: fixed; inset: 0; z-index: 99999;
+    background: #020b18;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 20px;
+  }
+  #loadingScreen.hidden { display: none; }
+  .loader-badge {
+    width: 80px; height: 80px; border-radius: 50%;
+    border: 3px solid #1a3a6b;
+    border-top-color: #c8922a;
+    animation: spin 1s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loader-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 22px; font-weight: 900; color: white; letter-spacing: 3px;
+  }
+  .loader-title span { color: #c8922a; }
+  .loader-sub {
+    font-family: 'Rajdhani', sans-serif;
+    color: #7aa5cc; font-size: 13px; letter-spacing: 4px;
+    animation: blink 1.5s ease infinite;
+  }
+  @keyframes blink { 0%,100% { opacity: 0.3; } 50% { opacity: 1; } }
+
+  /* Hide page1 by default - show only after auth check */
+  #page1 { display: none; }
+  #page1.active { display: flex; }
+
   /* ============ PAGE 1 - LOGIN ============ */
   #page1 {
     background: radial-gradient(ellipse at 30% 50%, #0d2040 0%, #020b18 50%, #030e1a 100%);
@@ -290,6 +322,13 @@
 </style>
 </head>
 <body>
+
+<!-- ==================== LOADING SCREEN ==================== -->
+<div id="loadingScreen">
+  <div class="loader-badge"></div>
+  <div class="loader-title"><span>LSPD</span> Terminal</div>
+  <div class="loader-sub">VERBINDUNG WIRD HERGESTELLT...</div>
+</div>
 
 <!-- ==================== NOTIFICATIONS ==================== -->
 <div id="notif" class="notification" style="display:none"></div>
@@ -900,6 +939,11 @@ window.showPage = function(n) {
   const nb = document.getElementById('nav-p'+n);
   if (nb) nb.classList.add('active');
   currentPage = n;
+  // Aktuelle Seite speichern (nur Hauptseiten 2-10, keine Sanktions-Detailseiten)
+  if (n >= 2 && n <= 10) {
+    try { localStorage.setItem('lspd_page', n); } catch(e) {}
+  }
+  window.scrollTo(0, 0);
   if (n === 7) renderMitarbeiter();
   if (n === 8) renderZugriff();
   if (n === 9) renderArchiv();
@@ -908,48 +952,55 @@ window.showPage = function(n) {
 }
 
 // ===== AUTH =====
-// Flag: wenn true, ignoriert onAuthStateChanged den nächsten Login (z.B. bei Registrierung)
 let isRegistering = false;
 
+function hideLoader() {
+  document.getElementById('loadingScreen').classList.add('hidden');
+}
+
 onAuthStateChanged(auth, async (user) => {
-  // Während Registrierung nichts tun - doRegister übernimmt selbst die Kontrolle
-  if (isRegistering) {
-    console.log('[AUTH] isRegistering=true, überspringe onAuthStateChanged');
-    return;
-  }
+  if (isRegistering) return;
 
   if (user) {
     currentUser = user;
-    console.log('[AUTH] User eingeloggt:', user.email);
-
     try {
       const zugDoc = await getDoc(doc(db, 'zugriff', user.uid));
-      console.log('[AUTH] zugriff doc exists:', zugDoc.exists());
-
-      if (zugDoc.exists()) {
-        console.log('[AUTH] freigegeben:', zugDoc.data().freigegeben);
-      }
-
       if (zugDoc.exists() && zugDoc.data().freigegeben === true) {
+        // Eingeloggt & freigegeben → direkt zu Seite 2
         document.getElementById('page1').style.display = 'none';
         document.getElementById('page1').classList.remove('active');
         document.getElementById('innerPages').style.display = 'block';
         window.scrollTo(0, 0);
-        loadAllData();
-        showPage(2);
+        await loadAllData();
+        // Gespeicherte Seite wiederherstellen
+        let savedPage = 2;
+        try {
+          const sp = localStorage.getItem('lspd_page');
+          if (sp && parseInt(sp) >= 2 && parseInt(sp) <= 10) {
+            savedPage = parseInt(sp);
+          }
+        } catch(e) {}
+        showPage(savedPage);
         loadUserDashboard(zugDoc.data());
+        hideLoader();
       } else {
-        // Kein Zugriff
-        document.getElementById('loginError').style.display = 'block';
-        setTimeout(() => {
-          document.getElementById('loginError').style.display = 'none';
-        }, 5000);
+        // Eingeloggt aber kein Zugriff
         await signOut(auth);
+        hideLoader();
+        document.getElementById('page1').classList.add('active');
+        document.getElementById('loginError').style.display = 'block';
+        setTimeout(() => document.getElementById('loginError').style.display = 'none', 5000);
       }
     } catch(e) {
-      console.error('[AUTH] Fehler beim Zugriff-Check:', e);
+      console.error('[AUTH] Fehler:', e);
       await signOut(auth);
+      hideLoader();
+      document.getElementById('page1').classList.add('active');
     }
+  } else {
+    // Nicht eingeloggt → Login-Seite zeigen
+    hideLoader();
+    document.getElementById('page1').classList.add('active');
   }
 });
 
@@ -1059,6 +1110,7 @@ window.doRegister = async function() {
 
 // ===== LOGOUT =====
 window.doLogout = async function() {
+  try { localStorage.removeItem('lspd_page'); } catch(e) {}
   await signOut(auth);
   currentUser = null;
   document.getElementById('innerPages').style.display = 'none';
