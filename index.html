@@ -1449,9 +1449,9 @@ window.showPage = function(n) {
   if (p14) {
     p14.style.display = (n === 11) ? 'flex' : 'none';
   }
-  // Page 16 is also a fixed overlay
-  const p16 = document.getElementById('page12');
-  if (p16 && n !== 16) p16.style.display = 'none';
+  // Page 12 is a fixed overlay - hide when navigating away
+  const p12el = document.getElementById('page12');
+  if (p12el && n !== 12) p12el.style.display = 'none';
 
 
   // Aktuelle Seite speichern (nur Hauptseiten 2-10)
