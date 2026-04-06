@@ -1034,7 +1034,7 @@
           <th>Abteilung</th><th>Zweitabteilung</th>
           <th class="sep-col"></th>
           <th>GA</th><th>EHK</th><th>ES</th><th>OP</th><th>OK</th><th>FULA</th>
-          <th>TST</th><th>KS</th><th>OK+</th><th>FT</th><th>COP</th>
+          <th>TST</th><th>KS</th><th>OK+</th><th>FT</th>
           <th>JP</th><th>ZP</th><th>VHP</th><th>TOW</th><th>AKS</th>
         </tr>
       </thead>
@@ -1134,8 +1134,8 @@
       <label style="display:flex;align-items:center;gap:8px;font-size:13px;"><input type="checkbox" id="ausb-OKP"> OK+</label>
       <label style="display:flex;align-items:center;gap:8px;font-size:13px;"><input type="checkbox" id="ausb-FT"> FT</label>
       <label style="display:flex;align-items:center;gap:8px;font-size:13px;"><input type="checkbox" id="ausb-JP"> JP</label>
-      <label style="display:flex;align-items:center;gap:8px;font-size:13px;"><input type="checkbox" id="ausb-ZP"> ZP (CP)</label>
-      <label style="display:flex;align-items:center;gap:8px;font-size:13px;"><input type="checkbox" id="ausb-VHP"> VHP (EL/VHP)</label>
+      <label style="display:flex;align-items:center;gap:8px;font-size:13px;"><input type="checkbox" id="ausb-ZP"> ZP</label>
+      <label style="display:flex;align-items:center;gap:8px;font-size:13px;"><input type="checkbox" id="ausb-VHP"> VHP</label>
       <label style="display:flex;align-items:center;gap:8px;font-size:13px;"><input type="checkbox" id="ausb-TOW"> TOW</label>
       <label style="display:flex;align-items:center;gap:8px;font-size:13px;"><input type="checkbox" id="ausb-AKS"> AKS</label>
     </div>
@@ -1255,7 +1255,7 @@
           <th>Abteilung</th><th>Zweitabteilung</th>
           <th class="sep-col"></th>
           <th>GA</th><th>EHK</th><th>ES</th><th>OP</th><th>OK</th><th>FULA</th>
-          <th>TST</th><th>KS</th><th>OK+</th><th>FT</th><th>COP</th>
+          <th>TST</th><th>KS</th><th>OK+</th><th>FT</th>
           <th>JP</th><th>ZP</th><th>VHP</th><th>TOW</th><th>AKS</th>
         </tr>
       </thead>
@@ -1780,8 +1780,8 @@ function renderMitarbeiter(filtered=null) {
       <td class="sep-col"></td>
       <td>${chk('GA')}</td><td>${chk('EHK')}</td><td>${chk('ES')}</td><td>${chk('OP')}</td>
       <td>${chk('OK')}</td><td>${chk('FULA')}</td><td>${chk('TST')}</td><td>${chk('KS')}</td>
-      <td>${chk('OKP')}</td><td>${chk('FT')}</td><td>${chk('JP')}</td>
-      <td>${chk('ZP')}</td><td>${chk('VHP')}</td><td>${chk('TOW')}</td><td>${chk('AKS')}</td>
+      <td>${chk('OKP')}</td><td>${chk('FT')}</td>
+      <td>${chk('JP')}</td><td>${chk('ZP')}</td><td>${chk('VHP')}</td><td>${chk('TOW')}</td><td>${chk('AKS')}</td>
     </tr>`;
   }).join('');
 }
@@ -1934,8 +1934,8 @@ function renderArchiv(filtered=null) {
       <td class="sep-col"></td>
       <td>${chk('GA')}</td><td>${chk('EHK')}</td><td>${chk('ES')}</td><td>${chk('OP')}</td>
       <td>${chk('OK')}</td><td>${chk('FULA')}</td><td>${chk('TST')}</td><td>${chk('KS')}</td>
-      <td>${chk('OKP')}</td><td>${chk('FT')}</td><td>${chk('JP')}</td>
-      <td>${chk('ZP')}</td><td>${chk('VHP')}</td><td>${chk('TOW')}</td><td>${chk('AKS')}</td>
+      <td>${chk('OKP')}</td><td>${chk('FT')}</td>
+      <td>${chk('JP')}</td><td>${chk('ZP')}</td><td>${chk('VHP')}</td><td>${chk('TOW')}</td><td>${chk('AKS')}</td>
     </tr>`;
   }).join('');
 }
