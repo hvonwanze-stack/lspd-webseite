@@ -1310,6 +1310,13 @@
   </div>
 </div>
 
+<!-- ==================== PAGE 12 ==================== -->
+<div id="page12" class="page">
+  <div style="padding:8px 12px;background:var(--bg-panel);border-bottom:1px solid var(--border);display:flex;align-items:center;">
+    <button class="tool-btn back" onclick="showPage(10)">← BACK</button>
+  </div>
+</div>
+
 </div><!-- end innerPages -->
 
 
@@ -1335,12 +1342,6 @@
   </div>
 </div>
 
-<!-- ==================== PAGE 12 ==================== -->
-<div id="page12" class="page" style="min-height:100vh;display:none;flex-direction:column;">
-  <div style="padding:8px 12px;background:var(--bg-panel);border-bottom:1px solid var(--border);display:flex;align-items:center;">
-    <button class="tool-btn back" onclick="showPage(10)">← BACK</button>
-  </div>
-</div>
 
 <!-- ==================== SANKTION DETAIL PAGES (dynamisch) ==================== -->
 <div id="sanktionPages"></div>
@@ -1423,19 +1424,6 @@ const HIDE_NAV_PAGES = [9, 10, 11, 12];
 
 window.showPage = function(n) {
   document.querySelectorAll('#innerPages .page').forEach(p => p.classList.remove('active'));
-  // Handle page12 separately (outside innerPages)
-  const p12 = document.getElementById('page12');
-  if (p12) p12.style.display = 'none';
-  if (n === 12) {
-    if (p12) p12.style.display = 'flex';
-    // Hide nav
-    const navBar = document.querySelector('.nav-bar');
-    if (navBar) navBar.style.display = 'none';
-    return;
-  } else {
-    const navBar = document.querySelector('.nav-bar');
-    if (navBar) navBar.style.display = '';
-  }
   const el = document.getElementById('page'+n);
   if (el) el.classList.add('active');
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
