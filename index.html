@@ -1112,7 +1112,7 @@
     </div>
     <div class="modal-btns">
       <button class="btn-modal gray" onclick="closeModal('addMaModal')">Abbrechen</button>
-      <button class="btn-modal green" onclick="addMitarbeiter()">Hinzufügen</button>
+      <button class="btn-modal green" id="addMaSubmitBtn" onclick="addMitarbeiter()">Hinzufügen</button>
     </div>
   </div>
 </div>
@@ -1795,6 +1795,8 @@ window.openAddMitarbeiterModal = function() {
   document.getElementById('ma-urlaub').textContent='0';
   document.getElementById('ma-strike').textContent='0';
   document.querySelector('#addMaModal .modal-title').textContent='Mitarbeiter Hinzufügen';
+  document.getElementById('addMaSubmitBtn').textContent='Hinzufügen';
+  document.getElementById('ma-id').readOnly = false;
   openModal('addMaModal');
 }
 
@@ -1817,6 +1819,8 @@ window.openEditMitarbeiterModal = async function() {
   document.getElementById('ma-urlaub').textContent = ma.urlaub||'0';
   document.getElementById('ma-strike').textContent = ma.strike||'0';
   document.querySelector('#addMaModal .modal-title').textContent='Mitarbeiter Bearbeiten';
+  document.getElementById('addMaSubmitBtn').textContent='Speichern';
+  document.getElementById('ma-id').readOnly = true;
   openModal('addMaModal');
 }
 
@@ -2390,7 +2394,9 @@ function rankName(r) {
     26:'Chief of Department',27:'Advising Chief of Police',28:'Assistant Chief of Police',
     29:'Deputy Chief of Police',30:'Chief of Police'
   };
-  return ranks[parseInt(r)] || r || '';
+  const n = parseInt(r);
+  if (!n || !ranks[n]) return r || '';
+  return n + ' - ' + ranks[n];
 }
 
 window.spinChange = function(id, delta) {
