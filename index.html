@@ -1305,12 +1305,12 @@
 
 
 <!-- ==================== PAGE 14 ==================== -->
-<div id="page14" class="page">
-  <div class="toolbar">
+<div id="page14" class="page" style="position:fixed;inset:0;z-index:200;background:var(--bg-dark);display:none;flex-direction:column;">
+  <div style="padding:8px 12px;background:var(--bg-panel);border-bottom:1px solid var(--border);flex-shrink:0;">
     <button class="tool-btn back" onclick="showPage(7)">← BACK</button>
   </div>
-  <div class="table-wrapper" style="padding:10px;">
-    <table class="data-table">
+  <div class="table-wrapper" style="flex:1;overflow-y:auto;">
+    <table class="data-table" style="width:100%;">
       <thead>
         <tr>
           <th>ID</th>
@@ -1400,6 +1400,12 @@ window.showPage = function(n) {
   const navButtons = document.querySelector('.nav-buttons');
   if (navButtons) {
     navButtons.style.display = HIDE_NAV_PAGES.includes(n) ? 'none' : 'flex';
+  }
+
+  // Page 14 uses fixed positioning - handle display separately
+  const p14 = document.getElementById('page14');
+  if (p14) {
+    p14.style.display = (n === 14) ? 'flex' : 'none';
   }
 
   // Aktuelle Seite speichern (nur Hauptseiten 2-10)
