@@ -959,31 +959,63 @@ window.doRegister = async function() {
   const confirmed = document.getElementById('reg-confirm').checked;
   if (!id||!name||!nachname||!tel) return showNotif('Bitte alle Felder ausfüllen!','error');
   if (!confirmed) return showNotif('Bitte die Warnung bestätigen!','error');
+
+  let user = null;
   try {
+    // 1. Erst Google Login
     const result = await signInWithPopup(auth, provider);
-    const user = result.user;
-    // Check if already registered
-    const existing = await getDoc(doc(db, 'anfragen', user.uid));
-    if (existing.exists()) { showNotif('Du hast bereits eine Anfrage gestellt!','error'); return; }
-    // Check ID uniqueness
-    const q = query(collection(db,'anfragen'), where('id','==',id));
-    const qs = await getDocs(q);
-    if (!qs.empty) { showNotif('Diese ID wurde bereits verwendet!','error'); return; }
-    // Save
-    await setDoc(doc(db,'anfragen', user.uid), {
-      id, name, nachname, tel, email: user.email, uid: user.uid,
+    user = result.user;
+  } catch(e) {
+    showNotif('Google Anmeldung fehlgeschlagen: ' + e.message, 'error');
+    return;
+  }
+
+  try {
+    // 2. Prüfen ob User schon registriert ist (anhand Email in zugriff collection)
+    const zugriffSnap = await getDocs(collection(db, 'zugriff'));
+    const alleZugriff = zugriffSnap.docs.map(d => d.data());
+    
+    const bereitsEmail = alleZugriff.find(z => z.email === user.email);
+    if (bereitsEmail) {
+      await signOut(auth);
+      showNotif('Diese Email hat bereits eine Anfrage gestellt!', 'error');
+      return;
+    }
+    
+    const bereitsID = alleZugriff.find(z => z.id === id);
+    if (bereitsID) {
+      await signOut(auth);
+      showNotif('Diese ID wurde bereits verwendet!', 'error');
+      return;
+    }
+
+    // 3. Daten speichern (User ist jetzt eingeloggt → hat Berechtigung)
+    const daten = {
+      id, name, nachname, tel,
+      email: user.email,
+      uid: user.uid,
+      rang: 'Admin',
+      freigegeben: false,
       timestamp: new Date().toISOString()
-    });
-    // Auto-add to zugriff table (pending)
-    await setDoc(doc(db,'zugriff', user.uid), {
-      id, name, nachname, tel, email: user.email,
-      rang: 'Admin', freigegeben: false, uid: user.uid
-    });
+    };
+
+    // In beide Collections speichern
+    await setDoc(doc(db, 'anfragen', user.uid), daten);
+    await setDoc(doc(db, 'zugriff', user.uid), daten);
+
+    // 4. Ausloggen (kein Zugriff noch)
     await signOut(auth);
     closeModal('registerModal');
-    showNotif('Du hast dich erfolgreich Registriert, Warte bis du Freigeben wirst','success');
+    // Felder leeren
+    ['reg-id','reg-name','reg-nachname','reg-tel'].forEach(f => document.getElementById(f).value = '');
+    document.getElementById('reg-confirm').checked = false;
+    showNotif('Du hast dich erfolgreich Registriert, Warte bis du Freigeben wirst', 'success');
+
   } catch(e) {
-    showNotif('Fehler: '+e.message,'error');
+    // Falls Fehler beim Speichern → ausloggen
+    try { await signOut(auth); } catch(_) {}
+    showNotif('Fehler beim Speichern: ' + e.message, 'error');
+    console.error('Register error:', e);
   }
 }
 
