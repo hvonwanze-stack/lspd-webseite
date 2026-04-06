@@ -912,7 +912,7 @@
 <!-- ==================== PAGE 6 - SANKTIONSKATALOG ==================== -->
 <div id="page6" class="page">
   <div class="toolbar">
-    <button class="tool-btn purple" onclick="openModal('addRuleModal')" title="Regel hinzufügen">＋</button>
+    <button class="tool-btn purple" onclick="clearAndOpenModal('addRuleModal')" title="Regel hinzufügen">＋</button>
     <button class="tool-btn" onclick="openEditRuleModal()" title="Spalten umbenennen">✏️</button>
     <div class="ml-auto"></div>
     <button class="tool-btn" onclick="openEditRuleBySearch()" title="Regel bearbeiten">✏️</button>
@@ -1156,7 +1156,7 @@
 <!-- ==================== PAGE 8 - ZUGRIFSANFRAGE ==================== -->
 <div id="page8" class="page">
   <div class="toolbar">
-    <button class="tool-btn purple" onclick="openModal('addZugriffModal')">＋</button>
+    <button class="tool-btn purple" onclick="clearAndOpenModal('addZugriffModal')">＋</button>
     <div class="ml-auto"></div>
     <button class="tool-btn red" onclick="deleteZugriff()">✕</button>
     <button class="tool-btn" onclick="openEditZugriffModal()">✏️</button>
@@ -1278,7 +1278,7 @@
   <div class="toolbar">
     <button class="tool-btn back" onclick="showPage(6)">← BACK</button>
     <div style="flex:1;text-align:center;font-size:14px;font-weight:700;color:var(--text-secondary);">Mitarbeiter Sanktionen</div>
-    <button class="tool-btn purple" onclick="openModal('addSanktionModal')">＋</button>
+    <button class="tool-btn purple" onclick="clearAndOpenModal('addSanktionModal')">＋</button>
     <button class="tool-btn red" onclick="deleteSanktion()">✕</button>
     <button class="tool-btn" onclick="searchSanktion()">🔍</button>
     <input class="search-input" autocomplete="off" id="sank-search" placeholder="Sanktion Suchen">
@@ -1394,7 +1394,22 @@ window.showNotif = function(msg, type='success') {
 }
 
 // ===== MODALS =====
-window.openModal = function(id) { document.getElementById(id).classList.add('open'); }
+window.openModal = function(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  // Clear ALL inputs, selects, checkboxes when opening any modal
+  el.querySelectorAll('input').forEach(inp => {
+    if (inp.type === 'hidden') return;
+    if (inp.type === 'checkbox') inp.checked = false;
+    else inp.value = '';
+  });
+  el.querySelectorAll('select').forEach(sel => sel.selectedIndex = 0);
+  el.querySelectorAll('textarea').forEach(ta => ta.value = '');
+  el.querySelectorAll('.spinner-val').forEach(sp => sp.textContent = '0');
+  el.classList.add('open');
+}
+
+window.clearAndOpenModal = function(id) { openModal(id); }
 window.closeModal = function(id) { document.getElementById(id).classList.remove('open'); }
 
 // ===== PAGES =====
@@ -1565,7 +1580,15 @@ window.doLogin = async function() {
 }
 
 // ===== REGISTER =====
-window.openRegisterModal = function() { openModal('registerModal'); }
+window.openRegisterModal = function() {
+  ['reg-id','reg-name','reg-nachname','reg-tel'].forEach(f => {
+    const el = document.getElementById(f);
+    if (el) el.value = '';
+  });
+  const chk = document.getElementById('reg-confirm');
+  if (chk) chk.checked = false;
+  openModal('registerModal');
+}
 
 
 window.doRegister = async function() {
@@ -2300,8 +2323,8 @@ window.openEditSanktionModal = function(nr) {
   modal.id = 'tmp-edit-modal';
   modal.innerHTML = `<div class="modal">
     <div class="modal-title">Sanktion Bearbeiten</div>
-    <div class="modal-field"><div class="modal-label">ID (Eigene ID)</div><input class="modal-input" autocomplete="off" id="se-id" placeholder="Eigene ID" value="${s.id||''}"></div>
-    <div class="modal-field"><div class="modal-label">Name (Eigener Name)</div><input class="modal-input" autocomplete="off" id="se-name" placeholder="Eigener Name" value="${s.name||''}"></div>
+    <div class="modal-field"><div class="modal-label">ID (Eigene ID)</div><input class="modal-input" autocomplete="off" id="se-id" placeholder="Eigene ID"></div>
+    <div class="modal-field"><div class="modal-label">Name (Eigener Name)</div><input class="modal-input" autocomplete="off" id="se-name" placeholder="Eigener Name"></div>
     <div class="modal-btns">
       <button class="btn-modal gray" onclick="document.getElementById('tmp-edit-modal').remove()">Abbrechen</button>
       <button class="btn-modal blue" onclick="saveSanktionEdit('${s._id}','${nr}')">Speichern</button>
@@ -2389,7 +2412,7 @@ window.openEditRuleModal = function() {
   skHeaders.forEach((h,i) => {
     const d = document.createElement('div');
     d.className = 'modal-field';
-    d.innerHTML = `<div class="modal-label">Name ändern von ${h}</div><input class="modal-input" autocomplete="off" id="eh-${i}" placeholder="${h}" value="${h}">`;
+    d.innerHTML = `<div class="modal-label">Name ändern von ${h}</div><input class="modal-input" autocomplete="off" id="eh-${i}" placeholder="${h}">`;
     grid.appendChild(d);
   });
 }
