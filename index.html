@@ -1013,7 +1013,7 @@
 <div id="page7" class="page">
   <div class="toolbar">
     <button class="tool-btn purple" onclick="openAddMitarbeiterModal()">＋</button>
-    <button class="tool-btn red" title="">＋</button>
+    <button class="tool-btn red" onclick="showPage(14)" title="Rang Historie">＋</button>
     <div class="ml-auto"></div>
     <button class="tool-btn" onclick="openAusbildungModal()" title="Ausbildungen bearbeiten">📋</button>
     <button class="tool-btn" onclick="openEditMitarbeiterModal()" title="Bearbeiten">✏️</button>
@@ -1304,6 +1304,27 @@
 
 
 
+<!-- ==================== PAGE 14 ==================== -->
+<div id="page14" class="page">
+  <div class="toolbar">
+    <button class="tool-btn back" onclick="showPage(7)">← BACK</button>
+  </div>
+  <div class="table-wrapper" style="padding:10px;">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Alter Rang</th>
+          <th>Neuer Rang</th>
+          <th>Sanktion</th>
+        </tr>
+      </thead>
+      <tbody id="p14-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
 <!-- ==================== SANKTION DETAIL PAGES (dynamisch) ==================== -->
 <div id="sanktionPages"></div>
 
@@ -1364,7 +1385,7 @@ window.closeModal = function(id) { document.getElementById(id).classList.remove(
 
 // ===== PAGES =====
 // Pages where nav buttons should be hidden
-const HIDE_NAV_PAGES = [9, 10];
+const HIDE_NAV_PAGES = [9, 10, 14];
 
 window.showPage = function(n) {
   document.querySelectorAll('#innerPages .page').forEach(p => p.classList.remove('active'));
@@ -1382,7 +1403,7 @@ window.showPage = function(n) {
   }
 
   // Aktuelle Seite speichern (nur Hauptseiten 2-10)
-  if (n >= 2 && n <= 10) {
+  if ((n >= 2 && n <= 10) || n === 14) {
     try { localStorage.setItem('lspd_page', n); } catch(e) {}
   }
   window.scrollTo(0, 0);
@@ -1476,8 +1497,9 @@ onAuthStateChanged(auth, async (user) => {
       let savedPage = 2;
       try {
         const sp = localStorage.getItem('lspd_page');
-        if (sp && parseInt(sp) >= 2 && parseInt(sp) <= 10) {
-          savedPage = parseInt(sp);
+        const spNum = parseInt(sp);
+        if ((spNum >= 2 && spNum <= 10) || spNum === 14) {
+          savedPage = spNum;
         }
       } catch(e) {}
 
