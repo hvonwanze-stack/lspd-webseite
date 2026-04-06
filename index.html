@@ -1278,10 +1278,12 @@
   <div class="toolbar">
     <button class="tool-btn back" onclick="showPage(6)">← BACK</button>
     <div style="flex:1;text-align:center;font-size:14px;font-weight:700;color:var(--text-secondary);">Mitarbeiter Sanktionen</div>
-    <button class="tool-btn purple" onclick="clearAndOpenModal('addSanktionModal')">＋</button>
     <button class="tool-btn red" onclick="deleteSanktion()">✕</button>
+    <button class="tool-btn purple" onclick="clearAndOpenModal('addSanktionModal')">＋</button>
     <button class="tool-btn" onclick="searchSanktion()">🔍</button>
-    <input class="search-input" autocomplete="off" id="sank-search" placeholder="Sanktion Suchen">
+    <input class="search-input" autocomplete="off" id="sank-search" placeholder="Sanktion Suchen" style="margin-right:20px;">
+    <button class="tool-btn" title="">📦→</button>
+    <button class="tool-btn" title="">📁</button>
   </div>
   <div class="table-wrapper">
     <table class="data-table">
