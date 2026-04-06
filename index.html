@@ -1302,69 +1302,98 @@ onAuthStateChanged(auth, async (user) => {
 
   if (user) {
     currentUser = user;
+    console.log('[AUTH] User eingeloggt:', user.email, '| UID:', user.uid);
+
+    let zugData = null;
+    let zugDocRef = null;
+
+    // ===== WEG 1: Direkt per UID =====
     try {
-      // Suche per UID (normaler Weg) UND per Email (manuell hinzugefügte User)
-      let zugData = null;
-
-      // Weg 1: direkt per UID
-      try {
-        const zugDocDirect = await getDoc(doc(db, 'zugriff', user.uid));
-        if (zugDocDirect.exists()) {
-          zugData = zugDocDirect.data();
-        }
-      } catch(e) {
-        console.warn('[AUTH] UID lookup fehlgeschlagen:', e.message);
-      }
-
-      // Weg 2: per Email (für manuell angelegte User ohne UID-Verknüpfung)
-      if (!zugData) {
-        try {
-          const emailSnap = await getDocs(
-            query(collection(db, 'zugriff'), where('email', '==', user.email))
-          );
-          if (!emailSnap.empty) {
-            zugData = emailSnap.docs[0].data();
-            console.log('[AUTH] User per Email gefunden:', user.email);
-          }
-        } catch(e) {
-          console.warn('[AUTH] Email lookup fehlgeschlagen:', e.message);
-        }
-      }
-
-      if (zugData && zugData.freigegeben === true) {
-        // Eingeloggt & freigegeben → direkt zu Seite 2
-        document.getElementById('page1').style.display = 'none';
-        document.getElementById('page1').classList.remove('active');
-        document.getElementById('innerPages').style.display = 'block';
-        window.scrollTo(0, 0);
-        await loadAllData();
-        // Gespeicherte Seite wiederherstellen
-        let savedPage = 2;
-        try {
-          const sp = localStorage.getItem('lspd_page');
-          if (sp && parseInt(sp) >= 2 && parseInt(sp) <= 10) {
-            savedPage = parseInt(sp);
-          }
-        } catch(e) {}
-        showPage(savedPage);
-        loadUserDashboard(zugData);
-        hideLoader();
+      const snap = await getDoc(doc(db, 'zugriff', user.uid));
+      if (snap.exists()) {
+        zugData = snap.data();
+        zugDocRef = user.uid;
+        console.log('[AUTH] Per UID gefunden. freigegeben:', zugData.freigegeben);
       } else {
-        // Eingeloggt aber kein Zugriff oder nicht freigegeben
-        await signOut(auth);
-        hideLoader();
-        document.getElementById('page1').classList.add('active');
-        document.getElementById('loginError').style.display = 'block';
-        setTimeout(() => document.getElementById('loginError').style.display = 'none', 5000);
+        console.log('[AUTH] Kein Dokument mit UID gefunden, suche per Email...');
       }
     } catch(e) {
-      console.error('[AUTH] Fehler:', e);
+      console.warn('[AUTH] UID-Suche Fehler:', e.code, e.message);
+    }
+
+    // ===== WEG 2: Per Email =====
+    if (!zugData) {
+      try {
+        const q = query(collection(db, 'zugriff'), where('email', '==', user.email));
+        const snap = await getDocs(q);
+        if (!snap.empty) {
+          zugData = snap.docs[0].data();
+          zugDocRef = snap.docs[0].id;
+          console.log('[AUTH] Per Email gefunden. DocID:', zugDocRef, '| freigegeben:', zugData.freigegeben);
+
+          // Jetzt ein neues Dokument mit der echten UID anlegen
+          // damit beim nächsten Login Weg 1 direkt klappt
+          try {
+            await setDoc(doc(db, 'zugriff', user.uid), {
+              ...zugData,
+              uid: user.uid
+            });
+            console.log('[AUTH] Neues UID-Dokument erstellt für:', user.uid);
+            // Altes manual-Dokument entfernen
+            if (zugDocRef !== user.uid) {
+              await deleteDoc(doc(db, 'zugriff', zugDocRef));
+              console.log('[AUTH] Altes manual-Dokument gelöscht:', zugDocRef);
+            }
+          } catch(linkErr) {
+            console.warn('[AUTH] UID-Verknüpfung fehlgeschlagen (nicht kritisch):', linkErr.code, linkErr.message);
+            // Nicht kritisch - User kann sich trotzdem einloggen
+          }
+        } else {
+          console.log('[AUTH] Auch per Email nichts gefunden für:', user.email);
+        }
+      } catch(e) {
+        console.warn('[AUTH] Email-Suche Fehler:', e.code, e.message);
+      }
+    }
+
+    // ===== ZUGANG PRÜFEN =====
+    if (zugData && zugData.freigegeben === true) {
+      console.log('[AUTH] Zugang erlaubt! Lade Seite...');
+      document.getElementById('page1').style.display = 'none';
+      document.getElementById('page1').classList.remove('active');
+      document.getElementById('innerPages').style.display = 'block';
+      window.scrollTo(0, 0);
+
+      try {
+        await loadAllData();
+      } catch(loadErr) {
+        console.warn('[AUTH] loadAllData Fehler (nicht kritisch):', loadErr.message);
+      }
+
+      let savedPage = 2;
+      try {
+        const sp = localStorage.getItem('lspd_page');
+        if (sp && parseInt(sp) >= 2 && parseInt(sp) <= 10) {
+          savedPage = parseInt(sp);
+        }
+      } catch(e) {}
+
+      showPage(savedPage);
+      loadUserDashboard(zugData);
+      hideLoader();
+
+    } else {
+      // Kein Zugang
+      console.log('[AUTH] Kein Zugang. zugData:', zugData ? JSON.stringify(zugData) : 'null');
       await signOut(auth);
       hideLoader();
       document.getElementById('page1').classList.add('active');
+      document.getElementById('loginError').style.display = 'block';
+      setTimeout(() => document.getElementById('loginError').style.display = 'none', 5000);
     }
+
   } else {
-    // Nicht eingeloggt → Login-Seite zeigen
+    // Nicht eingeloggt
     hideLoader();
     document.getElementById('page1').classList.add('active');
   }
