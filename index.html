@@ -953,19 +953,19 @@
     <div class="modal-field"><div class="modal-label">§</div><input class="modal-input" autocomplete="off" id="ar-para" placeholder="§ Nummer"></div>
     <div class="modal-field"><div class="modal-label">Regeldefinition</div><input class="modal-input" autocomplete="off" id="ar-def" placeholder="Regeldefinition"></div>
     <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;">
-      <div class="modal-field"><div class="modal-label">0</div><input class="modal-input" autocomplete="off" id="ar-0" placeholder="0"></div>
-      <div class="modal-field"><div class="modal-label">1</div><input class="modal-input" autocomplete="off" id="ar-1" placeholder="1"></div>
-      <div class="modal-field"><div class="modal-label">2</div><input class="modal-input" autocomplete="off" id="ar-2" placeholder="2"></div>
-      <div class="modal-field"><div class="modal-label">3</div><input class="modal-input" autocomplete="off" id="ar-3" placeholder="3"></div>
-      <div class="modal-field"><div class="modal-label">4</div><input class="modal-input" autocomplete="off" id="ar-4" placeholder="4"></div>
-      <div class="modal-field"><div class="modal-label">5</div><input class="modal-input" autocomplete="off" id="ar-5" placeholder="5"></div>
-      <div class="modal-field"><div class="modal-label">6</div><input class="modal-input" autocomplete="off" id="ar-6" placeholder="6"></div>
-      <div class="modal-field"><div class="modal-label">7</div><input class="modal-input" autocomplete="off" id="ar-7" placeholder="7"></div>
-      <div class="modal-field"><div class="modal-label">8</div><input class="modal-input" autocomplete="off" id="ar-8" placeholder="8"></div>
-      <div class="modal-field"><div class="modal-label">9</div><input class="modal-input" autocomplete="off" id="ar-9" placeholder="9"></div>
-      <div class="modal-field"><div class="modal-label">10</div><input class="modal-input" autocomplete="off" id="ar-10" placeholder="10"></div>
-      <div class="modal-field"><div class="modal-label">11</div><input class="modal-input" autocomplete="off" id="ar-11" placeholder="11"></div>
-      <div class="modal-field"><div class="modal-label">12</div><input class="modal-input" autocomplete="off" id="ar-12" placeholder="12"></div>
+      <div class="modal-field"><div class="modal-label" id="ar-lbl-0">0</div><input class="modal-input" autocomplete="off" id="ar-0" placeholder="0"></div>
+      <div class="modal-field"><div class="modal-label" id="ar-lbl-1">1</div><input class="modal-input" autocomplete="off" id="ar-1" placeholder="1"></div>
+      <div class="modal-field"><div class="modal-label" id="ar-lbl-2">2</div><input class="modal-input" autocomplete="off" id="ar-2" placeholder="2"></div>
+      <div class="modal-field"><div class="modal-label" id="ar-lbl-3">3</div><input class="modal-input" autocomplete="off" id="ar-3" placeholder="3"></div>
+      <div class="modal-field"><div class="modal-label" id="ar-lbl-4">4</div><input class="modal-input" autocomplete="off" id="ar-4" placeholder="4"></div>
+      <div class="modal-field"><div class="modal-label" id="ar-lbl-5">5</div><input class="modal-input" autocomplete="off" id="ar-5" placeholder="5"></div>
+      <div class="modal-field"><div class="modal-label" id="ar-lbl-6">6</div><input class="modal-input" autocomplete="off" id="ar-6" placeholder="6"></div>
+      <div class="modal-field"><div class="modal-label" id="ar-lbl-7">7</div><input class="modal-input" autocomplete="off" id="ar-7" placeholder="7"></div>
+      <div class="modal-field"><div class="modal-label" id="ar-lbl-8">8</div><input class="modal-input" autocomplete="off" id="ar-8" placeholder="8"></div>
+      <div class="modal-field"><div class="modal-label" id="ar-lbl-9">9</div><input class="modal-input" autocomplete="off" id="ar-9" placeholder="9"></div>
+      <div class="modal-field"><div class="modal-label" id="ar-lbl-10">10</div><input class="modal-input" autocomplete="off" id="ar-10" placeholder="10"></div>
+      <div class="modal-field"><div class="modal-label" id="ar-lbl-11">11</div><input class="modal-input" autocomplete="off" id="ar-11" placeholder="11"></div>
+      <div class="modal-field"><div class="modal-label" id="ar-lbl-12">12</div><input class="modal-input" autocomplete="off" id="ar-12" placeholder="12"></div>
     </div>
     <div class="modal-btns">
       <button class="btn-modal gray" onclick="closeModal('addRuleModal')">Abbrechen</button>
@@ -2388,10 +2388,21 @@ async function loadSKRules() {
   renderSKRules();
 }
 
+function updateAllModalHeaders() {
+  // Update labels in addRuleModal and editRuleModal
+  skHeaders.forEach((h,i) => {
+    const arLbl = document.getElementById('ar-lbl-'+i);
+    if (arLbl) arLbl.textContent = h;
+    const erLbl = document.getElementById('er-lbl-'+i);
+    if (erLbl) erLbl.textContent = h;
+  });
+}
+
 async function loadSKHeaders() {
   const snap = await getDoc(doc(db,'skConfig','headers'));
   if (snap.exists()) skHeaders = snap.data().headers || skHeaders;
   updateSKHeaders();
+  updateAllModalHeaders();
 }
 
 function updateSKHeaders() {
@@ -2457,9 +2468,11 @@ window.saveHeader = async function() {
   skHeaders = Array.from({length:13},(_,i)=>document.getElementById('eh-'+i)?.value.trim()||String(i));
   await setDoc(doc(db,'skConfig','headers'), {headers: skHeaders});
   updateSKHeaders();
+  updateAllModalHeaders();
   closeModal('editHeaderModal');
   showNotif('Spalten gespeichert','success');
 }
+
 
 window.openEditHeaderModal = function() {
   // This function is now unused - left pencil handles it via openEditRuleModal
