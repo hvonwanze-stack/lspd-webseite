@@ -1284,7 +1284,7 @@
     <input class="search-input" autocomplete="off" id="sank-search" placeholder="Sanktion Suchen">
     <div style="width:20px;"></div>
     <button class="tool-btn" title="">📦→</button>
-    <button class="tool-btn" onclick="openPage12()" title="Archiv">📁</button>
+    <button class="tool-btn" onclick="showPage(12)" title="Archiv">📁</button>
   </div>
   <div class="table-wrapper">
     <table class="data-table">
@@ -1336,9 +1336,9 @@
 </div>
 
 <!-- ==================== PAGE 12 ==================== -->
-<div id="page12" style="position:fixed;inset:0;z-index:500;background:var(--bg-dark);overflow-y:auto;display:none;flex-direction:column;">
-  <div style="display:flex;align-items:center;padding:8px 12px;background:var(--bg-panel);border-bottom:1px solid var(--border);flex-shrink:0;">
-    <button class="tool-btn back" onclick="hidePage12()">← BACK</button>
+<div id="page12" class="page">
+  <div class="toolbar">
+    <button class="tool-btn back" onclick="showPage(10)">← BACK</button>
   </div>
 </div>
 
@@ -1417,17 +1417,9 @@ window.closeModal = function(id) { document.getElementById(id).classList.remove(
 
 // ===== PAGES =====
 // Pages where nav buttons should be hidden
-const HIDE_NAV_PAGES = [9, 10, 11];
+const HIDE_NAV_PAGES = [9, 10, 11, 12];
 
-function openPage12() {
-  const p16 = document.getElementById('page12');
-  if (p16) { p16.style.display = 'flex'; }
-}
 
-function hidePage12() {
-  const p16 = document.getElementById('page12');
-  if (p16) { p16.style.display = 'none'; }
-}
 
 window.showPage = function(n) {
   document.querySelectorAll('#innerPages .page').forEach(p => p.classList.remove('active'));
@@ -1449,9 +1441,7 @@ window.showPage = function(n) {
   if (p14) {
     p14.style.display = (n === 11) ? 'flex' : 'none';
   }
-  // Page 12 is a fixed overlay - hide when navigating away
-  const p12el = document.getElementById('page12');
-  if (p12el && n !== 12) p12el.style.display = 'none';
+
 
 
   // Aktuelle Seite speichern (nur Hauptseiten 2-10)
@@ -1465,6 +1455,7 @@ window.showPage = function(n) {
   if (n === 10) renderSanktionen();
   if (n === 6) renderSKRules();
   if (n === 11) renderPage11();
+  if (n === 12) {} // Seite 12 Archiv
 }
 
 // ===== AUTH =====
