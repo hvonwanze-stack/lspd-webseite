@@ -2403,8 +2403,8 @@ window.showSanktionPage = function(nr) {
           </thead>
           <tbody>
             <tr>
-              <td id="sd-id-${s.nr}"></td>
-              <td id="sd-name-${s.nr}"></td>
+              <td id="sd-id-${s.nr}">${s.detailId||''}</td>
+              <td id="sd-name-${s.nr}">${s.detailName||''}</td>
               <td id="sd-beweise-${s.nr}">${s.beweise||''}</td>
             </tr>
           </tbody>
@@ -2450,24 +2450,35 @@ window.openEditSanktionModal = function(nr) {
   setTimeout(() => {
     const idEl = document.getElementById('se-id');
     const nameEl = document.getElementById('se-name');
-    if (idEl) idEl.value = s.id || '';
-    if (nameEl) nameEl.value = s.name || '';
+    // Lade detailId/detailName falls vorhanden, sonst leer
+    if (idEl) idEl.value = s.detailId || '';
+    if (nameEl) nameEl.value = s.detailName || '';
   }, 30);
 }
 
-window.saveSanktionEdit = function(docId, nr) {
-  const newId = document.getElementById('se-id').value;
-  const newName = document.getElementById('se-name').value;
+window.saveSanktionEdit = async function(docId, nr) {
+  const detailId = document.getElementById('se-id').value;
+  const detailName = document.getElementById('se-name').value;
 
-  // Nur lokale Anzeige auf der Detailseite ändern - NICHT in Firestore speichern
-  const idEl = document.getElementById('sd-id-'+nr);
-  if (idEl) idEl.textContent = newId;
-  const nameEl = document.getElementById('sd-name-'+nr);
-  if (nameEl) nameEl.textContent = newName;
+  try {
+    // Speichere detailId/detailName separat - id/name auf Seite 10 bleiben unverändert
+    await updateDoc(doc(db,'sanktionen', docId), {
+      detailId: detailId,
+      detailName: detailName
+    });
 
-  document.getElementById('tmp-edit-modal').remove();
-  showNotif('Auf dieser Seite gespeichert','success');
-  // Seite 10 bleibt unverändert
+    // Nur Detailseite aktualisieren
+    const idEl = document.getElementById('sd-id-'+nr);
+    if (idEl) idEl.textContent = detailId;
+    const nameEl = document.getElementById('sd-name-'+nr);
+    if (nameEl) nameEl.textContent = detailName;
+
+    document.getElementById('tmp-edit-modal').remove();
+    showNotif('Gespeichert','success');
+    // Seite 10 lädt NICHT neu - bleibt unverändert
+  } catch(e) {
+    showNotif('Fehler: '+e.message,'error');
+  }
 }
 
 // ===== SK RULES =====
