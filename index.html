@@ -2153,10 +2153,12 @@ function renderZugriff(filtered=null) {
       <option value="nein" ${!z.freigegeben?'selected':''}>Nein</option>
       <option value="ja" ${z.freigegeben?'selected':''}>Ja</option>
     </select>`;
+    // Wenn nicht freigegeben und rang ist 'Admin' oder leer -> zeige '1'
+    const rangAnzeige = (!z.freigegeben && (z.rang === 'Admin' || !z.rang)) ? '1' : (z.rang || '1');
     return `<tr>
       <td>${z.id||''}</td><td>${z.name||''}</td><td>${z.nachname||''}</td>
       <td>${z.tel||''}</td><td>${z.email||''}</td>
-      <td>${z.rang||'1'}</td><td>${status}</td><td>${sel}</td>
+      <td>${rangAnzeige}</td><td>${status}</td><td>${sel}</td>
     </tr>`;
   }).join('');
 }
