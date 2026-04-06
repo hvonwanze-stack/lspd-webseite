@@ -867,6 +867,15 @@
             <td class="ausb-chk-cell"><span id="db-chk-VHP">⬜</span></td><td class="ausb-lbl-cell">EL/VHP</td>
             <td class="ausb-chk-cell"></td><td class="ausb-lbl-cell"></td>
           </tr>
+          <!-- Für Sergeant -->
+          <tr>
+            <th colspan="6" style="background:linear-gradient(135deg,#b45309,#e07b20);padding:5px 8px;text-align:left;font-size:11px;letter-spacing:1px;border-bottom:1px solid rgba(255,255,255,0.1);">Für Sergeant</th>
+          </tr>
+          <tr>
+            <td class="ausb-chk-cell"><span id="db-chk-SP">⬜</span></td><td class="ausb-lbl-cell">SP</td>
+            <td class="ausb-chk-cell"></td><td class="ausb-lbl-cell"></td>
+            <td class="ausb-chk-cell"></td><td class="ausb-lbl-cell"></td>
+          </tr>
         </table>
       </div>
     </div>
@@ -1035,7 +1044,7 @@
           <th class="sep-col"></th>
           <th>GA</th><th>EHK</th><th>ES</th><th>OP</th><th>OK</th><th>FULA</th>
           <th>TST</th><th>KS</th><th>OK+</th><th>FT</th>
-          <th>JP</th><th>ZP</th><th>VHP</th><th>TOW</th><th>AKS</th>
+          <th>JP</th><th>ZP</th><th>VHP</th><th>SP</th><th>TOW</th><th>AKS</th>
         </tr>
       </thead>
       <tbody id="ma-tbody"></tbody>
@@ -1136,6 +1145,7 @@
       <label style="display:flex;align-items:center;gap:8px;font-size:13px;"><input type="checkbox" id="ausb-JP"> JP</label>
       <label style="display:flex;align-items:center;gap:8px;font-size:13px;"><input type="checkbox" id="ausb-ZP"> ZP</label>
       <label style="display:flex;align-items:center;gap:8px;font-size:13px;"><input type="checkbox" id="ausb-VHP"> VHP</label>
+      <label style="display:flex;align-items:center;gap:8px;font-size:13px;"><input type="checkbox" id="ausb-SP"> SP</label>
       <label style="display:flex;align-items:center;gap:8px;font-size:13px;"><input type="checkbox" id="ausb-TOW"> TOW</label>
       <label style="display:flex;align-items:center;gap:8px;font-size:13px;"><input type="checkbox" id="ausb-AKS"> AKS</label>
     </div>
@@ -1257,7 +1267,7 @@
           <th class="sep-col"></th>
           <th>GA</th><th>EHK</th><th>ES</th><th>OP</th><th>OK</th><th>FULA</th>
           <th>TST</th><th>KS</th><th>OK+</th><th>FT</th>
-          <th>JP</th><th>ZP</th><th>VHP</th><th>TOW</th><th>AKS</th>
+          <th>JP</th><th>ZP</th><th>VHP</th><th>SP</th><th>TOW</th><th>AKS</th>
         </tr>
       </thead>
       <tbody id="arch-tbody"></tbody>
@@ -1305,11 +1315,11 @@
 
 
 <!-- ==================== PAGE 14 ==================== -->
-<div id="page14" class="page" style="position:fixed;inset:0;z-index:200;background:var(--bg-dark);display:none;flex-direction:column;">
-  <div style="padding:8px 12px;background:var(--bg-panel);border-bottom:1px solid var(--border);flex-shrink:0;">
+<div id="page14" class="page">
+  <div class="toolbar">
     <button class="tool-btn back" onclick="showPage(7)">← BACK</button>
   </div>
-  <div class="table-wrapper" style="flex:1;overflow-y:auto;">
+  <div class="table-wrapper">
     <table class="data-table" style="width:100%;">
       <thead>
         <tr>
@@ -1402,11 +1412,6 @@ window.showPage = function(n) {
     navButtons.style.display = HIDE_NAV_PAGES.includes(n) ? 'none' : 'flex';
   }
 
-  // Page 14 uses fixed positioning - handle display separately
-  const p14 = document.getElementById('page14');
-  if (p14) {
-    p14.style.display = (n === 14) ? 'flex' : 'none';
-  }
 
   // Aktuelle Seite speichern (nur Hauptseiten 2-10)
   if ((n >= 2 && n <= 10) || n === 14) {
@@ -1729,6 +1734,7 @@ function renderDashboardAusbildungen(ausb) {
     { key:'JP',  label:'JP'      },
     { key:'ZP',  label:'ZP'      },
     { key:'VHP', label:'VHP'     },
+    { key:'SP',  label:'SP'      },
     { key:'TOW', label:'TOW'     },
     { key:'AKS', label:'AKS'     },
   ];
@@ -1800,7 +1806,7 @@ async function loadMitarbeiter() {
     const defaultAusb = {
       GA:false, EHK:false, ES:false, OP:false, OK:false, FULA:false,
       TST:false, KS:false, OKP:false, FT:false, JP:false, ZP:false,
-      VHP:false, TOW:false, AKS:false
+      VHP:false, SP:false, TOW:false, AKS:false
     };
     data.ausbildungen = Object.assign({}, defaultAusb, data.ausbildungen || {});
     return {...data, _id: d.id};
@@ -1831,7 +1837,7 @@ function renderMitarbeiter(filtered=null) {
       <td>${chk('GA')}</td><td>${chk('EHK')}</td><td>${chk('ES')}</td><td>${chk('OP')}</td>
       <td>${chk('OK')}</td><td>${chk('FULA')}</td><td>${chk('TST')}</td><td>${chk('KS')}</td>
       <td>${chk('OKP')}</td><td>${chk('FT')}</td>
-      <td>${chk('JP')}</td><td>${chk('ZP')}</td><td>${chk('VHP')}</td><td>${chk('TOW')}</td><td>${chk('AKS')}</td>
+      <td>${chk('JP')}</td><td>${chk('ZP')}</td><td>${chk('VHP')}</td><td>${chk('SP')}</td><td>${chk('TOW')}</td><td>${chk('AKS')}</td>
     </tr>`;
   }).join('');
 }
@@ -1893,7 +1899,7 @@ window.addMitarbeiter = async function() {
     ausbildungen: {
       GA:false, EHK:false, ES:false, OP:false, OK:false, FULA:false,
       TST:false, KS:false, OKP:false, FT:false, JP:false, ZP:false,
-      VHP:false, TOW:false, AKS:false
+      VHP:false, SP:false, TOW:false, AKS:false
     }
   };
   try {
@@ -1938,7 +1944,7 @@ window.openAusbildungModal = async function() {
   ausbildungTargetId = ma._id;
   document.getElementById('ausb-ma-name').textContent = `Mitarbeiter: ${ma.name||ma.id}`;
   const ausb = ma.ausbildungen || {};
-  ['GA','EHK','ES','OP','OK','FULA','TST','KS','OKP','FT','JP','ZP','VHP','TOW','AKS'].forEach(k => {
+  ['GA','EHK','ES','OP','OK','FULA','TST','KS','OKP','FT','JP','ZP','VHP','SP','TOW','AKS'].forEach(k => {
     document.getElementById('ausb-'+k).checked = !!ausb[k];
   });
   openModal('ausbildungModal');
@@ -1946,7 +1952,7 @@ window.openAusbildungModal = async function() {
 
 window.saveAusbildung = async function() {
   const ausb = {};
-  ['GA','EHK','ES','OP','OK','FULA','TST','KS','OKP','FT','JP','ZP','VHP','TOW','AKS'].forEach(k => {
+  ['GA','EHK','ES','OP','OK','FULA','TST','KS','OKP','FT','JP','ZP','VHP','SP','TOW','AKS'].forEach(k => {
     ausb[k] = document.getElementById('ausb-'+k).checked;
   });
   try {
@@ -1985,7 +1991,7 @@ function renderArchiv(filtered=null) {
       <td>${chk('GA')}</td><td>${chk('EHK')}</td><td>${chk('ES')}</td><td>${chk('OP')}</td>
       <td>${chk('OK')}</td><td>${chk('FULA')}</td><td>${chk('TST')}</td><td>${chk('KS')}</td>
       <td>${chk('OKP')}</td><td>${chk('FT')}</td>
-      <td>${chk('JP')}</td><td>${chk('ZP')}</td><td>${chk('VHP')}</td><td>${chk('TOW')}</td><td>${chk('AKS')}</td>
+      <td>${chk('JP')}</td><td>${chk('ZP')}</td><td>${chk('VHP')}</td><td>${chk('SP')}</td><td>${chk('TOW')}</td><td>${chk('AKS')}</td>
     </tr>`;
   }).join('');
 }
@@ -2056,7 +2062,7 @@ async function handleFreigabe(z) {
     const emptyAusb = {
       GA:false, EHK:false, ES:false, OP:false, OK:false, FULA:false,
       TST:false, KS:false, OKP:false, FT:false, JP:false, ZP:false,
-      VHP:false, TOW:false, AKS:false
+      VHP:false, SP:false, TOW:false, AKS:false
     };
     await addDoc(collection(db,'mitarbeiter'), {
       id: z.id, name:'', dn:'', tel:'', rank:'', division:'',
