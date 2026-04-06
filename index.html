@@ -411,9 +411,17 @@
 
   /* ======= PAGE 2 - DASHBOARD ======= */
   .dashboard-grid {
-    display:grid; grid-template-columns:1fr 1fr; gap:20px;
-    max-width:1100px; margin:0 auto; padding:50px 20px 20px;
+    display:grid; grid-template-columns:1fr 1fr; gap:12px;
+    max-width:1100px; margin:0 auto; padding:20px 20px 10px;
   }
+  #page2 { overflow:hidden; max-height:calc(100vh - 100px); }
+  #page2 .dashboard-grid { max-height:calc(100vh - 120px); overflow:hidden; }
+  #page2 .db-card-body { padding:0; }
+  #page2 .db-label, #page2 .db-value { padding:4px 8px; font-size:11px; }
+  #page2 .db-card-header { padding:6px 12px; font-size:12px; }
+  #page2 .ausb-chk-cell { padding:3px 2px; font-size:12px; }
+  #page2 .ausb-lbl-cell { padding:3px 6px 3px 2px; font-size:11px; }
+  #page2 .sonder-box { min-height:40px; font-size:11px; padding:6px; margin:6px; }
   .dashboard-separator {
     height:3px;
     background: linear-gradient(90deg, transparent, #000, #000, #000, transparent);
@@ -907,8 +915,8 @@
     <button class="tool-btn" onclick="openModal('editHeaderModal')" title="Header bearbeiten">✏️</button>
     <div class="ml-auto"></div>
     <button class="tool-btn" onclick="openModal('editRuleModal')" title="Regel bearbeiten">✏️</button>
-    <input class="search-input" id="sk-search" placeholder="§ Durchsuchen">
     <button class="tool-btn" onclick="searchRule()">🔍</button>
+    <input class="search-input" id="sk-search" placeholder="§ Durchsuchen" style="margin-left:4px;">
     <button class="tool-btn" onclick="showPage(10)" title="Sanktionsarchiv">📁</button>
   </div>
   <div class="sk-container table-wrapper" id="sk-table-wrap">
@@ -1014,6 +1022,7 @@
   <div style="height:18px;"></div>
   <div class="toolbar">
     <button class="tool-btn purple" onclick="openAddMitarbeiterModal()">＋</button>
+    <button class="tool-btn red" onclick="showPage(13)" title="Seite 13">＋</button>
     <div class="ml-auto"></div>
     <button class="tool-btn" onclick="openAusbildungModal()" title="Ausbildungen bearbeiten">📋</button>
     <button class="tool-btn" onclick="openEditMitarbeiterModal()" title="Bearbeiten">✏️</button>
@@ -1234,6 +1243,7 @@
 
 <!-- ==================== PAGE 9 - MITARBEITER ARCHIV ==================== -->
 <div id="page9" class="page">
+  <div id="nav-hide-p9" style="display:none"></div>
   <div class="toolbar">
     <button class="tool-btn back" onclick="showPage(7)">← BACK</button>
     <div style="flex:1;text-align:center;">
@@ -1266,6 +1276,7 @@
 
 <!-- ==================== PAGE 10 - SANKTIONSARCHIV ==================== -->
 <div id="page10" class="page">
+  <div id="nav-hide-p10" style="display:none"></div>
   <div class="toolbar">
     <button class="tool-btn back" onclick="showPage(6)">← BACK</button>
     <div style="flex:1;text-align:center;font-size:14px;font-weight:700;color:var(--text-secondary);">Mitarbeiter Sanktionen</div>
@@ -1299,6 +1310,16 @@
 </div>
 
 </div><!-- end innerPages -->
+
+<!-- ==================== PAGE 13 ==================== -->
+<div id="page13" class="page" style="min-height:100vh;">
+  <div class="toolbar">
+    <button class="tool-btn back" onclick="showPage(7)" style="background:#1a1a3a;border-color:#7c3aed;color:#8b7cf6;font-weight:700;">← BACK</button>
+  </div>
+  <div style="text-align:center;padding:20px;font-family:'Orbitron',monospace;font-size:26px;font-weight:900;color:white;letter-spacing:2px;border-bottom:1px solid var(--border);background:linear-gradient(180deg,rgba(200,146,42,0.05) 0%,transparent 100%);text-shadow:0 0 30px rgba(200,146,42,0.2);">
+    LSPD Personal Terminal
+  </div>
+</div>
 
 <!-- ==================== SANKTION DETAIL PAGES (dynamisch) ==================== -->
 <div id="sanktionPages"></div>
@@ -1359,6 +1380,9 @@ window.openModal = function(id) { document.getElementById(id).classList.add('ope
 window.closeModal = function(id) { document.getElementById(id).classList.remove('open'); }
 
 // ===== PAGES =====
+// Pages where nav buttons should be hidden
+const HIDE_NAV_PAGES = [9, 10, 13];
+
 window.showPage = function(n) {
   document.querySelectorAll('#innerPages .page').forEach(p => p.classList.remove('active'));
   const el = document.getElementById('page'+n);
@@ -1367,7 +1391,14 @@ window.showPage = function(n) {
   const nb = document.getElementById('nav-p'+n);
   if (nb) nb.classList.add('active');
   currentPage = n;
-  // Aktuelle Seite speichern (nur Hauptseiten 2-10, keine Sanktions-Detailseiten)
+
+  // Hide or show nav buttons row
+  const navButtons = document.querySelector('.nav-buttons');
+  if (navButtons) {
+    navButtons.style.display = HIDE_NAV_PAGES.includes(n) ? 'none' : 'flex';
+  }
+
+  // Aktuelle Seite speichern (nur Hauptseiten 2-10)
   if (n >= 2 && n <= 10) {
     try { localStorage.setItem('lspd_page', n); } catch(e) {}
   }
@@ -2170,6 +2201,9 @@ window.deleteSanktion = function() {
 window.showSanktionPage = function(nr) {
   const s = sanktionData.find(x=>x.nr===nr||x._id===nr);
   if (!s) return;
+  // Hide nav buttons for sanction detail pages
+  const navButtons = document.querySelector('.nav-buttons');
+  if (navButtons) navButtons.style.display = 'none';
   let dp = document.getElementById('sank-detail-'+s.nr);
   if (!dp) {
     dp = document.createElement('div');
@@ -2209,6 +2243,7 @@ window.backFromSanktionDetail = function(nr) {
   document.querySelectorAll('#sanktionPages .page').forEach(p=>p.classList.remove('active'));
   showPage(10);
 }
+// Page 13 nav hide handled by showPage HIDE_NAV_PAGES array
 
 window.openEditSanktionModal = function(nr) {
   const s = sanktionData.find(x=>x.nr===nr);
