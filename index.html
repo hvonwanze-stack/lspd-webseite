@@ -770,7 +770,7 @@
         <div class="db-field"><div class="db-label">Invite:</div><div class="db-value" id="db-invite"></div></div>
         <div class="db-field"><div class="db-label">Last RankUp:</div><div class="db-value" id="db-rankup"></div></div>
         <div class="db-field"><div class="db-label">Urlaub:</div><div class="db-value" id="db-urlaub"></div></div>
-        <div class="db-field"><div class="db-label">Stike:</div><div class="db-value" id="db-strike"></div></div>
+        <div class="db-field" style="border-bottom:1px solid rgba(30,58,95,0.25);"><div class="db-label">Strike:</div><div class="db-value" id="db-strike"></div></div>
       </div>
     </div>
     <div class="db-card">
@@ -1015,12 +1015,12 @@
   <div class="toolbar">
     <button class="tool-btn purple" onclick="openAddMitarbeiterModal()">＋</button>
     <div class="ml-auto"></div>
-    <button class="tool-btn" onclick="openAusbildungModal()" title="Ausbildungen bearbeiten">📄</button>
-    <button class="tool-btn" onclick="archiveMitarbeiter()" title="Archivieren">📦</button>
+    <button class="tool-btn" onclick="openAusbildungModal()" title="Ausbildungen bearbeiten">📋</button>
     <button class="tool-btn" onclick="openEditMitarbeiterModal()" title="Bearbeiten">✏️</button>
-    <input class="search-input" id="ma-search" placeholder="Mitarbeiter Suchen">
     <button class="tool-btn" onclick="searchMitarbeiter()">🔍</button>
-    <button class="tool-btn" onclick="showPage(9)" title="Archiv">📋</button>
+    <input class="search-input" id="ma-search" placeholder="Mitarbeiter Suchen">
+    <button class="tool-btn" onclick="archiveMitarbeiter()" title="Archivieren">📦→</button>
+    <button class="tool-btn" onclick="showPage(9)" title="Archiv">📁</button>
   </div>
   <div class="table-wrapper">
     <table class="data-table" id="ma-table">
