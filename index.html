@@ -412,7 +412,7 @@
   /* ======= PAGE 2 - DASHBOARD ======= */
   .dashboard-grid {
     display:grid; grid-template-columns:1fr 1fr; gap:20px;
-    max-width:1100px; margin:0 auto; padding:20px;
+    max-width:1100px; margin:0 auto; padding:40px 20px 20px;
   }
   .db-card {
     background:var(--bg-card);
@@ -497,6 +497,7 @@
 
   /* ======= TABLES ======= */
   .table-wrapper { overflow-x:auto; }
+  .sep-col { background:#000 !important; width:6px !important; min-width:6px !important; max-width:6px !important; padding:0 !important; border:none !important; }
   .data-table { width:100%; border-collapse:collapse; font-size:12px; }
   .data-table th {
     background:rgba(10,20,40,0.9); padding:9px 6px;
@@ -659,15 +660,7 @@
 
       <div class="login-section-title">Login to Your Account</div>
 
-      <!-- Fake non-interactive fields (decoration only like in image) -->
-      <div class="login-field-fake">
-        <span class="field-icon">🛡</span> Badge ID
-      </div>
-      <div class="login-field-fake">
-        <span class="field-icon">🔑</span> Access Code
-      </div>
-
-      <button class="btn-access" onclick="doLogin()">ACCESS TERMINAL</button>
+      <button class="btn-access" onclick="doLogin()">LOGIN</button>
       <button class="btn-register-p1" onclick="openRegisterModal()">REGISTER NEW ACCOUNT</button>
 
       <div class="login-error-msg" id="loginError">
@@ -786,6 +779,11 @@
       <div class="db-card-header orange">Sonder Infos Für Sie</div>
       <div class="db-card-body">
         <div class="sonder-box" id="db-sonder"></div>
+        <div style="margin-top:12px;display:flex;gap:10px;align-items:center;">
+          <input class="modal-input" id="db-beweis-input" placeholder="Beweis-Link einfügen (nur Links)" style="flex:1;">
+          <button class="tool-btn purple" onclick="sendBeweisLink()" style="white-space:nowrap;">Senden</button>
+        </div>
+        <div id="db-beweis-status" style="font-size:12px;color:var(--text-dim);margin-top:6px;"></div>
       </div>
     </div>
   </div>
@@ -933,9 +931,12 @@
       <thead>
         <tr>
           <th>ID</th><th>DN</th><th>Name</th><th>Tel. Nr.</th><th>Rank</th>
+          <th class="sep-col"></th>
           <th>Division</th>
+          <th class="sep-col"></th>
           <th>Urlaub</th><th>Strike</th><th>Invite Date</th><th>Last Rankup</th><th>UpRank</th>
-          <th>Abteilung</th><th>Abteilung 2</th>
+          <th>Abteilung</th><th>Zweitabteilung</th>
+          <th class="sep-col"></th>
           <th>GA</th><th>EHK</th><th>ES</th><th>OP</th><th>OK</th><th>FULA</th>
           <th>TST</th><th>KS</th><th>OK+</th><th>FT</th><th>COP</th>
           <th>JP</th><th>ZP</th><th>VHP</th><th>TOW</th><th>AKS</th>
@@ -1151,8 +1152,12 @@
       <thead>
         <tr>
           <th>ID</th><th>DN</th><th>Name</th><th>Tel. Nr.</th><th>Rank</th>
-          <th>Division</th><th>Urlaub</th><th>Strike</th><th>Invite Date</th><th>Last Rankup</th><th>UpRank</th>
-          <th>Abteilung</th><th>Abteilung 2</th>
+          <th class="sep-col"></th>
+          <th>Division</th>
+          <th class="sep-col"></th>
+          <th>Urlaub</th><th>Strike</th><th>Invite Date</th><th>Last Rankup</th><th>UpRank</th>
+          <th>Abteilung</th><th>Zweitabteilung</th>
+          <th class="sep-col"></th>
           <th>GA</th><th>EHK</th><th>ES</th><th>OP</th><th>OK</th><th>FULA</th>
           <th>TST</th><th>KS</th><th>OK+</th><th>FT</th><th>COP</th>
           <th>JP</th><th>ZP</th><th>VHP</th><th>TOW</th><th>AKS</th>
@@ -1449,9 +1454,15 @@ window.doLogout = async function() {
 }
 
 // ===== DASHBOARD =====
+// Store current user's ID and sanctions globally for sendBeweisLink
+let currentUserICId = '';
+let currentUserSanktionen = [];
+
 async function loadUserDashboard(zugData) {
   const id = zugData.id;
-  // Nur ID anzeigen, Rest leer lassen
+  currentUserICId = id;
+
+  // Nur ID anzeigen
   document.getElementById('db-id').textContent = id || '';
   document.getElementById('db-name').textContent = '';
   document.getElementById('db-tel').textContent = '';
@@ -1463,6 +1474,65 @@ async function loadUserDashboard(zugData) {
   document.getElementById('db-rankup').textContent = '';
   document.getElementById('db-urlaub').textContent = '';
   document.getElementById('db-strike').textContent = '';
+
+  // Load sanctions for this user's ID
+  try {
+    const snap = await getDocs(query(collection(db,'sanktionen'), where('id','==', id)));
+    currentUserSanktionen = snap.docs.map(d => ({...d.data(), _id: d.id}));
+    renderSonderInfos();
+  } catch(e) {
+    console.error('Sanktionen laden Fehler:', e);
+  }
+}
+
+function renderSonderInfos() {
+  const box = document.getElementById('db-sonder');
+  if (!box) return;
+  if (currentUserSanktionen.length === 0) {
+    box.innerHTML = '<span style="color:var(--text-muted);font-size:12px;">Keine Sanktionen vorhanden.</span>';
+    return;
+  }
+  box.innerHTML = currentUserSanktionen.map((s, i) => `
+    <div style="margin-bottom:${i < currentUserSanktionen.length-1 ? '12px' : '0'};padding-bottom:${i < currentUserSanktionen.length-1 ? '12px' : '0'};border-bottom:${i < currentUserSanktionen.length-1 ? '1px solid rgba(30,58,95,0.4)' : 'none'};">
+      <div style="color:var(--red);font-size:11px;font-weight:700;letter-spacing:1px;margin-bottom:4px;">⚠ SANKTION ${s.nr || (i+1)}</div>
+      <div style="font-size:12px;color:var(--text-dim);margin-bottom:3px;"><span style="color:var(--text);">Grund:</span> ${s.grund || '–'}</div>
+      <div style="font-size:12px;color:var(--text-dim);"><span style="color:var(--text);">Strafe:</span> ${s.strafe || '–'}</div>
+      ${s.beweise ? `<div style="font-size:11px;margin-top:4px;color:var(--cyan);word-break:break-all;">🔗 ${s.beweise}</div>` : ''}
+    </div>
+  `).join('');
+}
+
+window.sendBeweisLink = async function() {
+  const link = document.getElementById('db-beweis-input').value.trim();
+  const status = document.getElementById('db-beweis-status');
+  if (!link) { status.textContent = 'Bitte einen Link eingeben.'; return; }
+  if (!link.startsWith('http://') && !link.startsWith('https://')) {
+    status.textContent = 'Nur gültige Links (http:// oder https://) erlaubt.';
+    return;
+  }
+  if (currentUserSanktionen.length === 0) {
+    status.textContent = 'Keine Sanktion gefunden für deine ID.';
+    return;
+  }
+  // Add link to the most recent sanction (last one)
+  const sank = currentUserSanktionen[currentUserSanktionen.length - 1];
+  try {
+    const existing = sank.beweise ? sank.beweise + '\n' + link : link;
+    await updateDoc(doc(db,'sanktionen', sank._id), { beweise: existing });
+    // Update local
+    sank.beweise = existing;
+    // Update sanktion detail page if open
+    const sdEl = document.getElementById('sd-beweise-' + sank.nr);
+    if (sdEl) sdEl.textContent = existing;
+    document.getElementById('db-beweis-input').value = '';
+    status.style.color = 'var(--green)';
+    status.textContent = 'Link erfolgreich gesendet!';
+    renderSonderInfos();
+    setTimeout(() => status.textContent = '', 3000);
+  } catch(e) {
+    status.style.color = 'var(--red)';
+    status.textContent = 'Fehler: ' + e.message;
+  }
 }
 
 // ===== MITARBEITER =====
@@ -1485,11 +1555,13 @@ function renderMitarbeiter(filtered=null) {
     return `<tr>
       <td>${ma.id||''}</td><td>${ma.dn||''}</td><td>${ma.name||''}</td><td>${ma.tel||''}</td>
       <td>${rankName(ma.rank)||''}</td>
+      <td class="sep-col"></td>
       <td><span class="${div.cls}">${div.label}</span></td>
+      <td class="sep-col"></td>
       <td>${ma.urlaub||0}</td><td>${ma.strike||0}</td>
       <td>${ma.invite||''}</td><td>${ma.rankup||''}</td><td></td>
-      <td>${ma.abteilung||''}</td><td>${ma.zabt||''}
-      </td>
+      <td>${ma.abteilung||''}</td><td>${ma.zabt||''}</td>
+      <td class="sep-col"></td>
       <td>${chk('GA')}</td><td>${chk('EHK')}</td><td>${chk('ES')}</td><td>${chk('OP')}</td>
       <td>${chk('OK')}</td><td>${chk('FULA')}</td><td>${chk('TST')}</td><td>${chk('KS')}</td>
       <td>${chk('OKP')}</td><td>${chk('FT')}</td><td>${chk('JP')}</td>
@@ -1629,10 +1701,13 @@ function renderArchiv(filtered=null) {
     return `<tr>
       <td>${ma.id||''}</td><td>${ma.dn||''}</td><td>${ma.name||''}</td><td>${ma.tel||''}</td>
       <td>${rankName(ma.rank)||''}</td>
+      <td class="sep-col"></td>
       <td><span class="${div.cls}">${div.label}</span></td>
+      <td class="sep-col"></td>
       <td>${ma.urlaub||0}</td><td>${ma.strike||0}</td>
       <td>${ma.invite||''}</td><td>${ma.rankup||''}</td><td></td>
       <td>${ma.abteilung||''}</td><td>${ma.zabt||''}</td>
+      <td class="sep-col"></td>
       <td>${chk('GA')}</td><td>${chk('EHK')}</td><td>${chk('ES')}</td><td>${chk('OP')}</td>
       <td>${chk('OK')}</td><td>${chk('FULA')}</td><td>${chk('TST')}</td><td>${chk('KS')}</td>
       <td>${chk('OKP')}</td><td>${chk('FT')}</td><td>${chk('JP')}</td>
