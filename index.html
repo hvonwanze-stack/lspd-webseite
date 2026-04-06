@@ -2167,9 +2167,10 @@ window.setFreigabe = async function(docId, val) {
   const freigegeben = val === 'ja';
   try {
     const z = zugriffData.find(x=>x._id===docId);
-    // Wenn erstmals freigegeben und noch kein Rang gesetzt → Rang 1 setzen
+    // Beim Freigeben: rang immer auf '1' setzen falls nicht schon korrekt
+    // Rang darf nie automatisch auf Admin gesetzt werden
     const updateData = {freigegeben};
-    if (freigegeben && z && (!z.rang || z.rang === '')) {
+    if (freigegeben && z && (z.rang === 'Admin' || !z.rang || z.rang === '')) {
       updateData.rang = '1';
     }
     await updateDoc(doc(db,'zugriff',docId), updateData);
