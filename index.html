@@ -502,6 +502,9 @@
 
   /* ======= TABLES ======= */
   .table-wrapper { overflow-x:auto; }
+  /* Rang-based visibility */
+  .rang-hide { display: none !important; }
+
   .ausb-chk-cell {
     width:28px; text-align:center; padding:5px 4px;
     border-bottom:1px solid rgba(30,58,95,0.2);
@@ -1188,10 +1191,17 @@
     <div class="modal-field">
       <div class="modal-label">Rang (Rechte)</div>
       <select class="modal-input" autocomplete="off" id="az-rang">
-        <option value="1">1</option><option value="2">2</option><option value="3">3</option>
-        <option value="4">4</option><option value="5">5</option><option value="6">6</option>
-        <option value="7">7</option><option value="8">8</option><option value="9">9</option>
-        <option value="10">10</option><option value="Admin">Admin</option>
+        <option value="1">1 - Mitarbeiter</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6 - PA</option>
+        <option value="7">7 - IU</option>
+        <option value="8">8 - IU Leitung</option>
+        <option value="9">9 - HR</option>
+        <option value="10">10 - HR Leitung</option>
+        <option value="Admin">Admin</option>
         <option value="Ersteller">Ersteller</option>
       </select>
     </div>
@@ -1215,10 +1225,17 @@
     <div class="modal-field">
       <div class="modal-label">Rang (Rechte)</div>
       <select class="modal-input" autocomplete="off" id="ez-rang">
-        <option value="1">1</option><option value="2">2</option><option value="3">3</option>
-        <option value="4">4</option><option value="5">5</option><option value="6">6</option>
-        <option value="7">7</option><option value="8">8</option><option value="9">9</option>
-        <option value="10">10</option><option value="Admin">Admin</option>
+        <option value="1">1 - Mitarbeiter</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6 - PA</option>
+        <option value="7">7 - IU</option>
+        <option value="8">8 - IU Leitung</option>
+        <option value="9">9 - HR</option>
+        <option value="10">10 - HR Leitung</option>
+        <option value="Admin">Admin</option>
         <option value="Ersteller">Ersteller</option>
       </select>
     </div>
@@ -1469,6 +1486,10 @@ window.showPage = function(n) {
   if (n === 6) renderSKRules();
   if (n === 11) renderPage11();
   if (n === 12) { loadSanktionArchiv(); }
+  // Reapply rang permissions after page switch
+  if (typeof currentRang !== 'undefined' && currentRang) {
+    setTimeout(() => applyRangPermissions(currentRang), 60);
+  }
 }
 
 // ===== AUTH =====
@@ -1562,6 +1583,7 @@ onAuthStateChanged(auth, async (user) => {
 
       showPage(savedPage);
       loadUserDashboard(zugData);
+      applyRangPermissions(zugData.rang || '1');
       hideLoader();
 
     } else {
@@ -2647,6 +2669,125 @@ function getDivisionLabel(rank) {
   if (r===28||r===29) return {label:'Leaderschaft', cls:'div-leadership'};
   if (r===30) return {label:'Leader', cls:'div-leader'};
   return {label:'', cls:''};
+}
+
+// ===== RANG PERMISSIONS =====
+let currentRang = '1';
+let currentRangNum = 1;
+
+function rangNumFromStr(r) {
+  if (r === 'Ersteller') return 1000;
+  if (r === 'Admin') return 999;
+  const n = parseInt(r);
+  return isNaN(n) ? 0 : n;
+}
+
+function applyRangPermissions(rang) {
+  currentRang = rang;
+  currentRangNum = rangNumFromStr(rang);
+
+  // Helper: show or hide element
+  const show = (sel, visible) => {
+    document.querySelectorAll(sel).forEach(el => {
+      el.style.display = visible ? '' : 'none';
+    });
+  };
+
+  // ===== NAV BUTTONS =====
+  // Seite 2 always visible when logged in
+  const navP2 = document.getElementById('nav-p2');
+  if (navP2) navP2.style.display = '';
+
+  // Pages 3,4,5,6: Rang 1 + Admin + Ersteller
+  const canSee345 = (currentRangNum === 1 || currentRangNum === 6 || currentRangNum >= 999);
+  ['nav-p3','nav-p4','nav-p5','nav-p6'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = canSee345 ? '' : 'none';
+  });
+
+  // Page 7: Rang 6 (PA) + Ersteller
+  const canSeeP7 = (currentRangNum === 6 || currentRangNum >= 999);
+  const navP7 = document.getElementById('nav-p7');
+  if (navP7) navP7.style.display = canSeeP7 ? '' : 'none';
+
+  // Pages 8,9,10,11,12: nur Ersteller
+  ['nav-p8'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = (currentRangNum >= 999) ? '' : 'none';
+  });
+
+  // ===== ABMELDEN BUTTON always visible =====
+
+  // ===== PAGE 6 - SANKTIONSKATALOG =====
+  // Rang 1 und 6 sehen Seite 6 nur lesend - keine Knöpfe
+  const canEditP6 = currentRangNum >= 999; // nur Ersteller
+  document.querySelectorAll('#page6 .tool-btn').forEach(btn => {
+    // Keep all hidden for non-Ersteller
+    btn.style.display = canEditP6 ? '' : 'none';
+  });
+
+  // ===== PAGE 7 - MITARBEITER REGISTER =====
+  // Rang 6 (PA): nur Suchfeld, Lupe, Ausbildung-Button sehen
+  if (canSeeP7) {
+    document.querySelectorAll('#page7 .tool-btn').forEach(btn => {
+      if (currentRangNum === 6) {
+        // PA: nur 🔍 (search) und 📋 (ausbildung) sichtbar
+        const txt = btn.textContent.trim();
+        const allowed = ['🔍', '📋'];
+        btn.style.display = allowed.includes(txt) ? '' : 'none';
+      } else {
+        // Ersteller: alles sichtbar
+        btn.style.display = '';
+      }
+    });
+    // PA kann Suchfeld sehen
+    const maSearch = document.getElementById('ma-search');
+    if (maSearch) maSearch.style.display = canSeeP7 ? '' : 'none';
+  }
+
+  // ===== PAGES 2,3,4,5: Rang 1 - nur lesen, keine Knöpfe, keine Toolbar =====
+  if (currentRangNum === 1) {
+    // Auf Seite 2 Abmelden Button bleibt
+    // Seiten 3,4,5,6 haben nur WIP Banner - OK
+  }
+
+  // ===== Ränge 2,3,4,5,7,8,9,10: NUR Seite 2, Nav komplett ausblenden =====
+  const onlyPage2 = (currentRangNum >= 2 && currentRangNum <= 5) ||
+                    currentRangNum === 7 || currentRangNum === 8 ||
+                    currentRangNum === 9 || currentRangNum === 10;
+  if (onlyPage2) {
+    ['nav-p3','nav-p4','nav-p5','nav-p6','nav-p7','nav-p8'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.style.display = 'none';
+    });
+    // Force to page 2 if not already there
+    if (currentPage !== 2) showPage(2);
+  }
+
+  // ===== Admin: sieht alles, aber keine Edit/Delete/Add Knöpfe =====
+  if (currentRang === 'Admin') {
+    ['nav-p3','nav-p4','nav-p5','nav-p6','nav-p7','nav-p8'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.style.display = '';
+    });
+    // Hide all action buttons (purple+, red, edit pencils, archive)
+    document.querySelectorAll('.tool-btn.purple, .tool-btn.red, .btn-abmelden').forEach(btn => {
+      if (!btn.onclick || !btn.onclick.toString().includes('doLogout')) {
+        btn.style.display = 'none';
+      }
+    });
+    // Keep search and read-only buttons
+    // Hide edit pencils in toolbars
+    document.querySelectorAll('.toolbar .tool-btn').forEach(btn => {
+      const txt = btn.textContent.trim();
+      const readOnly = ['🔍', '← BACK', 'BACK'];
+      if (!readOnly.some(r => txt.includes(r))) {
+        btn.style.display = 'none';
+      }
+    });
+  }
+
+  console.log('[RANG] Applied permissions for rang:', rang, '(', currentRangNum, ')');
 }
 
 function checkVoraussetzung(ma) {
