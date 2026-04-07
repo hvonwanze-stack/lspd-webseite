@@ -1962,7 +1962,7 @@ function renderMitarbeiter(filtered=null) {
   sorted.forEach(ma => {
     const currentRank = parseInt(ma.rank) || 0;
     if (lastRank !== null && currentRank !== lastRank) {
-      rows.push(`<tr><td colspan="30" style="padding:0;border:none;"><div style="height:2px;background:#000;margin:0;"></div></td></tr>`);
+      rows.push(`<tr><td colspan="30" style="padding:0;border:none;"><div style="height:4px;background:#000;margin:0;"></div></td></tr>`);
     }
     lastRank = currentRank;
     const div = getDivisionLabel(ma.rank);
