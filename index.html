@@ -1951,6 +1951,22 @@ async function loadMitarbeiter() {
   renderMitarbeiter();
 }
 
+function getRankColor(rank) {
+  const r = parseInt(rank) || 0;
+  if (r === 1)              return '#dc2626'; // suspended
+  if (r >= 2 && r <= 4)    return '#60a5fa'; // cadet/tow/rookie
+  if (r >= 5 && r <= 10)   return '#16a34a'; // officer
+  if (r >= 11 && r <= 16)  return '#ea580c'; // command
+  if (r === 17)             return '#0891b2'; // media
+  if (r >= 18 && r <= 22)  return '#7c3aed'; // department
+  if (r === 23 || r === 24) return '#2563eb'; // high command
+  if (r === 25 || r === 26) return '#7c3aed'; // department
+  if (r === 27)             return '#1d4ed8'; // hclead
+  if (r === 28 || r === 29) return '#dc2626'; // leadership
+  if (r === 30)             return '#991b1b'; // leader
+  return '#333333';
+}
+
 function renderMitarbeiter(filtered=null) {
   const list = filtered || mitarbeiterData;
   const tbody = document.getElementById('ma-tbody');
@@ -1962,7 +1978,9 @@ function renderMitarbeiter(filtered=null) {
   sorted.forEach(ma => {
     const currentRank = parseInt(ma.rank) || 0;
     if (lastRank !== null && currentRank !== lastRank) {
-      rows.push(`<tr><td colspan="30" style="padding:0;border:none;"><div style="height:4px;background:#000;margin:0;"></div></td></tr>`);
+      // Farbe basierend auf dem Rang der vorherigen Gruppe
+      const lineColor = getRankColor(lastRank);
+      rows.push(`<tr><td colspan="30" style="padding:0;border:none;"><div style="height:5px;background:${lineColor};margin:0;"></div></td></tr>`);
     }
     lastRank = currentRank;
     const div = getDivisionLabel(ma.rank);
