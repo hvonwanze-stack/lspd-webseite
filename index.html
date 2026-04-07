@@ -2871,8 +2871,8 @@ function applyRangPermissions(rang) {
         // IU / IU Leitung: Lupe + 📁
         btn.style.display = (txt === '📁') ? '' : 'none';
       } else if (rn === 9 || rn === 10) {
-        // HR / HR Leitung: Lupe + 📁
-        btn.style.display = (txt === '📁') ? '' : 'none';
+        // HR / HR Leitung: nur Lupe - kein 📁
+        btn.style.display = 'none';
       } else if (rang === 'Admin') {
         // Admin: Lupe + 📁
         btn.style.display = (txt === '📁') ? '' : 'none';
