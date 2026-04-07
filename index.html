@@ -1980,7 +1980,7 @@ function renderMitarbeiter(filtered=null) {
     if (lastRank !== null && currentRank !== lastRank) {
       // Farbe basierend auf dem Rang der vorherigen Gruppe
       const lineColor = getRankColor(lastRank);
-      rows.push(`<tr><td colspan="30" style="padding:0;border:none;"><div style="height:5px;background:${lineColor};margin:0;"></div></td></tr>`);
+      rows.push(`<tr><td colspan="32" style="padding:0;border:none;"><div style="height:5px;background:${lineColor};margin:0;"></div></td></tr>`);
     }
     lastRank = currentRank;
     const div = getDivisionLabel(ma.rank);
