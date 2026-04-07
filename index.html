@@ -2855,24 +2855,27 @@ function applyRangPermissions(rang) {
   if (!allowedPages.includes(currentPage)) showPage(2);
 
   // ===== PAGE 6 - SANKTIONSKATALOG =====
-  // Toolbar buttons on page 6:
-  // lila+ (addRule), ✏️left (editHeader), ✏️right (editRule), 🔍(search), suchfeld, 📁(archiv->p10)
+  // Jeder Rang darf: Regeln sehen, Suchfeld, Lupen-Knopf
+  // Nur Edit/Add Knöpfe sind rangabhängig
   setTimeout(() => {
     const p6btns = document.querySelectorAll('#page6 .toolbar .tool-btn');
     p6btns.forEach(btn => {
       const txt = btn.textContent.trim();
-      if (rn === 1 || rn === 6) {
-        // Rang 1 & PA: nur lesen, keine knöpfe auf seite 6
+      // 🔍 Lupe: JEDER darf sie sehen
+      if (txt === '🔍') {
+        btn.style.display = '';
+      } else if (rn === 1 || rn === 6) {
+        // Rang 1 & PA: nur Lupe sichtbar
         btn.style.display = 'none';
       } else if (rn === 7 || rn === 8) {
-        // IU / IU Leitung: darf 📁 (rechts vom suchfeld = zu seite 10) sehen
-        btn.style.display = txt === '📁' ? '' : 'none';
+        // IU / IU Leitung: Lupe + 📁
+        btn.style.display = (txt === '📁') ? '' : 'none';
       } else if (rn === 9 || rn === 10) {
-        // HR / HR Leitung: darf 📁 sehen
-        btn.style.display = txt === '📁' ? '' : 'none';
+        // HR / HR Leitung: Lupe + 📁
+        btn.style.display = (txt === '📁') ? '' : 'none';
       } else if (rang === 'Admin') {
-        // Admin: nur navigations-buttons und suche
-        btn.style.display = (txt === '📁' || txt === '🔍') ? '' : 'none';
+        // Admin: Lupe + 📁
+        btn.style.display = (txt === '📁') ? '' : 'none';
       } else if (rang === 'Leaderschaft') {
         // Leaderschaft: alles außer rote x-buttons
         btn.style.display = (btn.classList.contains('red') && txt === '✕') ? 'none' : '';
@@ -2881,9 +2884,10 @@ function applyRangPermissions(rang) {
         btn.style.display = '';
       }
     });
+
+    // Suchfeld: JEDER darf es sehen und benutzen
     const p6search = document.getElementById('sk-search');
-    // Rang 1 und Rang 6 dürfen Suchfeld auf Seite 6 nicht sehen
-    if (p6search) p6search.style.display = (rn !== 1 && rn !== 6) ? '' : 'none';
+    if (p6search) p6search.style.display = '';
 
     // ===== PAGE 7 - MITARBEITER REGISTER =====
     const p7btns = document.querySelectorAll('#page7 .toolbar .tool-btn');
