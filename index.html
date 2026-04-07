@@ -1478,7 +1478,7 @@ window.showPage = function(n) {
   if (n === 8) renderZugriff();
   if (n === 9) renderArchiv();
   if (n === 10) renderSanktionen();
-  if (n === 6) renderSKRules();
+  if (n === 6) { if (skRules.length === 0) loadSKRules().then(renderSKRules); else renderSKRules(); }
   if (n === 11) renderPage11();
   if (n === 12) { loadSanktionArchiv(); }
   // Reapply rang permissions after page switch
