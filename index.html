@@ -2218,12 +2218,37 @@ window.setFreigabe = async function(docId, val) {
 
     if (quelle === 'anfragen') {
       // Anfrage: freigegeben in anfragen setzen
-      // Beim nächsten Login des Users wird er automatisch in zugriff übertragen
       const updateData = {freigegeben};
       if (freigegeben && (z.rang === 'Admin' || !z.rang || z.rang === '')) {
         updateData.rang = '1';
       }
       await updateDoc(doc(db,'anfragen', docId), updateData);
+
+      // Wenn freigegeben: Mitarbeiter anlegen falls noch nicht vorhanden
+      if (freigegeben && z.id) {
+        try {
+          const q = query(collection(db,'mitarbeiter'), where('id','==',z.id));
+          const qs = await getDocs(q);
+          if (qs.empty) {
+            const today = new Date().toISOString().split('T')[0];
+            const emptyAusb = {
+              GA:false, EHK:false, ES:false, OP:false, OK:false, FULA:false,
+              TST:false, KS:false, OKP:false, FT:false, JP:false, ZP:false,
+              VHP:false, SP:false, TOW:false, AKS:false
+            };
+            await addDoc(collection(db,'mitarbeiter'), {
+              id: z.id, name:'', dn:'', tel:'', rank:'', division:'',
+              invite: today, rankup: today, abteilung:'', zabt:'',
+              urlaub:0, strike:0, ausbildungen: emptyAusb,
+              linkedUid: z.uid||''
+            });
+            await loadMitarbeiter();
+          }
+        } catch(maErr) {
+          console.warn('[FREIGABE] Mitarbeiter anlegen fehlgeschlagen:', maErr.message);
+        }
+      }
+
       showNotif(freigegeben ? 'Anfrage freigegeben' : 'Anfrage abgelehnt', freigegeben?'success':'error');
     } else {
       // Normales zugriff Dokument - update
