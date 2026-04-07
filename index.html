@@ -1723,8 +1723,8 @@ window.doRegister = async function() {
       timestamp: new Date().toISOString()
     };
 
+    // Nur in anfragen schreiben - zugriff wird vom Admin angelegt
     await setDoc(doc(db, 'anfragen', user.uid), daten);
-    await setDoc(doc(db, 'zugriff', user.uid), daten);
     await signOut(auth);
     isRegistering = false;
 
