@@ -1955,13 +1955,20 @@ function renderMitarbeiter(filtered=null) {
   const list = filtered || mitarbeiterData;
   const tbody = document.getElementById('ma-tbody');
   if (!tbody) return;
-  // Sort by rank descending
   const sorted = [...list].sort((a,b) => (parseInt(b.rank)||0)-(parseInt(a.rank)||0));
-  tbody.innerHTML = sorted.map(ma => {
+
+  const rows = [];
+  let lastRank = null;
+  sorted.forEach(ma => {
+    const currentRank = parseInt(ma.rank) || 0;
+    if (lastRank !== null && currentRank !== lastRank) {
+      rows.push(`<tr><td colspan="30" style="padding:0;border:none;"><div style="height:2px;background:#000;margin:0;"></div></td></tr>`);
+    }
+    lastRank = currentRank;
     const div = getDivisionLabel(ma.rank);
     const ausb = ma.ausbildungen || {};
     const chk = (k) => ausb[k] === true ? '✅' : '⬜';
-    return `<tr>
+    rows.push(`<tr>
       <td>${ma.id||''}</td><td>${ma.dn||''}</td><td>${ma.name||''}</td><td>${ma.tel||''}</td>
       <td>${rankName(ma.rank)||''}</td>
       <td class="sep-col"></td>
@@ -1976,8 +1983,9 @@ function renderMitarbeiter(filtered=null) {
       <td>${chk('OK')}</td><td>${chk('FULA')}</td><td>${chk('TST')}</td><td>${chk('KS')}</td>
       <td>${chk('OKP')}</td><td>${chk('FT')}</td>
       <td>${chk('JP')}</td><td>${chk('ZP')}</td><td>${chk('SP')}</td><td>${chk('VHP')}</td><td>${chk('TOW')}</td><td>${chk('AKS')}</td>
-    </tr>`;
-  }).join('');
+    </tr>`);
+  });
+  tbody.innerHTML = rows.join('');
 }
 
 window.openAddMitarbeiterModal = function() {
