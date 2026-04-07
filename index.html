@@ -2130,8 +2130,22 @@ window.deleteArchived = function() {
 
 // ===== ZUGRIFF =====
 async function loadZugriff() {
-  const snap = await getDocs(collection(db,'zugriff'));
-  zugriffData = snap.docs.map(d => ({...d.data(), _id: d.id}));
+  // Lade beide Collections: zugriff (freigegebene) + anfragen (wartende)
+  const [zugriffSnap, anfragenSnap] = await Promise.all([
+    getDocs(collection(db,'zugriff')),
+    getDocs(collection(db,'anfragen'))
+  ]);
+  const zugriffDocs = zugriffSnap.docs.map(d => ({...d.data(), _id: d.id, _quelle: 'zugriff'}));
+  const anfragenDocs = anfragenSnap.docs.map(d => ({...d.data(), _id: d.id, _quelle: 'anfragen'}));
+
+  // Zusammenführen - anfragen die noch nicht in zugriff sind
+  const zugriffEmails = new Set(zugriffDocs.map(z => z.email));
+  const zugriffIds = new Set(zugriffDocs.map(z => z.id));
+  const nochNichtFreigegeben = anfragenDocs.filter(a =>
+    !zugriffEmails.has(a.email) && !zugriffIds.has(a.id)
+  );
+
+  zugriffData = [...zugriffDocs, ...nochNichtFreigegeben];
   renderZugriff();
 }
 
