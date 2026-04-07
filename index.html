@@ -1552,6 +1552,43 @@ onAuthStateChanged(auth, async (user) => {
       }
     }
 
+    // ===== WEG 3: Per anfragen (freigegeben=true) =====
+    if (!zugData) {
+      try {
+        const anfSnap = await getDoc(doc(db, 'anfragen', user.uid));
+        if (anfSnap.exists()) {
+          const anfData = anfSnap.data();
+          console.log('[AUTH] In anfragen gefunden. freigegeben:', anfData.freigegeben);
+          if (anfData.freigegeben === true) {
+            // Freigegeben → in zugriff übertragen
+            const neuerEintrag = {
+              ...anfData,
+              uid: user.uid,
+              rang: anfData.rang || '1',
+              freigegeben: true
+            };
+            try {
+              await setDoc(doc(db, 'zugriff', user.uid), neuerEintrag);
+              await deleteDoc(doc(db, 'anfragen', user.uid));
+              zugData = neuerEintrag;
+              zugDocRef = user.uid;
+              console.log('[AUTH] Aus anfragen in zugriff übertragen.');
+            } catch(transferErr) {
+              console.warn('[AUTH] Übertragung fehlgeschlagen:', transferErr.message);
+              // Trotzdem einloggen mit anfragen-Daten
+              zugData = anfData;
+              zugDocRef = user.uid;
+            }
+          } else {
+            // Noch nicht freigegeben
+            zugData = {...anfData, freigegeben: false};
+          }
+        }
+      } catch(e) {
+        console.warn('[AUTH] Anfragen-Suche Fehler:', e.code, e.message);
+      }
+    }
+
     // ===== ZUGANG PRÜFEN =====
     if (zugData && zugData.freigegeben === true) {
       console.log('[AUTH] Zugang erlaubt! Lade Seite...');
@@ -2179,24 +2216,15 @@ window.setFreigabe = async function(docId, val) {
 
     const quelle = z._quelle || 'zugriff';
 
-    if (freigegeben && quelle === 'anfragen') {
-      // Anfrage → in zugriff verschieben mit rang:'1'
-      const neuerEintrag = {
-        id: z.id, name: z.name, nachname: z.nachname||'',
-        tel: z.tel||'', email: z.email, uid: z.uid||'',
-        rang: '1', freigegeben: true,
-        timestamp: z.timestamp||new Date().toISOString()
-      };
-      // In zugriff anlegen (Doc-ID = uid falls vorhanden, sonst neue ID)
-      const zugriffDocId = z.uid && !z.uid.startsWith('manual-') ? z.uid : docId;
-      await setDoc(doc(db,'zugriff', zugriffDocId), neuerEintrag);
-      // Aus anfragen löschen
-      await deleteDoc(doc(db,'anfragen', docId));
-      if (z) await handleFreigabe({...neuerEintrag, _id: zugriffDocId});
-      showNotif('Zugriff freigegeben','success');
-    } else if (!freigegeben && quelle === 'anfragen') {
-      // Anfrage ablehnen - einfach in anfragen lassen oder löschen
-      showNotif('Anfrage abgelehnt','error');
+    if (quelle === 'anfragen') {
+      // Anfrage: freigegeben in anfragen setzen
+      // Beim nächsten Login des Users wird er automatisch in zugriff übertragen
+      const updateData = {freigegeben};
+      if (freigegeben && (z.rang === 'Admin' || !z.rang || z.rang === '')) {
+        updateData.rang = '1';
+      }
+      await updateDoc(doc(db,'anfragen', docId), updateData);
+      showNotif(freigegeben ? 'Anfrage freigegeben' : 'Anfrage abgelehnt', freigegeben?'success':'error');
     } else {
       // Normales zugriff Dokument - update
       const updateData = {freigegeben};
