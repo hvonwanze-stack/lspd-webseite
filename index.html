@@ -2096,15 +2096,25 @@ window.searchMitarbeiter = function() {
 window.openAusbildungModal = async function() {
   const id = document.getElementById('ma-search').value.trim();
   if (!id) return showNotif('Bitte ID eingeben','error');
+
+  // Frisch aus Firestore laden
+  await loadMitarbeiter();
   const ma = mitarbeiterData.find(m=>m.id===id);
   if (!ma) return showNotif('Mitarbeiter nicht gefunden','error');
+
   ausbildungTargetId = ma._id;
   document.getElementById('ausb-ma-name').textContent = `Mitarbeiter: ${ma.name||ma.id}`;
-  const ausb = ma.ausbildungen || {};
-  ['GA','EHK','ES','OP','OK','FULA','TST','KS','OKP','FT','JP','ZP','VHP','SP','TOW','AKS'].forEach(k => {
-    document.getElementById('ausb-'+k).checked = !!ausb[k];
-  });
+
+  // Modal zuerst öffnen, dann Checkboxen setzen
   openModal('ausbildungModal');
+
+  setTimeout(() => {
+    const ausb = ma.ausbildungen || {};
+    ['GA','EHK','ES','OP','OK','FULA','TST','KS','OKP','FT','JP','ZP','VHP','SP','TOW','AKS'].forEach(k => {
+      const el = document.getElementById('ausb-'+k);
+      if (el) el.checked = !!ausb[k];
+    });
+  }, 50);
 }
 
 window.saveAusbildung = async function() {
