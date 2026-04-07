@@ -1638,7 +1638,8 @@ window.doRegister = async function() {
   if (!id||!name||!nachname||!tel) return showNotif('Bitte alle Felder ausfüllen!','error');
   if (!confirmed) return showNotif('Bitte die Warnung bestätigen!','error');
 
-  // Prüfe ID VOR dem Google Login - in zugriff UND anfragen
+  // Prüfe ID VOR dem Google Login - nur in zugriff (öffentlich lesbar)
+  // anfragen wird nach Login mit eigener UID geprüft
   try {
     const zugriffSnap = await getDocs(collection(db, 'zugriff'));
     const alleZugriff = zugriffSnap.docs.map(d => d.data());
@@ -1647,12 +1648,9 @@ window.doRegister = async function() {
       showNotif('Ihre ID hat schon einen Account.', 'error');
       return;
     }
-
-    const anfragenSnap = await getDocs(collection(db, 'anfragen'));
-    const alleAnfragen = anfragenSnap.docs.map(d => d.data());
-    const idExistsA = alleAnfragen.find(a => a.id === id);
-    if (idExistsA) {
-      showNotif('Ihre ID hat schon einen Account.', 'error');
+    const emailExistsZ = alleZugriff.find(z => z.email === regEmail);
+    if (emailExistsZ) {
+      showNotif('Ihre Email hat schon einen Account.', 'error');
       return;
     }
   } catch(e) {
@@ -1682,7 +1680,7 @@ window.doRegister = async function() {
   await new Promise(r => setTimeout(r, 800));
 
   try {
-    // Nach Login: Email prüfen in zugriff UND anfragen
+    // Nach Login: Email + ID in zugriff prüfen (öffentlich lesbar)
     const zugriffSnap2 = await getDocs(collection(db, 'zugriff'));
     const alleZugriff2 = zugriffSnap2.docs.map(d => d.data());
 
@@ -1694,24 +1692,20 @@ window.doRegister = async function() {
       return;
     }
 
-    // Auch in anfragen prüfen
-    const anfragenSnap2 = await getDocs(collection(db, 'anfragen'));
-    const alleAnfragen2 = anfragenSnap2.docs.map(d => d.data());
-
-    const emailExistsAnfragen = alleAnfragen2.find(a => a.email === user.email);
-    if (emailExistsAnfragen) {
-      isRegistering = false;
-      await signOut(auth);
-      showNotif('Ihre Email hat schon einen Account.', 'error');
-      return;
-    }
-
-    // ID nochmal prüfen (könnte sich zwischen Vorprüfung und jetzt geändert haben)
     const idDoubleCheck = alleZugriff2.find(z => z.id === id);
     if (idDoubleCheck) {
       isRegistering = false;
       await signOut(auth);
       showNotif('Ihre ID hat schon einen Account.', 'error');
+      return;
+    }
+
+    // Eigenes anfragen-Dokument prüfen (nur eigene UID lesbar)
+    const ownAnfrage = await getDoc(doc(db, 'anfragen', user.uid));
+    if (ownAnfrage.exists()) {
+      isRegistering = false;
+      await signOut(auth);
+      showNotif('Sie haben bereits eine Anfrage gesendet.', 'error');
       return;
     }
 
