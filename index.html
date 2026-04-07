@@ -887,6 +887,7 @@
       <div class="db-card-body">
         <div class="sonder-box" id="db-sonder"></div>
         <div style="margin-top:12px;display:flex;gap:10px;align-items:center;">
+          <input class="modal-input" autocomplete="off" id="db-beweis-sknr" placeholder="SK Nummer" style="width:110px;flex-shrink:0;">
           <input class="modal-input" autocomplete="off" id="db-beweis-input" placeholder="Beweis-Link einfügen (nur Links)" style="flex:1;">
           <button class="tool-btn purple" onclick="sendBeweisLink()" style="white-space:nowrap;">Senden</button>
         </div>
@@ -1894,8 +1895,10 @@ function renderSonderInfos() {
 }
 
 window.sendBeweisLink = async function() {
+  const skNr = document.getElementById('db-beweis-sknr').value.trim();
   const link = document.getElementById('db-beweis-input').value.trim();
   const status = document.getElementById('db-beweis-status');
+  if (!skNr) { status.textContent = 'Bitte die SK Nummer eingeben.'; return; }
   if (!link) { status.textContent = 'Bitte einen Link eingeben.'; return; }
   if (!link.startsWith('http://') && !link.startsWith('https://')) {
     status.textContent = 'Nur gültige Links (http:// oder https://) erlaubt.';
@@ -1905,8 +1908,12 @@ window.sendBeweisLink = async function() {
     status.textContent = 'Keine Sanktion gefunden für deine ID.';
     return;
   }
-  // Add link to the most recent sanction (last one)
-  const sank = currentUserSanktionen[currentUserSanktionen.length - 1];
+  // Sanktion mit dieser SK Nummer suchen
+  const sank = currentUserSanktionen.find(s => s.nr === skNr);
+  if (!sank) {
+    status.textContent = 'Keine Sanktion mit SK Nummer "' + skNr + '" gefunden.';
+    return;
+  }
   try {
     const existing = sank.beweise ? sank.beweise + '\n' + link : link;
     await updateDoc(doc(db,'sanktionen', sank._id), { beweise: existing });
@@ -1915,6 +1922,7 @@ window.sendBeweisLink = async function() {
     // Update sanktion detail page if open
     const sdEl = document.getElementById('sd-beweise-' + sank.nr);
     if (sdEl) sdEl.textContent = existing;
+    document.getElementById('db-beweis-sknr').value = '';
     document.getElementById('db-beweis-input').value = '';
     status.style.color = 'var(--green)';
     status.textContent = 'Link erfolgreich gesendet!';
